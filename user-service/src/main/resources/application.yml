@@ -1,0 +1,28 @@
+#
+# Spring
+#
+spring:
+  application:
+    name: user-service
+  #
+  # Mongo DB
+  #
+  data:
+    mongodb:
+      database: my-moments
+      host: 192.168.99.100
+      port: 27017
+#
+# Eureka
+#
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.99.100:8761/eureka/
+  instance:
+    preferIpAddress: true
+#
+# Server
+#
+server:
+  port: 8081
