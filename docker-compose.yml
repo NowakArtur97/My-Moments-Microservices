@@ -1,0 +1,19 @@
+version: '3.7'
+
+networks:
+  my-moments:
+    driver: bridge
+    external: false
+    name: my-moments
+
+services:
+  discovery-service:
+    restart: on-failure
+    build: ./discovery-service
+    networks:
+      - my-moments
+    container_name: discovery-service
+    ports:
+      - 8761:8761
+    volumes:
+      - /discovery-service/dir:/app
