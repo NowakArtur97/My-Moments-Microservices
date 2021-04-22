@@ -1,11 +1,10 @@
-package com.nowakArtur97.myMoments.feature.user.testBuilder;
+package com.nowakArtur97.myMoments.userService.feature.user.document;
 
-import com.nowakArtur97.myMoments.feature.user.entity.RoleEntity;
-import com.nowakArtur97.myMoments.testUtil.enums.ObjectType;
+import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 
 public class RoleTestBuilder {
 
-    public static RoleEntity DEFAULT_ROLE_ENTITY = new RoleEntity("USER_ROLE");
+    public static RoleDocument DEFAULT_ROLE_ENTITY = new RoleDocument("USER_ROLE");
 
     private String name = "role";
 
@@ -16,15 +15,15 @@ public class RoleTestBuilder {
         return this;
     }
 
-    public RoleEntity build(ObjectType type) {
+    public RoleDocument build(ObjectType type) {
 
-        RoleEntity role;
+        RoleDocument role;
 
         switch (type) {
 
-            case ENTITY:
+            case DOCUMENT:
 
-                role = new RoleEntity(name);
+                role = new RoleDocument(name);
 
                 break;
 

@@ -1,6 +1,6 @@
-package com.nowakArtur97.myMoments.testUtil.enums;
+package com.nowakArtur97.myMoments.userService.testUtil.enums;
 
 public enum ObjectType {
 
-    CREATE_DTO, UPDATE_DTO, ENTITY, MODEL, REQUEST
+    CREATE_DTO, UPDATE_DTO, DOCUMENT, MODEL, REQUEST
 }

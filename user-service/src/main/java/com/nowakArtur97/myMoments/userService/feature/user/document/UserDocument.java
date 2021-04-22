@@ -1,6 +1,8 @@
 package com.nowakArtur97.myMoments.userService.feature.user.document;
 
+import com.nowakArtur97.myMoments.userService.feature.user.common.User;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -12,8 +14,9 @@ import java.util.Set;
 
 @Document(collection = "user")
 @Getter
+@Setter
 @ToString
-public class UserDocument extends AbstractDocument {
+public class UserDocument extends AbstractDocument implements User {
 
     @Indexed(unique = true)
     private String username;

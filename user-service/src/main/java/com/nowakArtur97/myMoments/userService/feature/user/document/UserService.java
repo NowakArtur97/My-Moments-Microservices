@@ -3,9 +3,6 @@ package com.nowakArtur97.myMoments.userService.feature.user.document;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserRegistrationDTO;
 import com.nowakArtur97.myMoments.userService.feature.user.validation.UserValidationGroupSequence;
 import lombok.RequiredArgsConstructor;
-import org.bson.BsonBinarySubType;
-import org.bson.types.Binary;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -26,9 +23,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final ModelMapper modelMapper;
-
     private final RoleService roleService;
+
+    private final UserMapper userMapper;
 
     public boolean isUsernameAlreadyInUse(String username) {
 
@@ -56,9 +53,7 @@ public class UserService {
         RoleDocument roleDocument = roleService.findByName(defaultUserRole)
                 .orElseThrow(() -> new RoleNotFoundException("Role with name: '" + defaultUserRole + "' not found."));
 
-        UserDocument newUserDocument = modelMapper.map(userRegistrationDTO, UserDocument.class);
-        newUserDocument.addRole(roleDocument);
-        newUserDocument.getProfile().setImage(new Binary(BsonBinarySubType.BINARY, image.getBytes()));
+        UserDocument newUserDocument = userMapper.convertDTOToDocument(userRegistrationDTO, image, roleDocument);
 
         return userRepository.save(newUserDocument);
     }

@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.userService.feature.user.document;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Document
 @EqualsAndHashCode(of = "uuid")
+@Getter
 @Setter
 @ToString
 abstract class AbstractDocument {

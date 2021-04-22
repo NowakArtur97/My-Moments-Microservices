@@ -1,11 +1,11 @@
-package com.nowakArtur97.myMoments.feature.user.testBuilder;
+package com.nowakArtur97.myMoments.userService.feature.user.document;
 
-import com.nowakArtur97.myMoments.feature.user.resource.UserProfileDTO;
-import com.nowakArtur97.myMoments.feature.user.entity.Gender;
-import com.nowakArtur97.myMoments.feature.user.entity.UserEntity;
-import com.nowakArtur97.myMoments.feature.user.entity.UserProfile;
-import com.nowakArtur97.myMoments.feature.user.entity.UserProfileEntity;
-import com.nowakArtur97.myMoments.testUtil.enums.ObjectType;
+
+import com.nowakArtur97.myMoments.userService.feature.user.common.UserProfile;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserProfileDTO;
+import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 
 public class UserProfileTestBuilder {
 
@@ -22,8 +22,6 @@ public class UserProfileTestBuilder {
     private String location = "location";
 
     private byte[] image = "image".getBytes();
-
-    private UserEntity user;
 
     public UserProfileTestBuilder withAbout(String about) {
 
@@ -74,13 +72,6 @@ public class UserProfileTestBuilder {
         return this;
     }
 
-    public UserProfileTestBuilder withUserEntity(UserEntity user) {
-
-        this.user = user;
-
-        return this;
-    }
-
     public UserProfile build(ObjectType type) {
 
         UserProfile userProfile;
@@ -94,9 +85,10 @@ public class UserProfileTestBuilder {
 
                 break;
 
-            case ENTITY:
+            case DOCUMENT:
 
-                userProfile = new UserProfileEntity(about, gender, interests, languages, location, image, user);
+                userProfile = new UserProfileDocument(about, gender, interests, languages, location,
+                        new Binary(BsonBinarySubType.BINARY, image));
 
                 break;
 

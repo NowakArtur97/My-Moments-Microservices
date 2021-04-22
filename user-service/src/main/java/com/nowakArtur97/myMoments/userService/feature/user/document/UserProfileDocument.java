@@ -1,16 +1,19 @@
 package com.nowakArtur97.myMoments.userService.feature.user.document;
 
+import com.nowakArtur97.myMoments.userService.feature.user.common.UserProfile;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "profile")
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-class UserProfileDocument extends AbstractDocument {
+class UserProfileDocument extends AbstractDocument implements UserProfile {
 
     private String about;
 
@@ -25,13 +28,8 @@ class UserProfileDocument extends AbstractDocument {
     @ToString.Exclude
     private Binary image;
 
-    public UserProfileDocument() {
-        super();
-    }
-
     public UserProfileDocument(String about, Gender gender, String interests, String languages, String location, Binary image) {
 
-        this();
         this.about = about;
         this.gender = gender;
         this.interests = interests;

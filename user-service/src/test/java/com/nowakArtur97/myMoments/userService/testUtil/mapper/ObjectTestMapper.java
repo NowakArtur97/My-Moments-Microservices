@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.testUtil.mapper;
+package com.nowakArtur97.myMoments.userService.testUtil.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

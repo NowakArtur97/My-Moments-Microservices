@@ -1,10 +1,12 @@
-package com.nowakArtur97.myMoments.feature.user.entity;
+package com.nowakArtur97.myMoments.userService.feature.user.document;
 
-import com.nowakArtur97.myMoments.feature.user.resource.UserDTO;
-import com.nowakArtur97.myMoments.feature.user.resource.UserProfileDTO;
-import com.nowakArtur97.myMoments.feature.user.resource.UserRegistrationDTO;
-import com.nowakArtur97.myMoments.feature.user.resource.UserUpdateDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserProfileDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserRegistrationDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserUpdateDTO;
 import lombok.RequiredArgsConstructor;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,82 +20,82 @@ public class UserMapper {
 
     private final PasswordEncoder bCryptPasswordEncoder;
 
-    public UserEntity convertDTOToEntity(UserRegistrationDTO userRegistrationDTO, MultipartFile image, RoleEntity role)
+    public UserDocument convertDTOToDocument(UserRegistrationDTO userRegistrationDTO, MultipartFile image, RoleDocument role)
             throws IOException {
 
-        UserEntity userEntity = new UserEntity();
-        UserProfileEntity userProfileEntity = new UserProfileEntity();
-        userEntity.setProfile(userProfileEntity);
+        UserDocument userDocument = new UserDocument();
+        UserProfileDocument userProfileDocument = new UserProfileDocument();
+        userDocument.setProfile(userProfileDocument);
 
-        setUp(userEntity, userRegistrationDTO, image);
+        setUp(userDocument, userRegistrationDTO, image);
 
-        userEntity.addRole(role);
+        userDocument.addRole(role);
 
-        return userEntity;
+        return userDocument;
     }
 
-    public void convertDTOToEntity(UserEntity userEntity, UserUpdateDTO userUpdateDTO, MultipartFile image) throws IOException {
-        setUp(userEntity, userUpdateDTO, image);
+    public void convertDTOToDocument(UserDocument userDocument, UserUpdateDTO userUpdateDTO, MultipartFile image)
+            throws IOException {
+        setUp(userDocument, userUpdateDTO, image);
     }
 
-    private void setUp(UserEntity userEntity, UserDTO userRegistrationDTO, MultipartFile image) throws IOException {
+    private void setUp(UserDocument userDocument, UserDTO userRegistrationDTO, MultipartFile image) throws IOException {
 
-        setUserProperties(userRegistrationDTO, userEntity, image);
+        setUserProperties(userRegistrationDTO, userDocument, image);
 
         UserProfileDTO userProfileDTO = userRegistrationDTO.getProfile();
-        UserProfileEntity userProfileEntity = userEntity.getProfile();
+        UserProfileDocument userProfileDocument = userDocument.getProfile();
 
         if (userProfileDTO != null) {
 
-            setupUserProfileProperties(userProfileEntity, userProfileDTO);
+            setupUserProfileProperties(userProfileDocument, userProfileDTO);
         }
 
-        setupDefaultProfileValues(userEntity, userProfileEntity);
+        setupDefaultProfileValues(userDocument, userProfileDocument);
     }
 
-    private void setUserProperties(UserDTO userRegistrationDTO, UserEntity userEntity, MultipartFile image) throws IOException {
+    private void setUserProperties(UserDTO userRegistrationDTO, UserDocument userDocument, MultipartFile image) throws IOException {
 
-        userEntity.setUsername(userRegistrationDTO.getUsername());
-        userEntity.setEmail(userRegistrationDTO.getEmail());
-        userEntity.setPassword(bCryptPasswordEncoder.encode(userRegistrationDTO.getPassword()));
-        userEntity.getProfile().setImage(image != null ? image.getBytes() : null);
+        userDocument.setUsername(userRegistrationDTO.getUsername());
+        userDocument.setEmail(userRegistrationDTO.getEmail());
+        userDocument.setPassword(bCryptPasswordEncoder.encode(userRegistrationDTO.getPassword()));
+        userDocument.getProfile().setImage(image != null ? new Binary(BsonBinarySubType.BINARY, image.getBytes()) : null);
     }
 
-    private void setupUserProfileProperties(UserProfileEntity userProfileEntity, UserProfileDTO userProfileDTO) {
+    private void setupUserProfileProperties(UserProfileDocument userProfileDocument, UserProfileDTO userProfileDTO) {
 
-        userProfileEntity.setAbout(userProfileDTO.getAbout());
+        userProfileDocument.setAbout(userProfileDTO.getAbout());
 
         String userGender = userProfileDTO.getGender();
         if (userGender != null) {
-            userProfileEntity.setGender(Arrays.stream(Gender.values())
+            userProfileDocument.setGender(Arrays.stream(Gender.values())
                     .filter(gender -> gender.name().equals(userGender.toUpperCase()))
                     .findFirst()
                     .orElse(Gender.UNSPECIFIED));
         }
-        userProfileEntity.setInterests(userProfileDTO.getInterests());
-        userProfileEntity.setLanguages(userProfileDTO.getLanguages());
-        userProfileEntity.setLocation(userProfileDTO.getLocation());
+        userProfileDocument.setInterests(userProfileDTO.getInterests());
+        userProfileDocument.setLanguages(userProfileDTO.getLanguages());
+        userProfileDocument.setLocation(userProfileDTO.getLocation());
     }
 
-    private void setupDefaultProfileValues(UserEntity userEntity, UserProfileEntity userProfileEntity) {
+    private void setupDefaultProfileValues(UserDocument userDocument, UserProfileDocument userProfileDocument) {
 
-        userProfileEntity.setId(userEntity.getId());
-        userProfileEntity.setUser(userEntity);
+        userProfileDocument.setId(userDocument.getId());
 
-        if (userProfileEntity.getGender() == null) {
-            userProfileEntity.setGender(Gender.UNSPECIFIED);
+        if (userProfileDocument.getGender() == null) {
+            userProfileDocument.setGender(Gender.UNSPECIFIED);
         }
-        if (userProfileEntity.getAbout() == null) {
-            userProfileEntity.setAbout("");
+        if (userProfileDocument.getAbout() == null) {
+            userProfileDocument.setAbout("");
         }
-        if (userProfileEntity.getInterests() == null) {
-            userProfileEntity.setInterests("");
+        if (userProfileDocument.getInterests() == null) {
+            userProfileDocument.setInterests("");
         }
-        if (userProfileEntity.getLanguages() == null) {
-            userProfileEntity.setLanguages("");
+        if (userProfileDocument.getLanguages() == null) {
+            userProfileDocument.setLanguages("");
         }
-        if (userProfileEntity.getLocation() == null) {
-            userProfileEntity.setLocation("");
+        if (userProfileDocument.getLocation() == null) {
+            userProfileDocument.setLocation("");
         }
     }
 }

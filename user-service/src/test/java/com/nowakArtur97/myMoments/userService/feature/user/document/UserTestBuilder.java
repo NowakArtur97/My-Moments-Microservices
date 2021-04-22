@@ -1,13 +1,11 @@
-package com.nowakArtur97.myMoments.feature.user.testBuilder;
+package com.nowakArtur97.myMoments.userService.feature.user.document;
 
-import com.nowakArtur97.myMoments.feature.comment.CommentEntity;
-import com.nowakArtur97.myMoments.feature.post.PostEntity;
-import com.nowakArtur97.myMoments.feature.user.authentication.AuthenticationRequest;
-import com.nowakArtur97.myMoments.feature.user.entity.*;
-import com.nowakArtur97.myMoments.feature.user.resource.UserProfileDTO;
-import com.nowakArtur97.myMoments.feature.user.resource.UserRegistrationDTO;
-import com.nowakArtur97.myMoments.feature.user.resource.UserUpdateDTO;
-import com.nowakArtur97.myMoments.testUtil.enums.ObjectType;
+import com.nowakArtur97.myMoments.userService.feature.user.common.User;
+import com.nowakArtur97.myMoments.userService.feature.user.common.UserProfile;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserProfileDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserRegistrationDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserUpdateDTO;
+import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,11 +23,7 @@ public class UserTestBuilder {
 
     private UserProfile profile;
 
-    private Set<PostEntity> posts = new HashSet<>();
-
-    private Set<CommentEntity> comments = new HashSet<>();
-
-    private Set<RoleEntity> roles = new HashSet<>(Collections.singletonList(RoleTestBuilder.DEFAULT_ROLE_ENTITY));
+    private Set<RoleDocument> roles = new HashSet<>(Collections.singletonList(RoleTestBuilder.DEFAULT_ROLE_ENTITY));
 
     public UserTestBuilder withUsername(String username) {
 
@@ -59,23 +53,9 @@ public class UserTestBuilder {
         return this;
     }
 
-    public UserTestBuilder withRoles(Set<RoleEntity> roles) {
+    public UserTestBuilder withRoles(Set<RoleDocument> roles) {
 
         this.roles = roles;
-
-        return this;
-    }
-
-    public UserTestBuilder withPosts(Set<PostEntity> posts) {
-
-        this.posts = posts;
-
-        return this;
-    }
-
-    public UserTestBuilder withComments(Set<CommentEntity> comments) {
-
-        this.comments = comments;
 
         return this;
     }
@@ -89,7 +69,7 @@ public class UserTestBuilder {
 
     public User build(ObjectType type) {
 
-        User user;
+        User user = null;
 
         switch (type) {
 
@@ -105,15 +85,15 @@ public class UserTestBuilder {
 
                 break;
 
-            case ENTITY:
+            case DOCUMENT:
 
-                user = new UserEntity(username, email, password, (UserProfileEntity) profile, roles, posts, comments);
+                user = new UserDocument(username, email, password, (UserProfileDocument) profile, roles);
 
                 break;
 
             case REQUEST:
 
-                user = new AuthenticationRequest(username, password, email);
+//                user = new AuthenticationRequest(username, password, email);
 
                 break;
 
@@ -139,9 +119,5 @@ public class UserTestBuilder {
         profile = null;
 
         roles = new HashSet<>();
-
-        posts = new HashSet<>();
-
-        comments = new HashSet<>();
     }
 }
