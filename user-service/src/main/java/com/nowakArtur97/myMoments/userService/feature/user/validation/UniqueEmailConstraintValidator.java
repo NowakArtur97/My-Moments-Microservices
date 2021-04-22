@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.userService.feature.user.validation;
 
+import com.nowakArtur97.myMoments.userService.feature.user.document.UserService;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.ConstraintValidator;

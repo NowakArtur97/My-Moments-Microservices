@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.userService.feature.user.document;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "profile")
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 class UserProfileDocument extends AbstractDocument {
 

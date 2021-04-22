@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.userService.feature.user.validation;
 
 import com.nowakArtur97.myMoments.userService.feature.user.document.UserDocument;
+import com.nowakArtur97.myMoments.userService.feature.user.document.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
