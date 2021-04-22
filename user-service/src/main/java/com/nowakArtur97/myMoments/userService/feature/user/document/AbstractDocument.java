@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.userService.feature.user;
+package com.nowakArtur97.myMoments.userService.feature.user.document;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
