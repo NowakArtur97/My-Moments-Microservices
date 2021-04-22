@@ -1,5 +1,5 @@
 package com.nowakArtur97.myMoments.userService.feature.user.document;
 
-enum Gender {
+public enum Gender {
     MALE, FEMALE, UNSPECIFIED
 }
