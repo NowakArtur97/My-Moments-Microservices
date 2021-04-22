@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @ToString
+public
 class UserDocument extends AbstractDocument {
 
     @Indexed(unique = true)

@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.userService.feature.user.resource;
 
 import com.nowakArtur97.myMoments.userService.feature.user.common.UserProfile;
 import com.nowakArtur97.myMoments.userService.feature.user.document.Gender;
+import com.nowakArtur97.myMoments.userService.feature.user.validation.EnumValidator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
