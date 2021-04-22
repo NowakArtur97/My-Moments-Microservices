@@ -39,3 +39,23 @@ management:
         include: '*'
   security:
     enabled: false
+#
+# Custom properties
+#
+my-moments:
+  default-user-role: USER_ROLE
+  #
+  # Swagger
+  #
+  swagger:
+    authorization-header: Authorization
+    contact-email: https://github.com/NowakArtur97
+    contact-name: Artur Nowak
+    contact-url: https://github.com/NowakArtur97
+    description: REST API of the social network
+    license: MIT
+    license-url: https://github.com/NowakArtur97/MyMoments/blob/master/LICENSE
+    path-selectors: /api/**
+    terms-of-serviceUrl: https://github.com/NowakArtur97/MyMoments/blob/master/LICENSE
+    title: MyMoments
+    version: 1.0

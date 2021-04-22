@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.userService.document;
+package com.nowakArtur97.myMoments.userService.feature.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
