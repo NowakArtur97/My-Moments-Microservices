@@ -53,8 +53,7 @@ public class UserService {
     public UserDocument registerUser(@Valid UserRegistrationDTO userRegistrationDTO, MultipartFile image)
             throws RoleNotFoundException, IOException {
 
-        RoleDocument roleDocument = roleService.findByName(defaultUserRole)
-                .orElseThrow(() -> new RoleNotFoundException("Role with name: '" + defaultUserRole + "' not found."));
+        RoleDocument roleDocument = roleService.findByName(defaultUserRole).orElse(new RoleDocument(defaultUserRole));
 
         UserDocument newUserDocument = modelMapper.map(userRegistrationDTO, UserDocument.class);
         newUserDocument.addRole(roleDocument);

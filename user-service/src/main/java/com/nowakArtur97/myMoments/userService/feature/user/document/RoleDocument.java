@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Getter
 @ToString
-class RoleDocument extends AbstractDocument {
+public class RoleDocument extends AbstractDocument {
 
     @Indexed(unique = true)
     private final String name;
