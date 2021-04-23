@@ -114,8 +114,8 @@ class UserRegistrationControllerTest {
 
         UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout(null).withInterests(null)
                 .withLanguages(null).withLocation(null).build(ObjectType.CREATE_DTO);
-        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile2")
-                .withEmail("valid2User123Profile@email.com").withPassword("ValidPassword123!")
+        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile")
+                .withEmail("validUser123Profile@email.com").withPassword("ValidPassword123!")
                 .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO)
                 .build(ObjectType.CREATE_DTO);
 
@@ -140,8 +140,8 @@ class UserRegistrationControllerTest {
 
         UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout("").withInterests("")
                 .withLanguages("").withLocation("").build(ObjectType.CREATE_DTO);
-        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile3")
-                .withEmail("valid3User123Profile@email.com").withPassword("ValidPassword123!")
+        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile")
+                .withEmail("validUser123Profile@email.com").withPassword("ValidPassword123!")
                 .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO)
                 .build(ObjectType.CREATE_DTO);
 

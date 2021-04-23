@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.userService.feature.user.testBuilder;
 
+import com.nowakArtur97.myMoments.userService.feature.user.authentication.AuthenticationRequest;
 import com.nowakArtur97.myMoments.userService.feature.user.common.User;
 import com.nowakArtur97.myMoments.userService.feature.user.common.UserProfile;
 import com.nowakArtur97.myMoments.userService.feature.user.document.RoleDocument;
@@ -96,7 +97,7 @@ public class UserTestBuilder {
 
             case REQUEST:
 
-//                user = new AuthenticationRequest(username, password, email);
+                user = new AuthenticationRequest(username, password, email);
 
                 break;
 
