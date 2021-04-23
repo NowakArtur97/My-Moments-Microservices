@@ -1,7 +1,9 @@
-package com.nowakArtur97.myMoments.userService.feature.user.document;
+package com.nowakArtur97.myMoments.userService.feature.user.testBuilder;
 
 
 import com.nowakArtur97.myMoments.userService.feature.user.common.UserProfile;
+import com.nowakArtur97.myMoments.userService.feature.user.document.Gender;
+import com.nowakArtur97.myMoments.userService.feature.user.document.UserProfileDocument;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserProfileDTO;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 import org.bson.BsonBinarySubType;
@@ -88,7 +90,7 @@ public class UserProfileTestBuilder {
             case DOCUMENT:
 
                 userProfile = new UserProfileDocument(about, gender, interests, languages, location,
-                        new Binary(BsonBinarySubType.BINARY, image));
+                        image != null ?  new Binary(BsonBinarySubType.BINARY, image) : null);
 
                 break;
 

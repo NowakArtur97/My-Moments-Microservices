@@ -1,5 +1,6 @@
-package com.nowakArtur97.myMoments.userService.feature.user.document;
+package com.nowakArtur97.myMoments.userService.feature.user.testBuilder;
 
+import com.nowakArtur97.myMoments.userService.feature.user.document.RoleDocument;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 
 public class RoleTestBuilder {

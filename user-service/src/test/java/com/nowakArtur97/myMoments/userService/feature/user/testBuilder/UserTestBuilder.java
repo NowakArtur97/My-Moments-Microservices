@@ -1,7 +1,10 @@
-package com.nowakArtur97.myMoments.userService.feature.user.document;
+package com.nowakArtur97.myMoments.userService.feature.user.testBuilder;
 
 import com.nowakArtur97.myMoments.userService.feature.user.common.User;
 import com.nowakArtur97.myMoments.userService.feature.user.common.UserProfile;
+import com.nowakArtur97.myMoments.userService.feature.user.document.RoleDocument;
+import com.nowakArtur97.myMoments.userService.feature.user.document.UserDocument;
+import com.nowakArtur97.myMoments.userService.feature.user.document.UserProfileDocument;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserProfileDTO;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserRegistrationDTO;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserUpdateDTO;
