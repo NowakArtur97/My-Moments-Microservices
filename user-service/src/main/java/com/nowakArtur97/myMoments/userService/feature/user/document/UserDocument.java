@@ -30,7 +30,7 @@ public class UserDocument extends AbstractDocument implements User {
     private UserProfileDocument profile;
 
     @DBRef
-    private final Set<RoleDocument> roles;
+    private Set<RoleDocument> roles;
 
     public void addRole(RoleDocument role) {
 
