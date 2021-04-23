@@ -13,14 +13,14 @@ import java.util.UUID;
 @Document
 @EqualsAndHashCode(of = "uuid")
 @Getter
-@Setter
+@Setter(AccessLevel.PRIVATE)
 @ToString
 abstract class AbstractDocument {
 
     @Id
+    @Setter(AccessLevel.PROTECTED)
     private String id;
 
-    @Setter(AccessLevel.PRIVATE)
     private String uuid = UUID.randomUUID().toString();
 
     @CreatedDate
