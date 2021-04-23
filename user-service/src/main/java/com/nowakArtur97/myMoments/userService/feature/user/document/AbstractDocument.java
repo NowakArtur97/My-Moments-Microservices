@@ -1,9 +1,6 @@
 package com.nowakArtur97.myMoments.userService.feature.user.document;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,6 +20,7 @@ abstract class AbstractDocument {
     @Id
     private String id;
 
+    @Setter(AccessLevel.PRIVATE)
     private String uuid = UUID.randomUUID().toString();
 
     @CreatedDate

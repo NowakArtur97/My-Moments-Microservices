@@ -44,6 +44,7 @@ management:
 #
 my-moments:
   default-user-role: USER_ROLE
+  admin-role: ADMIN_ROLE
   #
   # Swagger
   #
