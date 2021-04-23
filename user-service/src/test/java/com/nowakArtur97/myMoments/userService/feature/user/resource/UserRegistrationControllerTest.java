@@ -1,8 +1,8 @@
 package com.nowakArtur97.myMoments.userService.feature.user.resource;
 
 import com.nowakArtur97.myMoments.userService.feature.user.document.Gender;
-import com.nowakArtur97.myMoments.userService.feature.user.document.UserProfileTestBuilder;
-import com.nowakArtur97.myMoments.userService.feature.user.document.UserTestBuilder;
+import com.nowakArtur97.myMoments.userService.feature.user.testBuilder.UserProfileTestBuilder;
+import com.nowakArtur97.myMoments.userService.feature.user.testBuilder.UserTestBuilder;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.userService.testUtil.generator.NameWithSpacesGenerator;
 import com.nowakArtur97.myMoments.userService.testUtil.mapper.ObjectTestMapper;
@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisplayNameGeneration(NameWithSpacesGenerator.class)
 @Tag("UserRegistrationController_Tests")
 class UserRegistrationControllerTest {
@@ -38,6 +41,9 @@ class UserRegistrationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     private static UserProfileTestBuilder userProfileTestBuilder;
     private static UserTestBuilder userTestBuilder;
 
@@ -46,6 +52,12 @@ class UserRegistrationControllerTest {
 
         userProfileTestBuilder = new UserProfileTestBuilder();
         userTestBuilder = new UserTestBuilder();
+    }
+
+    @AfterEach
+    void cleanUpDatabase() {
+
+        mongoTemplate.getDb().drop();
     }
 
     @Test
@@ -102,8 +114,8 @@ class UserRegistrationControllerTest {
 
         UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout(null).withInterests(null)
                 .withLanguages(null).withLocation(null).build(ObjectType.CREATE_DTO);
-        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile")
-                .withEmail("validUser123Profile@email.com").withPassword("ValidPassword123!")
+        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile2")
+                .withEmail("valid2User123Profile@email.com").withPassword("ValidPassword123!")
                 .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO)
                 .build(ObjectType.CREATE_DTO);
 
@@ -128,8 +140,8 @@ class UserRegistrationControllerTest {
 
         UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout("").withInterests("")
                 .withLanguages("").withLocation("").build(ObjectType.CREATE_DTO);
-        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile")
-                .withEmail("validUser123Profile@email.com").withPassword("ValidPassword123!")
+        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("validUserWithProfile3")
+                .withEmail("valid3User123Profile@email.com").withPassword("ValidPassword123!")
                 .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO)
                 .build(ObjectType.CREATE_DTO);
 
@@ -153,8 +165,8 @@ class UserRegistrationControllerTest {
     void when_register_valid_user_with_profile_and_image_should_register_user() {
 
         UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.build(ObjectType.CREATE_DTO);
-        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("serWithImage")
-                .withEmail("ser123Image@email.com").withPassword("ValidPassword123!")
+        UserRegistrationDTO userRegistrationDTO = (UserRegistrationDTO) userTestBuilder.withUsername("userWithImage")
+                .withEmail("user123Image@email.com").withPassword("ValidPassword123!")
                 .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO)
                 .build(ObjectType.CREATE_DTO);
 

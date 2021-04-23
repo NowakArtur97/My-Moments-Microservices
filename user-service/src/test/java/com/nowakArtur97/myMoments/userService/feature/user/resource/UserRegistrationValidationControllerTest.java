@@ -1,16 +1,11 @@
 package com.nowakArtur97.myMoments.userService.feature.user.resource;
 
-import com.nowakArtur97.myMoments.userService.feature.user.document.UserProfileTestBuilder;
-import com.nowakArtur97.myMoments.userService.feature.user.document.UserTestBuilder;
-import com.nowakArtur97.myMoments.userService.feature.user.resource.UserProfileDTO;
-import com.nowakArtur97.myMoments.userService.feature.user.resource.UserRegistrationDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.testBuilder.UserProfileTestBuilder;
+import com.nowakArtur97.myMoments.userService.feature.user.testBuilder.UserTestBuilder;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.userService.testUtil.generator.NameWithSpacesGenerator;
 import com.nowakArtur97.myMoments.userService.testUtil.mapper.ObjectTestMapper;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -18,8 +13,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
@@ -32,14 +30,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisplayNameGeneration(NameWithSpacesGenerator.class)
 @Tag("UserRegistrationController_Tests")
 class UserRegistrationValidationControllerTest {
 
-    private final String REGISTRATION_BASE_PATH = "http://localhost:8080/api/v1/registration/register";
+    @LocalServerPort
+    private int serverPort;
+
+    private final String REGISTRATION_BASE_PATH = "http://localhost:" + serverPort + "/api/v1/registration/register";
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     private static UserProfileTestBuilder userProfileTestBuilder;
     private static UserTestBuilder userTestBuilder;
@@ -49,6 +54,12 @@ class UserRegistrationValidationControllerTest {
 
         userProfileTestBuilder = new UserProfileTestBuilder();
         userTestBuilder = new UserTestBuilder();
+    }
+
+    @AfterEach
+    void cleanUpDatabase() {
+
+        mongoTemplate.getDb().drop();
     }
 
     @Test
