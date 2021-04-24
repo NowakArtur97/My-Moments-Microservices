@@ -1,7 +1,10 @@
 package com.nowakArtur97.myMoments.userService.feature.user.document;
 
+import com.nowakArtur97.myMoments.userService.exception.ForbiddenException;
+import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserProfileDTO;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserRegistrationDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserUpdateDTO;
 import com.nowakArtur97.myMoments.userService.feature.user.testBuilder.UserProfileTestBuilder;
 import com.nowakArtur97.myMoments.userService.feature.user.testBuilder.UserTestBuilder;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
@@ -15,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -309,6 +313,367 @@ class UserServiceTest {
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(securityContext),
                     () -> verifyNoInteractions(authentication));
+        }
+    }
+
+    @Nested
+    class UpdaterUserTest {
+
+        @Test
+        @SneakyThrows
+        void when_update_user_with_profile_should_update_user() {
+
+            UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout("new about")
+                    .withInterests("new interests").withLanguages("new languages").withLocation("new location")
+                    .withGender(Gender.FEMALE).build(ObjectType.UPDATE_DTO);
+            UserUpdateDTO userUpdateDTOExpected = (UserUpdateDTO) userTestBuilder.withUsername("validUser")
+                    .withEmail("validUser123@email.com").withPassword("ValidPassword123!")
+                    .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
+
+            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
+                    "image.jpg".getBytes());
+
+            UserProfileDocument userProfileExpectedBeforeUpdate = (UserProfileDocument) userProfileTestBuilder
+                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
+                    .build(ObjectType.DOCUMENT);
+            UserDocument userExpectedBeforeUpdate = (UserDocument) userTestBuilder.withUsername("previous username")
+                    .withEmail("prevoius@email.com").withPassword("oldPass123!").withProfile(userProfileExpectedBeforeUpdate)
+                    .build(ObjectType.DOCUMENT);
+            UserProfileDocument userProfileExpectedAfterObjectMapping = (UserProfileDocument) userProfileTestBuilder
+                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
+                    .build(ObjectType.DOCUMENT);
+            UserDocument userExpectedAfterObjectMapping = (UserDocument) userTestBuilder
+                    .withProfile(userProfileExpectedAfterObjectMapping).build(ObjectType.DOCUMENT);
+            RoleDocument roleExpected = new RoleDocument(defaultUserRole);
+            String passwordEncoded = "encodedPassword";
+            UserDocument userExpectedAfterPasswordEncodingAndSettingRoles = (UserDocument) userTestBuilder
+                    .withPassword(passwordEncoded).withProfile(userProfileExpectedAfterObjectMapping)
+                    .withRoles(Set.of(roleExpected)).build(ObjectType.DOCUMENT);
+            UserDocument userExpected = (UserDocument) userTestBuilder.withPassword(passwordEncoded)
+                    .withProfile(userProfileExpectedAfterObjectMapping).withRoles(Set.of(roleExpected))
+                    .build(ObjectType.DOCUMENT);
+
+            Long userId = 1L;
+
+            SecurityContextHolder.setContext(securityContext);
+
+            when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
+                    .thenReturn(Optional.of(userExpectedBeforeUpdate));
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getName()).thenReturn(userExpectedBeforeUpdate.getUsername());
+            when(userRepository.save(userExpectedAfterPasswordEncodingAndSettingRoles)).thenReturn(userExpected);
+
+            UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image);
+
+            assertAll(() -> assertEquals(userExpected, userActual,
+                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                    () -> assertEquals(userExpected.getId(), userActual.getId(),
+                            () -> "should return user with id: " + userExpected.getId() + ", but was"
+                                    + userActual.getId()),
+                    () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
+                            () -> "should return user with username: " + userExpected.getUsername() + ", but was"
+                                    + userActual.getUsername()),
+                    () -> assertEquals(userExpected.getPassword(), userActual.getPassword(),
+                            () -> "should return user with user password: " + userExpected.getPassword() + ", but was"
+                                    + userActual.getPassword()),
+                    () -> assertEquals(userExpected.getEmail(), userActual.getEmail(),
+                            () -> "should return user with user email: " + userExpected.getEmail() + ", but was"
+                                    + userActual.getEmail()),
+                    () -> assertEquals(userExpected.getRoles(), userActual.getRoles(),
+                            () -> "should return user with user roles: " + userExpected.getRoles() + ", but was"
+                                    + userActual.getRoles()),
+                    () -> assertEquals(userExpected.getProfile(), userActual.getProfile(),
+                            () -> "should return user with profile: " + userExpected.getProfile()
+                                    + ", but was" + userActual.getProfile()),
+                    () -> assertEquals(userExpected.getProfile().getAbout(), userActual.getProfile().getAbout(),
+                            () -> "should return user with about section: " + userExpected.getProfile().getAbout()
+                                    + ", but was" + userActual.getProfile().getAbout()),
+                    () -> assertEquals(userExpected.getProfile().getGender(), userActual.getProfile().getGender(),
+                            () -> "should return user with gender: " + userExpected.getProfile().getGender()
+                                    + ", but was" + userActual.getProfile().getGender()),
+                    () -> assertEquals(userExpected.getProfile().getInterests(), userActual.getProfile().getInterests(),
+                            () -> "should return user with interests section: " + userExpected.getProfile().getInterests()
+                                    + ", but was" + userActual.getProfile().getInterests()),
+                    () -> assertEquals(userExpected.getProfile().getLanguages(), userActual.getProfile().getLanguages(),
+                            () -> "should return user with languages section: " + userExpected.getProfile().getLanguages()
+                                    + ", but was" + userActual.getProfile().getLanguages()),
+                    () -> assertEquals(userExpected.getProfile().getLocation(), userActual.getProfile().getLocation(),
+                            () -> "should return user with location: " + userExpected.getProfile().getLocation()
+                                    + ", but was" + userActual.getProfile().getLocation()),
+                    () -> assertEquals(userExpected.getProfile().getImage(), userActual.getProfile().getImage(),
+                            () -> "should return user with image: " + userExpected.getProfile().getImage()
+                                    + ", but was" + userActual.getProfile().getImage()),
+                    () -> verify(userRepository, times(1))
+                            .findByUsername(userExpectedBeforeUpdate.getUsername()),
+                    () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verify(securityContext, times(1)).getAuthentication(),
+                    () -> verifyNoMoreInteractions(securityContext),
+                    () -> verify(authentication, times(1)).getName(),
+                    () -> verifyNoMoreInteractions(authentication),
+                    () -> verify(userMapper, times(1))
+                            .convertDTOToDocument(userExpectedBeforeUpdate, userUpdateDTOExpected, image),
+                    () -> verifyNoMoreInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
+        }
+
+        @Test
+        @SneakyThrows
+        void when_update_user_without_profile_should_update_user() {
+
+            UserUpdateDTO userUpdateDTOExpected = (UserUpdateDTO) userTestBuilder.withUsername("validUser")
+                    .withEmail("validUser123@email.com").withPassword("ValidPassword123!")
+                    .withMatchingPassword("ValidPassword123!").build(ObjectType.UPDATE_DTO);
+
+            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
+                    "image.jpg".getBytes());
+
+            UserProfileDocument userProfileExpectedBeforeUpdate = (UserProfileDocument) userProfileTestBuilder
+                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
+                    .build(ObjectType.DOCUMENT);
+            UserDocument userExpectedBeforeUpdate = (UserDocument) userTestBuilder.withUsername("previous username")
+                    .withEmail("prevoius@email.com").withPassword("oldPass123!").withProfile(userProfileExpectedBeforeUpdate)
+                    .build(ObjectType.DOCUMENT);
+            UserProfileDocument userProfileExpectedAfterObjectMapping = (UserProfileDocument) userProfileTestBuilder
+                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
+                    .build(ObjectType.DOCUMENT);
+            UserDocument userExpectedAfterObjectMapping = (UserDocument) userTestBuilder
+                    .withProfile(userProfileExpectedAfterObjectMapping).build(ObjectType.DOCUMENT);
+            RoleDocument roleExpected = new RoleDocument(defaultUserRole);
+            String passwordEncoded = "encodedPassword";
+            UserDocument userExpectedAfterPasswordEncodingAndSettingRoles = (UserDocument) userTestBuilder
+                    .withPassword(passwordEncoded).withProfile(userProfileExpectedAfterObjectMapping)
+                    .withRoles(Set.of(roleExpected)).build(ObjectType.DOCUMENT);
+            UserDocument userExpected = (UserDocument) userTestBuilder.withPassword(passwordEncoded)
+                    .withProfile(userProfileExpectedAfterObjectMapping).withRoles(Set.of(roleExpected))
+                    .build(ObjectType.DOCUMENT);
+
+            SecurityContextHolder.setContext(securityContext);
+
+            when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
+                    .thenReturn(Optional.of(userExpectedBeforeUpdate));
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getName()).thenReturn(userExpectedBeforeUpdate.getUsername());
+            when(userRepository.save(userExpectedAfterPasswordEncodingAndSettingRoles)).thenReturn(userExpected);
+
+            UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image);
+
+            assertAll(() -> assertEquals(userExpected, userActual,
+                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                    () -> assertEquals(userExpected.getId(), userActual.getId(),
+                            () -> "should return user with id: " + userExpected.getId() + ", but was"
+                                    + userActual.getId()),
+                    () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
+                            () -> "should return user with username: " + userExpected.getUsername() + ", but was"
+                                    + userActual.getUsername()),
+                    () -> assertEquals(userExpected.getPassword(), userActual.getPassword(),
+                            () -> "should return user with user password: " + userExpected.getPassword() + ", but was"
+                                    + userActual.getPassword()),
+                    () -> assertEquals(userExpected.getEmail(), userActual.getEmail(),
+                            () -> "should return user with user email: " + userExpected.getEmail() + ", but was"
+                                    + userActual.getEmail()),
+                    () -> assertEquals(userExpected.getRoles(), userActual.getRoles(),
+                            () -> "should return user with user roles: " + userExpected.getRoles() + ", but was"
+                                    + userActual.getRoles()),
+                    () -> assertEquals(userExpected.getProfile(), userActual.getProfile(),
+                            () -> "should return user with profile: " + userExpected.getProfile()
+                                    + ", but was" + userActual.getProfile()),
+                    () -> assertEquals(userExpected.getProfile().getAbout(), userActual.getProfile().getAbout(),
+                            () -> "should return user with about section: " + userExpected.getProfile().getAbout()
+                                    + ", but was" + userActual.getProfile().getAbout()),
+                    () -> assertEquals(userExpected.getProfile().getGender(), userActual.getProfile().getGender(),
+                            () -> "should return user with gender: " + userExpected.getProfile().getGender()
+                                    + ", but was" + userActual.getProfile().getGender()),
+                    () -> assertEquals(userExpected.getProfile().getInterests(), userActual.getProfile().getInterests(),
+                            () -> "should return user with interests section: " + userExpected.getProfile().getInterests()
+                                    + ", but was" + userActual.getProfile().getInterests()),
+                    () -> assertEquals(userExpected.getProfile().getLanguages(), userActual.getProfile().getLanguages(),
+                            () -> "should return user with languages section: " + userExpected.getProfile().getLanguages()
+                                    + ", but was" + userActual.getProfile().getLanguages()),
+                    () -> assertEquals(userExpected.getProfile().getLocation(), userActual.getProfile().getLocation(),
+                            () -> "should return user with location: " + userExpected.getProfile().getLocation()
+                                    + ", but was" + userActual.getProfile().getLocation()),
+                    () -> assertEquals(userExpected.getProfile().getImage(), userActual.getProfile().getImage(),
+                            () -> "should return user with image: " + userExpected.getProfile().getImage()
+                                    + ", but was" + userActual.getProfile().getImage()),
+                    () -> verify(userRepository, times(1))
+                            .findByUsername(userExpectedBeforeUpdate.getUsername()),
+                    () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verify(securityContext, times(1)).getAuthentication(),
+                    () -> verifyNoMoreInteractions(securityContext),
+                    () -> verify(authentication, times(1)).getName(),
+                    () -> verifyNoMoreInteractions(authentication),
+                    () -> verify(userMapper, times(1))
+                            .convertDTOToDocument(userExpectedBeforeUpdate, userUpdateDTOExpected, image),
+                    () -> verifyNoMoreInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
+        }
+
+        @Test
+        @SneakyThrows
+        void when_update_user_without_profile_and_image_should_update_user() {
+
+            UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout("new about")
+                    .withInterests("new interests").withLanguages("new languages").withLocation("new location")
+                    .withGender(Gender.FEMALE).build(ObjectType.UPDATE_DTO);
+            UserUpdateDTO userUpdateDTOExpected = (UserUpdateDTO) userTestBuilder.withUsername("validUser")
+                    .withEmail("validUser123@email.com").withPassword("ValidPassword123!")
+                    .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
+
+            UserProfileDocument userProfileExpectedBeforeUpdate = (UserProfileDocument) userProfileTestBuilder
+                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(null)
+                    .build(ObjectType.DOCUMENT);
+            UserDocument userExpectedBeforeUpdate = (UserDocument) userTestBuilder.withUsername("previous username")
+                    .withEmail("prevoius@email.com").withPassword("oldPass123!").withProfile(userProfileExpectedBeforeUpdate)
+                    .build(ObjectType.DOCUMENT);
+            UserProfileDocument userProfileExpectedAfterObjectMapping = (UserProfileDocument) userProfileTestBuilder
+                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(null)
+                    .build(ObjectType.DOCUMENT);
+            UserDocument userExpectedAfterObjectMapping = (UserDocument) userTestBuilder
+                    .withProfile(userProfileExpectedAfterObjectMapping).build(ObjectType.DOCUMENT);
+            RoleDocument roleExpected = new RoleDocument(defaultUserRole);
+            String passwordEncoded = "encodedPassword";
+            UserDocument userExpectedAfterPasswordEncodingAndSettingRoles = (UserDocument) userTestBuilder
+                    .withPassword(passwordEncoded).withProfile(userProfileExpectedAfterObjectMapping)
+                    .withRoles(Set.of(roleExpected)).build(ObjectType.DOCUMENT);
+            UserDocument userExpected = (UserDocument) userTestBuilder.withPassword(passwordEncoded)
+                    .withProfile(userProfileExpectedAfterObjectMapping).withRoles(Set.of(roleExpected))
+                    .build(ObjectType.DOCUMENT);
+
+            SecurityContextHolder.setContext(securityContext);
+
+            when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
+                    .thenReturn(Optional.of(userExpectedBeforeUpdate));
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getName()).thenReturn(userExpectedBeforeUpdate.getUsername());
+            when(userRepository.save(userExpectedAfterPasswordEncodingAndSettingRoles)).thenReturn(userExpected);
+
+            UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, null);
+
+            assertAll(() -> assertEquals(userExpected, userActual,
+                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                    () -> assertEquals(userExpected.getId(), userActual.getId(),
+                            () -> "should return user with id: " + userExpected.getId() + ", but was"
+                                    + userActual.getId()),
+                    () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
+                            () -> "should return user with username: " + userExpected.getUsername() + ", but was"
+                                    + userActual.getUsername()),
+                    () -> assertEquals(userExpected.getPassword(), userActual.getPassword(),
+                            () -> "should return user with user password: " + userExpected.getPassword() + ", but was"
+                                    + userActual.getPassword()),
+                    () -> assertEquals(userExpected.getEmail(), userActual.getEmail(),
+                            () -> "should return user with user email: " + userExpected.getEmail() + ", but was"
+                                    + userActual.getEmail()),
+                    () -> assertEquals(userExpected.getRoles(), userActual.getRoles(),
+                            () -> "should return user with user roles: " + userExpected.getRoles() + ", but was"
+                                    + userActual.getRoles()),
+                    () -> assertEquals(userExpected.getProfile(), userActual.getProfile(),
+                            () -> "should return user with profile: " + userExpected.getProfile()
+                                    + ", but was" + userActual.getProfile()),
+                    () -> assertEquals(userExpected.getProfile().getAbout(), userActual.getProfile().getAbout(),
+                            () -> "should return user with about section: " + userExpected.getProfile().getAbout()
+                                    + ", but was" + userActual.getProfile().getAbout()),
+                    () -> assertEquals(userExpected.getProfile().getGender(), userActual.getProfile().getGender(),
+                            () -> "should return user with gender: " + userExpected.getProfile().getGender()
+                                    + ", but was" + userActual.getProfile().getGender()),
+                    () -> assertEquals(userExpected.getProfile().getInterests(), userActual.getProfile().getInterests(),
+                            () -> "should return user with interests section: " + userExpected.getProfile().getInterests()
+                                    + ", but was" + userActual.getProfile().getInterests()),
+                    () -> assertEquals(userExpected.getProfile().getLanguages(), userActual.getProfile().getLanguages(),
+                            () -> "should return user with languages section: " + userExpected.getProfile().getLanguages()
+                                    + ", but was" + userActual.getProfile().getLanguages()),
+                    () -> assertEquals(userExpected.getProfile().getLocation(), userActual.getProfile().getLocation(),
+                            () -> "should return user with location: " + userExpected.getProfile().getLocation()
+                                    + ", but was" + userActual.getProfile().getLocation()),
+                    () -> assertEquals(userExpected.getProfile().getImage(), userActual.getProfile().getImage(),
+                            () -> "should return user with image: " + userExpected.getProfile().getImage()
+                                    + ", but was" + userActual.getProfile().getImage()),
+                    () -> verify(userRepository, times(1))
+                            .findByUsername(userExpectedBeforeUpdate.getUsername()),
+                    () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verify(securityContext, times(1)).getAuthentication(),
+                    () -> verifyNoMoreInteractions(securityContext),
+                    () -> verify(authentication, times(1)).getName(),
+                    () -> verifyNoMoreInteractions(authentication),
+                    () -> verify(userMapper, times(1))
+                            .convertDTOToDocument(userExpectedBeforeUpdate, userUpdateDTOExpected, null),
+                    () -> verifyNoMoreInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
+        }
+
+        @Test
+        @SneakyThrows
+        void when_update_some_other_user_should_throw_exception() {
+
+            UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout("new about")
+                    .withInterests("new interests").withLanguages("new languages").withLocation("new location")
+                    .withGender(Gender.FEMALE).build(ObjectType.UPDATE_DTO);
+            UserUpdateDTO userUpdateDTOExpected = (UserUpdateDTO) userTestBuilder.withUsername("validUser")
+                    .withEmail("validUser123@email.com").withPassword("ValidPassword123!")
+                    .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
+
+            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
+                    "image.jpg".getBytes());
+
+            UserProfileDocument userProfileExpectedBeforeUpdate = (UserProfileDocument) userProfileTestBuilder
+                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
+                    .build(ObjectType.DOCUMENT);
+            UserDocument userExpectedBeforeUpdate = (UserDocument) userTestBuilder.withUsername("previous username")
+                    .withEmail("prevoius@email.com").withPassword("oldPass123!").withProfile(userProfileExpectedBeforeUpdate)
+                    .build(ObjectType.DOCUMENT);
+
+            SecurityContextHolder.setContext(securityContext);
+
+            when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
+                    .thenReturn(Optional.of(userExpectedBeforeUpdate));
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getName()).thenReturn("some other user");
+
+            assertAll(() -> assertThrows(ForbiddenException.class,
+                    () -> userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image),
+                    "should throw ForbiddenException but wasn't"),
+                    () -> verify(userRepository, times(1))
+                            .findByUsername(userExpectedBeforeUpdate.getUsername()),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verify(securityContext, times(1)).getAuthentication(),
+                    () -> verifyNoMoreInteractions(securityContext),
+                    () -> verify(authentication, times(1)).getName(),
+                    () -> verifyNoMoreInteractions(authentication),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
+        }
+
+
+        @Test
+        void when_update_not_existing_user_should_throw_exception() {
+
+            UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout("new about")
+                    .withInterests("new interests").withLanguages("new languages").withLocation("new location")
+                    .withGender(Gender.FEMALE).build(ObjectType.UPDATE_DTO);
+            UserUpdateDTO userUpdateDTOExpected = (UserUpdateDTO) userTestBuilder.withUsername("validUser")
+                    .withEmail("validUser123@email.com").withPassword("ValidPassword123!")
+                    .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
+
+            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
+                    "image.jpg".getBytes());
+
+            String notExistingUsername = "iAmNotExist";
+
+            SecurityContextHolder.setContext(securityContext);
+
+            when(userRepository.findByUsername(notExistingUsername)).thenReturn(Optional.empty());
+
+            assertAll(() -> assertThrows(ResourceNotFoundException.class,
+                    () -> userService.updateUser(notExistingUsername, userUpdateDTOExpected, image),
+                    "should throw ResourceNotFoundException but wasn't"),
+                    () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verifyNoInteractions(securityContext),
+                    () -> verifyNoInteractions(authentication),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
         }
     }
 
