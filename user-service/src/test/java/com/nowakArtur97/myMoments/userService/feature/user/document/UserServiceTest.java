@@ -353,8 +353,6 @@ class UserServiceTest {
                     .withProfile(userProfileExpectedAfterObjectMapping).withRoles(Set.of(roleExpected))
                     .build(ObjectType.DOCUMENT);
 
-            Long userId = 1L;
-
             SecurityContextHolder.setContext(securityContext);
 
             when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
@@ -645,7 +643,6 @@ class UserServiceTest {
                     () -> verifyNoInteractions(roleService));
         }
 
-
         @Test
         void when_update_not_existing_user_should_throw_exception() {
 
@@ -667,6 +664,89 @@ class UserServiceTest {
 
             assertAll(() -> assertThrows(ResourceNotFoundException.class,
                     () -> userService.updateUser(notExistingUsername, userUpdateDTOExpected, image),
+                    "should throw ResourceNotFoundException but wasn't"),
+                    () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verifyNoInteractions(securityContext),
+                    () -> verifyNoInteractions(authentication),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
+        }
+    }
+
+    @Nested
+    class DeleteUserTest {
+
+        @Test
+        @SneakyThrows
+        void when_delete_existing_user_should_delete_user() {
+
+            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
+                    "image.jpg".getBytes());
+            UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder
+                    .withImage(image.getBytes()).build(ObjectType.DOCUMENT);
+            RoleDocument roleExpected = new RoleDocument(defaultUserRole);
+            UserDocument userExpected = (UserDocument) userTestBuilder.withProfile(userProfileExpected)
+                    .withRoles(Set.of(roleExpected)).build(ObjectType.DOCUMENT);
+
+            SecurityContextHolder.setContext(securityContext);
+
+            when(userRepository.findByUsername(userExpected.getUsername())).thenReturn(Optional.of(userExpected));
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getName()).thenReturn(userExpected.getUsername());
+
+            assertAll(() -> assertDoesNotThrow(() -> userService.deleteUser(userExpected.getUsername()),
+                    "should not throw ResourceNotFoundException or NotAuthorizedException but was"),
+                    () -> verify(userRepository, times(1)).findByUsername(userExpected.getUsername()),
+                    () -> verify(userRepository, times(1)).delete(userExpected),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verify(securityContext, times(1)).getAuthentication(),
+                    () -> verifyNoMoreInteractions(securityContext),
+                    () -> verify(authentication, times(1)).getName(),
+                    () -> verifyNoMoreInteractions(authentication),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
+        }
+
+        @Test
+        @SneakyThrows
+        void when_delete_some_other_user_should_throw_exception() {
+
+            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
+                    "image.jpg".getBytes());
+            UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder
+                    .withImage(image.getBytes()).build(ObjectType.DOCUMENT);
+            RoleDocument roleExpected = new RoleDocument(defaultUserRole);
+            UserDocument userExpected = (UserDocument) userTestBuilder.withProfile(userProfileExpected)
+                    .withRoles(Set.of(roleExpected)).build(ObjectType.DOCUMENT);
+
+            SecurityContextHolder.setContext(securityContext);
+
+            when(userRepository.findByUsername(userExpected.getUsername())).thenReturn(Optional.of(userExpected));
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getName()).thenReturn("some other user");
+
+            assertAll(() -> assertThrows(ForbiddenException.class,
+                    () -> userService.deleteUser(userExpected.getUsername()), "should throw ForbiddenException but wasn't"),
+                    () -> verify(userRepository, times(1)).findByUsername(userExpected.getUsername()),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verify(securityContext, times(1)).getAuthentication(),
+                    () -> verifyNoMoreInteractions(securityContext),
+                    () -> verify(authentication, times(1)).getName(),
+                    () -> verifyNoMoreInteractions(authentication),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService));
+        }
+
+        @Test
+        void when_delete_not_existing_user_should_throw_exception() {
+
+            String notExistingUsername = "iAmNotExist";
+
+            when(userRepository.findByUsername(notExistingUsername)).thenReturn(Optional.empty());
+
+            assertAll(() -> assertThrows(ResourceNotFoundException.class,
+                    () -> userService.deleteUser(notExistingUsername),
                     "should throw ResourceNotFoundException but wasn't"),
                     () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
                     () -> verifyNoMoreInteractions(userRepository),
