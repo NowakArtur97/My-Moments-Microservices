@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
 public class UserUpdateDTO extends UserDTO {
 
     @ApiModelProperty(notes = "The user's id", required = true)
-    protected Long id;
+    protected String id;
 
     @UsernameNotTakenByAnother(message = "{user.name.unique}", groups = BasicUserValidationConstraints.class)
     @NotBlank(message = "{user.name.notBlank}")

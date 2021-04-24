@@ -1,9 +1,14 @@
 package com.nowakArtur97.myMoments.userService.feature.user.document;
 
+import com.nowakArtur97.myMoments.userService.exception.ForbiddenException;
+import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.feature.user.resource.UserRegistrationDTO;
+import com.nowakArtur97.myMoments.userService.feature.user.resource.UserUpdateDTO;
 import com.nowakArtur97.myMoments.userService.feature.user.validation.UserValidationGroupSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,5 +61,31 @@ public class UserService {
         UserDocument newUserDocument = userMapper.convertDTOToDocument(userRegistrationDTO, image, roleDocument);
 
         return userRepository.save(newUserDocument);
+    }
+
+    public UserDocument updateUser(String username, @Valid UserUpdateDTO userUpdateDTO, MultipartFile image)
+            throws IOException {
+
+        UserDocument userDocument = findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username: '" + username + "' not found."));
+
+        if (!isUserChangingOwnData(userDocument.getUsername())) {
+            throw new ForbiddenException("User can only update his own account.");
+        }
+
+        userUpdateDTO.setId(userDocument.getId());
+
+        userMapper.convertDTOToDocument(userDocument, userUpdateDTO, image);
+
+        return userRepository.save(userDocument);
+    }
+
+    public boolean isUserChangingOwnData(String username) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String usernameInContext = auth != null ? auth.getName() : "";
+
+        return username.equals(usernameInContext);
     }
 }
