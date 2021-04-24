@@ -16,9 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -45,12 +42,6 @@ class UserServiceTest {
 
     @Mock
     private RoleService roleService;
-
-    @Mock
-    private Authentication authentication;
-
-    @Mock
-    private SecurityContext securityContext;
 
     private static MockedStatic<UUID> mocked;
 
@@ -159,9 +150,7 @@ class UserServiceTest {
                     () -> verify(roleService, times(1)).findByName(defaultUserRole),
                     () -> verifyNoMoreInteractions(roleService),
                     () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
-                    () -> verifyNoMoreInteractions(userRepository),
-                    () -> verifyNoInteractions(securityContext),
-                    () -> verifyNoInteractions(authentication));
+                    () -> verifyNoMoreInteractions(userRepository));
         }
 
         @Test
@@ -235,9 +224,7 @@ class UserServiceTest {
                     () -> verify(roleService, times(1)).findByName(defaultUserRole),
                     () -> verifyNoMoreInteractions(roleService),
                     () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
-                    () -> verifyNoMoreInteractions(userRepository),
-                    () -> verifyNoInteractions(securityContext),
-                    () -> verifyNoInteractions(authentication));
+                    () -> verifyNoMoreInteractions(userRepository));
         }
 
         @Test
@@ -310,9 +297,7 @@ class UserServiceTest {
                     () -> verify(roleService, times(1)).findByName(defaultUserRole),
                     () -> verifyNoMoreInteractions(roleService),
                     () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
-                    () -> verifyNoMoreInteractions(userRepository),
-                    () -> verifyNoInteractions(securityContext),
-                    () -> verifyNoInteractions(authentication));
+                    () -> verifyNoMoreInteractions(userRepository));
         }
     }
 
@@ -353,12 +338,8 @@ class UserServiceTest {
                     .withProfile(userProfileExpectedAfterObjectMapping).withRoles(Set.of(roleExpected))
                     .build(ObjectType.DOCUMENT);
 
-            SecurityContextHolder.setContext(securityContext);
-
             when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
                     .thenReturn(Optional.of(userExpectedBeforeUpdate));
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getName()).thenReturn(userExpectedBeforeUpdate.getUsername());
             when(userRepository.save(userExpectedAfterPasswordEncodingAndSettingRoles)).thenReturn(userExpected);
 
             UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image);
@@ -405,10 +386,6 @@ class UserServiceTest {
                             .findByUsername(userExpectedBeforeUpdate.getUsername()),
                     () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
                     () -> verifyNoMoreInteractions(userRepository),
-                    () -> verify(securityContext, times(1)).getAuthentication(),
-                    () -> verifyNoMoreInteractions(securityContext),
-                    () -> verify(authentication, times(1)).getName(),
-                    () -> verifyNoMoreInteractions(authentication),
                     () -> verify(userMapper, times(1))
                             .convertDTOToDocument(userExpectedBeforeUpdate, userUpdateDTOExpected, image),
                     () -> verifyNoMoreInteractions(userMapper),
@@ -446,12 +423,8 @@ class UserServiceTest {
                     .withProfile(userProfileExpectedAfterObjectMapping).withRoles(Set.of(roleExpected))
                     .build(ObjectType.DOCUMENT);
 
-            SecurityContextHolder.setContext(securityContext);
-
             when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
                     .thenReturn(Optional.of(userExpectedBeforeUpdate));
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getName()).thenReturn(userExpectedBeforeUpdate.getUsername());
             when(userRepository.save(userExpectedAfterPasswordEncodingAndSettingRoles)).thenReturn(userExpected);
 
             UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image);
@@ -498,10 +471,6 @@ class UserServiceTest {
                             .findByUsername(userExpectedBeforeUpdate.getUsername()),
                     () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
                     () -> verifyNoMoreInteractions(userRepository),
-                    () -> verify(securityContext, times(1)).getAuthentication(),
-                    () -> verifyNoMoreInteractions(securityContext),
-                    () -> verify(authentication, times(1)).getName(),
-                    () -> verifyNoMoreInteractions(authentication),
                     () -> verify(userMapper, times(1))
                             .convertDTOToDocument(userExpectedBeforeUpdate, userUpdateDTOExpected, image),
                     () -> verifyNoMoreInteractions(userMapper),
@@ -539,12 +508,8 @@ class UserServiceTest {
                     .withProfile(userProfileExpectedAfterObjectMapping).withRoles(Set.of(roleExpected))
                     .build(ObjectType.DOCUMENT);
 
-            SecurityContextHolder.setContext(securityContext);
-
             when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
                     .thenReturn(Optional.of(userExpectedBeforeUpdate));
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getName()).thenReturn(userExpectedBeforeUpdate.getUsername());
             when(userRepository.save(userExpectedAfterPasswordEncodingAndSettingRoles)).thenReturn(userExpected);
 
             UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, null);
@@ -591,55 +556,9 @@ class UserServiceTest {
                             .findByUsername(userExpectedBeforeUpdate.getUsername()),
                     () -> verify(userRepository, times(1)).save(userExpectedAfterObjectMapping),
                     () -> verifyNoMoreInteractions(userRepository),
-                    () -> verify(securityContext, times(1)).getAuthentication(),
-                    () -> verifyNoMoreInteractions(securityContext),
-                    () -> verify(authentication, times(1)).getName(),
-                    () -> verifyNoMoreInteractions(authentication),
                     () -> verify(userMapper, times(1))
                             .convertDTOToDocument(userExpectedBeforeUpdate, userUpdateDTOExpected, null),
                     () -> verifyNoMoreInteractions(userMapper),
-                    () -> verifyNoInteractions(roleService));
-        }
-
-        @Test
-        @SneakyThrows
-        void when_update_some_other_user_should_throw_exception() {
-
-            UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.withAbout("new about")
-                    .withInterests("new interests").withLanguages("new languages").withLocation("new location")
-                    .withGender(Gender.FEMALE).build(ObjectType.UPDATE_DTO);
-            UserUpdateDTO userUpdateDTOExpected = (UserUpdateDTO) userTestBuilder.withUsername("validUser")
-                    .withEmail("validUser123@email.com").withPassword("ValidPassword123!")
-                    .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
-
-            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
-
-            UserProfileDocument userProfileExpectedBeforeUpdate = (UserProfileDocument) userProfileTestBuilder
-                    .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
-                    .build(ObjectType.DOCUMENT);
-            UserDocument userExpectedBeforeUpdate = (UserDocument) userTestBuilder.withUsername("previous username")
-                    .withEmail("prevoius@email.com").withPassword("oldPass123!").withProfile(userProfileExpectedBeforeUpdate)
-                    .build(ObjectType.DOCUMENT);
-
-            SecurityContextHolder.setContext(securityContext);
-
-            when(userRepository.findByUsername(userExpectedBeforeUpdate.getUsername()))
-                    .thenReturn(Optional.of(userExpectedBeforeUpdate));
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getName()).thenReturn("some other user");
-
-            assertAll(() -> assertThrows(ForbiddenException.class,
-                    () -> userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image),
-                    "should throw ForbiddenException but wasn't"),
-                    () -> verify(userRepository, times(1))
-                            .findByUsername(userExpectedBeforeUpdate.getUsername()),
-                    () -> verifyNoMoreInteractions(userRepository),
-                    () -> verify(securityContext, times(1)).getAuthentication(),
-                    () -> verifyNoMoreInteractions(securityContext),
-                    () -> verify(authentication, times(1)).getName(),
-                    () -> verifyNoMoreInteractions(authentication),
-                    () -> verifyNoInteractions(userMapper),
                     () -> verifyNoInteractions(roleService));
         }
 
@@ -658,8 +577,6 @@ class UserServiceTest {
 
             String notExistingUsername = "iAmNotExist";
 
-            SecurityContextHolder.setContext(securityContext);
-
             when(userRepository.findByUsername(notExistingUsername)).thenReturn(Optional.empty());
 
             assertAll(() -> assertThrows(ResourceNotFoundException.class,
@@ -667,8 +584,6 @@ class UserServiceTest {
                     "should throw ResourceNotFoundException but wasn't"),
                     () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
                     () -> verifyNoMoreInteractions(userRepository),
-                    () -> verifyNoInteractions(securityContext),
-                    () -> verifyNoInteractions(authentication),
                     () -> verifyNoInteractions(userMapper),
                     () -> verifyNoInteractions(roleService));
         }
@@ -689,51 +604,13 @@ class UserServiceTest {
             UserDocument userExpected = (UserDocument) userTestBuilder.withProfile(userProfileExpected)
                     .withRoles(Set.of(roleExpected)).build(ObjectType.DOCUMENT);
 
-            SecurityContextHolder.setContext(securityContext);
-
             when(userRepository.findByUsername(userExpected.getUsername())).thenReturn(Optional.of(userExpected));
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getName()).thenReturn(userExpected.getUsername());
 
             assertAll(() -> assertDoesNotThrow(() -> userService.deleteUser(userExpected.getUsername()),
                     "should not throw ResourceNotFoundException or NotAuthorizedException but was"),
                     () -> verify(userRepository, times(1)).findByUsername(userExpected.getUsername()),
                     () -> verify(userRepository, times(1)).delete(userExpected),
                     () -> verifyNoMoreInteractions(userRepository),
-                    () -> verify(securityContext, times(1)).getAuthentication(),
-                    () -> verifyNoMoreInteractions(securityContext),
-                    () -> verify(authentication, times(1)).getName(),
-                    () -> verifyNoMoreInteractions(authentication),
-                    () -> verifyNoInteractions(userMapper),
-                    () -> verifyNoInteractions(roleService));
-        }
-
-        @Test
-        @SneakyThrows
-        void when_delete_some_other_user_should_throw_exception() {
-
-            MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
-            UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder
-                    .withImage(image.getBytes()).build(ObjectType.DOCUMENT);
-            RoleDocument roleExpected = new RoleDocument(defaultUserRole);
-            UserDocument userExpected = (UserDocument) userTestBuilder.withProfile(userProfileExpected)
-                    .withRoles(Set.of(roleExpected)).build(ObjectType.DOCUMENT);
-
-            SecurityContextHolder.setContext(securityContext);
-
-            when(userRepository.findByUsername(userExpected.getUsername())).thenReturn(Optional.of(userExpected));
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getName()).thenReturn("some other user");
-
-            assertAll(() -> assertThrows(ForbiddenException.class,
-                    () -> userService.deleteUser(userExpected.getUsername()), "should throw ForbiddenException but wasn't"),
-                    () -> verify(userRepository, times(1)).findByUsername(userExpected.getUsername()),
-                    () -> verifyNoMoreInteractions(userRepository),
-                    () -> verify(securityContext, times(1)).getAuthentication(),
-                    () -> verifyNoMoreInteractions(securityContext),
-                    () -> verify(authentication, times(1)).getName(),
-                    () -> verifyNoMoreInteractions(authentication),
                     () -> verifyNoInteractions(userMapper),
                     () -> verifyNoInteractions(roleService));
         }
@@ -750,8 +627,6 @@ class UserServiceTest {
                     "should throw ResourceNotFoundException but wasn't"),
                     () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
                     () -> verifyNoMoreInteractions(userRepository),
-                    () -> verifyNoInteractions(securityContext),
-                    () -> verifyNoInteractions(authentication),
                     () -> verifyNoInteractions(userMapper),
                     () -> verifyNoInteractions(roleService));
         }

@@ -26,10 +26,10 @@ class UserObjectMapper {
     }
 
     private <T extends UserDTO> UserDTO returnDefaultValue(Class<T> clazz) {
-//        if (clazz == UserRegistrationDTO.class) {
-        return new UserRegistrationDTO();
-//        } else {
-//            return new UserUpdateDTO();
-//        }
+        if (clazz == UserRegistrationDTO.class) {
+            return new UserRegistrationDTO();
+        } else {
+            return new UserUpdateDTO();
+        }
     }
 }
