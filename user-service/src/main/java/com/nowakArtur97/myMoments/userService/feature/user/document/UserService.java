@@ -80,6 +80,18 @@ public class UserService {
         return userRepository.save(userDocument);
     }
 
+    public void deleteUser(String username) {
+
+        UserDocument userDocument = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username: '" + username + "' not found."));
+
+        if (isUserChangingOwnData(userDocument.getUsername())) {
+            userRepository.delete(userDocument);
+        } else {
+            throw new ForbiddenException("User can only delete his own account.");
+        }
+    }
+
     public boolean isUserChangingOwnData(String username) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

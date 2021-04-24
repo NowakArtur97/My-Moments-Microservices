@@ -5,7 +5,7 @@ spring:
   application:
     name: user-service
   profiles:
-    active: test
+    active: dev
 #
 # Eureka
 #
