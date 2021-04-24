@@ -5,7 +5,7 @@ spring:
   application:
     name: user-service
   profiles:
-    active: dev
+    active: ${SPRING_ACTIVE_PROFILE:dev}
 #
 # Eureka
 #

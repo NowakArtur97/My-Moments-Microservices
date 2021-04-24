@@ -17,7 +17,23 @@ services:
       - 8761:8761
     volumes:
       - /discovery-service/dir:/app
-  mongo-db:
+
+  user-service:
+    restart: on-failure
+    build: ./user-service
+    networks:
+      - my-moments
+    container_name: user-service
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - /user-service/dir:/app
+    depends_on:
+      - mongo-db-user-service
+
+  mongo-db-user-service:
     image: mongo:3.6
     ports:
       - 27017:27017
