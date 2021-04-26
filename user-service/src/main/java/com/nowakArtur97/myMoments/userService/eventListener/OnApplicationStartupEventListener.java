@@ -1,6 +1,6 @@
 package com.nowakArtur97.myMoments.userService.eventListener;
 
-import com.nowakArtur97.myMoments.userService.domain.document.*;
+import com.nowakArtur97.myMoments.userService.feature.document.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

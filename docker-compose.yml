@@ -27,7 +27,7 @@ services:
     ports:
       - 8081:8081
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=dev
     volumes:
       - /user-service/dir:/app
     depends_on:
@@ -37,6 +37,15 @@ services:
     image: mongo:3.6
     ports:
       - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - my-moments
+
+  mongo-db-post-service:
+    image: mongo:3.6
+    ports:
+      - 27019:27017
     volumes:
       - ./data/db:/data/db
     networks:

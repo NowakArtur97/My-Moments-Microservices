@@ -1,6 +1,6 @@
 package com.nowakArtur97.myMoments.userService.configuration.security;
 
-import com.nowakArtur97.myMoments.userService.domain.document.CustomUserDetailsService;
+import com.nowakArtur97.myMoments.userService.feature.document.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
