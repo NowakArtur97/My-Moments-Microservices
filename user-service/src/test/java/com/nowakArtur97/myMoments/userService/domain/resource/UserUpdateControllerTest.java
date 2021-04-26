@@ -5,7 +5,6 @@ import com.nowakArtur97.myMoments.userService.domain.document.*;
 import com.nowakArtur97.myMoments.userService.domain.testBuilder.UserProfileTestBuilder;
 import com.nowakArtur97.myMoments.userService.domain.testBuilder.UserTestBuilder;
 import com.nowakArtur97.myMoments.userService.exception.RoleNotFoundException;
-import com.nowakArtur97.myMoments.userService.feature.user.document.*;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.userService.testUtil.generator.NameWithSpacesGenerator;
 import com.nowakArtur97.myMoments.userService.testUtil.mapper.ObjectTestMapper;

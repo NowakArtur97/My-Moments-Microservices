@@ -4,7 +4,6 @@ import com.nowakArtur97.myMoments.userService.advice.AuthenticationControllerAdv
 import com.nowakArtur97.myMoments.userService.advice.GlobalResponseEntityExceptionHandler;
 import com.nowakArtur97.myMoments.userService.common.util.JwtUtil;
 import com.nowakArtur97.myMoments.userService.domain.document.CustomUserDetailsService;
-import com.nowakArtur97.myMoments.userService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.domain.document.UserService;
 import com.nowakArtur97.myMoments.userService.testUtil.generator.NameWithSpacesGenerator;
@@ -109,33 +108,6 @@ class UserDeleteControllerTest {
                         .andExpect(jsonPath("timestamp").isNotEmpty())
                         .andExpect(jsonPath("status", is(404)))
                         .andExpect(jsonPath("errors[0]", is("User with username: '" + username + "' not found.")))
-                        .andExpect(jsonPath("errors", hasSize(1))),
-                () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(header),
-                () -> verifyNoMoreInteractions(jwtUtil),
-                () -> verify(userService, times(1)).deleteUser(username),
-                () -> verifyNoMoreInteractions(userService),
-                () -> verifyNoInteractions(customUserDetailsService),
-                () -> verifyNoInteractions(userObjectMapper),
-                () -> verifyNoInteractions(modelMapper));
-    }
-
-    @Test
-    void when_delete_not_owned_account_should_return_error_response() {
-
-        String header = "Bearer token";
-        String username = "username";
-
-        when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
-        doThrow(new ForbiddenException("User can only delete his own account.")).when(userService).deleteUser(username);
-
-        assertAll(
-                () -> mockMvc.perform(delete(USER_BASE_PATH)
-                        .header("Authorization", header))
-                        .andExpect(status().isForbidden())
-                        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("timestamp").isNotEmpty())
-                        .andExpect(jsonPath("status", is(403)))
-                        .andExpect(jsonPath("errors[0]", is("User can only delete his own account.")))
                         .andExpect(jsonPath("errors", hasSize(1))),
                 () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(header),
                 () -> verifyNoMoreInteractions(jwtUtil),

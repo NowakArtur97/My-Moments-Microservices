@@ -1,7 +1,6 @@
 package com.nowakArtur97.myMoments.userService.domain.resource;
 
 import com.nowakArtur97.myMoments.userService.domain.validation.*;
-import com.nowakArtur97.myMoments.userService.feature.user.validation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
