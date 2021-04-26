@@ -9,10 +9,10 @@ import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/v1/posts")
-public class PostController {
+class PostController {
 
     @GetMapping
-    public Flux<Integer> getFlux() {
+    Flux<Integer> getFlux() {
 
         return Flux.just(1, 2, 3, 4)
                 .delayElements(Duration.ofSeconds(1))
