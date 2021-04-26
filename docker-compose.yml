@@ -31,6 +31,7 @@ services:
     volumes:
       - /user-service/dir:/app
     depends_on:
+      - discovery-service
       - mongo-db-user-service
 
   mongo-db-user-service:
@@ -38,7 +39,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./data/db:/data/db
+      - /var/lib/mongo-db-uesr-service:/data/db
     networks:
       - my-moments
 
@@ -47,6 +48,6 @@ services:
     ports:
       - 27019:27017
     volumes:
-      - ./data/db:/data/db
+      - /var/lib/mongo-db-post-service:/data/db
     networks:
       - my-moments
