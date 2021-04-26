@@ -1,0 +1,12 @@
+#
+# Spring
+#
+spring:
+  #
+  # Mongo DB
+  #
+  data:
+    mongodb:
+      database: my-moments-post-service
+      host: 192.168.99.100
+      port: 27017
