@@ -8,5 +8,12 @@ spring:
   data:
     mongodb:
       database: my-moments-user-service
-      host: 192.168.99.100
+      host: localhost
       port: 27017
+#
+# Eureka
+#
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

@@ -3,7 +3,7 @@ version: '3.7'
 networks:
   my-moments:
     driver: bridge
-    external: false
+#    external: false
     name: my-moments
 
 services:
