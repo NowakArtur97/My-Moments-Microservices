@@ -14,8 +14,8 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @EnableReactiveMongoRepositories
 class MultipleMongoDatabasesConfig {
 
-    @Primary
     @Bean(name = "postsMongoDatabaseProperties")
+    @Primary
     @ConfigurationProperties(prefix = "my-moments.data.mongodb.posts")
     MongoProperties getPostsDatabaseProperties() {
         return new MongoProperties();
@@ -27,8 +27,8 @@ class MultipleMongoDatabasesConfig {
         return new MongoProperties();
     }
 
-    @Primary
     @Bean(name = "postsMongoTemplate")
+    @Primary
     ReactiveMongoTemplate getPostsDatabaseMongoTemplate() {
         return new ReactiveMongoTemplate(getPostsDatabaseFactory(getPostsDatabaseProperties()));
     }

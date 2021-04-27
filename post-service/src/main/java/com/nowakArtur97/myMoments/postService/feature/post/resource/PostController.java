@@ -1,21 +1,35 @@
 package com.nowakArtur97.myMoments.postService.feature.post.resource;
 
+import com.nowakArtur97.myMoments.postService.feature.post.document.PostDocument;
+import com.nowakArtur97.myMoments.postService.feature.post.document.PostRepository;
+import com.nowakArtur97.myMoments.postService.feature.user.document.UserDocument;
+import com.nowakArtur97.myMoments.postService.feature.user.document.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
-
-import java.time.Duration;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/posts")
 class PostController {
 
-    @GetMapping
-    Flux<Integer> getFlux() {
+    @Autowired
+    private UserRepository userRepository;
 
-        return Flux.just(1, 2, 3, 4)
-                .delayElements(Duration.ofSeconds(1))
-                .log();
+    @Autowired
+    private PostRepository postRepository;
+
+    @GetMapping("/user")
+    Mono<UserDocument> getFlux() {
+
+        return userRepository.findByUsername("user");
+    }
+
+    @GetMapping("/posts")
+    Flux<PostDocument> getFlux2() {
+
+        return postRepository.findByUsername("user");
     }
 }

@@ -1,16 +1,18 @@
 package com.nowakArtur97.myMoments.postService.feature.post.document;
 
 import com.nowakArtur97.myMoments.postService.common.document.AbstractDocument;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "post")
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-class PostDocument extends AbstractDocument {
+public class PostDocument extends AbstractDocument {
 
     private String caption;
 

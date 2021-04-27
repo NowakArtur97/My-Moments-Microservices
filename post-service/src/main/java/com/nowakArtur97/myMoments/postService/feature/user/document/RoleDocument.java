@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Getter
 @ToString
-public class RoleDocument extends AbstractDocument {
+class RoleDocument extends AbstractDocument {
 
     @Indexed(unique = true)
     private final String name;
