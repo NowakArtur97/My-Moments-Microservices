@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RestControllerAdvice(basePackages = "com.nowakArtur97.myMoments.postService.feature")
+@RestControllerAdvice
 public class AuthenticationControllerAdvice {
 
     @ExceptionHandler({BadCredentialsException.class})

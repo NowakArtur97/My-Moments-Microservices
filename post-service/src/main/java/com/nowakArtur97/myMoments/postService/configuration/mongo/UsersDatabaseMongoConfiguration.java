@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.configuration;
+package com.nowakArtur97.myMoments.postService.configuration.mongo;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;

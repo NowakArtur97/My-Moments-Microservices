@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.configuration;
+package com.nowakArtur97.myMoments.postService.configuration.mongo;
 
 import com.mongodb.reactivestreams.client.MongoClients;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
