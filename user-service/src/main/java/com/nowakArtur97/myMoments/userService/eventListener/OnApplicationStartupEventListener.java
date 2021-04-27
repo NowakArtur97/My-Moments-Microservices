@@ -8,6 +8,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,28 +35,36 @@ class OnApplicationStartupEventListener {
         saveDefaultUser("user", "I am a user", Gender.MALE, "I like cats",
                 "Polish and English", "Poland", "user@email.com",
                 "$2y$10$55xnu/C0hSlu870m8.n3D.MlNdjYE4Y0X8DIhj7.m89zwSJQllFqy",
-                defaultUserRole);
+                List.of(defaultUserRole));
         saveDefaultUser("admin", "I am a admin", Gender.FEMALE, "I like alpacas",
                 "Polish and Japanese", "Japan", "admin@email.com",
                 "$2y$10$vU366Dmp7ZsASly4kHF0NuCbibOnLEom9W.ocPPTSIfloWUbvnM/e",
-                adminRole);
+                List.of(defaultUserRole, adminRole));
 
     }
 
     private void saveDefaultUser(String username, String about, Gender gender, String interests, String languages,
-                                 String location, String email, String password, String role) {
+                                 String location, String email, String password, List<String> roles) {
 
-        Optional<RoleDocument> userRoleDocumentOptional = roleRepository.findByName(role);
 
-        RoleDocument userRoleDocument = userRoleDocumentOptional.orElseGet(() -> new RoleDocument(role));
+        Set<RoleDocument> userRolesDocuments = new HashSet<>();
 
-        if (userRoleDocumentOptional.isEmpty()) {
-            roleRepository.save(userRoleDocument);
-        }
+        roles.forEach(role -> {
+
+            Optional<RoleDocument> userRoleDocumentOptional = roleRepository.findByName(role);
+
+            RoleDocument userRoleDocument = userRoleDocumentOptional.orElseGet(() -> new RoleDocument(role));
+
+            if (userRoleDocumentOptional.isEmpty()) {
+                roleRepository.save(userRoleDocument);
+            }
+
+            userRolesDocuments.add(userRoleDocument);
+        });
 
         UserProfileDocument userProfileDocument = new UserProfileDocument(about, gender, interests,
                 languages, location, null);
-        UserDocument userDocument = new UserDocument(username, email, password, userProfileDocument, Set.of(userRoleDocument));
+        UserDocument userDocument = new UserDocument(username, email, password, userProfileDocument, userRolesDocuments);
 
         if (!userRepository.existsUserByUsername(username)) {
             userRepository.save(userDocument);

@@ -1,7 +1,4 @@
-#
-# Custom properties
-#
-my-moments:
+spring:
   #
   # Mongo DB
   #
@@ -9,11 +6,7 @@ my-moments:
     mongodb:
       posts:
         database: my-moments-post-service
-#        host: 192.168.99.100
-#        port: 27019
         uri: mongodb://192.168.99.100:27019/mongo-db-post-service
       users:
         database: my-moments-user-service
-#        host: 192.168.99.100
-#        port: 27017
         uri: mongodb://192.168.99.100:27017/mongo-db-user-service

@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,10 +24,8 @@ public class UserDocument extends AbstractDocument implements User {
 
     private String password;
 
-    @Field("profile")
     private UserProfileDocument profile;
 
-    @DBRef
     private Set<RoleDocument> roles;
 
     public void addRole(RoleDocument role) {

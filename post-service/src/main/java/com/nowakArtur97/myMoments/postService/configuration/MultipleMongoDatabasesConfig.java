@@ -16,13 +16,13 @@ class MultipleMongoDatabasesConfig {
 
     @Bean(name = "postsMongoDatabaseProperties")
     @Primary
-    @ConfigurationProperties(prefix = "my-moments.data.mongodb.posts")
+    @ConfigurationProperties(prefix = "spring.data.mongodb.posts")
     MongoProperties getPostsDatabaseProperties() {
         return new MongoProperties();
     }
 
     @Bean(name = "usersMongoDatabaseProperties")
-    @ConfigurationProperties(prefix = "my-moments.data.mongodb.users")
+    @ConfigurationProperties(prefix = "spring.data.mongodb.users")
     MongoProperties getUsersDatabaseProperties() {
         return new MongoProperties();
     }
