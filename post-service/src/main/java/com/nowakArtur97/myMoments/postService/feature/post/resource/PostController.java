@@ -24,7 +24,7 @@ class PostController {
     @GetMapping("/user")
     Mono<UserDocument> getFlux() {
 
-        return userRepository.findByUsername("user");
+        return userRepository.findByUsernameOrEmail("user", "user");
     }
 
     @GetMapping("/posts")
