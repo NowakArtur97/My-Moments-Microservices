@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.postService.configuration.security;
 
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
-import com.nowakArtur97.myMoments.postService.feature.user.document.UserRepository;
+import com.nowakArtur97.myMoments.postService.feature.user.document.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,14 +21,14 @@ class CustomReactiveAuthenticationManager implements ReactiveAuthenticationManag
 
     private final JwtUtil jwtUtil;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
 
         String usernameOrEmail = authentication.getCredentials().toString();
 
-        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        return userService.findByUsernameOrEmail(usernameOrEmail)
                 .switchIfEmpty(Mono.error(() ->
                         new UsernameNotFoundException("User with name/email: '" + usernameOrEmail + "' not found.")))
                 .map(userDocument -> new User(userDocument.getUsername(), userDocument.getPassword(),

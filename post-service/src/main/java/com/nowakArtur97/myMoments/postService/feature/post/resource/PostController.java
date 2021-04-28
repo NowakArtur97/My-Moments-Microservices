@@ -3,9 +3,8 @@ package com.nowakArtur97.myMoments.postService.feature.post.resource;
 import com.nowakArtur97.myMoments.postService.feature.post.document.PostDocument;
 import com.nowakArtur97.myMoments.postService.feature.post.document.PostRepository;
 import com.nowakArtur97.myMoments.postService.feature.user.document.UserDocument;
-import com.nowakArtur97.myMoments.postService.feature.user.document.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.nowakArtur97.myMoments.postService.feature.user.document.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,19 +14,18 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/posts")
+@RequiredArgsConstructor
 class PostController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('USER_ROLE')")
     Mono<UserDocument> getFlux() {
 
-        return userRepository.findByUsernameOrEmail("user", "user");
+        return userService.findByUsernameOrEmail("user");
     }
 
     @GetMapping("/posts")
