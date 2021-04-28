@@ -42,6 +42,7 @@ class CustomServerSecurityContextRepository implements ServerSecurityContextRepo
 
             jwt = authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength());
             username = jwtUtil.extractUsername(jwt);
+
         } else {
             throw new JwtTokenMissingException("JWT token is missing in request headers.");
         }
