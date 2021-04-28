@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,5 +78,22 @@ public class JwtUtil {
     private boolean isTokenExpired(String token) {
 
         return extractExpirationDate(token).before(new Date(System.currentTimeMillis()));
+    }
+
+    public boolean isBearerTypeAuthorization(String authorizationHeader) {
+
+        return authorizationHeader != null && authorizationHeader.startsWith(jwtConfigurationProperties.getAuthorizationType());
+    }
+
+    public String getJwtFromHeader(String authorizationHeader) {
+
+        return authorizationHeader != null
+                ? authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength())
+                : "";
+    }
+
+    public String getAuthorizationHeader(HttpServletRequest request) {
+
+        return request.getHeader(jwtConfigurationProperties.getAuthorizationHeader());
     }
 }

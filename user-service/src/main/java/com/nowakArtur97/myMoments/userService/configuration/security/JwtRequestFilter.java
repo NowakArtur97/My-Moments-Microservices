@@ -33,14 +33,14 @@ class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader(jwtConfigurationProperties.getAuthorizationHeader());
+        String authorizationHeader = jwtUtil.getAuthorizationHeader(request);
 
         String username;
         String jwt;
 
-        if (isBearerTypeAuthorization(authorizationHeader)) {
+        if (jwtUtil.isBearerTypeAuthorization(authorizationHeader)) {
 
-            jwt = authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength());
+            jwt = jwtUtil.getJwtFromHeader(authorizationHeader);
             username = jwtUtil.extractUsername(jwt);
         } else {
             throw new JwtTokenMissingException("JWT token is missing in request headers.");
@@ -70,10 +70,5 @@ class JwtRequestFilter extends OncePerRequestFilter {
         String path = request.getRequestURI().substring(request.getContextPath().length());
 
         return jwtConfigurationProperties.getIgnoredEndpoints().stream().anyMatch(path::contains);
-    }
-
-    private boolean isBearerTypeAuthorization(String authorizationHeader) {
-
-        return authorizationHeader != null && authorizationHeader.startsWith(jwtConfigurationProperties.getAuthorizationType());
     }
 }
