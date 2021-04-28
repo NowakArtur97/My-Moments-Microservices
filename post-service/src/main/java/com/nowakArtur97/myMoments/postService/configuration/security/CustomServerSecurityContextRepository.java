@@ -20,8 +20,6 @@ class CustomServerSecurityContextRepository implements ServerSecurityContextRepo
 
     private final JwtUtil jwtUtil;
 
-    private final JwtConfigurationProperties jwtConfigurationProperties;
-
     private final CustomReactiveAuthenticationManager customReactiveAuthenticationManager;
 
     @Override
@@ -35,30 +33,25 @@ class CustomServerSecurityContextRepository implements ServerSecurityContextRepo
         ServerHttpRequest request = serverWebExchange.getRequest();
         String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        String username;
+        String usernameOrEmail;
         String jwt;
 
-        if (isBearerTypeAuthorization(authorizationHeader)) {
+        if (jwtUtil.isBearerTypeAuthorization(authorizationHeader)) {
 
-            jwt = authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength());
-            username = jwtUtil.extractUsername(jwt);
+            jwt = jwtUtil.getJwtFromHeader(authorizationHeader);
+            usernameOrEmail = jwtUtil.extractUsername(jwt);
 
         } else {
             throw new JwtTokenMissingException("JWT token is missing in request headers.");
         }
 
-        if (username != null) {
+        if (usernameOrEmail != null) {
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(jwt, username);
+            Authentication auth = new UsernamePasswordAuthenticationToken(jwt, usernameOrEmail);
 
             return customReactiveAuthenticationManager.authenticate(auth).map(SecurityContextImpl::new);
         }
 
         return Mono.empty();
-    }
-
-    private boolean isBearerTypeAuthorization(String authorizationHeader) {
-
-        return authorizationHeader != null && authorizationHeader.startsWith(jwtConfigurationProperties.getAuthorizationType());
     }
 }

@@ -25,9 +25,9 @@ class CustomReactiveAuthenticationManager implements ReactiveAuthenticationManag
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
 
-        String username = authentication.getCredentials().toString();
+        String usernameOrEmail = authentication.getCredentials().toString();
 
-        return userRepository.findByUsernameOrEmail(username, username)
+        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .map(userDocument -> new User(userDocument.getUsername(), userDocument.getPassword(),
                         userDocument.getRoles().stream()
                                 .map(roleDocument -> new SimpleGrantedAuthority(roleDocument.getName()))

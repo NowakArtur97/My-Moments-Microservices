@@ -3,15 +3,12 @@ package com.nowakArtur97.myMoments.postService.common.util;
 import com.nowakArtur97.myMoments.postService.configuration.security.JwtConfigurationProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -20,13 +17,6 @@ import java.util.function.Function;
 public class JwtUtil {
 
     private final JwtConfigurationProperties jwtConfigurationProperties;
-
-    public String generateToken(UserDetails userDetails) {
-
-        Map<String, Object> claims = new HashMap<>();
-
-        return createToken(userDetails.getUsername(), claims);
-    }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
 
@@ -62,19 +52,20 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(jwtConfigurationProperties.getSecretKey()).parseClaimsJws(token).getBody();
     }
 
-    private String createToken(String subject, Map<String, Object> claims) {
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtConfigurationProperties.getValidity()))
-                .signWith(SignatureAlgorithm.HS256, jwtConfigurationProperties.getSecretKey())
-                .compact();
-    }
-
     private boolean isTokenExpired(String token) {
 
         return extractExpirationDate(token).before(new Date(System.currentTimeMillis()));
+    }
+
+    public boolean isBearerTypeAuthorization(String authorizationHeader) {
+
+        return authorizationHeader != null && authorizationHeader.startsWith(jwtConfigurationProperties.getAuthorizationType());
+    }
+
+    public String getJwtFromHeader(String authorizationHeader) {
+
+        return authorizationHeader != null
+                ? authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength())
+                : "";
     }
 }
