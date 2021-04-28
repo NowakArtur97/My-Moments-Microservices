@@ -6,6 +6,7 @@ import com.nowakArtur97.myMoments.userService.exception.JwtTokenMissingException
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -48,7 +49,7 @@ class ExceptionHandlerFilter extends OncePerRequestFilter {
     private void setErrorResponse(HttpStatus status, HttpServletResponse response, Throwable exception) {
 
         response.setStatus(status.value());
-        response.setContentType("application/json");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), status.value(), List.of(exception.getMessage()));
 

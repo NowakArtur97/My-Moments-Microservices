@@ -16,11 +16,11 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @RequiredArgsConstructor
 class WebSecurityConfiguration {
 
-    private final JwtConfigurationProperties jwtConfigurationProperties;
-
     private final CustomReactiveAuthenticationManager customReactiveAuthenticationManager;
 
     private final CustomServerSecurityContextRepository customServerSecurityContextRepository;
+
+    private final JwtConfigurationProperties jwtConfigurationProperties;
 
     @Bean
     SecurityWebFilterChain getSecurityWebFilterChain(ServerHttpSecurity httpSecurity) {

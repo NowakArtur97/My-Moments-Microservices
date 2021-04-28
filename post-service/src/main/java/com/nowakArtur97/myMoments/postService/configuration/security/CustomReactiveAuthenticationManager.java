@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -28,6 +29,8 @@ class CustomReactiveAuthenticationManager implements ReactiveAuthenticationManag
         String usernameOrEmail = authentication.getCredentials().toString();
 
         return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+                .switchIfEmpty(Mono.error(() ->
+                        new UsernameNotFoundException("User with name/email: '" + usernameOrEmail + "' not found.")))
                 .map(userDocument -> new User(userDocument.getUsername(), userDocument.getPassword(),
                         userDocument.getRoles().stream()
                                 .map(roleDocument -> new SimpleGrantedAuthority(roleDocument.getName()))
