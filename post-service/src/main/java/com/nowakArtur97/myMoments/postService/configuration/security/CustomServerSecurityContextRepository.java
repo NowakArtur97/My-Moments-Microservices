@@ -22,6 +22,8 @@ class CustomServerSecurityContextRepository implements ServerSecurityContextRepo
 
     private final CustomReactiveAuthenticationManager customReactiveAuthenticationManager;
 
+    private final JwtConfigurationProperties jwtConfigurationProperties;
+
     @Override
     public Mono<Void> save(ServerWebExchange serverWebExchange, SecurityContext securityContext) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -31,6 +33,14 @@ class CustomServerSecurityContextRepository implements ServerSecurityContextRepo
     public Mono<SecurityContext> load(ServerWebExchange serverWebExchange) {
 
         ServerHttpRequest request = serverWebExchange.getRequest();
+
+        String path = request.getURI().getPath();
+
+        if (jwtConfigurationProperties.getIgnoredEndpoints().stream().anyMatch(path::contains)) {
+
+            return Mono.empty();
+        }
+
         String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         String usernameOrEmail;
