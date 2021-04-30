@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
 @EnableWebFluxSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 @EnableConfigurationProperties(value = JwtConfigurationProperties.class)
 @RequiredArgsConstructor
 class WebSecurityConfiguration {

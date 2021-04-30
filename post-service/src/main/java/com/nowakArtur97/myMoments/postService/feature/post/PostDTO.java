@@ -3,7 +3,7 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.codec.multipart.FilePart;
 
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -23,5 +23,5 @@ class PostDTO implements Post {
     @NotEmptyMultipartList(message = "{post.photos.notEmpty}")
     @Size(min = 1, max = 10, message = "{post.photos.size}")
     @ApiModelProperty(notes = "The post's photos")
-    private List<MultipartFile> photos;
+    private List<FilePart> photos;
 }
