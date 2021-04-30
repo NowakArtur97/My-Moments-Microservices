@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebExceptionHandler;
 import reactor.core.publisher.Flux;
@@ -43,6 +44,10 @@ class RestWebExceptionHandler implements WebExceptionHandler {
         } else if (exception instanceof JwtException) {
 
             return setErrorResponse(HttpStatus.BAD_REQUEST, serverWebExchange, exception);
+
+        } else if (exception instanceof ResponseStatusException) {
+
+            return setErrorResponse(((ResponseStatusException) exception).getStatus(), serverWebExchange, exception);
 
         } else {
 
