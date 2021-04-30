@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.feature.post.resource;
+package com.nowakArtur97.myMoments.postService.feature.post;
 
 public final class PostTag {
 

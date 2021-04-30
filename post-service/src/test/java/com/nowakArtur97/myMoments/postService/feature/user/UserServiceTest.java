@@ -1,7 +1,6 @@
-package com.nowakArtur97.myMoments.postService.feature.user.document;
+package com.nowakArtur97.myMoments.postService.feature.user;
 
 
-import com.nowakArtur97.myMoments.postService.feature.user.testBuilder.UserTestBuilder;
 import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

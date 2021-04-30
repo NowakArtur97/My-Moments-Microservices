@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.postService.configuration.security;
 
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
-import com.nowakArtur97.myMoments.postService.feature.user.document.UserService;
+import com.nowakArtur97.myMoments.postService.feature.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

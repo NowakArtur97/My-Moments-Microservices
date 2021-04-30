@@ -1,22 +1,21 @@
-package com.nowakArtur97.myMoments.postService.feature.user.testBuilder;
+package com.nowakArtur97.myMoments.postService.feature.user;
 
 import com.nowakArtur97.myMoments.postService.enums.ObjectType;
-import com.nowakArtur97.myMoments.postService.feature.user.document.RoleDocument;
 
-public class RoleTestBuilder {
+class RoleTestBuilder {
 
-    public static RoleDocument DEFAULT_ROLE_ENTITY = new RoleDocument("USER_ROLE");
+    static RoleDocument DEFAULT_ROLE_ENTITY = new RoleDocument("USER_ROLE");
 
     private String name = "role";
 
-    public RoleTestBuilder withName(String name) {
+    RoleTestBuilder withName(String name) {
 
         this.name = name;
 
         return this;
     }
 
-    public RoleDocument build(ObjectType type) {
+    RoleDocument build(ObjectType type) {
 
         RoleDocument role;
 

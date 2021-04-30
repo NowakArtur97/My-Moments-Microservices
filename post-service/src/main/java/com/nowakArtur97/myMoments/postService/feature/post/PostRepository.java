@@ -1,9 +1,9 @@
-package com.nowakArtur97.myMoments.postService.feature.post.document;
+package com.nowakArtur97.myMoments.postService.feature.post;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
 
-public interface PostRepository extends ReactiveMongoRepository<PostDocument, String> {
+interface PostRepository extends ReactiveMongoRepository<PostDocument, String> {
 
     Flux<PostDocument> findByUsername(String username);
 }

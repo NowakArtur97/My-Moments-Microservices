@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.feature.user.document;
+package com.nowakArtur97.myMoments.postService.feature.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
