@@ -22,7 +22,6 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-
     private static UserTestBuilder userTestBuilder;
 
     @BeforeAll
@@ -71,7 +70,7 @@ class UserServiceTest {
                                     () -> verifyNoMoreInteractions(userRepository));
                             return true;
                         }
-                );
+                ).verifyComplete();
     }
 
     @Test
@@ -94,6 +93,6 @@ class UserServiceTest {
                                     () -> verifyNoMoreInteractions(userRepository));
                             return true;
                         }
-                );
+                ).verifyComplete();
     }
 }

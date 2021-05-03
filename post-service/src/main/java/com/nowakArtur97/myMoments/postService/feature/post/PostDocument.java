@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-class PostDocument extends AbstractDocument {
+class PostDocument extends AbstractDocument implements Post {
 
     private String caption;
 
