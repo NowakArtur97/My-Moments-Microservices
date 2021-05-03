@@ -28,27 +28,31 @@ class PostObjectMapper {
                     DataBufferUtils.release(dataBuffer);
                     return new Binary(BsonBinarySubType.BINARY, bytes);
                 }).collectList())
-                .map(images -> {
-                    if (postAsString == null) {
-
-                        return new PostDTO("", images);
-
-                    } else {
-                        try {
-                            PostDTO postDTO = objectMapper.readValue(postAsString, PostDTO.class);
-
-                            if (postDTO.getCaption() == null) {
-                                postDTO.setCaption("");
-                            }
-                            postDTO.setPhotos(images);
-
-                            return postDTO;
-
-                        } catch (JsonProcessingException e) {
-                            return new PostDTO("", images);
-                        }
-                    }
-                }).switchIfEmpty(Mono.just(new PostDTO("", Collections.emptyList())))
+                .map(images ->
+                        getPostDTO(postAsString, images)
+                ).switchIfEmpty(Mono.just(getPostDTO(postAsString, Collections.emptyList())))
                 .next();
+    }
+
+    private PostDTO getPostDTO(String postAsString, java.util.List<Binary> images) {
+        if (postAsString == null) {
+
+            return new PostDTO("", images);
+
+        } else {
+            try {
+                PostDTO postDTO = objectMapper.readValue(postAsString, PostDTO.class);
+
+                if (postDTO.getCaption() == null) {
+                    postDTO.setCaption("");
+                }
+                postDTO.setPhotos(images);
+
+                return postDTO;
+
+            } catch (JsonProcessingException e) {
+                return new PostDTO("", images);
+            }
+        }
     }
 }
