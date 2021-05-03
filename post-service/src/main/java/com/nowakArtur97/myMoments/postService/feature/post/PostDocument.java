@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.http.codec.multipart.FilePart;
 
 import java.util.List;
 
@@ -22,5 +21,5 @@ class PostDocument extends AbstractDocument {
 
     private String author;
 
-    private List<FilePart> photos;
+    private List<Binary> photos;
 }

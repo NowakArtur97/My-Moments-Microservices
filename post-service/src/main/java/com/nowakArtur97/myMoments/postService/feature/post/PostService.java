@@ -16,8 +16,6 @@ class PostService {
 
     Mono<PostDocument> createPost(@Valid PostDTO postDTO, String username) {
 
-        PostDocument postDocument = new PostDocument(postDTO.getCaption(), username, postDTO.getPhotos());
-
-        return postRepository.save(postDocument);
+        return postRepository.save(new PostDocument(postDTO.getCaption(), username, postDTO.getPhotos()));
     }
 }

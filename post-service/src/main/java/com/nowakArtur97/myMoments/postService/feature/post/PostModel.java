@@ -6,10 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bson.types.Binary;
-import org.springframework.http.codec.multipart.FilePart;
 
-import java.util.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -26,15 +24,6 @@ class PostModel implements Post {
 
     @ApiModelProperty(notes = "The post's author")
     private String author;
-
-    @ToString.Exclude
-    @ApiModelProperty(notes = "The post's photos")
-    private final List<FilePart> photos;
-
-    PostModel() {
-
-        photos = new ArrayList<>();
-    }
 
     @Override
     public boolean equals(Object o) {

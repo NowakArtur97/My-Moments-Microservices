@@ -1,15 +1,15 @@
 package com.nowakArtur97.myMoments.postService.feature.post;
 
-import org.springframework.http.codec.multipart.FilePart;
+import org.bson.types.Binary;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-class NotEmptyMultipartListConstraintValidator implements ConstraintValidator<NotEmptyMultipartList, List<FilePart>> {
+class NotEmptyMultipartListConstraintValidator implements ConstraintValidator<NotEmptyMultipartList, List<Binary>> {
 
     @Override
-    public boolean isValid(List<FilePart> files, ConstraintValidatorContext context) {
+    public boolean isValid(List<Binary> files, ConstraintValidatorContext context) {
 
         return files != null && !files.isEmpty();
     }
