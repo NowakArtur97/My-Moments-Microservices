@@ -20,7 +20,6 @@ class PostDTO implements Post {
     @ApiModelProperty(notes = "The post's caption")
     private String caption;
 
-    @NotEmptyMultipartList(message = "{post.photos.notEmpty}")
     @Size(min = 1, max = 10, message = "{post.photos.size}")
     @ApiModelProperty(notes = "The post's photos")
     private List<Binary> photos;

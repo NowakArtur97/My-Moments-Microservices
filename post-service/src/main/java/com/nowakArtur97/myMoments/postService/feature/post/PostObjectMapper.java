@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ class PostObjectMapper {
                 .switchIfEmpty(Mono.just(getPostDTO(postAsString, Collections.emptyList())));
     }
 
-    private PostDTO getPostDTO(String postAsString, java.util.List<Binary> images) {
+    private PostDTO getPostDTO(String postAsString, List<Binary> images) {
         if (postAsString == null) {
 
             return new PostDTO("", images);
