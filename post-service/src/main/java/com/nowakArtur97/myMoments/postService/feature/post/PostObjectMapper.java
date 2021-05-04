@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -22,16 +21,12 @@ class PostObjectMapper {
     public Mono<PostDTO> getPostDTOFromString(String postAsString, Flux<FilePart> photos) {
 
         return photos.flatMap(filePart ->
-                filePart.content().map(dataBuffer -> {
-                    byte[] bytes = new byte[dataBuffer.readableByteCount()];
-                    dataBuffer.read(bytes);
-                    DataBufferUtils.release(dataBuffer);
-                    return new Binary(BsonBinarySubType.BINARY, bytes);
-                }).collectList())
+                filePart.content().map(dataBuffer ->
+                        new Binary(BsonBinarySubType.BINARY, new byte[dataBuffer.readableByteCount()])))
+                .collectList()
                 .map(images ->
-                        getPostDTO(postAsString, images)
-                ).switchIfEmpty(Mono.just(getPostDTO(postAsString, Collections.emptyList())))
-                .next();
+                        getPostDTO(postAsString, images))
+                .switchIfEmpty(Mono.just(getPostDTO(postAsString, Collections.emptyList())));
     }
 
     private PostDTO getPostDTO(String postAsString, java.util.List<Binary> images) {
