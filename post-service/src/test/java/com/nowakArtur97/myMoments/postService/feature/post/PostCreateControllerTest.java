@@ -27,16 +27,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayNameGeneration(NameWithSpacesGenerator.class)
 @Tag("PostController_Tests")
 class PostCreateControllerTest {
 
     @LocalServerPort
     private int serverPort;
-
-    @Value("${my-moments.default-user-role:USER_ROLE}")
-    private String defaultUserRole;
 
     private String POSTS_BASE_PATH;
 
@@ -65,7 +62,7 @@ class PostCreateControllerTest {
                 .build();
 
         token = jwtUtil.generateToken(new User("user", "user",
-                List.of(new SimpleGrantedAuthority(defaultUserRole))));
+                List.of(new SimpleGrantedAuthority("USER_ROLE"))));
 
         POSTS_BASE_PATH = "http://localhost:" + serverPort + "/api/v1/posts";
     }
