@@ -37,7 +37,64 @@ class UserServiceTest {
     }
 
     @Test
-    void when_user_exists_and_find_user_by_username_should_return_user() {
+    void when_find_existing_user_by_username_should_return_user() {
+
+        UserDocument userExpected = userTestBuilder.build();
+
+        when(userRepository.findByUsername(userExpected.getUsername())).thenReturn(Mono.just(userExpected));
+
+        Mono<UserDocument> userActualMono = userService.findByUsername(userExpected.getUsername());
+
+        StepVerifier.create(userActualMono)
+                .thenConsumeWhile(
+                        userActual -> {
+                            assertAll(() -> assertNotNull(userActual,
+                                    () -> "should return user: " + userExpected + ", but was: " + userActual),
+                                    () -> assertEquals(userExpected, userActual,
+                                            () -> "should return user: " + userExpected + ", but was: " + userActual),
+                                    () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
+                                            () -> "should return user with username: " + userExpected.getUsername() + ", but was: "
+                                                    + userActual.getUsername()),
+                                    () -> assertEquals(userExpected.getPassword(), userActual.getPassword(),
+                                            () -> "should return user with user password: " + userExpected.getPassword() + ", but was: "
+                                                    + userActual.getPassword()),
+                                    () -> assertEquals(userExpected.getEmail(), userActual.getEmail(),
+                                            () -> "should return user with user email: " + userExpected.getEmail() + ", but was: "
+                                                    + userActual.getEmail()),
+                                    () -> assertEquals(userExpected.getRoles(), userActual.getRoles(),
+                                            () -> "should return user with user roles: " + userExpected.getRoles() + ", but was: "
+                                                    + userActual.getRoles()),
+                                    () -> verify(userRepository, times(1))
+                                            .findByUsername(userExpected.getUsername()),
+                                    () -> verifyNoMoreInteractions(userRepository));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
+
+    @Test
+    void when_find_not_existing_user_by_username_should_return_empty_mono() {
+
+        String notExistingUsername = "notExistingUsername";
+
+        when(userRepository.findByUsername(notExistingUsername)).thenReturn(Mono.empty());
+
+        Mono<UserDocument> userActualMono = userService.findByUsername(notExistingUsername);
+
+        StepVerifier.create(userActualMono)
+                .expectNextCount(0)
+                .then(() -> {
+                            assertAll(
+                                    () -> verify(userRepository, times(1))
+                                            .findByUsername(notExistingUsername),
+                                    () -> verifyNoMoreInteractions(userRepository));
+                        }
+                )
+                .verifyComplete();
+    }
+
+    @Test
+    void when_find_existing_user_by_username_or_email_should_return_user() {
 
         UserDocument userExpected = userTestBuilder.build();
 
@@ -74,7 +131,7 @@ class UserServiceTest {
     }
 
     @Test
-    void when_user_not_exists_and_find_user_by_username_should_return_empty_optional() {
+    void when_find_not_existing_user_by_username_or_email_should_return_empty_mono() {
 
         String notExistingUsernameOrEmail = "notExistingUsername";
 
@@ -84,15 +141,14 @@ class UserServiceTest {
         Mono<UserDocument> userActualMono = userService.findByUsernameOrEmail(notExistingUsernameOrEmail);
 
         StepVerifier.create(userActualMono)
-                .thenConsumeWhile(
-                        userActual -> {
-                            assertAll(() -> assertNull(userActual,
-                                    () -> "should return: null, but was: " + userActual),
+                .expectNextCount(0)
+                .then(() -> {
+                            assertAll(
                                     () -> verify(userRepository, times(1))
                                             .findByUsernameOrEmail(notExistingUsernameOrEmail, notExistingUsernameOrEmail),
                                     () -> verifyNoMoreInteractions(userRepository));
-                            return true;
                         }
-                ).verifyComplete();
+                )
+                .verifyComplete();
     }
 }
