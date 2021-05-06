@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.postService.advice;
 
 
 import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
+import com.nowakArtur97.myMoments.postService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,5 +38,14 @@ class GlobalRestControllerAdvice {
                 List.of(exception.getMessage()));
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ForbiddenException.class})
+    ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException exception) {
+
+        ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.FORBIDDEN.value(),
+                List.of(exception.getMessage()));
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 }
