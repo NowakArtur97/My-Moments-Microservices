@@ -43,13 +43,12 @@ class PostController {
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
 
-        String username = jwtUtil.extractUsernameFromHeader(authorizationHeader);
-
-        return postObjectMapper.getPostDTOFromString(post, photos)
-                .flatMap(postDTO -> postService.createPost(postDTO, username))
-                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
-                .map(postModel -> ResponseEntity.created(URI.create("/api/v1/posts/" + postModel.getId()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(postModel));
+        return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
+                        .zipWith(postObjectMapper.getPostDTOFromString(post, photos))
+                        .flatMap((tuple) -> postService.createPost(tuple.getT2(), tuple.getT1()))
+                        .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+                        .map(postModel -> ResponseEntity.created(URI.create("/api/v1/posts/" + postModel.getId()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(postModel));
     }
 }
