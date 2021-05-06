@@ -35,10 +35,10 @@ class PostCreateControllerTest {
     @LocalServerPort
     private int serverPort;
 
-    private String POSTS_BASE_PATH;
-
     @Value("${my-moments.default-user-role:USER_ROLE}")
     private String defaultUserRole;
+
+    private String POSTS_BASE_PATH;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -189,8 +189,7 @@ class PostCreateControllerTest {
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
-                                                    + errorResponse.getStatus())
-                            );
+                                                    + errorResponse.getStatus()));
                             return true;
                         }
                 ).verifyComplete();
@@ -232,8 +231,7 @@ class PostCreateControllerTest {
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
-                                                    + errorResponse.getStatus())
-                            );
+                                                    + errorResponse.getStatus()));
                             return true;
                         }
                 ).verifyComplete();
@@ -288,8 +286,7 @@ class PostCreateControllerTest {
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
-                                                    + errorResponse.getStatus())
-                            );
+                                                    + errorResponse.getStatus()));
                             return true;
                         }
                 ).verifyComplete();
@@ -334,8 +331,7 @@ class PostCreateControllerTest {
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
-                                                    + errorResponse.getStatus())
-                            );
+                                                    + errorResponse.getStatus()));
                             return true;
                         }
                 ).verifyComplete();

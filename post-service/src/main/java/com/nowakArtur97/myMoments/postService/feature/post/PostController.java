@@ -38,8 +38,8 @@ class PostController {
             @ApiResponse(code = 200, message = "Successfully found post", response = PostModel.class),
             @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
     Mono<ResponseEntity<PostModel>> getPost(
-            @ApiParam(value = "Id of the Post being looked up", name = "id", type = "integer",
-                    required = true, example = "1") @PathVariable("id") String id
+            @ApiParam(value = "Id of the Post being looked up", name = "id", type = "string",
+                    required = true, example = "id") @PathVariable("id") String id
     ) {
 
         return postService.findPostById(id)
