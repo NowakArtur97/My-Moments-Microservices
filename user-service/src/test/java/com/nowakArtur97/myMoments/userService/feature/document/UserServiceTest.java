@@ -1,11 +1,11 @@
 package com.nowakArtur97.myMoments.userService.feature.document;
 
+import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserProfileDTO;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserRegistrationDTO;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
 import com.nowakArtur97.myMoments.userService.feature.testBuilder.UserProfileTestBuilder;
 import com.nowakArtur97.myMoments.userService.feature.testBuilder.UserTestBuilder;
-import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.userService.testUtil.generator.NameWithSpacesGenerator;
 import lombok.SneakyThrows;
@@ -86,7 +86,7 @@ class UserServiceTest {
                     .withProfile(userProfileDTOExpected).build(ObjectType.CREATE_DTO);
 
             MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
+                    "image.jpg" .getBytes());
             UserProfileDocument userProfileExpectedAfterObjectMapping = (UserProfileDocument) userProfileTestBuilder
                     .withImage(image.getBytes()).build(ObjectType.DOCUMENT);
             UserDocument userExpectedAfterObjectMapping = (UserDocument) userTestBuilder
@@ -160,7 +160,7 @@ class UserServiceTest {
                     .build(ObjectType.CREATE_DTO);
 
             MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
+                    "image.jpg" .getBytes());
             UserProfileDocument userProfileExpectedAfterObjectMapping = (UserProfileDocument) userProfileTestBuilder
                     .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
                     .build(ObjectType.DOCUMENT);
@@ -315,7 +315,7 @@ class UserServiceTest {
                     .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
 
             MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
+                    "image.jpg" .getBytes());
 
             UserProfileDocument userProfileExpectedBeforeUpdate = (UserProfileDocument) userProfileTestBuilder
                     .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
@@ -400,7 +400,7 @@ class UserServiceTest {
                     .withMatchingPassword("ValidPassword123!").build(ObjectType.UPDATE_DTO);
 
             MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
+                    "image.jpg" .getBytes());
 
             UserProfileDocument userProfileExpectedBeforeUpdate = (UserProfileDocument) userProfileTestBuilder
                     .withAbout("").withInterests("").withLanguages("").withLocation("").withImage(image.getBytes())
@@ -572,7 +572,7 @@ class UserServiceTest {
                     .withMatchingPassword("ValidPassword123!").withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
 
             MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
+                    "image.jpg" .getBytes());
 
             String notExistingUsername = "iAmNotExist";
 
@@ -596,7 +596,7 @@ class UserServiceTest {
         void when_delete_existing_user_should_delete_user() {
 
             MockMultipartFile image = new MockMultipartFile("image", "image", "application/json",
-                    "image.jpg".getBytes());
+                    "image.jpg" .getBytes());
             UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder
                     .withImage(image.getBytes()).build(ObjectType.DOCUMENT);
             RoleDocument roleExpected = new RoleDocument(defaultUserRole);
@@ -635,7 +635,7 @@ class UserServiceTest {
     class FindUserTest {
 
         @Test
-        void when_user_does_exists_and_check_if_user_exists_by_username_should_return_true() {
+        void when_check_existing_user_if_user_exists_by_username_should_return_true() {
 
             String expectedUsername = "username";
 
@@ -651,7 +651,7 @@ class UserServiceTest {
         }
 
         @Test
-        void when_user_does_not_exist_and_check_if_user_exists_by_username_should_return_false() {
+        void when_check_not_existing_user_if_user_exists_by_username_should_return_false() {
 
             String expectedUsername = "username";
 
@@ -667,7 +667,7 @@ class UserServiceTest {
         }
 
         @Test
-        void when_user_does_exists_and_check_if_user_exists_by_email_should_return_true() {
+        void when_check_existing_user_if_user_exists_by_email_should_return_true() {
 
             String expectedEmail = "user@email.com";
 
@@ -683,7 +683,7 @@ class UserServiceTest {
         }
 
         @Test
-        void when_user_does_not_exist_and_check_if_user_exists_by_email_should_return_true() {
+        void when_check_not_existing_user_if_user_exists_by_email_should_return_false() {
 
             String expectedEmail = "user@email.com";
 
@@ -699,7 +699,7 @@ class UserServiceTest {
         }
 
         @Test
-        void when_user_exists_and_find_user_by_id_should_return_user() {
+        void when_find_existing_user_by_id_should_return_user() {
 
             Long expectedId = 1L;
             UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder.build(ObjectType.DOCUMENT);
@@ -755,7 +755,7 @@ class UserServiceTest {
         }
 
         @Test
-        void when_user_not_exists_and_find_user_by_id_should_return_empty_optional() {
+        void when_find_not_existing_user_by_id_should_return_empty_optional() {
 
             Long notExistingId = 1L;
 
@@ -772,7 +772,7 @@ class UserServiceTest {
         }
 
         @Test
-        void when_user_exists_and_find_user_by_username_should_return_user() {
+        void when_find_existing_user_by_username_should_return_user() {
 
             UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder.build(ObjectType.DOCUMENT);
             UserDocument userExpected = (UserDocument) userTestBuilder.withProfile(userProfileExpected).build(ObjectType.DOCUMENT);
@@ -827,7 +827,7 @@ class UserServiceTest {
         }
 
         @Test
-        void when_user_not_exists_and_find_user_by_username_should_return_empty_optional() {
+        void when_find_existing_user_by_username_should_return_empty_optional() {
 
             String notExistingUsername = "notExistingUsername";
 

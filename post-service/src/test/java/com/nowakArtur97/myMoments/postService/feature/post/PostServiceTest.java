@@ -63,7 +63,7 @@ class PostServiceTest {
         @Test
         void when_create_post_should_create_post() {
 
-            Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image.jpg".getBytes());
+            Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image.jpg" .getBytes());
             String authorExpected = "author";
 
             PostDTO postDTOExpected = (PostDTO) postTestBuilder.withAuthor(authorExpected).withBinary(List.of(imageExpected))
@@ -97,6 +97,64 @@ class PostServiceTest {
                                 return true;
                             }
                     ).verifyComplete();
+        }
+    }
+
+    @Nested
+    class OtherPostTest {
+
+        @Test
+        void when_find_existing_post_by_id_should_return_post() {
+
+            String postId = "id";
+            PostDocument postExpected = (PostDocument) postTestBuilder.withId(postId).build(ObjectType.DOCUMENT);
+
+            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpected));
+
+            Mono<PostDocument> postActualMono = postService.findPostById(postId);
+
+            StepVerifier.create(postActualMono)
+                    .thenConsumeWhile(
+                            postActual -> {
+                                assertAll(() -> assertEquals(postExpected, postActual,
+                                        () -> "should return post: " + postExpected + ", but was: " + postActual),
+                                        () -> assertEquals(postExpected.getId(), postActual.getId(),
+                                                () -> "should return post with id: " + postExpected.getId() + ", but was: "
+                                                        + postActual.getId()),
+                                        () -> assertEquals(postExpected.getCaption(), postActual.getCaption(),
+                                                () -> "should return post with caption: " + postExpected.getCaption() + ", but was: "
+                                                        + postActual.getCaption()),
+                                        () -> assertEquals(postExpected.getAuthor(), postActual.getAuthor(),
+                                                () -> "should return post with author: " + postExpected.getAuthor() + ", but was: "
+                                                        + postActual.getAuthor()),
+                                        () -> assertEquals(postExpected.getPhotos(), postActual.getPhotos(),
+                                                () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
+                                                        + postActual.getPhotos()),
+                                        () -> verify(postRepository, times(1)).findById(postId),
+                                        () -> verifyNoMoreInteractions(postRepository));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_find_not_existing_post_by_id_should_return_empty_mono() {
+
+            String postId = "id";
+
+            when(postRepository.findById(postId)).thenReturn(Mono.empty());
+
+            Mono<PostDocument> postActualMono = postService.findPostById(postId);
+
+            StepVerifier.create(postActualMono)
+                    .expectNextCount(0)
+                    .then(() -> {
+                                assertAll(
+                                        () -> verify(postRepository, times(1)).findById(postId),
+                                        () -> verifyNoMoreInteractions(postRepository));
+                            }
+                    )
+                    .verifyComplete();
         }
     }
 }
