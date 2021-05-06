@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-class UserTestBuilder {
+public class UserTestBuilder {
 
     private String username = "user123";
 
@@ -14,7 +14,7 @@ class UserTestBuilder {
 
     private Set<RoleDocument> roles = new HashSet<>(Collections.singletonList(RoleTestBuilder.DEFAULT_ROLE_ENTITY));
 
-    UserTestBuilder withUsername(String username) {
+    public UserTestBuilder withUsername(String username) {
 
         this.username = username;
 
@@ -42,11 +42,13 @@ class UserTestBuilder {
         return this;
     }
 
-    UserDocument build() {
+    public UserDocument build() {
+
+        UserDocument userDocument = new UserDocument(username, email, password, roles);
 
         resetProperties();
 
-        return new UserDocument(username, email, password, roles);
+        return userDocument;
     }
 
     private void resetProperties() {

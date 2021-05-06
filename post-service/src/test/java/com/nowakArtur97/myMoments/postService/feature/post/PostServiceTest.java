@@ -1,6 +1,9 @@
 package com.nowakArtur97.myMoments.postService.feature.post;
 
 import com.nowakArtur97.myMoments.postService.enums.ObjectType;
+import com.nowakArtur97.myMoments.postService.feature.user.UserDocument;
+import com.nowakArtur97.myMoments.postService.feature.user.UserService;
+import com.nowakArtur97.myMoments.postService.feature.user.UserTestBuilder;
 import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
@@ -29,13 +32,18 @@ class PostServiceTest {
     @Mock
     private PostRepository postRepository;
 
+    @Mock
+    private UserService userService;
+
     private static MockedStatic<UUID> mocked;
 
+    private static UserTestBuilder userTestBuilder;
     private static PostTestBuilder postTestBuilder;
 
     @BeforeAll
     static void setUpBuildersAndUUID() {
 
+        userTestBuilder = new UserTestBuilder();
         postTestBuilder = new PostTestBuilder();
 
         UUID uuid = UUID.randomUUID();
@@ -54,7 +62,7 @@ class PostServiceTest {
     @BeforeEach
     void setUp() {
 
-        postService = new PostService(postRepository);
+        postService = new PostService(postRepository, userService);
     }
 
     @Nested
@@ -73,7 +81,7 @@ class PostServiceTest {
 
             when(postRepository.save(postExpected)).thenReturn(Mono.just(postExpected));
 
-            Mono<PostDocument> postActualMono = postService.createPost(postDTOExpected, authorExpected);
+            Mono<PostDocument> postActualMono = postService.createPost(authorExpected, postDTOExpected);
 
             StepVerifier.create(postActualMono)
                     .thenConsumeWhile(
@@ -93,10 +101,156 @@ class PostServiceTest {
                                                 () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
                                                         + postActual.getPhotos()),
                                         () -> verify(postRepository, times(1)).save(postExpected),
+                                        () -> verifyNoMoreInteractions(postRepository),
+                                        () -> verifyNoInteractions(userService));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+    }
+
+    @Nested
+    class UpdatePostTest {
+
+        @Test
+        void when_update_valid_post_should_update_post() {
+
+            String postId = "post id";
+            Binary imageExpectedBeforeUpdate = new Binary(BsonBinarySubType.BINARY, "image.jpg" .getBytes());
+            Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image2.jpg" .getBytes());
+            Binary imageExpected2 = new Binary(BsonBinarySubType.BINARY, "image3.jpg" .getBytes());
+            String authorExpected = "author";
+
+            PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption("new caption").withAuthor(authorExpected)
+                    .withBinary(List.of(imageExpected, imageExpected2)).build(ObjectType.CREATE_DTO);
+            PostDocument postExpectedBeforeUpdate = (PostDocument) postTestBuilder.withCaption("old caption")
+                    .withAuthor(authorExpected).withBinary(List.of(imageExpectedBeforeUpdate)).build(ObjectType.DOCUMENT);
+            PostDocument postExpected = (PostDocument) postTestBuilder.withCaption("new caption").withAuthor(authorExpected)
+                    .withBinary(List.of(imageExpected, imageExpected2)).build(ObjectType.DOCUMENT);
+            UserDocument userExpected = userTestBuilder.withUsername(authorExpected).build();
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
+            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpectedBeforeUpdate));
+            when(postRepository.save(postExpected)).thenReturn(Mono.just(postExpected));
+
+            Mono<PostDocument> postActualMono = postService.updatePost(postId, authorExpected, postDTOExpected);
+
+            StepVerifier.create(postActualMono)
+                    .thenConsumeWhile(
+                            postActual -> {
+                                assertAll(() -> assertEquals(postExpected, postActual,
+                                        () -> "should return post: " + postExpected + ", but was: " + postActual),
+                                        () -> assertEquals(postExpected.getId(), postActual.getId(),
+                                                () -> "should return post with id: " + postExpected.getId() + ", but was: "
+                                                        + postActual.getId()),
+                                        () -> assertEquals(postExpected.getCaption(), postActual.getCaption(),
+                                                () -> "should return post with caption: " + postExpected.getCaption() + ", but was: "
+                                                        + postActual.getCaption()),
+                                        () -> assertEquals(postExpected.getAuthor(), postActual.getAuthor(),
+                                                () -> "should return post with author: " + postExpected.getAuthor() + ", but was: "
+                                                        + postActual.getAuthor()),
+                                        () -> assertEquals(postExpected.getPhotos(), postActual.getPhotos(),
+                                                () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
+                                                        + postActual.getPhotos()),
+                                        () -> verify(userService, times(1))
+                                                .findByUsername(authorExpected),
+                                        () -> verifyNoMoreInteractions(userService),
+                                        () -> verify(postRepository, times(1)).findById(postId),
+                                        () -> verify(postRepository, times(1)).save(postExpected),
                                         () -> verifyNoMoreInteractions(postRepository));
                                 return true;
                             }
                     ).verifyComplete();
+        }
+
+        @Test
+        void when_update_post_of_not_existing_user_should_throw_exception() {
+
+            String postId = "post id";
+            Binary imageExpectedBeforeUpdate = new Binary(BsonBinarySubType.BINARY, "image.jpg" .getBytes());
+            Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image2.jpg" .getBytes());
+            String authorExpected = "author";
+
+            PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption("new caption").withAuthor(authorExpected)
+                    .withBinary(List.of(imageExpected)).build(ObjectType.CREATE_DTO);
+            PostDocument postExpectedBeforeUpdate = (PostDocument) postTestBuilder.withCaption("old caption")
+                    .withAuthor(authorExpected).withBinary(List.of(imageExpectedBeforeUpdate)).build(ObjectType.DOCUMENT);
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.empty());
+            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpectedBeforeUpdate));
+
+            Mono<PostDocument> postActualMono = postService.updatePost(postId, authorExpected, postDTOExpected);
+
+            StepVerifier.create(postActualMono)
+                    .then(() -> {
+                                assertAll(
+                                        () -> verify(userService, times(1))
+                                                .findByUsername(authorExpected),
+                                        () -> verifyNoMoreInteractions(userService),
+                                        () -> verify(postRepository, times(1)).findById(postId),
+                                        () -> verifyNoMoreInteractions(postRepository));
+                            }
+                    ).verifyErrorMessage("User with name: '" + authorExpected + "' not found.");
+        }
+
+        @Test
+        void when_update_not_existing_post_should_throw_exception() {
+
+            String postId = "post id";
+            Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image2.jpg" .getBytes());
+            String authorExpected = "author";
+
+            PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption("new caption").withAuthor(authorExpected)
+                    .withBinary(List.of(imageExpected)).build(ObjectType.CREATE_DTO);
+            UserDocument userExpected = userTestBuilder.withUsername(authorExpected).build();
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
+            when(postRepository.findById(postId)).thenReturn(Mono.empty());
+
+            Mono<PostDocument> postActualMono = postService.updatePost(postId, authorExpected, postDTOExpected);
+
+            StepVerifier.create(postActualMono)
+                    .then(() -> {
+                                assertAll(
+                                        () -> verify(userService, times(1))
+                                                .findByUsername(authorExpected),
+                                        () -> verifyNoMoreInteractions(userService),
+                                        () -> verify(postRepository, times(1)).findById(postId),
+                                        () -> verifyNoMoreInteractions(postRepository));
+                            }
+                    ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
+        }
+
+        @Test
+        void when_update_other_user_post_should_throw_exception() {
+
+            String postId = "post id";
+            Binary imageExpectedBeforeUpdate = new Binary(BsonBinarySubType.BINARY, "image.jpg" .getBytes());
+            Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image2.jpg" .getBytes());
+            String authorExpected = "author";
+            String otherUser = "other user";
+
+            PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption("new caption").withAuthor(authorExpected)
+                    .withBinary(List.of(imageExpected)).build(ObjectType.CREATE_DTO);
+            PostDocument postExpectedBeforeUpdate = (PostDocument) postTestBuilder.withCaption("old caption")
+                    .withAuthor(authorExpected).withBinary(List.of(imageExpectedBeforeUpdate)).build(ObjectType.DOCUMENT);
+            UserDocument userExpected = userTestBuilder.withUsername(otherUser).build();
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
+            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpectedBeforeUpdate));
+
+            Mono<PostDocument> postActualMono = postService.updatePost(postId, authorExpected, postDTOExpected);
+
+            StepVerifier.create(postActualMono)
+                    .then(() -> {
+                                assertAll(
+                                        () -> verify(userService, times(1))
+                                                .findByUsername(authorExpected),
+                                        () -> verifyNoMoreInteractions(userService),
+                                        () -> verify(postRepository, times(1)).findById(postId),
+                                        () -> verifyNoMoreInteractions(postRepository));
+                            }
+                    ).verifyErrorMessage("User can only change his own posts.");
         }
     }
 
@@ -131,7 +285,8 @@ class PostServiceTest {
                                                 () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
                                                         + postActual.getPhotos()),
                                         () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
+                                        () -> verifyNoMoreInteractions(postRepository),
+                                        () -> verifyNoInteractions(userService));
                                 return true;
                             }
                     ).verifyComplete();
@@ -151,7 +306,8 @@ class PostServiceTest {
                     .then(() -> {
                                 assertAll(
                                         () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
+                                        () -> verifyNoMoreInteractions(postRepository),
+                                        () -> verifyNoInteractions(userService));
                             }
                     )
                     .verifyComplete();
