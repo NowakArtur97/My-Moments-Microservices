@@ -18,7 +18,7 @@ import java.util.UUID;
 public abstract class AbstractDocument {
 
     @Id
-    @Setter(AccessLevel.PROTECTED)
+    @Setter
     private String id;
 
     private String uuid = UUID.randomUUID().toString();

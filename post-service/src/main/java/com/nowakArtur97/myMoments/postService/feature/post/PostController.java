@@ -61,11 +61,35 @@ class PostController {
     ) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
-                        .zipWith(postObjectMapper.getPostDTOFromString(post, photos))
-                        .flatMap((tuple) -> postService.createPost(tuple.getT2(), tuple.getT1()))
-                        .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
-                        .map(postModel -> ResponseEntity.created(URI.create("/api/v1/posts/" + postModel.getId()))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .body(postModel));
+                .zipWith(postObjectMapper.getPostDTOFromString(post, photos))
+                .flatMap((tuple) -> postService.createPost(tuple.getT1(), tuple.getT2()))
+                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+                .map(postModel -> ResponseEntity.created(URI.create("/api/v1/posts/" + postModel.getId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(postModel));
+    }
+
+    @PutMapping(path = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ApiOperation(value = "Update a post", notes = "Provide an id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully updated post", response = PostModel.class),
+            @ApiResponse(code = 400, message = "Invalid Post's id supplied or incorrectly entered data"),
+            @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
+    Mono<ResponseEntity<PostModel>> updatePost(
+            @ApiParam(value = "Id of the Post being updated", name = "id", type = "string",
+                    required = true, example = "id") @PathVariable("id") String id,
+            @ApiParam(value = "The post's photos", name = "photos", required = true)
+            @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
+            @ApiParam(value = "The post's data", name = "post") @RequestPart(value = "post", required = false) String post,
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
+    ) {
+
+        return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
+                .zipWith(postObjectMapper.getPostDTOFromString(post, photos))
+                .flatMap((tuple) -> postService.updatePost(id, tuple.getT1(), tuple.getT2()))
+                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+                .map(postModel -> ResponseEntity.created(URI.create("/api/v1/posts/" + postModel.getId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(postModel));
     }
 }
