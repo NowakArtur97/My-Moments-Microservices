@@ -14,6 +14,11 @@ class PostService {
 
     private final PostRepository postRepository;
 
+    Mono<PostDocument> findPostById(String id) {
+
+        return postRepository.findById(id);
+    }
+
     Mono<PostDocument> createPost(@Valid PostDTO postDTO, String username) {
 
         return postRepository.save(new PostDocument(postDTO.getCaption(), username, postDTO.getPhotos()));

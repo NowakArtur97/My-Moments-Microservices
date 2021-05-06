@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 
 import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
+import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,6 +31,22 @@ class PostController {
     private final PostObjectMapper postObjectMapper;
 
     private final ModelMapper modelMapper;
+
+    @GetMapping(path = "/{id}")
+    @ApiOperation(value = "Get a post", notes = "Provide an id")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully found post", response = PostModel.class),
+            @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
+    Mono<ResponseEntity<PostModel>> getPost(
+            @ApiParam(value = "Id of the Post being looked up", name = "id", type = "integer",
+                    required = true, example = "1") @PathVariable("id") String id
+    ) {
+
+        return postService.findPostById(id)
+                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Post", id)));
+    }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation("Create a post")
