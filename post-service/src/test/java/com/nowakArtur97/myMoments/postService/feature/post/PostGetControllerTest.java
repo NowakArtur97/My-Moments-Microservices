@@ -2,7 +2,7 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 
 import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
-import com.nowakArtur97.myMoments.postService.enums.ObjectType;
+import com.nowakArtur97.myMoments.postService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -154,7 +154,7 @@ class PostGetControllerTest {
                                     () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(404, errorResponse.getStatus(),
-                                            () -> "should return error response with 400 status, but was: "
+                                            () -> "should return error response with 404 status, but was: "
                                                     + errorResponse.getStatus()),
                                     () -> verify(postService, times(1)).findPostById(postId),
                                     () -> verifyNoMoreInteractions(postService),

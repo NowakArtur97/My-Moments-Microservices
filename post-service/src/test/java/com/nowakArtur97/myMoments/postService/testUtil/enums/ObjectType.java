@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.enums;
+package com.nowakArtur97.myMoments.postService.testUtil.enums;
 
 public enum ObjectType {
 

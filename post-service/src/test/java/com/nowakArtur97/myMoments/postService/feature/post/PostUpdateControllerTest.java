@@ -3,7 +3,7 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 
 import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
-import com.nowakArtur97.myMoments.postService.enums.ObjectType;
+import com.nowakArtur97.myMoments.postService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
 import com.nowakArtur97.myMoments.postService.testUtil.mapper.ObjectTestMapper;
 import lombok.SneakyThrows;
@@ -404,8 +404,9 @@ class PostUpdateControllerTest {
     }
 
     @Test
-    void when_update_other_user_post_should_return_error_response() {
+    void when_update_not_existing_user_post_should_return_error_response() {
 
+        String notExistingUsername = "iAmNotExist";
         PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption(null).build(ObjectType.CREATE_DTO);
         String postAsString = ObjectTestMapper.asJsonString(postDTOExpected);
 
@@ -414,15 +415,18 @@ class PostUpdateControllerTest {
         objectMultiValueMap.add("photos",
                 new ClassPathResource("example.jpg", this.getClass().getClassLoader()));
 
+        String token = jwtUtil.generateToken(new User(notExistingUsername, notExistingUsername,
+                List.of(new SimpleGrantedAuthority("USER_ROLE"))));
+
         Mono<ErrorResponse> errorResponseMono = webTestClient.put()
                 .uri(uriBuilder -> uriBuilder
                         .path(POSTS_BASE_PATH)
                         .build(postDocument.getId()))
                 .body(BodyInserters.fromMultipartData(objectMultiValueMap))
-                .header("Authorization", "Bearer " + adminToken)
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus()
-                .isForbidden()
+                .isUnauthorized()
                 .returnResult(ErrorResponse.class)
                 .getResponseBody()
                 .single();
@@ -431,18 +435,18 @@ class PostUpdateControllerTest {
                 .thenConsumeWhile(
                         errorResponse -> {
                             assertAll(
-                                    () -> assertEquals("User can only change his own posts.",
-                                            errorResponse.getErrors().get(0),
+                                    () -> assertEquals("User with name/email: '" + notExistingUsername
+                                                    + "' not found.", errorResponse.getErrors().get(0),
                                             () -> "should return error response with message: " +
-                                                    "'User can only change his own posts.'" + ", but was: "
-                                                    + errorResponse.getErrors().get(0)),
+                                                    "'User with name/email: '" + notExistingUsername + "' not found.'"
+                                                    + ", but was: " + errorResponse.getErrors().get(0)),
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
                                     () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
-                                    () -> assertEquals(403, errorResponse.getStatus(),
-                                            () -> "should return error response with 403 status, but was: "
+                                    () -> assertEquals(401, errorResponse.getStatus(),
+                                            () -> "should return error response with 401 status, but was: "
                                                     + errorResponse.getStatus()));
                             return true;
                         }
@@ -497,9 +501,8 @@ class PostUpdateControllerTest {
     }
 
     @Test
-    void when_update_not_existing_user_post_should_return_error_response() {
+    void when_update_other_user_post_should_return_error_response() {
 
-        String notExistingUsername = "iAmNotExist";
         PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption(null).build(ObjectType.CREATE_DTO);
         String postAsString = ObjectTestMapper.asJsonString(postDTOExpected);
 
@@ -508,18 +511,15 @@ class PostUpdateControllerTest {
         objectMultiValueMap.add("photos",
                 new ClassPathResource("example.jpg", this.getClass().getClassLoader()));
 
-        String token = jwtUtil.generateToken(new User(notExistingUsername, notExistingUsername,
-                List.of(new SimpleGrantedAuthority("USER_ROLE"))));
-
         Mono<ErrorResponse> errorResponseMono = webTestClient.put()
                 .uri(uriBuilder -> uriBuilder
                         .path(POSTS_BASE_PATH)
                         .build(postDocument.getId()))
                 .body(BodyInserters.fromMultipartData(objectMultiValueMap))
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + adminToken)
                 .exchange()
                 .expectStatus()
-                .isUnauthorized()
+                .isForbidden()
                 .returnResult(ErrorResponse.class)
                 .getResponseBody()
                 .single();
@@ -528,18 +528,18 @@ class PostUpdateControllerTest {
                 .thenConsumeWhile(
                         errorResponse -> {
                             assertAll(
-                                    () -> assertEquals("User with name/email: '" + notExistingUsername
-                                                    + "' not found.", errorResponse.getErrors().get(0),
+                                    () -> assertEquals("User can only change his own posts.",
+                                            errorResponse.getErrors().get(0),
                                             () -> "should return error response with message: " +
-                                                    "'User with name/email: '" + notExistingUsername + "' not found.'"
-                                                    + ", but was: " + errorResponse.getErrors().get(0)),
+                                                    "'User can only change his own posts.'" + ", but was: "
+                                                    + errorResponse.getErrors().get(0)),
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
                                     () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
-                                    () -> assertEquals(401, errorResponse.getStatus(),
-                                            () -> "should return error response with 401 status, but was: "
+                                    () -> assertEquals(403, errorResponse.getStatus(),
+                                            () -> "should return error response with 403 status, but was: "
                                                     + errorResponse.getStatus()));
                             return true;
                         }

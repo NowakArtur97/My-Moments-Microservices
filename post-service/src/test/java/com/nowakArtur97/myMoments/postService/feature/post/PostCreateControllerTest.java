@@ -3,13 +3,12 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 
 import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
-import com.nowakArtur97.myMoments.postService.enums.ObjectType;
+import com.nowakArtur97.myMoments.postService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
 import com.nowakArtur97.myMoments.postService.testUtil.mapper.ObjectTestMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
