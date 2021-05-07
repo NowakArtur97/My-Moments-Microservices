@@ -50,6 +50,20 @@ class PostController {
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Post", id)));
     }
 
+    @GetMapping(path = "/me")
+    @ApiOperation(value = "Get posts")
+    @ApiResponse(code = 200, message = "Successfully found posts", response = PostModel.class)
+    Mono<ResponseEntity<UsersPostsModel>> getUserPosts(
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+
+        return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
+                .flatMapMany(postService::findPostsByAuthor)
+                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+                .collectList()
+                .map(UsersPostsModel::new)
+                .map(ResponseEntity::ok);
+    }
+
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation("Create a post")
     @ApiResponses({

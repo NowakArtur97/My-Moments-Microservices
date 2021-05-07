@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -24,6 +25,11 @@ class PostService {
     Mono<PostDocument> findPostById(String id) {
 
         return postRepository.findById(id);
+    }
+
+    Flux<PostDocument> findPostsByAuthor(String author) {
+
+        return postRepository.findByAuthor(author);
     }
 
     Mono<PostDocument> createPost(String username, @Valid PostDTO postDTO) {
