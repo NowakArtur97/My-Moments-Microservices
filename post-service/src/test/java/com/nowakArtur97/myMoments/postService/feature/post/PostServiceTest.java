@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -86,21 +87,8 @@ class PostServiceTest {
             StepVerifier.create(postActualMono)
                     .thenConsumeWhile(
                             postActual -> {
-                                assertAll(() -> assertEquals(postExpected, postActual,
-                                        () -> "should return post: " + postExpected + ", but was: " + postActual),
-                                        () -> assertEquals(postExpected.getId(), postActual.getId(),
-                                                () -> "should return post with id: " + postExpected.getId() + ", but was: "
-                                                        + postActual.getId()),
-                                        () -> assertEquals(postExpected.getCaption(), postActual.getCaption(),
-                                                () -> "should return post with caption: " + postExpected.getCaption() + ", but was: "
-                                                        + postActual.getCaption()),
-                                        () -> assertEquals(postExpected.getAuthor(), postActual.getAuthor(),
-                                                () -> "should return post with author: " + postExpected.getAuthor() + ", but was: "
-                                                        + postActual.getAuthor()),
-                                        () -> assertEquals(postExpected.getPhotos(), postActual.getPhotos(),
-                                                () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
-                                                        + postActual.getPhotos()),
-                                        () -> verify(postRepository, times(1)).save(postExpected),
+                                assertPost(postExpected, postActual);
+                                assertAll(() -> verify(postRepository, times(1)).save(postExpected),
                                         () -> verifyNoMoreInteractions(postRepository),
                                         () -> verifyNoInteractions(userService));
                                 return true;
@@ -138,20 +126,8 @@ class PostServiceTest {
             StepVerifier.create(postActualMono)
                     .thenConsumeWhile(
                             postActual -> {
-                                assertAll(() -> assertEquals(postExpected, postActual,
-                                        () -> "should return post: " + postExpected + ", but was: " + postActual),
-                                        () -> assertEquals(postExpected.getId(), postActual.getId(),
-                                                () -> "should return post with id: " + postExpected.getId() + ", but was: "
-                                                        + postActual.getId()),
-                                        () -> assertEquals(postExpected.getCaption(), postActual.getCaption(),
-                                                () -> "should return post with caption: " + postExpected.getCaption() + ", but was: "
-                                                        + postActual.getCaption()),
-                                        () -> assertEquals(postExpected.getAuthor(), postActual.getAuthor(),
-                                                () -> "should return post with author: " + postExpected.getAuthor() + ", but was: "
-                                                        + postActual.getAuthor()),
-                                        () -> assertEquals(postExpected.getPhotos(), postActual.getPhotos(),
-                                                () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
-                                                        + postActual.getPhotos()),
+                                assertPost(postExpected, postActual);
+                                assertAll(
                                         () -> verify(userService, times(1))
                                                 .findByUsername(authorExpected),
                                         () -> verifyNoMoreInteractions(userService),
@@ -382,20 +358,8 @@ class PostServiceTest {
             StepVerifier.create(postActualMono)
                     .thenConsumeWhile(
                             postActual -> {
-                                assertAll(() -> assertEquals(postExpected, postActual,
-                                        () -> "should return post: " + postExpected + ", but was: " + postActual),
-                                        () -> assertEquals(postExpected.getId(), postActual.getId(),
-                                                () -> "should return post with id: " + postExpected.getId() + ", but was: "
-                                                        + postActual.getId()),
-                                        () -> assertEquals(postExpected.getCaption(), postActual.getCaption(),
-                                                () -> "should return post with caption: " + postExpected.getCaption() + ", but was: "
-                                                        + postActual.getCaption()),
-                                        () -> assertEquals(postExpected.getAuthor(), postActual.getAuthor(),
-                                                () -> "should return post with author: " + postExpected.getAuthor() + ", but was: "
-                                                        + postActual.getAuthor()),
-                                        () -> assertEquals(postExpected.getPhotos(), postActual.getPhotos(),
-                                                () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
-                                                        + postActual.getPhotos()),
+                                assertPost(postExpected, postActual);
+                                assertAll(
                                         () -> verify(postRepository, times(1)).findById(postId),
                                         () -> verifyNoMoreInteractions(postRepository),
                                         () -> verifyNoInteractions(userService));
@@ -424,5 +388,47 @@ class PostServiceTest {
                     )
                     .verifyComplete();
         }
+
+        @Test
+        void when_find_posts_by_author_should_return_posts() {
+
+            String author = "user";
+
+            PostDocument postExpected = (PostDocument) postTestBuilder.withAuthor(author).build(ObjectType.DOCUMENT);
+            PostDocument postExpected2 = (PostDocument) postTestBuilder.withCaption("caption 2").withAuthor(author)
+                    .build(ObjectType.DOCUMENT);
+
+            when(postRepository.findByAuthor(author)).thenReturn(Flux.just(postExpected, postExpected2));
+
+            Flux<PostDocument> postsActualFlux = postService.findPostsByAuthor(author);
+
+            StepVerifier.create(postsActualFlux)
+                    .expectNextMatches(postActual -> assertPost(postExpected, postActual))
+                    .expectNextMatches(postActual -> assertPost(postExpected2, postActual))
+                    .then(
+                            () -> assertAll(() -> verify(postRepository, times(1)).findByAuthor(author),
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(userService)))
+                    .verifyComplete();
+        }
+    }
+
+    private boolean assertPost(PostDocument postExpected, PostDocument postActual) {
+
+        assertAll(() -> assertEquals(postExpected, postActual,
+                () -> "should return post: " + postExpected + ", but was: " + postActual),
+                () -> assertEquals(postExpected.getId(), postActual.getId(),
+                        () -> "should return post with id: " + postExpected.getId() + ", but was: "
+                                + postActual.getId()),
+                () -> assertEquals(postExpected.getCaption(), postActual.getCaption(),
+                        () -> "should return post with caption: " + postExpected.getCaption() + ", but was: "
+                                + postActual.getCaption()),
+                () -> assertEquals(postExpected.getAuthor(), postActual.getAuthor(),
+                        () -> "should return post with author: " + postExpected.getAuthor() + ", but was: "
+                                + postActual.getAuthor()),
+                () -> assertEquals(postExpected.getPhotos(), postActual.getPhotos(),
+                        () -> "should return post with photos: " + postExpected.getPhotos() + ", but was: "
+                                + postActual.getPhotos()));
+        return true;
     }
 }
