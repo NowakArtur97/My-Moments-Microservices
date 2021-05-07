@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.postService.feature.user;
 
 
-import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
+import com.nowakArtur97.myMoments.postService.testUtil.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.generator;
+package com.nowakArtur97.myMoments.postService.testUtil.generator;
 
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 

@@ -3,7 +3,7 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
 import com.nowakArtur97.myMoments.postService.testUtil.enums.ObjectType;
-import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
+import com.nowakArtur97.myMoments.postService.testUtil.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

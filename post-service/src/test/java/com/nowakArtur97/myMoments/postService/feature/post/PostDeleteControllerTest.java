@@ -4,7 +4,7 @@ import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
 import com.nowakArtur97.myMoments.postService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
-import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
+import com.nowakArtur97.myMoments.postService.testUtil.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Tag;

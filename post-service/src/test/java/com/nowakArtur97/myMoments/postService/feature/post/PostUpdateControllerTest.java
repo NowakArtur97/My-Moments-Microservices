@@ -4,7 +4,7 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.common.util.JwtUtil;
 import com.nowakArtur97.myMoments.postService.testUtil.enums.ObjectType;
-import com.nowakArtur97.myMoments.postService.generator.NameWithSpacesGenerator;
+import com.nowakArtur97.myMoments.postService.testUtil.generator.NameWithSpacesGenerator;
 import com.nowakArtur97.myMoments.postService.testUtil.mapper.ObjectTestMapper;
 import lombok.SneakyThrows;
 import org.bson.BsonBinarySubType;

@@ -1,6 +1,6 @@
 package com.nowakArtur97.myMoments.postService.feature.post;
 
-import com.nowakArtur97.myMoments.postService.enums.ObjectType;
+import com.nowakArtur97.myMoments.postService.testUtil.enums.ObjectType;
 import org.bson.types.Binary;
 
 import java.util.ArrayList;
