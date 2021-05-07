@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.ws.rs.PathParam;
 import java.net.URI;
 
 @RestController
@@ -52,12 +53,31 @@ class PostController {
 
     @GetMapping(path = "/me")
     @ApiOperation(value = "Get posts")
-    @ApiResponse(code = 200, message = "Successfully found posts", response = PostModel.class)
-    Mono<ResponseEntity<UsersPostsModel>> getUserPosts(
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "User's posts found", response = UsersPostsModel.class),
+            @ApiResponse(code = 404, message = "Could not find User with provided token", response = ErrorResponse.class)})
+    Mono<ResponseEntity<UsersPostsModel>> getAuthenticatedUsersPosts(
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMapMany(postService::findPostsByAuthor)
+                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+                .collectList()
+                .map(UsersPostsModel::new)
+                .map(ResponseEntity::ok);
+    }
+
+    @GetMapping
+    @ApiOperation(value = "Find User's Posts by Username", notes = "Provide a name to look up specific User")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "User's posts found", response = UsersPostsModel.class),
+            @ApiResponse(code = 400, message = "Invalid User's name supplied"),
+            @ApiResponse(code = 404, message = "Could not find User with provided name", response = ErrorResponse.class)})
+    Mono<ResponseEntity<UsersPostsModel>> getUsersPosts(
+            @ApiParam(value = "Username of the User being looked up", name = "username", type = "integer", required = true,
+                    example = "user") @RequestParam("username") String username) {
+
+        return postService.findPostsByAuthor(username)
                 .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
                 .collectList()
                 .map(UsersPostsModel::new)
