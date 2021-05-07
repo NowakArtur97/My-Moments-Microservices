@@ -33,6 +33,23 @@ services:
       - discovery-service
       - mongo-db-user-service
 
+  post-service:
+    restart: on-failure
+    build: ./post-service
+    networks:
+      - my-moments
+    container_name: post-service
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /post-service/dir:/app
+    depends_on:
+      - discovery-service
+      - mongo-db-user-service
+      - mongo-db-post-service
+
   mongo-db-user-service:
     image: mongo:3.6
     ports:
