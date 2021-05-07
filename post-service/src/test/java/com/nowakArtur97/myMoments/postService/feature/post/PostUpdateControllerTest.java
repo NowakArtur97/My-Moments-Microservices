@@ -64,7 +64,7 @@ class PostUpdateControllerTest {
                 .build();
 
         postDocument = (PostDocument) postTestBuilder.withCaption("new").withAuthor("user")
-                .withBinary(List.of(new Binary(BsonBinarySubType.BINARY, "image.jpg" .getBytes())))
+                .withBinary(List.of(new Binary(BsonBinarySubType.BINARY, "image.jpg".getBytes())))
                 .build(ObjectType.DOCUMENT);
 
         postDocument = postRepository.save(postDocument).block();
@@ -97,7 +97,7 @@ class PostUpdateControllerTest {
                 .header("Authorization", "Bearer " + userToken)
                 .exchange()
                 .expectStatus()
-                .isCreated()
+                .isOk()
                 .returnResult(PostModel.class)
                 .getResponseBody()
                 .single();
@@ -142,7 +142,7 @@ class PostUpdateControllerTest {
                 .header("Authorization", "Bearer " + userToken)
                 .exchange()
                 .expectStatus()
-                .isCreated()
+                .isOk()
                 .returnResult(PostModel.class)
                 .getResponseBody()
                 .single();
@@ -314,7 +314,7 @@ class PostUpdateControllerTest {
     @Test
     void when_update_post_with_too_long_caption_should_return_error_response() {
 
-        String tooLongCaption = "caption123" .repeat(100) + "!";
+        String tooLongCaption = "caption123".repeat(100) + "!";
         PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption(tooLongCaption).build(ObjectType.CREATE_DTO);
         String postAsString = ObjectTestMapper.asJsonString(postDTOExpected);
 

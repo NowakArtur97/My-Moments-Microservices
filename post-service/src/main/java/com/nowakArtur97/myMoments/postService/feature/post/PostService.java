@@ -31,7 +31,7 @@ class PostService {
         return postRepository.save(new PostDocument(postDTO.getCaption(), username, postDTO.getPhotos()));
     }
 
-    public Mono<PostDocument> updatePost(String postId, String username, @Valid PostDTO postDTO) {
+    Mono<PostDocument> updatePost(String postId, String username, @Valid PostDTO postDTO) {
 
         return userService.findByUsername(username)
                 .switchIfEmpty(Mono.error(new UsernameNotFoundException("User with name: '" + username + "' not found.")))
@@ -47,6 +47,25 @@ class PostService {
                         postDocument.setPhotos(postDTO.getPhotos());
 
                         return postRepository.save(postDocument);
+                    } else {
+                        return Mono.error(new ForbiddenException("User can only change his own posts."));
+                    }
+                });
+    }
+
+    Mono<Void> deletePost(String postId, String username) {
+
+        return userService.findByUsername(username)
+                .switchIfEmpty(Mono.error(new UsernameNotFoundException("User with name: '" + username + "' not found.")))
+                .zipWith(postRepository.findById(postId))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Post", postId)))
+                .flatMap((tuple) -> {
+                    PostDocument postDocument = tuple.getT2();
+                    UserDocument userDocument = tuple.getT1();
+
+                    if (postDocument.getAuthor().equals(userDocument.getUsername())) {
+
+                        return postRepository.delete(postDocument);
                     } else {
                         return Mono.error(new ForbiddenException("User can only change his own posts."));
                     }

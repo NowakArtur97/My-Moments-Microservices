@@ -6,6 +6,7 @@ import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundExceptio
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
@@ -39,7 +40,8 @@ class PostController {
             @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
     Mono<ResponseEntity<PostModel>> getPost(
             @ApiParam(value = "Id of the Post being looked up", name = "id", type = "string",
-                    required = true, example = "id") @PathVariable("id") String id
+                    required = true, example = "id")
+            @PathVariable("id") String id
     ) {
 
         return postService.findPostById(id)
@@ -56,7 +58,8 @@ class PostController {
     Mono<ResponseEntity<PostModel>> cretePost(
             @ApiParam(value = "The post's photos", name = "photos", required = true)
             @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
-            @ApiParam(value = "The post's data", name = "post") @RequestPart(value = "post", required = false) String post,
+            @ApiParam(value = "The post's data", name = "post")
+            @RequestPart(value = "post", required = false) String post,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
 
@@ -77,10 +80,12 @@ class PostController {
             @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
     Mono<ResponseEntity<PostModel>> updatePost(
             @ApiParam(value = "Id of the Post being updated", name = "id", type = "string",
-                    required = true, example = "id") @PathVariable("id") String id,
+                    required = true, example = "id")
+            @PathVariable("id") String id,
             @ApiParam(value = "The post's photos", name = "photos", required = true)
             @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
-            @ApiParam(value = "The post's data", name = "post") @RequestPart(value = "post", required = false) String post,
+            @ApiParam(value = "The post's data", name = "post")
+            @RequestPart(value = "post", required = false) String post,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
 
@@ -88,8 +93,25 @@ class PostController {
                 .zipWith(postObjectMapper.getPostDTOFromString(post, photos))
                 .flatMap((tuple) -> postService.updatePost(id, tuple.getT1(), tuple.getT2()))
                 .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
-                .map(postModel -> ResponseEntity.created(URI.create("/api/v1/posts/" + postModel.getId()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(postModel));
+                .map(ResponseEntity::ok);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Added to remove the default 200 status added by Swagger
+    @ApiOperation(value = "Delete a post", notes = "Provide an id")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Successfully deleted a post"),
+            @ApiResponse(code = 400, message = "Invalid Post's id supplied"),
+            @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
+    Mono<ResponseEntity<Void>> deletePost(
+            @ApiParam(value = "Id of the Post being deleted", name = "id", type = "string",
+                    required = true, example = "id")
+            @PathVariable("id") String id,
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+
+        return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
+                .flatMap((username) -> postService.deletePost(id, username))
+                .map((postDocumentVoid) -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+                        .body(postDocumentVoid));
     }
 }
