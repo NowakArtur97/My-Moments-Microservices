@@ -1,5 +1,7 @@
 package com.nowakArtur97.myMoments.commentService.configuration.security;
 
+import com.nowakArtur97.myMoments.commentService.common.util.JwtUtil;
+import com.nowakArtur97.myMoments.commentService.exception.JwtTokenMissingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
