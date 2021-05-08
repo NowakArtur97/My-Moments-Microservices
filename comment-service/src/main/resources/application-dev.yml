@@ -1,0 +1,12 @@
+spring:
+  #
+  # Mongo DB
+  #
+  data:
+    mongodb:
+      posts:
+        database: my-moments-comment-service
+        uri: mongodb://192.168.99.100:27021/mongo-db-comment-service
+      users:
+        database: my-moments-user-service
+        uri: mongodb://192.168.99.100:27017/mongo-db-user-service
