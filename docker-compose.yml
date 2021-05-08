@@ -69,3 +69,13 @@ services:
     networks:
       - my-moments
     container_name: mongo-db-post-service
+
+  mongo-db-comment-service:
+    image: mongo:3.6
+    ports:
+      - 27021:27017
+    volumes:
+      - /var/lib/mongo-db-comment-service:/data/db
+    networks:
+      - my-moments
+    container_name: mongo-db-comment-service

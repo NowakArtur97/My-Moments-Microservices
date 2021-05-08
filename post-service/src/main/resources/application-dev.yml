@@ -4,7 +4,7 @@ spring:
   #
   data:
     mongodb:
-      comments:
+      posts:
         database: my-moments-post-service
         uri: mongodb://192.168.99.100:27019/mongo-db-post-service
       users:
