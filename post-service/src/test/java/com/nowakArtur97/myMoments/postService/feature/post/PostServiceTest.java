@@ -158,14 +158,13 @@ class PostServiceTest {
             Mono<PostDocument> postActualMono = postService.updatePost(postId, authorExpected, postDTOExpected);
 
             StepVerifier.create(postActualMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verifyNoMoreInteractions(postRepository))
                     ).verifyErrorMessage("User with name: '" + authorExpected + "' not found.");
         }
 
@@ -186,14 +185,13 @@ class PostServiceTest {
             Mono<PostDocument> postActualMono = postService.updatePost(postId, authorExpected, postDTOExpected);
 
             StepVerifier.create(postActualMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verifyNoMoreInteractions(postRepository))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
         }
 
@@ -218,14 +216,13 @@ class PostServiceTest {
             Mono<PostDocument> postActualMono = postService.updatePost(postId, authorExpected, postDTOExpected);
 
             StepVerifier.create(postActualMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verifyNoMoreInteractions(postRepository))
                     ).verifyErrorMessage("User can only change his own posts.");
         }
     }
@@ -250,15 +247,14 @@ class PostServiceTest {
             Mono<Void> postVoidMono = postService.deletePost(postId, authorExpected);
 
             StepVerifier.create(postVoidMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verify(postRepository, times(1)).delete(postExpected),
-                                        () -> verifyNoMoreInteractions(postRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verify(postRepository, times(1)).delete(postExpected),
+                                    () -> verifyNoMoreInteractions(postRepository))
                     ).verifyComplete();
         }
 
@@ -268,23 +264,22 @@ class PostServiceTest {
             String postId = "post id";
             String authorExpected = "author";
 
-            PostDocument postExpectedBeforeUpdate = (PostDocument) postTestBuilder.withCaption("old caption")
+            PostDocument postExpected = (PostDocument) postTestBuilder.withCaption("old caption")
                     .withAuthor(authorExpected).build(ObjectType.DOCUMENT);
 
             when(userService.findByUsername(authorExpected)).thenReturn(Mono.empty());
-            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpectedBeforeUpdate));
+            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpected));
 
             Mono<Void> postVoidMono = postService.deletePost(postId, authorExpected);
 
             StepVerifier.create(postVoidMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verifyNoMoreInteractions(postRepository))
                     ).verifyErrorMessage("User with name: '" + authorExpected + "' not found.");
         }
 
@@ -302,14 +297,13 @@ class PostServiceTest {
             Mono<Void> postVoidMono = postService.deletePost(postId, authorExpected);
 
             StepVerifier.create(postVoidMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verifyNoMoreInteractions(postRepository))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
         }
 
@@ -320,24 +314,23 @@ class PostServiceTest {
             String authorExpected = "author";
             String otherUser = "other user";
 
-            PostDocument postExpectedBeforeUpdate = (PostDocument) postTestBuilder.withCaption("old caption")
+            PostDocument postExpected = (PostDocument) postTestBuilder.withCaption("old caption")
                     .withAuthor(authorExpected).build(ObjectType.DOCUMENT);
             UserDocument userExpected = userTestBuilder.withUsername(otherUser).build();
 
             when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
-            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpectedBeforeUpdate));
+            when(postRepository.findById(postId)).thenReturn(Mono.just(postExpected));
 
             Mono<Void> postVoidMono = postService.deletePost(postId, authorExpected);
 
             StepVerifier.create(postVoidMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verifyNoMoreInteractions(postRepository))
                     ).verifyErrorMessage("User can only change his own posts.");
         }
     }
@@ -379,12 +372,11 @@ class PostServiceTest {
 
             StepVerifier.create(postActualMono)
                     .expectNextCount(0)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(postRepository, times(1)).findById(postId),
-                                        () -> verifyNoMoreInteractions(postRepository),
-                                        () -> verifyNoInteractions(userService));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(postRepository, times(1)).findById(postId),
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(userService))
                     )
                     .verifyComplete();
         }
@@ -405,8 +397,9 @@ class PostServiceTest {
             StepVerifier.create(postsActualFlux)
                     .expectNextMatches(postActual -> assertPost(postExpected, postActual))
                     .expectNextMatches(postActual -> assertPost(postExpected2, postActual))
-                    .then(
-                            () -> assertAll(() -> verify(postRepository, times(1)).findByAuthor(author),
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(postRepository, times(1)).findByAuthor(author),
                                     () -> verifyNoMoreInteractions(postRepository),
                                     () -> verifyNoInteractions(userService)))
                     .verifyComplete();

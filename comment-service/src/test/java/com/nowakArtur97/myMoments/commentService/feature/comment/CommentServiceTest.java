@@ -48,6 +48,14 @@ class CommentServiceTest {
         mocked.when(UUID::randomUUID).thenReturn(uuid);
     }
 
+    @AfterAll
+    static void cleanUp() {
+
+        if (!mocked.isClosed()) {
+            mocked.close();
+        }
+    }
+
     @BeforeEach
     void setUp() {
 
@@ -89,7 +97,7 @@ class CommentServiceTest {
     class UpdateCommentTest {
 
         @Test
-        void when_update_comment_should_create_comment() {
+        void when_update_comment_should_update_comment() {
 
             String commentId = "commentId";
             String postId = "postId";
@@ -146,15 +154,14 @@ class CommentServiceTest {
                     authorExpected, commentDTOExpected);
 
             StepVerifier.create(commentActualMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(commentRepository, times(1))
-                                                .findById(commentId),
-                                        () -> verifyNoMoreInteractions(commentRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
                     ).verifyErrorMessage("User with name: '" + authorExpected + "' not found.");
         }
 
@@ -177,15 +184,14 @@ class CommentServiceTest {
                     authorExpected, commentDTOExpected);
 
             StepVerifier.create(commentActualMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(commentRepository, times(1))
-                                                .findById(commentId),
-                                        () -> verifyNoMoreInteractions(commentRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
                     ).verifyErrorMessage("Comment with id: '" + commentId + "' not found.");
         }
 
@@ -211,15 +217,14 @@ class CommentServiceTest {
                     authorExpected, commentDTOExpected);
 
             StepVerifier.create(commentActualMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(commentRepository, times(1))
-                                                .findById(commentId),
-                                        () -> verifyNoMoreInteractions(commentRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
                     ).verifyErrorMessage("Comment with commentId: '" + commentId + "' in the post with id: '"
                     + postId + "' not found.");
         }
@@ -246,23 +251,174 @@ class CommentServiceTest {
                     authorExpected, commentDTOExpected);
 
             StepVerifier.create(commentActualMono)
-                    .then(() -> {
-                                assertAll(
-                                        () -> verify(userService, times(1))
-                                                .findByUsername(authorExpected),
-                                        () -> verifyNoMoreInteractions(userService),
-                                        () -> verify(commentRepository, times(1))
-                                                .findById(commentId),
-                                        () -> verifyNoMoreInteractions(commentRepository));
-                            }
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
+                    ).verifyErrorMessage("User can only change his own comments.");
+        }
+    }
+
+    @Nested
+    class DeleteCommentTest {
+
+        @Test
+        void when_delete_comment_should_delete_comment() {
+
+            String commentId = "commentId";
+            String postId = "postId";
+            String authorExpected = "author";
+
+            UserDocument userExpected = userTestBuilder.withUsername(authorExpected).build();
+            CommentDocument commentExpected = (CommentDocument) commentTestBuilder.withId(commentId)
+                    .withRelatedPostId(postId).withAuthor(authorExpected).build(ObjectType.DOCUMENT);
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
+            when(commentRepository.findById(commentId)).thenReturn(Mono.just(commentExpected));
+            when(commentRepository.delete(commentExpected)).thenReturn(Mono.empty());
+
+            Mono<Void> commentVoidMono = commentService.deleteComment(commentId, postId,
+                    authorExpected);
+
+            StepVerifier.create(commentVoidMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1)).findById(commentId),
+                                    () -> verify(commentRepository, times(1))
+                                            .delete(commentExpected),
+                                    () -> verifyNoMoreInteractions(commentRepository))
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_delete_comment_of_not_existing_user_should_throw_exception() {
+
+            String commentId = "commentId";
+            String postId = "postId";
+            String authorExpected = "author";
+
+            CommentDocument commentExpected = (CommentDocument) commentTestBuilder.withId(commentId)
+                    .withRelatedPostId(postId).withAuthor(authorExpected).build(ObjectType.DOCUMENT);
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.empty());
+            when(commentRepository.findById(commentId)).thenReturn(Mono.just(commentExpected));
+
+            Mono<Void> commentVoidMono = commentService.deleteComment(commentId, postId,
+                    authorExpected);
+
+            StepVerifier.create(commentVoidMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
+                    ).verifyErrorMessage("User with name: '" + authorExpected + "' not found.");
+        }
+
+        @Test
+        void when_delete_not_existing_comment_should_throw_exception() {
+
+            String commentId = "commentId";
+            String postId = "postId";
+            String authorExpected = "author";
+
+            UserDocument userExpected = userTestBuilder.withUsername(authorExpected).build();
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
+            when(commentRepository.findById(commentId)).thenReturn(Mono.empty());
+
+            Mono<Void> commentVoidMono = commentService.deleteComment(commentId, postId,
+                    authorExpected);
+
+            StepVerifier.create(commentVoidMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
+                    ).verifyErrorMessage("Comment with id: '" + commentId + "' not found.");
+        }
+
+        @Test
+        void when_delete_other_post_comment_should_throw_exception() {
+
+            String commentId = "commentId";
+            String postId = "postId";
+            String otherPostId = "other postId";
+            String authorExpected = "author";
+
+            UserDocument userExpected = userTestBuilder.withUsername(authorExpected).build();
+            CommentDocument commentExpected = (CommentDocument) commentTestBuilder.withId(commentId)
+                    .withRelatedPostId(otherPostId).withAuthor(authorExpected).build(ObjectType.DOCUMENT);
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
+            when(commentRepository.findById(commentId)).thenReturn(Mono.just(commentExpected));
+
+            Mono<Void> commentVoidMono = commentService.deleteComment(commentId, postId,
+                    authorExpected);
+
+            StepVerifier.create(commentVoidMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
+                    ).verifyErrorMessage("Comment with commentId: '" + commentId + "' in the post with id: '"
+                    + postId + "' not found.");
+        }
+
+        @Test
+        void when_delete_other_user_comment_should_throw_exception() {
+
+            String commentId = "commentId";
+            String postId = "postId";
+            String authorExpected = "author";
+            String otherUser = "other user";
+
+            UserDocument userExpected = userTestBuilder.withUsername(otherUser).build();
+            CommentDocument commentExpectedBeforeUpdate = (CommentDocument) commentTestBuilder.withId(commentId)
+                    .withRelatedPostId(postId).withAuthor(authorExpected).build(ObjectType.DOCUMENT);
+
+            when(userService.findByUsername(authorExpected)).thenReturn(Mono.just(userExpected));
+            when(commentRepository.findById(commentId)).thenReturn(Mono.just(commentExpectedBeforeUpdate));
+
+            Mono<Void> commentVoidMono = commentService.deleteComment(commentId, postId,
+                    authorExpected);
+
+            StepVerifier.create(commentVoidMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1))
+                                            .findByUsername(authorExpected),
+                                    () -> verifyNoMoreInteractions(userService),
+                                    () -> verify(commentRepository, times(1))
+                                            .findById(commentId),
+                                    () -> verifyNoMoreInteractions(commentRepository))
                     ).verifyErrorMessage("User can only change his own comments.");
         }
     }
 
     private boolean assertComment(CommentDocument commentExpected, CommentDocument commentActual) {
 
-        assertAll(() -> assertEquals(commentExpected, commentActual,
-                () -> "should return comment: " + commentExpected + ", but was: " + commentActual),
+        assertAll(
+                () -> assertEquals(commentExpected, commentActual,
+                        () -> "should return comment: " + commentExpected + ", but was: " + commentActual),
                 () -> assertEquals(commentExpected.getId(), commentActual.getId(),
                         () -> "should return comment with id: " + commentExpected.getId() + ", but was: "
                                 + commentActual.getId()),
