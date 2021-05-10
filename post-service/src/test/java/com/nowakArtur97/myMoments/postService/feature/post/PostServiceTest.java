@@ -234,7 +234,7 @@ class PostServiceTest {
     class DeletePostTest {
 
         @Test
-        void when_delete_post_should_update_post() {
+        void when_delete_post_should_delete_post() {
 
             String postId = "post id";
             String authorExpected = "author";

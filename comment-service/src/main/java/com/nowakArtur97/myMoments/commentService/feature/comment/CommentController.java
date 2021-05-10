@@ -5,6 +5,7 @@ import com.nowakArtur97.myMoments.commentService.common.util.JwtUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,5 +68,25 @@ class CommentController {
                 .flatMap(username -> commentService.updateComment(id, postId, username, commentDTO))
                 .map(commentDocument -> modelMapper.map(commentDocument, CommentModel.class))
                 .map(ResponseEntity::ok);
+    }
+
+    @DeleteMapping(path = "/comments/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Added to remove the default 200 status added by Swagger
+    @ApiOperation(value = "Delete a comment", notes = "Provide a Post's and Comment's ids")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Successfully deleted a comment"),
+            @ApiResponse(code = 400, message = "Invalid Post's or Comment's id supplied"),
+            @ApiResponse(code = 404, message = "Could not find Post or Comment with provided ids", response = ErrorResponse.class)})
+    Mono<ResponseEntity<Void>> deleteCommentInPost(
+            @ApiParam(value = "Id of the Post Comment's being deleted", name = "postId", type = "string", required = true, example = "id")
+            @PathVariable("postId") String postId,
+            @ApiParam(value = "Id of the Comment being deleted", name = "id", type = "string", required = true, example = "id")
+            @PathVariable("id") String id,
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+
+        return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
+                .flatMap((username) -> commentService.deleteComment(id, postId, username))
+                .map((commentDocumentVoid) -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+                        .body(commentDocumentVoid));
     }
 }
