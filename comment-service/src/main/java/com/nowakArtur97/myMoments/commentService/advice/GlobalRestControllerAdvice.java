@@ -1,8 +1,8 @@
-package com.nowakArtur97.myMoments.postService.advice;
+package com.nowakArtur97.myMoments.commentService.advice;
 
-import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
-import com.nowakArtur97.myMoments.postService.exception.ForbiddenException;
-import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
+import com.nowakArtur97.myMoments.commentService.common.model.ErrorResponse;
+import com.nowakArtur97.myMoments.commentService.exception.ForbiddenException;
+import com.nowakArtur97.myMoments.commentService.exception.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
