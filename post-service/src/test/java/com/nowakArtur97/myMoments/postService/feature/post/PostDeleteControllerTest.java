@@ -124,7 +124,7 @@ class PostDeleteControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                    () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(401, errorResponse.getStatus(),
                                             () -> "should return error response with 401 status, but was: "
@@ -168,7 +168,7 @@ class PostDeleteControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                    () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(401, errorResponse.getStatus(),
                                             () -> "should return error response with 401 status, but was: "
@@ -213,7 +213,7 @@ class PostDeleteControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                    () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(404, errorResponse.getStatus(),
                                             () -> "should return error response with 404 status, but was: "
@@ -260,7 +260,7 @@ class PostDeleteControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                    () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(403, errorResponse.getStatus(),
                                             () -> "should return error response with 403 status, but was: "

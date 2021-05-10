@@ -13,7 +13,7 @@ import java.util.Objects;
 public class ErrorResponse {
 
     @ApiModelProperty(notes = "Error's time")
-    private final LocalDateTime dateTime;
+    private final LocalDateTime timestamp;
 
     @ApiModelProperty(notes = "Error's status")
     private final int status;
@@ -22,7 +22,7 @@ public class ErrorResponse {
     private final List<String> errors;
 
     public ErrorResponse(LocalDateTime timestamp, int status, List<String> errors) {
-        this.dateTime = timestamp;
+        this.timestamp = timestamp;
         this.status = status;
         this.errors = errors;
     }
@@ -36,12 +36,12 @@ public class ErrorResponse {
         ErrorResponse that = (ErrorResponse) o;
 
         return getStatus() == that.getStatus() &&
-                Objects.equals(getDateTime(), that.getDateTime()) &&
+                Objects.equals(getTimestamp(), that.getTimestamp()) &&
                 Objects.equals(getErrors(), that.getErrors());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDateTime(), getStatus(), getErrors());
+        return Objects.hash(getTimestamp(), getStatus(), getErrors());
     }
 }
