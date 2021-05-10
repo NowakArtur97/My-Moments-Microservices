@@ -50,6 +50,23 @@ services:
       - mongo-db-user-service
       - mongo-db-post-service
 
+  comment-service:
+    restart: on-failure
+    build: ./comment-service
+    networks:
+      - my-moments
+    container_name: comment-service
+    ports:
+      - 8083:8083
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /comment-service/dir:/app
+    depends_on:
+      - discovery-service
+      - mongo-db-user-service
+      - mongo-db-comment-service
+
   mongo-db-user-service:
     image: mongo:3.6
     ports:
