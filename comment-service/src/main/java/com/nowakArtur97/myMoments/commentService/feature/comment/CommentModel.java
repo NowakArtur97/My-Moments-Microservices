@@ -1,11 +1,10 @@
 package com.nowakArtur97.myMoments.commentService.feature.comment;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,10 +24,8 @@ class CommentModel implements Comment {
     private String author;
 
     @ApiModelProperty(notes = "The comment's creation date")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     @ApiModelProperty(notes = "The comment's modification date")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
-    private Date modifyDate;
+    private LocalDateTime modifyDate;
 }

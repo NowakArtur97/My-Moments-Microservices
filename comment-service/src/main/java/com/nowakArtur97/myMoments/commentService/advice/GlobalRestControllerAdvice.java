@@ -3,14 +3,14 @@ package com.nowakArtur97.myMoments.commentService.advice;
 import com.nowakArtur97.myMoments.commentService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.commentService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.commentService.exception.ResourceNotFoundException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 class GlobalRestControllerAdvice {
 
-    @ExceptionHandler({ConstraintViolationException.class})
-    ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException exception) {
+    @ExceptionHandler({WebExchangeBindException.class})
+    ResponseEntity<Object> handleWebExchangeBindException(WebExchangeBindException exception) {
 
-        List<String> errors = exception.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage)
+        List<String> errors = exception.getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
         ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), errors);

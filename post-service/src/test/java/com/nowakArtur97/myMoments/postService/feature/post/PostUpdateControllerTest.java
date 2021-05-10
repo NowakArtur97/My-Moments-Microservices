@@ -200,7 +200,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
@@ -244,7 +244,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
@@ -301,7 +301,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
@@ -348,7 +348,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
@@ -393,7 +393,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(401, errorResponse.getStatus(),
                                             () -> "should return error response with 401 status, but was: "
@@ -443,7 +443,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(401, errorResponse.getStatus(),
                                             () -> "should return error response with 401 status, but was: "
@@ -490,7 +490,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(404, errorResponse.getStatus(),
                                             () -> "should return error response with 404 status, but was: "
@@ -536,7 +536,7 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(403, errorResponse.getStatus(),
                                             () -> "should return error response with 403 status, but was: "

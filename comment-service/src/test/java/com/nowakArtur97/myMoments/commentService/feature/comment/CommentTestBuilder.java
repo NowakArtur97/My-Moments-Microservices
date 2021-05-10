@@ -2,7 +2,7 @@ package com.nowakArtur97.myMoments.commentService.feature.comment;
 
 import com.nowakArtur97.myMoments.commentService.testUtil.enums.ObjectType;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 class CommentTestBuilder {
@@ -15,9 +15,9 @@ class CommentTestBuilder {
 
     private String relatedPostId;
 
-    private Date createDate = new Date();
+    private LocalDateTime createDate = LocalDateTime.now();
 
-    private Date modifyDate = new Date();
+    private LocalDateTime modifyDate = LocalDateTime.now();
 
     CommentTestBuilder withId(String id) {
 
@@ -33,7 +33,7 @@ class CommentTestBuilder {
         return this;
     }
 
-     CommentTestBuilder withAuthor(String author) {
+    CommentTestBuilder withAuthor(String author) {
 
         this.author = author;
 
@@ -47,7 +47,7 @@ class CommentTestBuilder {
         return this;
     }
 
-     Comment build(ObjectType type) {
+    Comment build(ObjectType type) {
 
         Comment comment;
 
@@ -91,8 +91,8 @@ class CommentTestBuilder {
 
         relatedPostId = null;
 
-        createDate = new Date();
+        createDate = LocalDateTime.now();
 
-        modifyDate = new Date();
+        modifyDate = LocalDateTime.now();
     }
 }

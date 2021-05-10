@@ -181,7 +181,7 @@ class PostCreateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
@@ -223,7 +223,7 @@ class PostCreateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
@@ -278,7 +278,7 @@ class PostCreateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
@@ -323,10 +323,53 @@ class PostCreateControllerTest {
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "
                                                     + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(400, errorResponse.getStatus(),
                                             () -> "should return error response with 400 status, but was: "
+                                                    + errorResponse.getStatus()));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
+
+    @Test
+    void when_create_valid_post_without_token_should_return_error_response() {
+
+        PostDTO postDTOExpected = (PostDTO) postTestBuilder.build(ObjectType.CREATE_DTO);
+        String postAsString = ObjectTestMapper.asJsonString(postDTOExpected);
+
+        MultiValueMap<String, Object> objectMultiValueMap = new LinkedMultiValueMap<>();
+        objectMultiValueMap.add("post", postAsString);
+        objectMultiValueMap.add("photos",
+                new ClassPathResource("example.jpg", this.getClass().getClassLoader()));
+
+        Mono<ErrorResponse> errorResponseMono = webTestClient.post()
+                .uri(POSTS_BASE_PATH)
+                .body(BodyInserters.fromMultipartData(objectMultiValueMap))
+                .exchange()
+                .expectStatus()
+                .isUnauthorized()
+                .returnResult(ErrorResponse.class)
+                .getResponseBody()
+                .single();
+
+        StepVerifier.create(errorResponseMono)
+                .thenConsumeWhile(
+                        errorResponse -> {
+                            assertAll(
+                                    () -> assertEquals("JWT token is missing in request headers.",
+                                            errorResponse.getErrors().get(0),
+                                            () -> "should return error response with message: " +
+                                                    "'JWT token is missing in request headers.'" + ", but was: "
+                                                    + errorResponse.getErrors().get(0)),
+                                    () -> assertEquals(1, errorResponse.getErrors().size(),
+                                            () -> "should return error response with 1 message, but was: "
+                                                    + errorResponse.getErrors().size()),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                            () -> "should return error response with not null timestamp, but was: null"),
+                                    () -> assertEquals(401, errorResponse.getStatus(),
+                                            () -> "should return error response with 401 status, but was: "
                                                     + errorResponse.getStatus()));
                             return true;
                         }

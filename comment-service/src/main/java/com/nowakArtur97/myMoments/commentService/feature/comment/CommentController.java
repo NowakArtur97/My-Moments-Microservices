@@ -20,7 +20,7 @@ import java.net.URI;
 @ApiResponses(value = {
         @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
         @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
-public class CommentController {
+class CommentController {
 
     private final CommentService commentService;
 

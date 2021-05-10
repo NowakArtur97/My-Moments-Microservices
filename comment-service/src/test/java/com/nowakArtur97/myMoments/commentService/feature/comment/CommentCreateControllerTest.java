@@ -1,9 +1,13 @@
 package com.nowakArtur97.myMoments.commentService.feature.comment;
 
+import com.nowakArtur97.myMoments.commentService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.commentService.common.util.JwtUtil;
 import com.nowakArtur97.myMoments.commentService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.commentService.testUtil.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -124,6 +128,131 @@ class CommentCreateControllerTest {
                                     () -> verify(modelMapper, times(1)).map(commentDocumentExpected,
                                             CommentModel.class),
                                     () -> verifyNoMoreInteractions(modelMapper));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
+
+    @ParameterizedTest(name = "{index}: For Comment content: {0}")
+    @EmptySource
+    @ValueSource(strings = {" "})
+    void when_add_comment_without_content_should_return_error_response(String invalidContent) {
+
+        String relatedPostId = "postId";
+        CommentDTO commentDTOExpected = (CommentDTO) commentTestBuilder.withContent(invalidContent).build(ObjectType.CREATE_DTO);
+
+        Mono<ErrorResponse> errorResponseMono = webTestClient.post()
+                .uri(COMMENTS_BASE_PATH, relatedPostId)
+                .bodyValue(commentDTOExpected)
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .returnResult(ErrorResponse.class)
+                .getResponseBody()
+                .single();
+
+        StepVerifier.create(errorResponseMono)
+                .thenConsumeWhile(
+                        errorResponse -> {
+                            assertAll(
+                                    () -> assertEquals("Content cannot be blank.",
+                                            errorResponse.getErrors().get(0),
+                                            () -> "should return error response with message: "
+                                                    + "'Content cannot be blank.'" + ", but was: "
+                                                    + errorResponse.getErrors().get(0)),
+                                    () -> assertEquals(1, errorResponse.getErrors().size(),
+                                            () -> "should return error response with 1 message, but was: "
+                                                    + errorResponse.getErrors().size()),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                            () -> "should return error response with not null timestamp, but was: null"),
+                                    () -> assertEquals(400, errorResponse.getStatus(),
+                                            () -> "should return error response with 400 status, but was: "
+                                                    + errorResponse.getStatus()),
+                                    () -> verifyNoInteractions(commentService),
+                                    () -> verifyNoInteractions(modelMapper));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
+
+    @Test
+    void when_add_comment_with_too_long_content_should_return_error_response() {
+
+        String relatedPostId = "postId";
+        CommentDTO commentDTOExpected = (CommentDTO) commentTestBuilder.withContent("content".repeat(34))
+                .build(ObjectType.CREATE_DTO);
+
+        Mono<ErrorResponse> errorResponseMono = webTestClient.post()
+                .uri(COMMENTS_BASE_PATH, relatedPostId)
+                .bodyValue(commentDTOExpected)
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .returnResult(ErrorResponse.class)
+                .getResponseBody()
+                .single();
+
+        StepVerifier.create(errorResponseMono)
+                .thenConsumeWhile(
+                        errorResponse -> {
+                            assertAll(
+                                    () -> assertEquals("Content cannot be longer than 200.",
+                                            errorResponse.getErrors().get(0),
+                                            () -> "should return error response with message: "
+                                                    + "'Content cannot be longer than 200.'" + ", but was: "
+                                                    + errorResponse.getErrors().get(0)),
+                                    () -> assertEquals(1, errorResponse.getErrors().size(),
+                                            () -> "should return error response with 1 message, but was: "
+                                                    + errorResponse.getErrors().size()),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                            () -> "should return error response with not null timestamp, but was: null"),
+                                    () -> assertEquals(400, errorResponse.getStatus(),
+                                            () -> "should return error response with 400 status, but was: "
+                                                    + errorResponse.getStatus()),
+                                    () -> verifyNoInteractions(commentService),
+                                    () -> verifyNoInteractions(modelMapper));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
+
+    @Test
+    void when_add_comment_without_token_should_return_error_response() {
+
+        String relatedPostId = "postId";
+        CommentDTO commentDTOExpected = (CommentDTO) commentTestBuilder.build(ObjectType.CREATE_DTO);
+
+        Mono<ErrorResponse> errorResponseMono = webTestClient.post()
+                .uri(COMMENTS_BASE_PATH, relatedPostId)
+                .bodyValue(commentDTOExpected)
+                .exchange()
+                .expectStatus()
+                .isUnauthorized()
+                .returnResult(ErrorResponse.class)
+                .getResponseBody()
+                .single();
+
+        StepVerifier.create(errorResponseMono)
+                .thenConsumeWhile(
+                        errorResponse -> {
+                            assertAll(
+                                    () -> assertEquals("JWT token is missing in request headers.",
+                                            errorResponse.getErrors().get(0),
+                                            () -> "should return error response with message: " +
+                                                    "'JWT token is missing in request headers.'" + ", but was: "
+                                                    + errorResponse.getErrors().get(0)),
+                                    () -> assertEquals(1, errorResponse.getErrors().size(),
+                                            () -> "should return error response with 1 message, but was: "
+                                                    + errorResponse.getErrors().size()),
+                                    () -> assertNotNull(errorResponse.getDateTime(),
+                                            () -> "should return error response with not null timestamp, but was: null"),
+                                    () -> assertEquals(401, errorResponse.getStatus(),
+                                            () -> "should return error response with 401 status, but was: "
+                                                    + errorResponse.getStatus()),
+                                    () -> verifyNoInteractions(commentService),
+                                    () -> verifyNoInteractions(modelMapper));
                             return true;
                         }
                 ).verifyComplete();
