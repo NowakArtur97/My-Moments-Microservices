@@ -48,7 +48,6 @@ class PostService {
                     UserDocument userDocument = tuple.getT1();
 
                     if (postDocument.getAuthor().equals(userDocument.getUsername())) {
-                        postDocument.setId(postId);
                         postDocument.setCaption(postDTO.getCaption());
                         postDocument.setPhotos(postDTO.getPhotos());
 

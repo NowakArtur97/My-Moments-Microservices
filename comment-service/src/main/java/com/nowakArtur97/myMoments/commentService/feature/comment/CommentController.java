@@ -35,7 +35,7 @@ class CommentController {
             @ApiResponse(code = 400, message = "Incorrectly entered data", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
     Mono<ResponseEntity<CommentModel>> addCommentToPost(
-            @ApiParam(value = "Id of the Post being commented", name = "postId", type = "integer", required = true, example = "1")
+            @ApiParam(value = "Id of the Post being commented", name = "postId", type = "string", required = true, example = "id")
             @PathVariable("postId") String postId,
             @ApiParam(value = "Comment content", name = "comment", required = true) @RequestBody @Valid CommentDTO commentDTO,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
@@ -46,5 +46,26 @@ class CommentController {
                 .map(commentModel -> ResponseEntity.created(URI.create("/api/v1/posts/" + commentModel.getId() + "/comments"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(commentModel));
+    }
+
+    @PutMapping(path = "/comments/{id}")
+    @ApiOperation(value = "Update a comment in the post", notes = "Provide a Post's and Comment's ids")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully updated comment", response = CommentModel.class),
+            @ApiResponse(code = 400, message = "Invalid Post's or Comment's id supplied or incorrectly entered data"),
+            @ApiResponse(code = 404, message = "Could not find Post or Comment with provided ids", response = ErrorResponse.class)})
+    Mono<ResponseEntity<CommentModel>> updateCommentInPost(
+            @ApiParam(value = "Id of the Post Comment's being updated", name = "postId", type = "string", required = true, example = "id")
+            @PathVariable("postId") String postId,
+            @ApiParam(value = "Id of the Comment being updated", name = "id", type = "string", required = true, example = "id")
+            @PathVariable("id") String id,
+            @ApiParam(value = "Updated comment content", name = "comment", required = true) @RequestBody @Valid CommentDTO commentDTO,
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
+    ) {
+
+        return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
+                .flatMap(username -> commentService.updateComment(id, postId, username, commentDTO))
+                .map(commentDocument -> modelMapper.map(commentDocument, CommentModel.class))
+                .map(ResponseEntity::ok);
     }
 }

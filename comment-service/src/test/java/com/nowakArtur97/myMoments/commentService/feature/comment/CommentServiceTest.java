@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.commentService.feature.comment;
 
+import com.nowakArtur97.myMoments.commentService.feature.user.UserService;
 import com.nowakArtur97.myMoments.commentService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.commentService.testUtil.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
@@ -26,6 +27,9 @@ class CommentServiceTest {
     @Mock
     private CommentRepository commentRepository;
 
+    @Mock
+    private UserService userService;
+
     private static MockedStatic<UUID> mocked;
 
     private static CommentTestBuilder commentTestBuilder;
@@ -43,7 +47,7 @@ class CommentServiceTest {
     @BeforeEach
     void setUp() {
 
-        commentService = new CommentService(commentRepository);
+        commentService = new CommentService(commentRepository, userService);
     }
 
     @Nested
