@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.commentService.configuration.swagger;
 
 
+import com.nowakArtur97.myMoments.commentService.feature.comment.CommentTag;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,9 @@ class SwaggerConfiguration {
                 .paths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors()))
                 .build()
                 .apiInfo(getApiDetails(swaggerConfigurationProperties))
-//                .tags(
-//                )
+                .tags(
+                        new Tag(CommentTag.RESOURCE, CommentTag.DESCRIPTION)
+                )
                 .securityContexts(List.of(getSecurityContext(swaggerConfigurationProperties)))
                 .securitySchemes(List.of(getApiKey(swaggerConfigurationProperties)));
     }

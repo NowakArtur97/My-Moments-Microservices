@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 @Configuration
 @EnableReactiveMongoRepositories(basePackages =
-        "com.nowakArtur97.myMoments.postService.feature.comment",
+        "com.nowakArtur97.myMoments.commentService.feature.comment",
         reactiveMongoTemplateRef = "commentsMongoTemplate")
 class CommentsDatabaseMongoConfiguration {
 }
