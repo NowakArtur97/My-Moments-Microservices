@@ -1,8 +1,10 @@
 package com.nowakArtur97.myMoments.userService.feature.document;
 
+import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
+import com.nowakArtur97.myMoments.userService.feature.messaging.PostEventSender;
+import com.nowakArtur97.myMoments.userService.feature.messaging.UserUpdateEventPayload;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserRegistrationDTO;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
-import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.feature.validation.UserValidationGroupSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,8 @@ public class UserService {
     private final RoleService roleService;
 
     private final UserMapper userMapper;
+
+    private final PostEventSender postEventSender;
 
     public boolean isUsernameAlreadyInUse(String username) {
 
@@ -66,11 +70,20 @@ public class UserService {
         UserDocument userDocument = findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User with username: '" + username + "' not found."));
 
+        boolean shouldSendMessage = !username.equals(userUpdateDTO.getUsername());
+
         userUpdateDTO.setId(userDocument.getId());
 
         userMapper.convertDTOToDocument(userDocument, userUpdateDTO, image);
 
-        return userRepository.save(userDocument);
+        userDocument = userRepository.save(userDocument);
+
+        if (shouldSendMessage) {
+
+            postEventSender.sendPostCreated(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
+        }
+
+        return userDocument;
     }
 
     public void deleteUser(String username) {

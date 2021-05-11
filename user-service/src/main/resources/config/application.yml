@@ -6,6 +6,27 @@ spring:
     name: user-service
   profiles:
     active: ${SPRING_ACTIVE_PROFILE:dev}
+  #
+  # Messaging / RabbitMQ
+  #
+  cloud:
+    stream:
+      rabbit:
+        binder:
+          brokers: 192.168.99.100:15672
+      bindings:
+        momentsPostChanged:
+          destination: moments.post.changed
+          contentType: application/json
+      default:
+        binder: rabbit
+        contentType: application/json
+      source: momentsPostChanged
+  rabbitmq:
+    host: 192.168.99.100
+    port: 5672
+    username: my-moments-user
+    password: my-moments-password
 #
 # Eureka
 #
