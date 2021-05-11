@@ -17,55 +17,58 @@ services:
     volumes:
       - /discovery-service/dir:/app
 
-  user-service:
-    restart: on-failure
-    build: ./user-service
-    networks:
-      - my-moments
-    container_name: user-service
-    ports:
-      - 8081:8081
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    volumes:
-      - /user-service/dir:/app
-    depends_on:
-      - discovery-service
-      - mongo-db-user-service
-
-  post-service:
-    restart: on-failure
-    build: ./post-service
-    networks:
-      - my-moments
-    container_name: post-service
-    ports:
-      - 8082:8082
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    volumes:
-      - /post-service/dir:/app
-    depends_on:
-      - discovery-service
-      - mongo-db-user-service
-      - mongo-db-post-service
-
-  comment-service:
-    restart: on-failure
-    build: ./comment-service
-    networks:
-      - my-moments
-    container_name: comment-service
-    ports:
-      - 8083:8083
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    volumes:
-      - /comment-service/dir:/app
-    depends_on:
-      - discovery-service
-      - mongo-db-user-service
-      - mongo-db-comment-service
+#  user-service:
+#    restart: on-failure
+#    build: ./user-service
+#    networks:
+#      - my-moments
+#    container_name: user-service
+#    ports:
+#      - 8081:8081
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    volumes:
+#      - /user-service/dir:/app
+#    depends_on:
+#      - discovery-service
+#      - mongo-db-user-service
+#      - kafka
+#
+#  post-service:
+#    restart: on-failure
+#    build: ./post-service
+#    networks:
+#      - my-moments
+#    container_name: post-service
+#    ports:
+#      - 8082:8082
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    volumes:
+#      - /post-service/dir:/app
+#    depends_on:
+#      - discovery-service
+#      - mongo-db-user-service
+#      - mongo-db-post-service
+#      - kafka
+#
+#  comment-service:
+#    restart: on-failure
+#    build: ./comment-service
+#    networks:
+#      - my-moments
+#    container_name: comment-service
+#    ports:
+#      - 8083:8083
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    volumes:
+#      - /comment-service/dir:/app
+#    depends_on:
+#      - discovery-service
+#      - mongo-db-user-service
+#      - mongo-db-comment-service
+#      - kafka
 
   mongo-db-user-service:
     image: mongo:3.6
@@ -96,3 +99,15 @@ services:
     networks:
       - my-moments
     container_name: mongo-db-comment-service
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    networks:
+      - my-moments
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: my-moments-user
+      RABBITMQ_DEFAULT_PASS: my-moments-password
+    ports:
+      - 5672:5672
+      - 15672:15672
