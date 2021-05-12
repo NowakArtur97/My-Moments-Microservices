@@ -80,7 +80,7 @@ public class UserService {
 
         if (shouldSendMessage) {
 
-            userEventProducer.sendPostCreated(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
+            userEventProducer.sendUserUpdateEvent(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
         }
 
         return userDocument;

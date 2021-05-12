@@ -11,7 +11,7 @@ public class UserEventProducer {
 
     private final UserEventStream channels;
 
-    public void sendPostCreated(UserUpdateEventPayload userUpdateEventPayload) {
+    public void sendUserUpdateEvent(UserUpdateEventPayload userUpdateEventPayload) {
 
         Message<UserUpdateEventPayload> message = MessageBuilder.withPayload(userUpdateEventPayload).build();
 
