@@ -32,7 +32,7 @@ services:
 #    depends_on:
 #      - discovery-service
 #      - mongo-db-user-service
-#      - kafka
+#      - rabbitmq
 #
 #  post-service:
 #    restart: on-failure
@@ -50,7 +50,7 @@ services:
 #      - discovery-service
 #      - mongo-db-user-service
 #      - mongo-db-post-service
-#      - kafka
+#      - rabbitmq
 #
 #  comment-service:
 #    restart: on-failure
@@ -68,7 +68,7 @@ services:
 #      - discovery-service
 #      - mongo-db-user-service
 #      - mongo-db-comment-service
-#      - kafka
+#      - rabbitmq
 
   mongo-db-user-service:
     image: mongo:3.6
@@ -90,15 +90,15 @@ services:
       - my-moments
     container_name: mongo-db-post-service
 
-#  mongo-db-comment-service:
-#    image: mongo:3.6
-#    ports:
-#      - 27021:27017
-#    volumes:
-#      - /var/lib/mongo-db-comment-service:/data/db
-#    networks:
-#      - my-moments
-#    container_name: mongo-db-comment-service
+  mongo-db-comment-service:
+    image: mongo:3.6
+    ports:
+      - 27021:27017
+    volumes:
+      - /var/lib/mongo-db-comment-service:/data/db
+    networks:
+      - my-moments
+    container_name: mongo-db-comment-service
 
   rabbitmq:
     image: rabbitmq:3-management-alpine

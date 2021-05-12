@@ -39,7 +39,7 @@ public class UserEventProducerTest {
         UserUpdateEventPayload userUpdateEventPayload =
                 new UserUpdateEventPayload("previousUsername", "newUsername");
 
-        when(userEventStream.userChangedChannel()).thenReturn(messageChannel);
+        when(userEventStream.userUpdateChannel()).thenReturn(messageChannel);
         when(messageChannel.send(any(Message.class))).thenReturn(true);
 
         userEventProducer.sendUserUpdateEvent(userUpdateEventPayload);

@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.feature.post;
+package com.nowakArtur97.myMoments.commentService.feature.comment;
 
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.messaging.SubscribableChannel;

@@ -5,8 +5,8 @@ import org.springframework.messaging.MessageChannel;
 
 public interface UserEventStream {
 
-    String OUTPUT = "userChangedChannel";
+    String OUTPUT = "userUpdateChannel";
 
     @Output(OUTPUT)
-    MessageChannel userChangedChannel();
+    MessageChannel userUpdateChannel();
 }

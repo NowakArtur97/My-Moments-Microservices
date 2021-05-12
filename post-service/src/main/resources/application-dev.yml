@@ -16,8 +16,8 @@ spring:
   cloud:
     stream:
       bindings:
-        userChangedChannel:
-          destination: user.changed
+        userUpdateChannel:
+          destination: user.update
           contentType: application/json
   rabbitmq:
     host: 192.168.99.100
