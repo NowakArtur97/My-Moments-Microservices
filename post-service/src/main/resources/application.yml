@@ -6,33 +6,6 @@ spring:
     name: post-service
   profiles:
     active: ${SPRING_ACTIVE_PROFILE:dev}
-  #
-  # Messaging
-  #
-  cloud:
-    stream:
-      rabbit:
-        binder:
-          brokers: 192.168.99.100:15672
-        bindings:
-          momentsPostChanged:
-            consumer:
-              startOffset: latest
-              autoCommitOffset: false
-            content-type: application/json
-      bindings:
-        momentsPostChanged:
-          destination: moments.post.changed
-          contentType: application/json
-          group: graphService
-          consumer:
-            startOffset: latest
-            autoCommitOffset: false
-  rabbitmq:
-    host: 192.168.99.100
-    port: 5672
-    username: my-moments-user
-    password: my-moments-password
 #
 # Eureka
 #

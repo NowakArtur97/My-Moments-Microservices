@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.userService.feature.document;
 
 import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
-import com.nowakArtur97.myMoments.userService.feature.messaging.PostEventSender;
+import com.nowakArtur97.myMoments.userService.feature.messaging.UserEventProducer;
 import com.nowakArtur97.myMoments.userService.feature.messaging.UserUpdateEventPayload;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserRegistrationDTO;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
@@ -31,7 +31,7 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    private final PostEventSender postEventSender;
+    private final UserEventProducer userEventProducer;
 
     public boolean isUsernameAlreadyInUse(String username) {
 
@@ -80,7 +80,7 @@ public class UserService {
 
         if (shouldSendMessage) {
 
-            postEventSender.sendPostCreated(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
+            userEventProducer.sendPostCreated(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
         }
 
         return userDocument;

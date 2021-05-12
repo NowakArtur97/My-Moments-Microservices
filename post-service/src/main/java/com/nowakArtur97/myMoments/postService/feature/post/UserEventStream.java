@@ -3,10 +3,10 @@ package com.nowakArtur97.myMoments.postService.feature.post;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.messaging.SubscribableChannel;
 
-public interface PostEventStream {
+public interface UserEventStream {
 
-    String INPUT = "momentsPostChanged";
+    String INPUT = "userChangedChannel";
 
     @Input(INPUT)
-    SubscribableChannel momentsPostChanged();
+    SubscribableChannel userChangedChannel();
 }

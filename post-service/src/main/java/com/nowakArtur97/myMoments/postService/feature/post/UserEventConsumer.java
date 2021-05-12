@@ -12,11 +12,11 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class PostEventListener {
+public class UserEventConsumer {
 
     private final ObjectMapper objectMapper;
 
-    @StreamListener(PostEventStream.INPUT)
+    @StreamListener(UserEventStream.INPUT)
     public void onMessage(Message<byte[]> message) throws IOException {
 
         UserUpdateEventPayload payload = objectMapper.readValue(message.getPayload(), UserUpdateEventPayload.class);
