@@ -1,7 +1,5 @@
 package com.nowakArtur97.myMoments.userService.feature.messaging;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -13,13 +11,9 @@ public class UserEventProducer {
 
     private final UserEventStream channels;
 
-    private final ObjectMapper objectMapper;
+    public void sendPostCreated(UserUpdateEventPayload userUpdateEventPayload) {
 
-    public void sendPostCreated(UserUpdateEventPayload userUpdateEventPayload) throws JsonProcessingException {
-
-        String payloadAsString = objectMapper.writeValueAsString(userUpdateEventPayload);
-
-        Message<String> message = MessageBuilder.withPayload(payloadAsString).build();
+        Message<UserUpdateEventPayload> message = MessageBuilder.withPayload(userUpdateEventPayload).build();
 
         channels.userChangedChannel().send(message);
     }

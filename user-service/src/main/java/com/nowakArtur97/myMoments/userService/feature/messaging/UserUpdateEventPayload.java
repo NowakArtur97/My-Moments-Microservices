@@ -4,12 +4,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import java.io.Serializable;
-
 @RequiredArgsConstructor
 @Getter
 @ToString
-public class UserUpdateEventPayload implements Serializable {
+public class UserUpdateEventPayload {
 
     private final String previousUsername;
 

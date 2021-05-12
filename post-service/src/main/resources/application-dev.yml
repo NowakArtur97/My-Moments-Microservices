@@ -15,9 +15,6 @@ spring:
   #
   cloud:
     stream:
-      rabbit:
-        binder:
-          brokers: 192.168.99.100:15672
       bindings:
         userChangedChannel:
           destination: user.changed
