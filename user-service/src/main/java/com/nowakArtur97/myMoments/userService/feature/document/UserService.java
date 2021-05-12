@@ -70,18 +70,13 @@ public class UserService {
         UserDocument userDocument = findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User with username: '" + username + "' not found."));
 
-        boolean shouldSendMessage = !username.equals(userUpdateDTO.getUsername());
-
         userUpdateDTO.setId(userDocument.getId());
 
         userMapper.convertDTOToDocument(userDocument, userUpdateDTO, image);
 
         userDocument = userRepository.save(userDocument);
 
-        if (shouldSendMessage) {
-
-            userEventProducer.sendUserUpdateEvent(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
-        }
+        userEventProducer.sendUserUpdateEvent(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
 
         return userDocument;
     }

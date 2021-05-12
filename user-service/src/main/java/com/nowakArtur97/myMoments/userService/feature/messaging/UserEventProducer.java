@@ -9,12 +9,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserEventProducer {
 
-    private final UserEventStream channels;
+    private final UserEventStream userEventStream;
 
     public void sendUserUpdateEvent(UserUpdateEventPayload userUpdateEventPayload) {
 
-        Message<UserUpdateEventPayload> message = MessageBuilder.withPayload(userUpdateEventPayload).build();
+        if (shouldSendMessage(userUpdateEventPayload)) {
 
-        channels.userChangedChannel().send(message);
+            Message<UserUpdateEventPayload> message = MessageBuilder.withPayload(userUpdateEventPayload).build();
+
+            userEventStream.userChangedChannel().send(message);
+        }
+    }
+
+    private boolean shouldSendMessage(UserUpdateEventPayload userUpdateEventPayload) {
+        return !userUpdateEventPayload.getNewUsername().equals(userUpdateEventPayload.getPreviousUsername());
     }
 }
