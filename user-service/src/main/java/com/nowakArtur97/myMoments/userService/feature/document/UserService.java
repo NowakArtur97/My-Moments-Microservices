@@ -87,5 +87,7 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with username: '" + username + "' not found."));
 
         userRepository.delete(userDocument);
+
+        userEventProducer.sendUserDeleteEvent(username);
     }
 }

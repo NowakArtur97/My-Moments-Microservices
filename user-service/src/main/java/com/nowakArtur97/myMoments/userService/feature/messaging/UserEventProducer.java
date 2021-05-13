@@ -24,4 +24,11 @@ public class UserEventProducer {
     private boolean shouldSendMessage(UserUpdateEventPayload userUpdateEventPayload) {
         return !userUpdateEventPayload.getNewUsername().equals(userUpdateEventPayload.getPreviousUsername());
     }
+
+    public void sendUserDeleteEvent(String usernamePayload) {
+
+        Message<String> message = MessageBuilder.withPayload(usernamePayload).build();
+
+        userEventStream.userDeleteChannel().send(message);
+    }
 }
