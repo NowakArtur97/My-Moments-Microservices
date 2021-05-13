@@ -22,6 +22,9 @@ spring:
         userDeleteChannel:
           destination: user.delete
           contentType: application/json
+        postDeleteChannel:
+          destination: post.delete
+          contentType: application/json
   rabbitmq:
     host: 192.168.99.100
     port: 5672
