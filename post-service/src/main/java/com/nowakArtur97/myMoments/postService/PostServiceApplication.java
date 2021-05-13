@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.postService;
 
+import com.nowakArtur97.myMoments.postService.feature.post.PostEventStream;
 import com.nowakArtur97.myMoments.postService.feature.post.UserEventStream;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +11,7 @@ import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableReactiveMongoAuditing
-@EnableBinding(UserEventStream.class)
+@EnableBinding({UserEventStream.class, PostEventStream.class})
 public class PostServiceApplication {
 
     public static void main(String[] args) {

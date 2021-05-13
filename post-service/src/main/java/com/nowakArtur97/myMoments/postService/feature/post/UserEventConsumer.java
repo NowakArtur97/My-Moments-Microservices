@@ -22,8 +22,8 @@ class UserEventConsumer {
     @StreamListener(UserEventStream.DELETE_INPUT)
     public void onUserDeleteMessage(Message<String> message) {
 
-        String payload = message.getPayload();
+        String usernamePayload = message.getPayload();
 
-        log.info(payload);
+        log.info(usernamePayload);
     }
 }

@@ -22,6 +22,8 @@ class PostService {
 
     private final UserService userService;
 
+    private final PostEventProducer postEventProducer;
+
     Mono<PostDocument> findPostById(String id) {
 
         return postRepository.findById(id);
@@ -74,6 +76,6 @@ class PostService {
                     } else {
                         return Mono.error(new ForbiddenException("User can only change his own posts."));
                     }
-                });
+                }).doOnSuccess((__) -> postEventProducer.sendPostDeleteEvent(postId));
     }
 }
