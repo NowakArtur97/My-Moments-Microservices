@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(NameWithSpacesGenerator.class)
 @Tag("UserEventProducer_Tests")
-public class UserEventProducerTest {
+class UserEventProducerTest {
 
     private UserEventProducer userEventProducer;
 
@@ -57,5 +58,19 @@ public class UserEventProducerTest {
         userEventProducer.sendUserUpdateEvent(userUpdateEventPayload);
 
         assertAll(() -> verifyNoInteractions(userEventStream));
+    }
+
+    @Test
+    void when_send_user_delete_event_should_send_event() {
+
+        String usernamePayload = "username";
+
+        when(userEventStream.userDeleteChannel()).thenReturn(messageChannel);
+        when(messageChannel.send(any(Message.class))).thenReturn(true);
+
+        userEventProducer.sendUserDeleteEvent(usernamePayload);
+
+        assertAll(() -> verify(messageChannel, times(1)).send(any(Message.class)),
+                () -> verifyNoMoreInteractions(userEventStream));
     }
 }

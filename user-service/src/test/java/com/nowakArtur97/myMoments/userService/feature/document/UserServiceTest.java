@@ -601,7 +601,8 @@ class UserServiceTest {
                     () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),
-                    () -> verifyNoInteractions(roleService));
+                    () -> verifyNoInteractions(roleService),
+                    () -> verifyNoInteractions(userEventProducer));
         }
     }
 
@@ -627,9 +628,10 @@ class UserServiceTest {
                     () -> verify(userRepository, times(1)).findByUsername(userExpected.getUsername()),
                     () -> verify(userRepository, times(1)).delete(userExpected),
                     () -> verifyNoMoreInteractions(userRepository),
+                    () -> verify(userEventProducer, times(1)).sendUserDeleteEvent(userExpected.getUsername()),
+                    () -> verifyNoMoreInteractions(userEventProducer),
                     () -> verifyNoInteractions(userMapper),
-                    () -> verifyNoInteractions(roleService),
-                    () -> verifyNoInteractions(userEventProducer));
+                    () -> verifyNoInteractions(roleService));
         }
 
         @Test
