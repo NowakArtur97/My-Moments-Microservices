@@ -1,7 +1,7 @@
 **/HELP.md
 **/target/
 **/!.mvn/wrapper/maven-wrapper.jar
-**/!gradle/wrapper/gradle-wrapper.jar
+**/gradle/**
 **/!**/src/main/**/target/
 **/!**/src/test/**/target/
 **/.mvn
@@ -33,4 +33,3 @@
 
 ### VS Code ###
 **/.vscode/
-
