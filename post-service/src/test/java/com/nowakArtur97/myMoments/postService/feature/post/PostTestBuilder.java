@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PostTestBuilder {
+class PostTestBuilder {
 
     private String id = UUID.randomUUID().toString();
 
@@ -17,35 +17,35 @@ public class PostTestBuilder {
 
     private List<Binary> photosBinary = new ArrayList<>();
 
-    public PostTestBuilder withId(String id) {
+    PostTestBuilder withId(String id) {
 
         this.id = id;
 
         return this;
     }
 
-    public PostTestBuilder withCaption(String caption) {
+    PostTestBuilder withCaption(String caption) {
 
         this.caption = caption;
 
         return this;
     }
 
-    public PostTestBuilder withAuthor(String author) {
+    PostTestBuilder withAuthor(String author) {
 
         this.author = author;
 
         return this;
     }
 
-    public PostTestBuilder withBinary(List<Binary> photos) {
+    PostTestBuilder withBinary(List<Binary> photos) {
 
         this.photosBinary = photos;
 
         return this;
     }
 
-    public Post build(ObjectType type) {
+    Post build(ObjectType type) {
 
         Post post;
 

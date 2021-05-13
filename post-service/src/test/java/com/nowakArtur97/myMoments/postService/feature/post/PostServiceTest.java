@@ -36,6 +36,9 @@ class PostServiceTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private PostEventProducer postEventProducer;
+
     private static MockedStatic<UUID> mocked;
 
     private static UserTestBuilder userTestBuilder;
@@ -63,7 +66,7 @@ class PostServiceTest {
     @BeforeEach
     void setUp() {
 
-        postService = new PostService(postRepository, userService);
+        postService = new PostService(postRepository, userService, postEventProducer);
     }
 
     @Nested
@@ -90,7 +93,8 @@ class PostServiceTest {
                                 assertPost(postExpected, postActual);
                                 assertAll(() -> verify(postRepository, times(1)).save(postExpected),
                                         () -> verifyNoMoreInteractions(postRepository),
-                                        () -> verifyNoInteractions(userService));
+                                        () -> verifyNoInteractions(userService),
+                                        () -> verifyNoInteractions(postEventProducer));
                                 return true;
                             }
                     ).verifyComplete();
@@ -133,7 +137,8 @@ class PostServiceTest {
                                         () -> verifyNoMoreInteractions(userService),
                                         () -> verify(postRepository, times(1)).findById(postId),
                                         () -> verify(postRepository, times(1)).save(postExpected),
-                                        () -> verifyNoMoreInteractions(postRepository));
+                                        () -> verifyNoMoreInteractions(postRepository),
+                                        () -> verifyNoInteractions(postEventProducer));
                                 return true;
                             }
                     ).verifyComplete();
@@ -164,7 +169,8 @@ class PostServiceTest {
                                             .findByUsername(authorExpected),
                                     () -> verifyNoMoreInteractions(userService),
                                     () -> verify(postRepository, times(1)).findById(postId),
-                                    () -> verifyNoMoreInteractions(postRepository))
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(postEventProducer))
                     ).verifyErrorMessage("User with name: '" + authorExpected + "' not found.");
         }
 
@@ -191,7 +197,8 @@ class PostServiceTest {
                                             .findByUsername(authorExpected),
                                     () -> verifyNoMoreInteractions(userService),
                                     () -> verify(postRepository, times(1)).findById(postId),
-                                    () -> verifyNoMoreInteractions(postRepository))
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(postEventProducer))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
         }
 
@@ -222,7 +229,8 @@ class PostServiceTest {
                                             .findByUsername(authorExpected),
                                     () -> verifyNoMoreInteractions(userService),
                                     () -> verify(postRepository, times(1)).findById(postId),
-                                    () -> verifyNoMoreInteractions(postRepository))
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(postEventProducer))
                     ).verifyErrorMessage("User can only change his own posts.");
         }
     }
@@ -254,7 +262,10 @@ class PostServiceTest {
                                     () -> verifyNoMoreInteractions(userService),
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verify(postRepository, times(1)).delete(postExpected),
-                                    () -> verifyNoMoreInteractions(postRepository))
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(postEventProducer, times(1))
+                                            .sendPostDeleteEvent(postId),
+                                    () -> verifyNoMoreInteractions(postEventProducer))
                     ).verifyComplete();
         }
 
@@ -279,7 +290,8 @@ class PostServiceTest {
                                             .findByUsername(authorExpected),
                                     () -> verifyNoMoreInteractions(userService),
                                     () -> verify(postRepository, times(1)).findById(postId),
-                                    () -> verifyNoMoreInteractions(postRepository))
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(postEventProducer))
                     ).verifyErrorMessage("User with name: '" + authorExpected + "' not found.");
         }
 
@@ -303,7 +315,8 @@ class PostServiceTest {
                                             .findByUsername(authorExpected),
                                     () -> verifyNoMoreInteractions(userService),
                                     () -> verify(postRepository, times(1)).findById(postId),
-                                    () -> verifyNoMoreInteractions(postRepository))
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(postEventProducer))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
         }
 
@@ -330,7 +343,8 @@ class PostServiceTest {
                                             .findByUsername(authorExpected),
                                     () -> verifyNoMoreInteractions(userService),
                                     () -> verify(postRepository, times(1)).findById(postId),
-                                    () -> verifyNoMoreInteractions(postRepository))
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verifyNoInteractions(postEventProducer))
                     ).verifyErrorMessage("User can only change his own posts.");
         }
     }
@@ -355,7 +369,8 @@ class PostServiceTest {
                                 assertAll(
                                         () -> verify(postRepository, times(1)).findById(postId),
                                         () -> verifyNoMoreInteractions(postRepository),
-                                        () -> verifyNoInteractions(userService));
+                                        () -> verifyNoInteractions(userService),
+                                        () -> verifyNoInteractions(postEventProducer));
                                 return true;
                             }
                     ).verifyComplete();
@@ -376,7 +391,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(userService))
+                                    () -> verifyNoInteractions(userService),
+                                    () -> verifyNoInteractions(postEventProducer))
                     )
                     .verifyComplete();
         }
@@ -401,7 +417,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findByAuthor(author),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(userService)))
+                                    () -> verifyNoInteractions(userService),
+                                    () -> verifyNoInteractions(postEventProducer)))
                     .verifyComplete();
         }
     }
