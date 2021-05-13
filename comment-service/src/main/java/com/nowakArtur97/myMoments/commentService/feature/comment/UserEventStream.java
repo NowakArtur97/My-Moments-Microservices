@@ -5,8 +5,13 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface UserEventStream {
 
-    String INPUT = "userUpdateChannel";
+    String UPDATE_INPUT = "userUpdateChannel";
 
-    @Input(INPUT)
+    @Input(UPDATE_INPUT)
     SubscribableChannel userUpdateChannel();
+
+    String DELETE_INPUT = "userDeleteChannel";
+
+    @Input(DELETE_INPUT)
+    SubscribableChannel userDeleteChannel();
 }

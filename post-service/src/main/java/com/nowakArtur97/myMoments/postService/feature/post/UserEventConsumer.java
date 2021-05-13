@@ -11,11 +11,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 class UserEventConsumer {
 
-    @StreamListener(UserEventStream.INPUT)
-    public void onMessage(Message<UserUpdateEventPayload> message) {
+    @StreamListener(UserEventStream.UPDATE_INPUT)
+    public void onUserUpdateMessage(Message<UserUpdateEventPayload> message) {
 
         UserUpdateEventPayload payload = message.getPayload();
 
         log.info(payload.toString());
+    }
+
+    @StreamListener(UserEventStream.DELETE_INPUT)
+    public void onUserDeleteMessage(Message<String> message) {
+
+        String payload = message.getPayload();
+
+        log.info(payload);
     }
 }
