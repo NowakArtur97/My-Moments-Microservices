@@ -1,0 +1,13 @@
+#
+# Spring
+#
+spring:
+  application:
+    name: post-service
+  profiles:
+    active: ${SPRING_ACTIVE_PROFILE:dev}
+#
+# Server
+#
+server:
+  port: 8082
