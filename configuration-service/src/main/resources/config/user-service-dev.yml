@@ -1,6 +1,3 @@
-#
-# Spring
-#
 spring:
   #
   # Mongo DB
@@ -10,10 +7,9 @@ spring:
       database: my-moments-user-service
       host: 192.168.99.100
       port: 27017
-  #
-  # Messaging / RabbitMQ
-  #
-  cloud:
+    #
+    # Messaging / RabbitMQ
+    #
     stream:
       bindings:
         userUpdateChannel:
@@ -22,8 +18,6 @@ spring:
         userDeleteChannel:
           destination: user.delete
           contentType: application/json
-  rabbitmq:
-    host: 192.168.99.100
-    port: 5672
-    username: my-moments-user
-    password: my-moments-password
+        postDeleteChannel:
+          destination: post.delete
+          contentType: application/json
