@@ -10,6 +10,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.io.IOException;
 @ApiResponses(value = {
         @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
         @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
+@RefreshScope
 class UserController {
 
     @Value("${my-moments.jwt.validity:36000000}")

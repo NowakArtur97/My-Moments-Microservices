@@ -7,6 +7,7 @@ import com.nowakArtur97.myMoments.userService.feature.document.CustomUserDetails
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ApiResponses(value = {
         @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
         @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
+@RefreshScope
 class AuthenticationController {
 
     @Value("${my-moments.jwt.validity:36000000}")

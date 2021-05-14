@@ -9,6 +9,7 @@ import com.nowakArtur97.myMoments.userService.feature.document.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -26,6 +27,7 @@ import java.io.IOException;
 @RequestMapping("/api/v1/registration")
 @RequiredArgsConstructor
 @Api(tags = {UserRegistrationTag.RESOURCE})
+@RefreshScope
 class UserRegistrationController {
 
     @Value("${my-moments.jwt.validity:36000000}")

@@ -52,7 +52,7 @@ my-moments:
   #
   jwt:
     secretKey: secret
-    validity: 36000000
+    validity: 72000000
     authenticated-ant-matchers: /api/v1/**
     ignored-endpoints:
       - /v2/api-docs
