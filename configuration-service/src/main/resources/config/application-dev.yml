@@ -1,16 +1,4 @@
 #
-# Spring
-#
-spring:
-  #
-  # Messaging / RabbitMQ
-  #
-  rabbitmq:
-    host: 192.168.99.100
-    port: 5672
-    username: my-moments-user
-    password: my-moments-password
-#
 # Eureka
 #
 eureka:
