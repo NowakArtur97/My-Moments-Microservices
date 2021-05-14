@@ -1,7 +1,13 @@
+#
+# Eureka
+#
 eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
   renewalPercentThreshold: 0.85
+#
+# Server
+#
 server:
   port: 8761
