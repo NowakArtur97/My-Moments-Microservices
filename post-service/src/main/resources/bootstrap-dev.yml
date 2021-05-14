@@ -5,4 +5,4 @@ spring:
     #
     config:
       uri: http://localhost:8888
-      profile: dev
+      profile: ${SPRING_ACTIVE_PROFILE:dev}

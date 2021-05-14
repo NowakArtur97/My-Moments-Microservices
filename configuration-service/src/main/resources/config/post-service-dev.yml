@@ -22,11 +22,6 @@ spring:
         userDeleteChannel:
           destination: user.delete
           contentType: application/json
-  #
-  # RabbitMQ
-  #
-  rabbitmq:
-    host: 192.168.99.100
-    port: 5672
-    username: my-moments-user
-    password: my-moments-password
+        postDeleteChannel:
+          destination: post.delete
+          contentType: application/json
