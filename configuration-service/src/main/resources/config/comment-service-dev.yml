@@ -1,0 +1,26 @@
+spring:
+  #
+  # Mongo DB
+  #
+  data:
+    mongodb:
+      comments:
+        database: my-moments-comment-service
+        uri: mongodb://192.168.99.100:27021/mongo-db-comment-service
+      users:
+        database: my-moments-user-service
+        uri: mongodb://192.168.99.100:27017/mongo-db-user-service
+    #
+    # Messaging / RabbitMQ
+    #
+    stream:
+      bindings:
+        userUpdateChannel:
+          destination: user.update
+          contentType: application/json
+        userDeleteChannel:
+          destination: user.delete
+          contentType: application/json
+        postDeleteChannel:
+          destination: post.delete
+          contentType: application/json

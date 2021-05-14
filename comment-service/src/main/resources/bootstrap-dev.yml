@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    #
+    # Config Client
+    #
+    config:
+      uri: http://localhost:8888
+      profile: {SPRING_ACTIVE_PROFILE:dev}

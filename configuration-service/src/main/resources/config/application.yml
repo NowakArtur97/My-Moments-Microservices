@@ -2,30 +2,24 @@
 # Server
 #
 server:
-  port: 8088
+  port: 8888
 #
 # Spring
 #
 spring:
   application:
     name: configuration-service
+  #
+  # Config Server
+  #
   cloud:
     config:
       server:
         git:
           uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
           searchPaths:
-            - configuration-service/src/main/resources
+            - configuration-service/src/main/resources/config
           default-label: main
-#
-# Eureka
-#
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://192.168.99.100:8761/eureka/
-  instance:
-    preferIpAddress: true
 #
 # Spring Boot Actuator
 #

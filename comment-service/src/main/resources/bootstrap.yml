@@ -1,0 +1,13 @@
+#
+# Spring
+#
+spring:
+  application:
+    name: comment-service
+  profiles:
+    active: ${SPRING_ACTIVE_PROFILE:dev}
+#
+# Server
+#
+server:
+  port: 8083
