@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 class GatewayConfig {
 
     @Bean
-    RouteLocator routes(RouteLocatorBuilder builder, JwtGatewayRequestFilter jwtGatewayRequestFilter) {
+    RouteLocator routes(RouteLocatorBuilder builder, JwtGatewayFilter jwtGatewayFilter) {
 
         return builder.routes()
                 .route("registration",
@@ -22,17 +22,17 @@ class GatewayConfig {
 
                 .route("users",
                         r -> r.path("/api/v1/users/**")
-                                .filters(f -> f.filter(jwtGatewayRequestFilter))
+                                .filters(f -> f.filter(jwtGatewayFilter))
                                 .uri("lb://user-service"))
 
                 .route("posts",
                         r -> r.path("/api/v1/posts/**")
-                                .filters(f -> f.filter(jwtGatewayRequestFilter))
+                                .filters(f -> f.filter(jwtGatewayFilter))
                                 .uri("lb:post-service"))
 
                 .route("comments",
                         r -> r.path("/api/v1/comments/**")
-                                .filters(f -> f.filter(jwtGatewayRequestFilter))
+                                .filters(f -> f.filter(jwtGatewayFilter))
                                 .uri("lb:comment-service"))
                 .build();
     }
