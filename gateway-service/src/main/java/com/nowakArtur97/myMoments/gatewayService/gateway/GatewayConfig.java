@@ -12,6 +12,7 @@ class GatewayConfig {
     RouteLocator routes(RouteLocatorBuilder builder, JwtGatewayFilter jwtGatewayFilter) {
 
         return builder.routes()
+
                 .route("registration",
                         r -> r.path("/api/v1/registration/**")
                                 .uri("lb://user-service"))
@@ -26,14 +27,14 @@ class GatewayConfig {
                                 .uri("lb://user-service"))
 
                 .route("posts",
-                        r -> r.path("/api/v1/posts/**")
+                        r -> r.path("/api/v1/**")
                                 .filters(f -> f.filter(jwtGatewayFilter))
-                                .uri("lb:post-service"))
+                                .uri("lb://post-service"))
 
                 .route("comments",
-                        r -> r.path("/api/v1/comments/**")
+                        r -> r.path("/api/v1/**")
                                 .filters(f -> f.filter(jwtGatewayFilter))
-                                .uri("lb:comment-service"))
+                                .uri("lb://comment-service"))
                 .build();
     }
 }

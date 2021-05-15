@@ -46,22 +46,18 @@ class JwtGatewayFilter implements GatewayFilter {
             throw new JwtTokenMissingException("JWT token is missing in request headers.");
         }
 
-        if (usernameOrEmail != null) {
+        return userService.findByUsernameOrEmail(usernameOrEmail)
+                .switchIfEmpty(Mono.error(() ->
+                        new UsernameNotFoundException("User with name/email: '" + usernameOrEmail + "' not found.")))
+                .flatMap(userDocument -> {
 
-            userService.findByUsernameOrEmail(usernameOrEmail)
-                    .switchIfEmpty(Mono.error(() ->
-                            new UsernameNotFoundException("User with name/email: '" + usernameOrEmail + "' not found.")))
-                    .flatMap(userDocument -> {
+                    if (jwtUtil.isTokenValid(jwt, userDocument.getUsername())) {
 
-                        if (jwtUtil.isTokenValid(jwt, userDocument.getUsername())) {
+                        return filterChain.filter(serverWebExchange);
 
-                            return filterChain.filter(serverWebExchange);
-
-                        } else {
-                            throw new JwtException("Invalid JWT token.");
-                        }
-                    });
-        }
-        throw new JwtException("Username not found in JWT token.");
+                    } else {
+                        throw new JwtException("Invalid JWT token.");
+                    }
+                });
     }
 }

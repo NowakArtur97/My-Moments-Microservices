@@ -7,7 +7,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerWebExchange;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -19,29 +18,24 @@ class JwtUtil {
 
     private final JwtConfigurationProperties jwtConfigurationProperties;
 
-    public boolean isTokenValid(String token, String username) {
+    boolean isTokenValid(String token, String username) {
 
         return (extractUsername(token).equals(username) && !isTokenExpired(token));
     }
 
-    public String extractUsernameFromHeader(String authorizationHeader) {
+    String extractUsername(String token) {
 
-        String token = authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength());
+        String subject = extractClaim(token, Claims::getSubject);
 
-        return extractClaim(token, Claims::getSubject);
+        return subject != null ? subject : "";
     }
 
-    public String extractUsername(String token) {
-
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public Date extractExpirationDate(String token) {
+    Date extractExpirationDate(String token) {
 
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 
         Claims claim = extractAllClaims(token);
 
@@ -58,24 +52,24 @@ class JwtUtil {
         return extractExpirationDate(token).before(new Date(System.currentTimeMillis()));
     }
 
-    public boolean isBearerTypeAuthorization(String authorizationHeader) {
+    boolean isBearerTypeAuthorization(String authorizationHeader) {
 
         return authorizationHeader != null && authorizationHeader.startsWith(jwtConfigurationProperties.getAuthorizationType());
     }
 
-    public String getJwtFromHeader(String authorizationHeader) {
+    String getJwtFromHeader(String authorizationHeader) {
 
         return authorizationHeader != null
                 ? authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength())
                 : "";
     }
 
-    public String getAuthorizationHeader(ServerHttpRequest serverHttpRequest) {
+    String getAuthorizationHeader(ServerHttpRequest serverHttpRequest) {
 
         return serverHttpRequest.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
     }
 
-    public boolean isNotSecured(String path) {
+    boolean isNotSecured(String path) {
         return jwtConfigurationProperties.getIgnoredEndpoints().stream().anyMatch(path::contains);
     }
 }
