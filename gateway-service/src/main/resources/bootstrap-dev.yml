@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    #
+    # Config Client
+    #
+    config:
+      uri: http://192.168.99.100:8888
+      profile: ${SPRING_ACTIVE_PROFILE:dev}
