@@ -4,12 +4,9 @@ spring:
   #
   data:
     mongodb:
-      comments:
-        database: my-moments-comment-service
-        uri: mongodb://192.168.99.100:27021/mongo-db-comment-service
-      users:
-        database: my-moments-user-service
-        uri: mongodb://192.168.99.100:27017/mongo-db-user-service
+      database: my-moments-comment-service
+      host: 192.168.99.100
+      port: 27021
   #
   # Messaging
   #
