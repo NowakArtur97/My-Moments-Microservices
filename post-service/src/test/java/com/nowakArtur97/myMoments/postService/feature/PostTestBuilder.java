@@ -49,7 +49,7 @@ public class PostTestBuilder {
         return this;
     }
 
-    public  Post build(ObjectType type) {
+    public Post build(ObjectType type) {
 
         Post post;
 

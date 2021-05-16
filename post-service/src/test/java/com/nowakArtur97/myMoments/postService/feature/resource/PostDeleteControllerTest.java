@@ -70,7 +70,9 @@ class PostDeleteControllerTest {
         String username = "user";
         String header = "Bearer token";
 
+        Void mock = mock(Void.class);
         when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
+        when(postService.deletePost(postId, username)).thenReturn(Mono.just(mock));
 
         webTestClient.delete()
                 .uri(POSTS_BASE_PATH, postId)
@@ -89,62 +91,13 @@ class PostDeleteControllerTest {
     }
 
     @Test
-    void when_delete_not_existing_user_post_should_return_error_response() {
-
-        String postId = "some generated id";
-        String notExistingUsername = "not existing username";
-        String notExistingUserToken = "notExistingUserToken";
-        String header = "Bearer " + notExistingUserToken;
-
-        when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(notExistingUsername);
-        doThrow(new ForbiddenException("User can only change his own posts."))
-                .when(postService).deletePost(postId, notExistingUsername);
-
-        Mono<ErrorResponse> errorResponseMono = webTestClient.delete()
-                .uri(POSTS_BASE_PATH, postId)
-                .header("Authorization", header)
-                .exchange()
-                .expectStatus()
-                .isUnauthorized()
-                .returnResult(ErrorResponse.class)
-                .getResponseBody()
-                .single();
-
-        StepVerifier.create(errorResponseMono)
-                .thenConsumeWhile(
-                        errorResponse -> {
-                            assertAll(
-                                    () -> assertEquals("User with name/email: '" + notExistingUsername + "' not found.",
-                                            errorResponse.getErrors().get(0),
-                                            () -> "should return error response with message: " +
-                                                    "'User with name/email: '" + notExistingUsername + "' not found.'" + ", but was: "
-                                                    + errorResponse.getErrors().get(0)),
-                                    () -> assertEquals(1, errorResponse.getErrors().size(),
-                                            () -> "should return error response with 1 message, but was: "
-                                                    + errorResponse.getErrors().size()),
-                                    () -> assertNotNull(errorResponse.getTimestamp(),
-                                            () -> "should return error response with not null timestamp, but was: null"),
-                                    () -> assertEquals(401, errorResponse.getStatus(),
-                                            () -> "should return error response with 401 status, but was: "
-                                                    + errorResponse.getStatus()),
-                                    () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(header),
-                                    () -> verifyNoMoreInteractions(jwtUtil),
-                                    () -> verify(postService, times(1)).deletePost(postId, notExistingUsername),
-                                    () -> verifyNoMoreInteractions(postService),
-                                    () -> verifyNoInteractions(modelMapper),
-                                    () -> verifyNoInteractions(postObjectMapper));
-                            return true;
-                        }
-                ).verifyComplete();
-    }
-
-    @Test
     void when_delete_not_existing_post_should_return_error_response() {
 
         String notExistingPostId = "not existing id";
         String username = "user";
         String header = "Bearer token";
 
+        when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
         doThrow(new ResourceNotFoundException("Post", notExistingPostId)).when(postService).deletePost(notExistingPostId, username);
 
         Mono<ErrorResponse> errorResponseMono = webTestClient.delete()
@@ -193,6 +146,7 @@ class PostDeleteControllerTest {
         String username = "user";
         String header = "Bearer token";
 
+        when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
         doThrow(new ForbiddenException("User can only change his own posts."))
                 .when(postService).deletePost(notExistingPostId, username);
 

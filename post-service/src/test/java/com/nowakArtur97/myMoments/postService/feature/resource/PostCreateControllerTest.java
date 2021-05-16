@@ -63,7 +63,7 @@ class PostCreateControllerTest {
     private static PostTestBuilder postTestBuilder;
 
     @BeforeAll
-    static void setUpBuilders() {
+    static void setUpBuilder() {
 
         postTestBuilder = new PostTestBuilder();
     }
@@ -130,7 +130,7 @@ class PostCreateControllerTest {
                                     () -> verifyNoMoreInteractions(jwtUtil),
                                     () -> verify(postObjectMapper, times(1))
                                             .getPostDTOFromString(any(String.class), any(Flux.class)),
-                                    () -> verifyNoMoreInteractions(modelMapper),
+                                    () -> verifyNoMoreInteractions(postObjectMapper),
                                     () -> verify(postService, times(1)).createPost(author, postDTOExpected),
                                     () -> verifyNoMoreInteractions(postService),
                                     () -> verify(modelMapper, times(1))
@@ -149,11 +149,15 @@ class PostCreateControllerTest {
 
         String emptyCaption = "";
         Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image.jpg".getBytes());
-        PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption(null).withBinary(List.of(imageExpected))
+        PostDTO postDTOExpectedAsString = (PostDTO) postTestBuilder.withCaption(null).withBinary(List.of(imageExpected))
                 .build(ObjectType.CREATE_DTO);
-        String postAsString = ObjectTestMapper.asJsonString(postDTOExpected);
-        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(author).build(ObjectType.DOCUMENT);
-        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(author).build(ObjectType.MODEL);
+        PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption(emptyCaption).withBinary(List.of(imageExpected))
+                .build(ObjectType.CREATE_DTO);
+        String postAsString = ObjectTestMapper.asJsonString(postDTOExpectedAsString);
+        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withCaption(emptyCaption)
+                .withAuthor(author).build(ObjectType.DOCUMENT);
+        PostModel postModelExpected = (PostModel) postTestBuilder.withCaption(emptyCaption)
+                .withAuthor(author).build(ObjectType.MODEL);
 
         MultiValueMap<String, Object> objectMultiValueMap = new LinkedMultiValueMap<>();
         objectMultiValueMap.add("post", postAsString);
@@ -194,7 +198,7 @@ class PostCreateControllerTest {
                                     () -> verifyNoMoreInteractions(jwtUtil),
                                     () -> verify(postObjectMapper, times(1))
                                             .getPostDTOFromString(any(String.class), any(Flux.class)),
-                                    () -> verifyNoMoreInteractions(modelMapper),
+                                    () -> verifyNoMoreInteractions(postObjectMapper),
                                     () -> verify(postService, times(1)).createPost(author, postDTOExpected),
                                     () -> verifyNoMoreInteractions(postService),
                                     () -> verify(modelMapper, times(1))

@@ -56,7 +56,7 @@ class PostGetControllerTest {
     private static PostTestBuilder postTestBuilder;
 
     @BeforeAll
-    static void setUpBuilders() {
+    static void setUpBuilder() {
 
         postTestBuilder = new PostTestBuilder();
     }
@@ -218,7 +218,7 @@ class PostGetControllerTest {
                                     () -> assertEquals(2, userPostsModelActual.getPosts().size(),
                                             () -> "should return: two posts, but was: "
                                                     + userPostsModelActual.getPosts().size()),
-                                    () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(username),
+                                    () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(header),
                                     () -> verifyNoMoreInteractions(jwtUtil),
                                     () -> verify(postService, times(1)).findPostsByAuthor(username),
                                     () -> verifyNoMoreInteractions(postService),
@@ -259,7 +259,7 @@ class PostGetControllerTest {
                                     () -> assertTrue(userPostsModelActual.getPosts().isEmpty(),
                                             () -> "should return: zero posts, but was: "
                                                     + userPostsModelActual.getPosts().size()),
-                                    () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(username),
+                                    () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(header),
                                     () -> verifyNoMoreInteractions(jwtUtil),
                                     () -> verify(postService, times(1)).findPostsByAuthor(username),
                                     () -> verifyNoMoreInteractions(postService),

@@ -35,7 +35,7 @@ class UserEventConsumerTest {
     private static PostTestBuilder postTestBuilder;
 
     @BeforeAll
-    static void setUpBuildersAndUUID() {
+    static void setUpBuilderAndUUID() {
 
         postTestBuilder = new PostTestBuilder();
 
@@ -48,6 +48,14 @@ class UserEventConsumerTest {
     void setUp() {
 
         userEventConsumer = new UserEventConsumer(postRepository);
+    }
+
+    @AfterAll
+    static void cleanUp() {
+
+        if (!mocked.isClosed()) {
+            mocked.close();
+        }
     }
 
     @Test

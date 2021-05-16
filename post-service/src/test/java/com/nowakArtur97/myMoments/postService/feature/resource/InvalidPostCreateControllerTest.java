@@ -58,7 +58,7 @@ class InvalidPostCreateControllerTest {
     private static PostTestBuilder postTestBuilder;
 
     @BeforeAll
-    static void setUpBuilders() {
+    static void setUpBuilder() {
 
         postTestBuilder = new PostTestBuilder();
     }
