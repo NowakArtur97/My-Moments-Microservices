@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.postService;
 
-import com.nowakArtur97.myMoments.postService.feature.post.PostEventStream;
-import com.nowakArtur97.myMoments.postService.feature.post.UserEventStream;
+import com.nowakArtur97.myMoments.postService.feature.messaging.PostEventStream;
+import com.nowakArtur97.myMoments.postService.feature.messaging.UserEventStream;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;

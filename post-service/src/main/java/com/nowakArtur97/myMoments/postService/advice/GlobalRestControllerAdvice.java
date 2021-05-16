@@ -1,6 +1,5 @@
 package com.nowakArtur97.myMoments.postService.advice;
 
-import com.nowakArtur97.myMoments.postService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;

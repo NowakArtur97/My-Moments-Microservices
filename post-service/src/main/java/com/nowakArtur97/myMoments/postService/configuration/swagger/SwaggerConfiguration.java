@@ -1,6 +1,6 @@
 package com.nowakArtur97.myMoments.postService.configuration.swagger;
 
-import com.nowakArtur97.myMoments.postService.feature.post.PostTag;
+import com.nowakArtur97.myMoments.postService.feature.resource.PostTag;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
