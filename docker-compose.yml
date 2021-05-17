@@ -27,57 +27,70 @@ services:
       - 8761:8761
     volumes:
       - /discovery-service/dir:/app
-    depends_on:
-      - configuration-service
 
-#  user-service:
-#    restart: on-failure
-#    build: ./user-service
-#    networks:
-#      - my-moments
-#    container_name: user-service
-#    ports:
-#      - 8081:8081
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#    volumes:
-#      - /user-service/dir:/app
-#    depends_on:
-#      - discovery-service
-#      - mongo-db-user-service
-#      - rabbitmq
-#
-#  post-service:
-#    restart: on-failure
-#    build: ./post-service
-#    networks:
-#      - my-moments
-#    container_name: post-service
-#    ports:
-#      - 8082:8082
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#    volumes:
-#      - /post-service/dir:/app
-#    depends_on:
-#      - user-service
-#      - mongo-db-post-service
-#
-#  comment-service:
-#    restart: on-failure
-#    build: ./comment-service
-#    networks:
-#      - my-moments
-#    container_name: comment-service
-#    ports:
-#      - 8083:8083
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#    volumes:
-#      - /comment-service/dir:/app
-#    depends_on:
-#      - post-service
-#      - mongo-db-comment-service
+  gateway-service:
+    restart: on-failure
+    build: ./gateway-service
+    networks:
+      - my-moments
+    container_name: gateway-service
+    ports:
+      - 8989:8989
+    volumes:
+      - /gateway-service/dir:/app
+    depends_on:
+      - discovery-service
+
+  user-service:
+    restart: on-failure
+    build: ./user-service
+    networks:
+      - my-moments
+    container_name: user-service
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /user-service/dir:/app
+    depends_on:
+      - gateway-service
+      - mongo-db-user-service
+      - rabbitmq
+
+  post-service:
+    restart: on-failure
+    build: ./post-service
+    networks:
+      - my-moments
+    container_name: post-service
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /post-service/dir:/app
+    depends_on:
+      - gateway-service
+      - mongo-db-post-service
+      - rabbitmq
+
+  comment-service:
+    restart: on-failure
+    build: ./comment-service
+    networks:
+      - my-moments
+    container_name: comment-service
+    ports:
+      - 8083:8083
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /comment-service/dir:/app
+    depends_on:
+      - gateway-service
+      - mongo-db-comment-service
+      - rabbitmq
 
   mongo-db-user-service:
     image: mongo:3.6
