@@ -1,4 +1,4 @@
-package com.nowakArtur97.myMoments.postService.jwt;
+package com.nowakArtur97.myMoments.commentService.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

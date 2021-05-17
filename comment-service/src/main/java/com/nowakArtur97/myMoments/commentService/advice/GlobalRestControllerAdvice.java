@@ -1,6 +1,5 @@
 package com.nowakArtur97.myMoments.commentService.advice;
 
-import com.nowakArtur97.myMoments.commentService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.commentService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.commentService.exception.ResourceNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

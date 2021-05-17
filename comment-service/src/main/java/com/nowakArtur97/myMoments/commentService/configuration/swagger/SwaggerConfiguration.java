@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.commentService.configuration.swagger;
 
 
-import com.nowakArtur97.myMoments.commentService.feature.comment.CommentTag;
+import com.nowakArtur97.myMoments.commentService.feature.resource.CommentTag;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

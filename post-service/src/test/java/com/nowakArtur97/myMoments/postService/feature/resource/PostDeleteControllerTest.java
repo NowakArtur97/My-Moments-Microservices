@@ -66,9 +66,9 @@ class PostDeleteControllerTest {
     @Test
     void when_delete_existing_post_should_not_return_content() {
 
+        String header = "Bearer token";
         String postId = "some generated id";
         String username = "user";
-        String header = "Bearer token";
 
         Void mock = mock(Void.class);
         when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
@@ -93,9 +93,9 @@ class PostDeleteControllerTest {
     @Test
     void when_delete_not_existing_post_should_return_error_response() {
 
+        String header = "Bearer token";
         String notExistingPostId = "not existing id";
         String username = "user";
-        String header = "Bearer token";
 
         when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
         doThrow(new ResourceNotFoundException("Post", notExistingPostId)).when(postService).deletePost(notExistingPostId, username);
@@ -142,9 +142,9 @@ class PostDeleteControllerTest {
     @Test
     void when_delete_some_other_user_post_should_return_error_response() {
 
+        String header = "Bearer token";
         String notExistingPostId = "not existing id";
         String username = "user";
-        String header = "Bearer token";
 
         when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
         doThrow(new ForbiddenException("User can only change his own posts."))

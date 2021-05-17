@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.commentService;
 
-import com.nowakArtur97.myMoments.commentService.feature.comment.PostEventStream;
-import com.nowakArtur97.myMoments.commentService.feature.comment.UserEventStream;
+import com.nowakArtur97.myMoments.commentService.feature.messaging.PostEventStream;
+import com.nowakArtur97.myMoments.commentService.feature.messaging.UserEventStream;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;

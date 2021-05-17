@@ -1,16 +1,12 @@
 package com.nowakArtur97.myMoments.commentService.advice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nowakArtur97.myMoments.commentService.common.model.ErrorResponse;
-import com.nowakArtur97.myMoments.commentService.exception.JwtTokenMissingException;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
@@ -33,19 +29,7 @@ class RestWebExceptionHandler implements WebExceptionHandler {
     @Override
     public Mono<Void> handle(ServerWebExchange serverWebExchange, Throwable exception) {
 
-        if (exception instanceof UsernameNotFoundException) {
-
-            return setErrorResponse(HttpStatus.UNAUTHORIZED, serverWebExchange, exception);
-
-        } else if (exception instanceof JwtTokenMissingException) {
-
-            return setErrorResponse(HttpStatus.UNAUTHORIZED, serverWebExchange, exception);
-
-        } else if (exception instanceof JwtException) {
-
-            return setErrorResponse(HttpStatus.BAD_REQUEST, serverWebExchange, exception);
-
-        } else if (exception instanceof ResponseStatusException) {
+        if (exception instanceof ResponseStatusException) {
 
             return setErrorResponse(((ResponseStatusException) exception).getStatus(), serverWebExchange, exception);
 
