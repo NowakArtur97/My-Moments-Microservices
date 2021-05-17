@@ -30,23 +30,23 @@ services:
     depends_on:
       - configuration-service
 
-  user-service:
-    restart: on-failure
-    build: ./user-service
-    networks:
-      - my-moments
-    container_name: user-service
-    ports:
-      - 8081:8081
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    volumes:
-      - /user-service/dir:/app
-    depends_on:
-      - discovery-service
-      - mongo-db-user-service
-      - rabbitmq
-
+#  user-service:
+#    restart: on-failure
+#    build: ./user-service
+#    networks:
+#      - my-moments
+#    container_name: user-service
+#    ports:
+#      - 8081:8081
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    volumes:
+#      - /user-service/dir:/app
+#    depends_on:
+#      - discovery-service
+#      - mongo-db-user-service
+#      - rabbitmq
+#
 #  post-service:
 #    restart: on-failure
 #    build: ./post-service

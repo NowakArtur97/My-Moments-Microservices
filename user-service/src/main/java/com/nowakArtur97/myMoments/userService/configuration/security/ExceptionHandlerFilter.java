@@ -2,8 +2,6 @@ package com.nowakArtur97.myMoments.userService.configuration.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nowakArtur97.myMoments.userService.common.model.ErrorResponse;
-import com.nowakArtur97.myMoments.userService.exception.JwtTokenMissingException;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,13 +30,9 @@ class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
 
-        } catch (JwtTokenMissingException | AuthenticationException exception) {
+        } catch (AuthenticationException exception) {
 
             setErrorResponse(HttpStatus.UNAUTHORIZED, response, exception);
-
-        } catch (JwtException exception) {
-
-            setErrorResponse(HttpStatus.BAD_REQUEST, response, exception);
 
         } catch (RuntimeException exception) {
 

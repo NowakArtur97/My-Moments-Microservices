@@ -773,30 +773,6 @@ class UserUpdateValidationControllerTest {
     }
 
     @Test
-    void when_update_user_without_token_should_return_error_response() {
-
-        UserProfileDTO userProfileDTO = (UserProfileDTO) userProfileTestBuilder.build(ObjectType.UPDATE_DTO);
-        UserUpdateDTO userUpdateDTO = (UserUpdateDTO) userTestBuilder.withProfile(userProfileDTO).build(ObjectType.UPDATE_DTO);
-
-        String userAsString = ObjectTestMapper.asJsonString(userUpdateDTO);
-
-        MockMultipartFile userData = new MockMultipartFile("user", "request",
-                MediaType.MULTIPART_FORM_DATA_VALUE, userAsString.getBytes(StandardCharsets.UTF_8));
-
-        assertAll(
-                () -> mockMvc
-                        .perform(mockRequestBuilder
-                                .file(userData)
-                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isUnauthorized())
-                        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("timestamp", is(notNullValue())))
-                        .andExpect(jsonPath("status", is(401)))
-                        .andExpect(jsonPath("errors[0]", is("JWT token is missing in request headers.")))
-                        .andExpect(jsonPath("errors", hasSize(1))));
-    }
-
-    @Test
     void when_update_user_with_not_existing_username_should_return_error_response() {
 
         String notExistingUsername = "iAmNotExist";

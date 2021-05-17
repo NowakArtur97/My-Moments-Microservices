@@ -30,11 +30,6 @@ public class JwtUtil {
         return createToken(userDetails.getUsername(), claims);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-
-        return (extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
     public String extractUsernameFromHeader(String authorizationHeader) {
 
         String token = authorizationHeader.substring(jwtConfigurationProperties.getAuthorizationHeaderLength());
@@ -45,11 +40,6 @@ public class JwtUtil {
     public String extractUsername(String token) {
 
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public Date extractExpirationDate(String token) {
-
-        return extractClaim(token, Claims::getExpiration);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -75,16 +65,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    private boolean isTokenExpired(String token) {
-
-        return extractExpirationDate(token).before(new Date(System.currentTimeMillis()));
-    }
-
-    public boolean isBearerTypeAuthorization(String authorizationHeader) {
-
-        return authorizationHeader != null && authorizationHeader.startsWith(jwtConfigurationProperties.getAuthorizationType());
-    }
-
     public String getJwtFromHeader(String authorizationHeader) {
 
         return authorizationHeader != null
@@ -95,5 +75,9 @@ public class JwtUtil {
     public String getAuthorizationHeader(HttpServletRequest request) {
 
         return request.getHeader(jwtConfigurationProperties.getAuthorizationHeader());
+    }
+
+    public boolean isNotSecured(String path) {
+        return jwtConfigurationProperties.getIgnoredEndpoints().stream().anyMatch(path::contains);
     }
 }

@@ -28,7 +28,7 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtConfigurationProperties jwtConfigurationProperties;
 
-    private final JwtRequestFilter jwtRequestFilter;
+    private final SecurityContextFilter securityContextFilter;
 
     private final ExceptionHandlerFilter exceptionHandlerFilter;
 
@@ -73,7 +73,7 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(securityContextFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.addFilterBefore(exceptionHandlerFilter, CorsFilter.class);
     }
 

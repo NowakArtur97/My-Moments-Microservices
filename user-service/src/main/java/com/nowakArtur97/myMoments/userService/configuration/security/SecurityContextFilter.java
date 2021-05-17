@@ -1,10 +1,8 @@
 package com.nowakArtur97.myMoments.userService.configuration.security;
 
 import com.nowakArtur97.myMoments.userService.common.util.JwtUtil;
-import com.nowakArtur97.myMoments.userService.exception.JwtTokenMissingException;
 import com.nowakArtur97.myMoments.userService.feature.document.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,14 +18,11 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-@EnableConfigurationProperties(value = JwtConfigurationProperties.class)
-class JwtRequestFilter extends OncePerRequestFilter {
+class SecurityContextFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
 
     private final JwtUtil jwtUtil;
-
-    private final JwtConfigurationProperties jwtConfigurationProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -35,31 +30,21 @@ class JwtRequestFilter extends OncePerRequestFilter {
 
         String authorizationHeader = jwtUtil.getAuthorizationHeader(request);
 
-        String username;
-        String jwt;
-
-        if (jwtUtil.isBearerTypeAuthorization(authorizationHeader)) {
-
-            jwt = jwtUtil.getJwtFromHeader(authorizationHeader);
-            username = jwtUtil.extractUsername(jwt);
-        } else {
-            throw new JwtTokenMissingException("JWT token is missing in request headers.");
+        if (authorizationHeader == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
         }
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null && username != null) {
+        String jwt = jwtUtil.getJwtFromHeader(authorizationHeader);
+        String username = jwtUtil.extractUsername(jwt);
 
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-            if (jwtUtil.isTokenValid(jwt, userDetails)) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+                = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                        = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
-        }
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
         filterChain.doFilter(request, response);
     }
@@ -69,6 +54,6 @@ class JwtRequestFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI().substring(request.getContextPath().length());
 
-        return jwtConfigurationProperties.getIgnoredEndpoints().stream().anyMatch(path::contains);
+        return jwtUtil.isNotSecured(path);
     }
 }
