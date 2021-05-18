@@ -5,6 +5,7 @@ import com.nowakArtur97.myMoments.commentService.exception.ResourceNotFoundExcep
 import com.nowakArtur97.myMoments.commentService.feature.resource.CommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -12,6 +13,11 @@ import reactor.core.publisher.Mono;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+
+    public Flux<CommentDocument> findCommentsByRelatedPostId(String relatedPostId) {
+
+        return commentRepository.findByRelatedPost(relatedPostId);
+    }
 
     public Mono<CommentDocument> addComment(String postId, String username, CommentDTO commentDTO) {
 
@@ -24,7 +30,7 @@ public class CommentService {
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Comment", commentId)))
                 .flatMap((commentDocument) -> {
 
-                    if (!commentDocument.getRelatedPostId().equals(postId)) {
+                    if (!commentDocument.getRelatedPost().equals(postId)) {
                         return Mono.error(new ResourceNotFoundException("Comment with commentId: '" + commentId
                                 + "' in the post with id: '" + postId + "' not found."));
                     }
@@ -45,7 +51,7 @@ public class CommentService {
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Comment", commentId)))
                 .flatMap((commentDocument) -> {
 
-                    if (!commentDocument.getRelatedPostId().equals(postId)) {
+                    if (!commentDocument.getRelatedPost().equals(postId)) {
                         return Mono.error(new ResourceNotFoundException("Comment with commentId: '" + commentId
                                 + "' in the post with id: '" + postId + "' not found."));
                     }

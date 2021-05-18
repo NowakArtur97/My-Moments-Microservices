@@ -38,12 +38,12 @@ class PostEventConsumerTest {
         String relatedPostIdPayload = "postId";
         Message<String> message = MessageBuilder.withPayload(relatedPostIdPayload).build();
 
-        when(commentRepository.deleteByRelatedPostId(relatedPostIdPayload)).thenReturn(Mono.empty());
+        when(commentRepository.deleteByRelatedPost(relatedPostIdPayload)).thenReturn(Mono.empty());
 
         postEventConsumer.onPostDeleteMessage(message);
 
         assertAll(() -> verify(commentRepository, times(1))
-                        .deleteByRelatedPostId(relatedPostIdPayload),
+                        .deleteByRelatedPost(relatedPostIdPayload),
                 () -> verifyNoMoreInteractions(commentRepository));
     }
 }

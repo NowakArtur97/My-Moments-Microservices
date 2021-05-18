@@ -17,5 +17,5 @@ public class CommentDocument extends AbstractDocument implements Comment {
 
     private String author;
 
-    private String relatedPostId;
+    private String relatedPost;
 }

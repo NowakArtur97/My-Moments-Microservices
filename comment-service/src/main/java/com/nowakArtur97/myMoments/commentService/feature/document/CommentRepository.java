@@ -8,7 +8,9 @@ public interface CommentRepository extends ReactiveMongoRepository<CommentDocume
 
     Flux<CommentDocument> findByAuthor(String author);
 
+    Flux<CommentDocument> findByRelatedPost(String relatedPost);
+
     Mono<Void> deleteByAuthor(String author);
 
-    Mono<Void> deleteByRelatedPostId(String relatedPostId);
+    Mono<Void> deleteByRelatedPost(String relatedPost);
 }

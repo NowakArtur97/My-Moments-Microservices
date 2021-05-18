@@ -17,7 +17,7 @@ class PostEventConsumer {
 
         String postIdPayload = message.getPayload();
 
-        commentRepository.deleteByRelatedPostId(postIdPayload)
+        commentRepository.deleteByRelatedPost(postIdPayload)
                 .subscribe();
     }
 }

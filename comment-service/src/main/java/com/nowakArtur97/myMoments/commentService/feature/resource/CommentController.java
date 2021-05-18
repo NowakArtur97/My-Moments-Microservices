@@ -1,8 +1,8 @@
 package com.nowakArtur97.myMoments.commentService.feature.resource;
 
 import com.nowakArtur97.myMoments.commentService.advice.ErrorResponse;
-import com.nowakArtur97.myMoments.commentService.jwt.JwtUtil;
 import com.nowakArtur97.myMoments.commentService.feature.document.CommentService;
+import com.nowakArtur97.myMoments.commentService.jwt.JwtUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +29,23 @@ class CommentController {
     private final JwtUtil jwtUtil;
 
     private final ModelMapper modelMapper;
+
+    @GetMapping(path = "/comments")
+    @ApiOperation(value = "Find Post's Comments by Post Id", notes = "Provide a Post's id to look up specific Comments")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Post's comments found", response = PostsCommentsModel.class),
+            @ApiResponse(code = 404, message = "Invalid Post's id supplied", response = ErrorResponse.class)})
+    Mono<ResponseEntity<PostsCommentsModel>> getPostsComments(
+            @ApiParam(value = "Id of the Post's Comments being looked up", name = "postId", type = "string",
+                    required = true, example = "id")
+            @PathVariable("postId") String postId) {
+
+        return commentService.findCommentsByRelatedPostId(postId)
+                .map(commentDocument -> modelMapper.map(commentDocument, CommentModel.class))
+                .collectList()
+                .map(PostsCommentsModel::new)
+                .map(ResponseEntity::ok);
+    }
 
     @PostMapping(path = "/comments")
     @ApiOperation(value = "Add a comment to the post", notes = "Provide a Post's id")

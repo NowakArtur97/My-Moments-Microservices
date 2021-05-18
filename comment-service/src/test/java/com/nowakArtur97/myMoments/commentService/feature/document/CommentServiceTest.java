@@ -317,9 +317,9 @@ class CommentServiceTest {
                 () -> assertEquals(commentExpected.getId(), commentActual.getId(),
                         () -> "should return comment with id: " + commentExpected.getId() + ", but was: "
                                 + commentActual.getId()),
-                () -> assertEquals(commentExpected.getRelatedPostId(), commentActual.getRelatedPostId(),
-                        () -> "should return comment with post id: " + commentExpected.getRelatedPostId() + ", but was: "
-                                + commentActual.getRelatedPostId()),
+                () -> assertEquals(commentExpected.getRelatedPost(), commentActual.getRelatedPost(),
+                        () -> "should return comment with post id: " + commentExpected.getRelatedPost() + ", but was: "
+                                + commentActual.getRelatedPost()),
                 () -> assertEquals(commentExpected.getAuthor(), commentActual.getAuthor(),
                         () -> "should return comment with author: " + commentExpected.getAuthor() + ", but was: "
                                 + commentActual.getAuthor()),
