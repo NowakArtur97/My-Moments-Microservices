@@ -34,7 +34,7 @@ class CommentController {
     @ApiOperation(value = "Find Post's Comments by Post Id", notes = "Provide a Post's id to look up specific Comments")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Post's comments found", response = PostsCommentsModel.class),
-            @ApiResponse(code = 404, message = "Invalid Post's id supplied", response = ErrorResponse.class)})
+            @ApiResponse(code = 400, message = "Invalid Post's id supplied", response = ErrorResponse.class)})
     Mono<ResponseEntity<PostsCommentsModel>> getPostsComments(
             @ApiParam(value = "Id of the Post's Comments being looked up", name = "postId", type = "string",
                     required = true, example = "id")

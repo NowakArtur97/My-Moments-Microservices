@@ -1,9 +1,9 @@
 package com.nowakArtur97.myMoments.postService.feature.resource;
 
 import com.nowakArtur97.myMoments.postService.advice.ErrorResponse;
+import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.postService.feature.document.PostService;
 import com.nowakArtur97.myMoments.postService.jwt.JwtUtil;
-import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -34,27 +35,35 @@ class PostController {
 
     private final ModelMapper modelMapper;
 
+    private final WebClient.Builder webClientBuilder;
+
     @GetMapping(path = "/{id}")
     @ApiOperation(value = "Get a post", notes = "Provide an id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully found post", response = PostModel.class),
-            @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
-    Mono<ResponseEntity<PostModel>> getPost(
+            @ApiResponse(code = 200, message = "Successfully found post", response = PostModelWithComments.class),
+            @ApiResponse(code = 400, message = "Invalid Post's id supplied", response = ErrorResponse.class)})
+    Mono<ResponseEntity<PostModelWithComments>> getPostWithComments(
             @ApiParam(value = "Id of the Post being looked up", name = "id", type = "string",
-                    required = true, example = "id")
-            @PathVariable("id") String id
+                    required = true, example = "id") @PathVariable("id") String id
     ) {
 
-        return postService.findPostById(id)
-                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+        return webClientBuilder.build().get().uri("lb://comment-service/api/v1/posts/{postId}/comments", id)
+                .retrieve()
+                .bodyToMono(PostsCommentsModel.class)
+                .zipWith(postService.findPostById(id))
+                .map(tuple -> {
+                    PostModelWithComments postModelWithComments = modelMapper.map(tuple.getT2(), PostModelWithComments.class);
+                    postModelWithComments.setComments(tuple.getT1().getComments());
+                    return postModelWithComments;
+                })
                 .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Post", id)));
     }
 
     @GetMapping(path = "/me")
-    @ApiOperation(value = "Get posts")
+    @ApiOperation(value = "Find authenticated User's Posts")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "User's posts found", response = UsersPostsModel.class),
+            @ApiResponse(code = 200, message = "Successfully found posts", response = UsersPostsModel.class),
             @ApiResponse(code = 404, message = "Could not find User with provided token", response = ErrorResponse.class)})
     Mono<ResponseEntity<UsersPostsModel>> getAuthenticatedUsersPosts(
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
@@ -68,11 +77,10 @@ class PostController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Find User's Posts by Username", notes = "Provide a name to look up specific User")
+    @ApiOperation(value = "Find User's Posts by Username", notes = "Provide a name to look up specific Posts")
     @ApiResponses({
             @ApiResponse(code = 200, message = "User's posts found", response = UsersPostsModel.class),
-            @ApiResponse(code = 400, message = "Invalid User's name supplied"),
-            @ApiResponse(code = 404, message = "Could not find User with provided name", response = ErrorResponse.class)})
+            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
     Mono<ResponseEntity<UsersPostsModel>> getUsersPosts(
             @ApiParam(value = "Username of the User being looked up", name = "username", type = "integer", required = true,
                     example = "user") @RequestParam("username") String username) {

@@ -16,13 +16,13 @@ import java.util.Objects;
 public class PostModel implements Post {
 
     @ApiModelProperty(notes = "The unique id of the Post")
-    private String id;
+    protected String id;
 
     @ApiModelProperty(notes = "The post's caption")
-    private String caption;
+    protected String caption;
 
     @ApiModelProperty(notes = "The post's author")
-    private String author;
+    protected String author;
 
     @Override
     public boolean equals(Object o) {
