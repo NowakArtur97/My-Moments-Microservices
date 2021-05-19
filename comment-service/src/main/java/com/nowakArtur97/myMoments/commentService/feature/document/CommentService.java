@@ -14,9 +14,9 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    public Flux<CommentDocument> findCommentsByRelatedPostId(String relatedPostId) {
+    public Flux<CommentDocument> findCommentsByRelatedPost(String postId) {
 
-        return commentRepository.findByRelatedPost(relatedPostId);
+        return commentRepository.findByRelatedPost(postId);
     }
 
     public Mono<CommentDocument> addComment(String postId, String username, CommentDTO commentDTO) {

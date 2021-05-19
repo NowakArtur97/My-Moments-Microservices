@@ -40,7 +40,7 @@ class CommentController {
                     required = true, example = "id")
             @PathVariable("postId") String postId) {
 
-        return commentService.findCommentsByRelatedPostId(postId)
+        return commentService.findCommentsByRelatedPost(postId)
                 .map(commentDocument -> modelMapper.map(commentDocument, CommentModel.class))
                 .collectList()
                 .map(PostsCommentsModel::new)

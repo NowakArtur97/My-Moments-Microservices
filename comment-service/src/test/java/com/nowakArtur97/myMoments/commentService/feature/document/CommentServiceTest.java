@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -306,6 +307,54 @@ class CommentServiceTest {
                                             .findById(commentId),
                                     () -> verifyNoMoreInteractions(commentRepository))
                     ).verifyErrorMessage("User can only change his own comments.");
+        }
+    }
+
+    @Nested
+    class FindCommentTest {
+
+        @Test
+        void when_find_comments_by_related_post_id_should_return_comments() {
+
+            String postId = "postId";
+
+            CommentDocument commentExpected = (CommentDocument) commentTestBuilder.withRelatedPostId(postId)
+                    .build(ObjectType.DOCUMENT);
+            CommentDocument commentExpected2 = (CommentDocument) commentTestBuilder.withRelatedPostId(postId)
+                    .withContent("content 2").build(ObjectType.DOCUMENT);
+
+            when(commentRepository.findByRelatedPost(postId)).thenReturn(Flux.just(commentExpected, commentExpected2));
+
+            Flux<CommentDocument> commentActualFlux = commentService.findCommentsByRelatedPost(postId);
+
+            StepVerifier.create(commentActualFlux)
+                    .expectNextMatches(commentActual -> assertComment(commentExpected, commentActual))
+                    .expectNextMatches(commentActual -> assertComment(commentExpected2, commentActual))
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(commentRepository, times(1))
+                                            .findByRelatedPost(postId),
+                                    () -> verifyNoMoreInteractions(commentRepository)))
+                    .verifyComplete();
+        }
+
+        @Test
+        void when_find_comments_by_related_post_id_and_found_nothing_should_empty_flux() {
+
+            String postId = "postId";
+
+            when(commentRepository.findByRelatedPost(postId)).thenReturn(Flux.empty());
+
+            Flux<CommentDocument> commentActualFlux = commentService.findCommentsByRelatedPost(postId);
+
+            StepVerifier.create(commentActualFlux)
+                    .expectNextCount(0)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(commentRepository, times(1))
+                                            .findByRelatedPost(postId),
+                                    () -> verifyNoMoreInteractions(commentRepository)))
+                    .verifyComplete();
         }
     }
 

@@ -257,7 +257,7 @@ class PostServiceTest {
     }
 
     @Nested
-    class OtherPostTest {
+    class FindPostTest {
 
         @Test
         void when_find_existing_post_by_id_should_return_post() {
