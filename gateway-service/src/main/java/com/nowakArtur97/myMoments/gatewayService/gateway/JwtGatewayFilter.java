@@ -1,8 +1,6 @@
 package com.nowakArtur97.myMoments.gatewayService.gateway;
 
 import com.nowakArtur97.myMoments.gatewayService.exception.JwtTokenMissingException;
-import com.nowakArtur97.myMoments.gatewayService.exception.UsernameNotFoundException;
-import com.nowakArtur97.myMoments.gatewayService.user.UserService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -18,8 +16,6 @@ class JwtGatewayFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
 
-    private final UserService userService;
-
     @Override
     public Mono<Void> filter(ServerWebExchange serverWebExchange, GatewayFilterChain filterChain) {
 
@@ -34,30 +30,24 @@ class JwtGatewayFilter implements GatewayFilter {
 
         String authorizationHeader = jwtUtil.getAuthorizationHeader(request);
 
-        String usernameOrEmail;
+        String username;
         String jwt;
 
         if (jwtUtil.isBearerTypeAuthorization(authorizationHeader)) {
 
             jwt = jwtUtil.getJwtFromHeader(authorizationHeader);
-            usernameOrEmail = jwtUtil.extractUsername(jwt);
+            username = jwtUtil.extractUsername(jwt);
 
         } else {
             throw new JwtTokenMissingException("JWT token is missing in request headers.");
         }
 
-        return userService.findByUsernameOrEmail(usernameOrEmail)
-                .switchIfEmpty(Mono.error(() ->
-                        new UsernameNotFoundException("User with name/email: '" + usernameOrEmail + "' not found.")))
-                .flatMap(userDocument -> {
+        if (jwtUtil.isTokenValid(jwt, username)) {
 
-                    if (jwtUtil.isTokenValid(jwt, userDocument.getUsername())) {
+            return filterChain.filter(serverWebExchange);
 
-                        return filterChain.filter(serverWebExchange);
-
-                    } else {
-                        throw new JwtException("Invalid JWT token.");
-                    }
-                });
+        } else {
+            throw new JwtException("Invalid JWT token.");
+        }
     }
 }
