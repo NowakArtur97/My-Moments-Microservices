@@ -11,3 +11,8 @@ spring:
 #
 server:
   port: 8082
+#
+# Custom properties
+#
+my-moments:
+  comment-service-uri: lb://comment-service/api/v1/posts/{postId}/comments

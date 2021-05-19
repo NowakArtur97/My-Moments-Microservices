@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @ApiModel(description = "Details about the Post's Comments")
-class PostsCommentsModel {
+public class PostsCommentsModel {
 
     @ApiModelProperty(notes = "The post's comments")
     private final List<CommentModel> comments;

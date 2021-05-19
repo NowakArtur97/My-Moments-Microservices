@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -35,8 +34,6 @@ class PostController {
 
     private final ModelMapper modelMapper;
 
-    private final WebClient.Builder webClientBuilder;
-
     @GetMapping(path = "/{id}")
     @ApiOperation(value = "Get a post", notes = "Provide an id")
     @ApiResponses({
@@ -47,9 +44,7 @@ class PostController {
                     required = true, example = "id") @PathVariable("id") String id
     ) {
 
-        return webClientBuilder.build().get().uri("lb://comment-service/api/v1/posts/{postId}/comments", id)
-                .retrieve()
-                .bodyToMono(PostsCommentsModel.class)
+        return postService.getCommentsByPostId(id)
                 .zipWith(postService.findPostById(id))
                 .map(tuple -> {
                     PostModelWithComments postModelWithComments = modelMapper.map(tuple.getT2(), PostModelWithComments.class);

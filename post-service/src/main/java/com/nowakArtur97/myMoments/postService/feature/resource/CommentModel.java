@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @ApiModel(description = "Details about the Comment")
-class CommentModel {
+public class CommentModel {
 
     @ApiModelProperty(notes = "The unique id of the Comment")
     private String id;
