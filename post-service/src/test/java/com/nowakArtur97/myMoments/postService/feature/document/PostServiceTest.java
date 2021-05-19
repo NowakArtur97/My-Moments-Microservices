@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -35,6 +36,9 @@ class PostServiceTest {
 
     @Mock
     private PostEventProducer postEventProducer;
+
+    @Mock
+    private WebClient.Builder webClientBuilder;
 
     private static MockedStatic<UUID> mocked;
 
@@ -61,7 +65,8 @@ class PostServiceTest {
     @BeforeEach
     void setUp() {
 
-        postService = new PostService(postRepository, postEventProducer);
+        String commentServiceUri = "comment-service/api/v1/posts/{postId}/comments";
+        postService = new PostService(postRepository, postEventProducer, webClientBuilder, commentServiceUri);
     }
 
     @Nested
@@ -88,7 +93,8 @@ class PostServiceTest {
                                 assertPost(postExpected, postActual);
                                 assertAll(() -> verify(postRepository, times(1)).save(postExpected),
                                         () -> verifyNoMoreInteractions(postRepository),
-                                        () -> verifyNoInteractions(postEventProducer));
+                                        () -> verifyNoInteractions(postEventProducer),
+                                        () -> verifyNoInteractions(webClientBuilder));
                                 return true;
                             }
                     ).verifyComplete();
@@ -127,7 +133,8 @@ class PostServiceTest {
                                         () -> verify(postRepository, times(1)).findById(postId),
                                         () -> verify(postRepository, times(1)).save(postExpected),
                                         () -> verifyNoMoreInteractions(postRepository),
-                                        () -> verifyNoInteractions(postEventProducer));
+                                        () -> verifyNoInteractions(postEventProducer),
+                                        () -> verifyNoInteractions(webClientBuilder));
                                 return true;
                             }
                     ).verifyComplete();
@@ -152,7 +159,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(postEventProducer))
+                                    () -> verifyNoInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
         }
 
@@ -179,7 +187,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(postEventProducer))
+                                    () -> verifyNoInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("User can only change his own posts.");
         }
     }
@@ -209,7 +218,8 @@ class PostServiceTest {
                                     () -> verifyNoMoreInteractions(postRepository),
                                     () -> verify(postEventProducer, times(1))
                                             .sendPostDeleteEvent(postId),
-                                    () -> verifyNoMoreInteractions(postEventProducer))
+                                    () -> verifyNoMoreInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder))
                     ).verifyComplete();
         }
 
@@ -228,7 +238,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(postEventProducer))
+                                    () -> verifyNoInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
         }
 
@@ -251,7 +262,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(postEventProducer))
+                                    () -> verifyNoInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("User can only change his own posts.");
         }
     }
@@ -276,7 +288,8 @@ class PostServiceTest {
                                 assertAll(
                                         () -> verify(postRepository, times(1)).findById(postId),
                                         () -> verifyNoMoreInteractions(postRepository),
-                                        () -> verifyNoInteractions(postEventProducer));
+                                        () -> verifyNoInteractions(postEventProducer),
+                                        () -> verifyNoInteractions(webClientBuilder));
                                 return true;
                             }
                     ).verifyComplete();
@@ -297,7 +310,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(postEventProducer))
+                                    () -> verifyNoInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder))
                     )
                     .verifyComplete();
         }
@@ -322,7 +336,8 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findByAuthor(author),
                                     () -> verifyNoMoreInteractions(postRepository),
-                                    () -> verifyNoInteractions(postEventProducer)))
+                                    () -> verifyNoInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder)))
                     .verifyComplete();
         }
     }

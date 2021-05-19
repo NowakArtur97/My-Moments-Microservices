@@ -21,6 +21,8 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -80,19 +82,28 @@ class PostGetControllerTest {
         String postId = "some generated id";
         String header = "Bearer token";
 
+        CommentModel commentModelExpected = new CommentModel("id", "content", "author",
+                LocalDateTime.now(), LocalDateTime.now());
+        CommentModel commentModelExpected2 = new CommentModel("id2", "content2", "author2",
+                LocalDateTime.now(), LocalDateTime.now());
+        List<CommentModel> commentsExpected = List.of(commentModelExpected, commentModelExpected2);
+        PostsCommentsModel postsCommentsModelExpected
+                = new PostsCommentsModel();
         PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withId(postId).build(ObjectType.DOCUMENT);
-        PostModel postModelExpected = (PostModel) postTestBuilder.withId(postId).build(ObjectType.MODEL);
+        PostModelWithComments postModelExpected = (PostModelWithComments) postTestBuilder.withId(postId)
+                .withComments(commentsExpected).build(ObjectType.MODEL);
 
+        when(postService.getCommentsByPostId(postId)).thenReturn(Mono.just(postsCommentsModelExpected));
         when(postService.findPostById(postId)).thenReturn(Mono.just(postDocumentExpected));
-        when(modelMapper.map(postDocumentExpected, PostModel.class)).thenReturn(postModelExpected);
+        when(modelMapper.map(postDocumentExpected, PostModelWithComments.class)).thenReturn(postModelExpected);
 
-        Mono<PostModel> postModelMono = webTestClient.get()
+        Mono<PostModelWithComments> postModelMono = webTestClient.get()
                 .uri(POST_BY_ID_BASE_PATH, postId)
                 .header("Authorization", header)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .returnResult(PostModel.class)
+                .returnResult(PostModelWithComments.class)
                 .getResponseBody()
                 .single();
 
@@ -108,10 +119,11 @@ class PostGetControllerTest {
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),
+                                    () -> verify(postService, times(1)).getCommentsByPostId(postId),
                                     () -> verify(postService, times(1)).findPostById(postId),
                                     () -> verifyNoMoreInteractions(postService),
                                     () -> verify(modelMapper, times(1))
-                                            .map(postDocumentExpected, PostModel.class),
+                                            .map(postDocumentExpected, PostModelWithComments.class),
                                     () -> verifyNoMoreInteractions(modelMapper),
                                     () -> verifyNoInteractions(jwtUtil),
                                     () -> verifyNoInteractions(postObjectMapper));
@@ -126,6 +138,7 @@ class PostGetControllerTest {
         String postId = "some generated id";
         String header = "Bearer token";
 
+        when(postService.getCommentsByPostId(postId)).thenReturn(Mono.empty());
         when(postService.findPostById(postId)).thenReturn(Mono.empty());
 
         Mono<ErrorResponse> errorResponseMono = webTestClient.get()
@@ -155,6 +168,7 @@ class PostGetControllerTest {
                                     () -> assertEquals(404, errorResponse.getStatus(),
                                             () -> "should return error response with 404 status, but was: "
                                                     + errorResponse.getStatus()),
+                                    () -> verify(postService, times(1)).getCommentsByPostId(postId),
                                     () -> verify(postService, times(1)).findPostById(postId),
                                     () -> verifyNoMoreInteractions(postService),
                                     () -> verifyNoInteractions(jwtUtil),
