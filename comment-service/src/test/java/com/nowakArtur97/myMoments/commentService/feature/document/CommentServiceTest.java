@@ -339,7 +339,7 @@ class CommentServiceTest {
         }
 
         @Test
-        void when_find_comments_by_related_post_id_and_found_nothing_should_empty_flux() {
+        void when_find_comments_by_related_post_id_but_found_nothing_should_empty_flux() {
 
             String postId = "postId";
 
