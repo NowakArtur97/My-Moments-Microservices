@@ -32,7 +32,7 @@ class GatewayConfig {
                                 .uri("lb://post-service"))
 
                 .route("comments",
-                        r -> r.path("/api/v1/**")
+                        r -> r.path("/api/v1/posts/{id}/comments/**")
                                 .filters(f -> f.filter(jwtGatewayFilter))
                                 .uri("lb://comment-service"))
                 .build();

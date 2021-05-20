@@ -20,7 +20,7 @@ public class PostsCommentsModel {
     @ApiModelProperty(notes = "The post's comments")
     private final List<CommentModel> comments;
 
-    PostsCommentsModel() {
+    public PostsCommentsModel() {
         this.comments = new ArrayList<>();
     }
 }

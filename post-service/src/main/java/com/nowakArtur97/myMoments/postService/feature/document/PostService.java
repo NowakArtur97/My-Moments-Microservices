@@ -7,6 +7,8 @@ import com.nowakArtur97.myMoments.postService.feature.resource.PostDTO;
 import com.nowakArtur97.myMoments.postService.feature.resource.PostsCommentsModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,22 +21,27 @@ import javax.validation.Valid;
 @Validated
 public class PostService {
 
+    private final String COMMENT_SERVICE_URI;
+
     private final PostRepository postRepository;
 
     private final PostEventProducer postEventProducer;
 
     private final WebClient.Builder webClientBuilder;
 
-    private final String commentServiceUri;
+    private final ReactiveCircuitBreaker reactiveCircuitBreaker;
 
     @Autowired
-    public PostService(PostRepository postRepository, PostEventProducer postEventProducer, WebClient.Builder webClientBuilder,
-                       @Value("${my-moments.comment-service-uri:lb://comment-service/api/v1/posts/{postId}/comments}")
-                               String commentServiceUri) {
+    public PostService(@Value("${my-moments.comment-service-uri:lb://comment-service/api/v1/posts/{postId}/comments}")
+                               String COMMENT_SERVICE_URI, PostRepository postRepository,
+                       PostEventProducer postEventProducer, WebClient.Builder webClientBuilder,
+                       ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory
+    ) {
+        this.COMMENT_SERVICE_URI = COMMENT_SERVICE_URI;
         this.postRepository = postRepository;
         this.postEventProducer = postEventProducer;
         this.webClientBuilder = webClientBuilder;
-        this.commentServiceUri = commentServiceUri;
+        this.reactiveCircuitBreaker = reactiveCircuitBreakerFactory.create("comment-fallback");
     }
 
     public Mono<PostDocument> findPostById(String id) {
@@ -49,10 +56,17 @@ public class PostService {
 
     public Mono<PostsCommentsModel> getCommentsByPostId(String id) {
 
-        return webClientBuilder.build().get()
-                .uri(commentServiceUri, id)
-                .retrieve()
-                .bodyToMono(PostsCommentsModel.class);
+        return reactiveCircuitBreaker.run(
+                webClientBuilder.build().get()
+                        .uri(COMMENT_SERVICE_URI, id)
+                        .retrieve()
+                        .bodyToMono(PostsCommentsModel.class),
+                PostService::getCommentsByPostIdFallback);
+    }
+
+    private static Mono<PostsCommentsModel> getCommentsByPostIdFallback(Throwable throwable) {
+
+        return Mono.just(new PostsCommentsModel());
     }
 
     public Mono<PostDocument> createPost(String username, @Valid PostDTO postDTO) {

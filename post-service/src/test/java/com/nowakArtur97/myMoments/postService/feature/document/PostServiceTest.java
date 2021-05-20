@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -40,6 +41,9 @@ class PostServiceTest {
     @Mock
     private WebClient.Builder webClientBuilder;
 
+    @Mock
+    private ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory;
+
     private static MockedStatic<UUID> mocked;
 
     private static PostTestBuilder postTestBuilder;
@@ -66,7 +70,8 @@ class PostServiceTest {
     void setUp() {
 
         String commentServiceUri = "comment-service/api/v1/posts/{postId}/comments";
-        postService = new PostService(postRepository, postEventProducer, webClientBuilder, commentServiceUri);
+        postService = new PostService(commentServiceUri, postRepository, postEventProducer, webClientBuilder,
+                reactiveCircuitBreakerFactory);
     }
 
     @Nested
@@ -93,6 +98,9 @@ class PostServiceTest {
                                 assertPost(postExpected, postActual);
                                 assertAll(() -> verify(postRepository, times(1)).save(postExpected),
                                         () -> verifyNoMoreInteractions(postRepository),
+                                        () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                                .create("comment-fallback"),
+                                        () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                         () -> verifyNoInteractions(postEventProducer),
                                         () -> verifyNoInteractions(webClientBuilder));
                                 return true;
@@ -133,6 +141,9 @@ class PostServiceTest {
                                         () -> verify(postRepository, times(1)).findById(postId),
                                         () -> verify(postRepository, times(1)).save(postExpected),
                                         () -> verifyNoMoreInteractions(postRepository),
+                                        () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                                .create("comment-fallback"),
+                                        () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                         () -> verifyNoInteractions(postEventProducer),
                                         () -> verifyNoInteractions(webClientBuilder));
                                 return true;
@@ -159,6 +170,9 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                     () -> verifyNoInteractions(postEventProducer),
                                     () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
@@ -187,6 +201,9 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                     () -> verifyNoInteractions(postEventProducer),
                                     () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("User can only change his own posts.");
@@ -216,6 +233,9 @@ class PostServiceTest {
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verify(postRepository, times(1)).delete(postExpected),
                                     () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                     () -> verify(postEventProducer, times(1))
                                             .sendPostDeleteEvent(postId),
                                     () -> verifyNoMoreInteractions(postEventProducer),
@@ -238,6 +258,9 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                     () -> verifyNoInteractions(postEventProducer),
                                     () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("Post with id: '" + postId + "' not found.");
@@ -262,6 +285,9 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                     () -> verifyNoInteractions(postEventProducer),
                                     () -> verifyNoInteractions(webClientBuilder))
                     ).verifyErrorMessage("User can only change his own posts.");
@@ -288,6 +314,9 @@ class PostServiceTest {
                                 assertAll(
                                         () -> verify(postRepository, times(1)).findById(postId),
                                         () -> verifyNoMoreInteractions(postRepository),
+                                        () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                                .create("comment-fallback"),
+                                        () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                         () -> verifyNoInteractions(postEventProducer),
                                         () -> verifyNoInteractions(webClientBuilder));
                                 return true;
@@ -310,6 +339,9 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findById(postId),
                                     () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                     () -> verifyNoInteractions(postEventProducer),
                                     () -> verifyNoInteractions(webClientBuilder))
                     )
@@ -336,6 +368,9 @@ class PostServiceTest {
                             assertAll(
                                     () -> verify(postRepository, times(1)).findByAuthor(author),
                                     () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
                                     () -> verifyNoInteractions(postEventProducer),
                                     () -> verifyNoInteractions(webClientBuilder)))
                     .verifyComplete();
