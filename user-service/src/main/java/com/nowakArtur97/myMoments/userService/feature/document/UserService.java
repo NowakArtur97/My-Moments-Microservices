@@ -7,6 +7,7 @@ import com.nowakArtur97.myMoments.userService.feature.resource.UserRegistrationD
 import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
 import com.nowakArtur97.myMoments.userService.feature.validation.UserValidationGroupSequence;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Validated({UserValidationGroupSequence.class})
+@Slf4j
 public class UserService {
 
     @Value("${my-moments.default-user-role:USER_ROLE}")
@@ -56,12 +58,18 @@ public class UserService {
     public UserDocument registerUser(@Valid UserRegistrationDTO userRegistrationDTO, MultipartFile image)
             throws RoleNotFoundException, IOException {
 
+        log.info("Creating a new User: {}", userRegistrationDTO.getUsername());
+
         RoleDocument roleDocument = roleService.findByName(defaultUserRole)
                 .orElseThrow(() -> new RoleNotFoundException("Role with name: '" + defaultUserRole + "' not found."));
 
         UserDocument newUserDocument = userMapper.convertDTOToDocument(userRegistrationDTO, image, roleDocument);
 
-        return userRepository.save(newUserDocument);
+        newUserDocument = userRepository.save(newUserDocument);
+
+        log.info("Successfully created a User: {}", newUserDocument.getUsername());
+
+        return newUserDocument;
     }
 
     public UserDocument updateUser(String username, @Valid UserUpdateDTO userUpdateDTO, MultipartFile image)
@@ -69,6 +77,8 @@ public class UserService {
 
         UserDocument userDocument = findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User with username: '" + username + "' not found."));
+
+        log.info("Updating a User: {}", userDocument.getUsername());
 
         userUpdateDTO.setId(userDocument.getId());
 
@@ -78,10 +88,14 @@ public class UserService {
 
         userEventProducer.sendUserUpdateEvent(new UserUpdateEventPayload(username, userUpdateDTO.getUsername()));
 
+        log.info("Successfully updated a User: {}", userDocument.getUsername());
+
         return userDocument;
     }
 
     public void deleteUser(String username) {
+
+        log.info("Deleting a User: {}", username);
 
         UserDocument userDocument = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User with username: '" + username + "' not found."));
@@ -89,5 +103,7 @@ public class UserService {
         userRepository.delete(userDocument);
 
         userEventProducer.sendUserDeleteEvent(username);
+
+        log.info("Successfully deleted a User: {}", username);
     }
 }

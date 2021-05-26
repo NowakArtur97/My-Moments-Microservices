@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.userService.advice;
 
 import com.nowakArtur97.myMoments.userService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
@@ -76,6 +78,8 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
 
         ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(),
                 List.of(exception.getMessage()));
+
+        log.info(exception.getMessage());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

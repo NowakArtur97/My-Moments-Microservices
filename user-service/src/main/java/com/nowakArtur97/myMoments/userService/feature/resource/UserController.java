@@ -8,6 +8,7 @@ import com.nowakArtur97.myMoments.userService.feature.document.UserDocument;
 import com.nowakArtur97.myMoments.userService.feature.document.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -29,6 +30,7 @@ import java.io.IOException;
         @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
         @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
 @RefreshScope
+@Slf4j
 class UserController {
 
     @Value("${my-moments.jwt.validity:36000000}")
@@ -71,6 +73,8 @@ class UserController {
         String newToken = jwtUtil.generateToken(userDetails);
 
         userModel.setAuthenticationResponse(new AuthenticationResponse(newToken, validity));
+
+        log.info("Generating token for an updated user: {}", userDetails.getUsername());
 
         return new ResponseEntity<>(userModel, HttpStatus.OK);
     }

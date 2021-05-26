@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.userService.advice;
 
 import com.nowakArtur97.myMoments.userService.common.model.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice(basePackages = "com.nowakArtur97.myMoments.userService.feature")
+@Slf4j
 public class AuthenticationControllerAdvice {
 
     @ExceptionHandler({BadCredentialsException.class})
@@ -28,6 +30,8 @@ public class AuthenticationControllerAdvice {
 
         ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(),
                 List.of(exception.getMessage()));
+
+        log.info(exception.getMessage());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }

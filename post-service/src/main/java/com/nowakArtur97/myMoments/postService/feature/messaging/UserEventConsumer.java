@@ -2,12 +2,14 @@ package com.nowakArtur97.myMoments.postService.feature.messaging;
 
 import com.nowakArtur97.myMoments.postService.feature.document.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 class UserEventConsumer {
 
     private final PostRepository postRepository;
@@ -17,6 +19,8 @@ class UserEventConsumer {
 
         UserUpdateEventPayload payload = message.getPayload();
         String newUsername = payload.getNewUsername();
+
+        log.info("Consuming User Update Event for user: {}", newUsername);
 
         postRepository.findByAuthor(payload.getPreviousUsername())
                 .doOnNext(postDocument -> postDocument.setAuthor(newUsername))
@@ -28,6 +32,8 @@ class UserEventConsumer {
     public void onUserDeleteMessage(Message<String> message) {
 
         String usernamePayload = message.getPayload();
+
+        log.info("Consuming User Delete Event for user: {}", usernamePayload);
 
         postRepository.deleteByAuthor(usernamePayload)
                 .subscribe();

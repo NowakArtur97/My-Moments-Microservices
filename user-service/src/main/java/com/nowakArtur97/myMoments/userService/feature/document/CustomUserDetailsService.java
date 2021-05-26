@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.userService.feature.document;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,12 +16,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String value) throws UsernameNotFoundException {
+
+        log.info("Looking up User with name/email: {}", value);
 
         UserDocument userDocument = userRepository.findByUsernameOrEmail(value, value)
                 .orElseThrow(() -> new UsernameNotFoundException("User with name/email: '" + value + "' not found."));

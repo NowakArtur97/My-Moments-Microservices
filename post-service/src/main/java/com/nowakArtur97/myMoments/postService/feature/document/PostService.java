@@ -5,6 +5,7 @@ import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundExceptio
 import com.nowakArtur97.myMoments.postService.feature.messaging.PostEventProducer;
 import com.nowakArtur97.myMoments.postService.feature.resource.PostDTO;
 import com.nowakArtur97.myMoments.postService.feature.resource.PostsCommentsModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 
 @Service
 @Validated
+@Slf4j
 public class PostService {
 
     private final String COMMENT_SERVICE_URI;
@@ -46,15 +48,21 @@ public class PostService {
 
     public Mono<PostDocument> findPostById(String id) {
 
+        log.info("Looking up a Post with id: {}", id);
+
         return postRepository.findById(id);
     }
 
     public Flux<PostDocument> findPostsByAuthor(String author) {
 
+        log.info("Looking up a Post by author: {}", author);
+
         return postRepository.findByAuthor(author);
     }
 
     public Mono<PostsCommentsModel> getCommentsByPostId(String id) {
+
+        log.info("Looking up Comments with Post id: {} form Comment Service", id);
 
         return reactiveCircuitBreaker.run(
                 webClientBuilder.build().get()
@@ -71,10 +79,14 @@ public class PostService {
 
     public Mono<PostDocument> createPost(String username, @Valid PostDTO postDTO) {
 
+        log.info("Creating a new Post for user: {}", username);
+
         return postRepository.save(new PostDocument(postDTO.getCaption(), username, postDTO.getPhotos()));
     }
 
     public Mono<PostDocument> updatePost(String postId, String username, @Valid PostDTO postDTO) {
+
+        log.info("Updating a Post with id: {} by user: {}", postId, username);
 
         return postRepository.findById(postId)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Post", postId)))
@@ -84,8 +96,13 @@ public class PostService {
                         postDocument.setCaption(postDTO.getCaption());
                         postDocument.setPhotos(postDTO.getPhotos());
 
+                        log.info("Successfully updated a Post with id: {} by user: {}", postId, username);
+
                         return postRepository.save(postDocument);
                     } else {
+
+                        log.info("User: {} tried to update someone else's Post with id: {}", username, postId);
+
                         return Mono.error(new ForbiddenException("User can only change his own posts."));
                     }
                 });
@@ -93,14 +110,21 @@ public class PostService {
 
     public Mono<Void> deletePost(String postId, String username) {
 
+        log.info("Deleting a Post with id: {} by user: {}", postId, username);
+
         return postRepository.findById(postId)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Post", postId)))
                 .flatMap((postDocument) -> {
 
                     if (username.equals(postDocument.getAuthor())) {
 
+                        log.info("Successfully deleted a Post with id: {} by user: {}", postId, username);
+
                         return postRepository.delete(postDocument);
                     } else {
+
+                        log.info("User: {} tried to delete someone else's Post with id: {}", username, postId);
+
                         return Mono.error(new ForbiddenException("User can only change his own posts."));
                     }
                 }).doOnSuccess((__) -> postEventProducer.sendPostDeleteEvent(postId));

@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.postService.advice;
 
 import com.nowakArtur97.myMoments.postService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 class GlobalRestControllerAdvice {
 
     @ExceptionHandler({ConstraintViolationException.class})
@@ -34,6 +36,8 @@ class GlobalRestControllerAdvice {
 
         ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(),
                 List.of(exception.getMessage()));
+
+        log.info(exception.getMessage());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

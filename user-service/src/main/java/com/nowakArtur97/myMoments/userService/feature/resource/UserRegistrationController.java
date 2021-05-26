@@ -8,6 +8,7 @@ import com.nowakArtur97.myMoments.userService.feature.document.UserDocument;
 import com.nowakArtur97.myMoments.userService.feature.document.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Api(tags = {UserRegistrationTag.RESOURCE})
 @RefreshScope
+@Slf4j
 class UserRegistrationController {
 
     @Value("${my-moments.jwt.validity:36000000}")
@@ -61,6 +63,8 @@ class UserRegistrationController {
                 customUserDetailsService.getAuthorities(newUser.getRoles()));
 
         String token = jwtUtil.generateToken(userDetails);
+
+        log.info("Generating token for a new User: {}", userDetails.getUsername());
 
         return ResponseEntity.ok(new AuthenticationResponse(token, validity));
     }
