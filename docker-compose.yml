@@ -102,25 +102,25 @@ services:
       - my-moments
     container_name: mongo-db-user-service
 
-  mongo-db-post-service:
-    image: mongo:3.6
-    ports:
-      - 27019:27017
-    volumes:
-      - /var/lib/mongo-db-post-service:/data/db
-    networks:
-      - my-moments
-    container_name: mongo-db-post-service
-
-  mongo-db-comment-service:
-    image: mongo:3.6
-    ports:
-      - 27021:27017
-    volumes:
-      - /var/lib/mongo-db-comment-service:/data/db
-    networks:
-      - my-moments
-    container_name: mongo-db-comment-service
+#  mongo-db-post-service:
+#    image: mongo:3.6
+#    ports:
+#      - 27019:27017
+#    volumes:
+#      - /var/lib/mongo-db-post-service:/data/db
+#    networks:
+#      - my-moments
+#    container_name: mongo-db-post-service
+#
+#  mongo-db-comment-service:
+#    image: mongo:3.6
+#    ports:
+#      - 27021:27017
+#    volumes:
+#      - /var/lib/mongo-db-comment-service:/data/db
+#    networks:
+#      - my-moments
+#    container_name: mongo-db-comment-service
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -135,6 +135,50 @@ services:
       - 15672:15672
 
   zipkin:
-    image: openzipkin/zipkin
+    image: openzipkin/zipkin:2.23.2
+    restart: on-failure
+    networks:
+      - my-moments
+    container_name: zipkin
     ports:
       - 9411:9411
+
+  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    build: ./elk/elasticsearch
+    restart: on-failure
+    networks:
+      - my-moments
+    ports:
+      - 9200:9200
+    container_name: elasticsearch
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+#      discovery.type: single-node
+#      node.name: elasticsearch
+
+  logstash:
+    build: ./elk/logstash
+    restart: on-failure
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
+    networks:
+      - my-moments
+    ports:
+      - 5000:5000
+      - 9600:9600
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+#  kibana:
+#    build: ./elk/kibana
+#    restart: on-failure
+#    networks:
+#      - my-moments
+#    ports:
+#      - 5601:5601
+#    container_name: kibana
+#    depends_on:
+#      - elasticsearch
