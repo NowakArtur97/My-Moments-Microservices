@@ -13,6 +13,9 @@ spring:
           searchPaths:
             - configuration-service/src/main/resources/config
           default-label: main
+      allowOverride: true
+      overrideNone: true
+      overrideSystemProperties: false
 #
 # Spring Boot Actuator
 #
