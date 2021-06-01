@@ -144,7 +144,6 @@ services:
       - 9411:9411
 
   elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
     build: ./elk/elasticsearch
     restart: on-failure
     networks:
@@ -154,8 +153,6 @@ services:
     container_name: elasticsearch
     environment:
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-#      discovery.type: single-node
-#      node.name: elasticsearch
 
   logstash:
     build: ./elk/logstash
@@ -167,18 +164,18 @@ services:
       - 5000:5000
       - 9600:9600
     container_name: logstash
-    depends_on:
-      - elasticsearch
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
 
-#  kibana:
-#    build: ./elk/kibana
-#    restart: on-failure
-#    networks:
-#      - my-moments
-#    ports:
-#      - 5601:5601
-#    container_name: kibana
-#    depends_on:
-#      - elasticsearch
+  kibana:
+    build: ./elk/kibana
+    restart: on-failure
+    networks:
+      - my-moments
+    ports:
+      - 5601:5601
+    container_name: kibana
+    depends_on:
+      - elasticsearch
