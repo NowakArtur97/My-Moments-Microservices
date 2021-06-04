@@ -28,18 +28,19 @@ services:
     volumes:
       - /discovery-service/dir:/app
 
-#  gateway-service:
-#    restart: on-failure
-#    build: ./gateway-service
-#    networks:
-#      - my-moments
-#    container_name: gateway-service
-#    ports:
-#      - 8989:8989
-#    volumes:
-#      - /gateway-service/dir:/app
-#    depends_on:
-#      - discovery-service
+  gateway-service:
+    restart: on-failure
+    build: ./gateway-service
+    networks:
+      - my-moments
+    container_name: gateway-service
+    ports:
+      - 8989:8989
+    volumes:
+      - /gateway-service/dir:/app
+    depends_on:
+      - discovery-service
+      - mongo-db-user-service
 
 #  user-service:
 #    restart: on-failure
@@ -55,7 +56,6 @@ services:
 #      - /user-service/dir:/app
 #    depends_on:
 #      - gateway-service
-#      - mongo-db-user-service
 #      - rabbitmq
 #
 #  post-service:
