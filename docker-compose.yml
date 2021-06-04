@@ -40,24 +40,26 @@ services:
       - /gateway-service/dir:/app
     depends_on:
       - discovery-service
+      - logstash
+      - zipkin
       - mongo-db-user-service
 
-#  user-service:
-#    restart: on-failure
-#    build: ./user-service
-#    networks:
-#      - my-moments
-#    container_name: user-service
-#    ports:
-#      - 8081:8081
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#    volumes:
-#      - /user-service/dir:/app
-#    depends_on:
-#      - gateway-service
-#      - rabbitmq
-#
+  user-service:
+    restart: on-failure
+    build: ./user-service
+    networks:
+      - my-moments
+    container_name: user-service
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /user-service/dir:/app
+    depends_on:
+      - gateway-service
+      - rabbitmq
+
 #  post-service:
 #    restart: on-failure
 #    build: ./post-service
@@ -121,19 +123,19 @@ services:
 #    networks:
 #      - my-moments
 #    container_name: mongo-db-comment-service
-#
-#  rabbitmq:
-#    image: rabbitmq:3-management-alpine
-#    networks:
-#      - my-moments
-#    container_name: rabbitmq
-#    environment:
-#      RABBITMQ_DEFAULT_USER: my-moments-user
-#      RABBITMQ_DEFAULT_PASS: my-moments-password
-#    ports:
-#      - 5672:5672
-#      - 15672:15672
-#
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    networks:
+      - my-moments
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: my-moments-user
+      RABBITMQ_DEFAULT_PASS: my-moments-password
+    ports:
+      - 5672:5672
+      - 15672:15672
+
   zipkin:
     image: openzipkin/zipkin:2.23.2
     restart: on-failure
