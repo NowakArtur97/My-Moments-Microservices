@@ -28,18 +28,18 @@ services:
     volumes:
       - /discovery-service/dir:/app
 
-  gateway-service:
-    restart: on-failure
-    build: ./gateway-service
-    networks:
-      - my-moments
-    container_name: gateway-service
-    ports:
-      - 8989:8989
-    volumes:
-      - /gateway-service/dir:/app
-    depends_on:
-      - discovery-service
+#  gateway-service:
+#    restart: on-failure
+#    build: ./gateway-service
+#    networks:
+#      - my-moments
+#    container_name: gateway-service
+#    ports:
+#      - 8989:8989
+#    volumes:
+#      - /gateway-service/dir:/app
+#    depends_on:
+#      - discovery-service
 
 #  user-service:
 #    restart: on-failure
@@ -134,48 +134,48 @@ services:
 #      - 5672:5672
 #      - 15672:15672
 #
-#  zipkin:
-#    image: openzipkin/zipkin:2.23.2
-#    restart: on-failure
-#    networks:
-#      - my-moments
-#    container_name: zipkin
-#    ports:
-#      - 9411:9411
-#
-#  elasticsearch:
-#    build: ./elk/elasticsearch
-#    restart: on-failure
-#    networks:
-#      - my-moments
-#    ports:
-#      - 9200:9200
-#    container_name: elasticsearch
-#    environment:
-#      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-#
-#  logstash:
-#    build: ./elk/logstash
-#    restart: on-failure
-#    command: logstash -f /etc/logstash/conf.d/logstash.conf
-#    networks:
-#      - my-moments
-#    ports:
-#      - 5000:5000
-#      - 9600:9600
-#    container_name: logstash
-#    environment:
-#      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-#    depends_on:
-#      - elasticsearch
-#
-#  kibana:
-#    build: ./elk/kibana
-#    restart: on-failure
-#    networks:
-#      - my-moments
-#    ports:
-#      - 5601:5601
-#    container_name: kibana
-#    depends_on:
-#      - elasticsearch
+  zipkin:
+    image: openzipkin/zipkin:2.23.2
+    restart: on-failure
+    networks:
+      - my-moments
+    container_name: zipkin
+    ports:
+      - 9411:9411
+
+  elasticsearch:
+    build: ./elk/elasticsearch
+    restart: on-failure
+    networks:
+      - my-moments
+    ports:
+      - 9200:9200
+    container_name: elasticsearch
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
+  logstash:
+    build: ./elk/logstash
+    restart: on-failure
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
+    networks:
+      - my-moments
+    ports:
+      - 5000:5000
+      - 9600:9600
+    container_name: logstash
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    build: ./elk/kibana
+    restart: on-failure
+    networks:
+      - my-moments
+    ports:
+      - 5601:5601
+    container_name: kibana
+    depends_on:
+      - elasticsearch

@@ -5,6 +5,7 @@ import com.nowakArtur97.myMoments.gatewayService.exception.UsernameNotFoundExcep
 import com.nowakArtur97.myMoments.gatewayService.user.UserService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 class JwtGatewayFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
@@ -29,6 +31,8 @@ class JwtGatewayFilter implements GatewayFilter {
 
         if (jwtUtil.isNotSecured(path)) {
 
+            log.info("Passing the request to an unsecured endpoint: {}", path);
+
             return filterChain.filter(serverWebExchange);
         }
 
@@ -43,19 +47,33 @@ class JwtGatewayFilter implements GatewayFilter {
             username = jwtUtil.extractUsername(jwt);
 
         } else {
+
+            log.info("JWT token is missing in request headers: {}", authorizationHeader);
+
             throw new JwtTokenMissingException("JWT token is missing in request headers.");
         }
 
+        log.info("Extracted username: {} from token: {}", username, jwt);
+
         return userService.findByUsername(username)
-                .switchIfEmpty(Mono.error(() ->
-                        new UsernameNotFoundException("User with name: '" + username + "' not found.")))
+                .switchIfEmpty(Mono.error(() -> {
+
+                    log.info("User with name: {} not found", username);
+
+                    return new UsernameNotFoundException("User with name: '" + username + "' not found.");
+                }))
                 .flatMap(userDocument -> {
 
                     if (jwtUtil.isTokenValid(jwt, userDocument.getUsername())) {
 
+                        log.info("Token is valid for User: {}", username);
+
                         return filterChain.filter(serverWebExchange);
 
                     } else {
+
+                        log.info("Token: {} is invalid for User: {}", jwt, username);
+
                         throw new JwtException("Invalid JWT token.");
                     }
                 });
