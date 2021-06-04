@@ -40,6 +40,7 @@ services:
       - /gateway-service/dir:/app
     depends_on:
       - discovery-service
+      - configuration-service
       - logstash
       - zipkin
       - mongo-db-user-service
@@ -60,39 +61,39 @@ services:
       - gateway-service
       - rabbitmq
 
-#  post-service:
-#    restart: on-failure
-#    build: ./post-service
-#    networks:
-#      - my-moments
-#    container_name: post-service
-#    ports:
-#      - 8082:8082
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#    volumes:
-#      - /post-service/dir:/app
-#    depends_on:
-#      - gateway-service
-#      - mongo-db-post-service
-#      - rabbitmq
-#
-#  comment-service:
-#    restart: on-failure
-#    build: ./comment-service
-#    networks:
-#      - my-moments
-#    container_name: comment-service
-#    ports:
-#      - 8083:8083
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#    volumes:
-#      - /comment-service/dir:/app
-#    depends_on:
-#      - gateway-service
-#      - mongo-db-comment-service
-#      - rabbitmq
+  post-service:
+    restart: on-failure
+    build: ./post-service
+    networks:
+      - my-moments
+    container_name: post-service
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /post-service/dir:/app
+    depends_on:
+      - gateway-service
+      - mongo-db-post-service
+      - rabbitmq
+
+  comment-service:
+    restart: on-failure
+    build: ./comment-service
+    networks:
+      - my-moments
+    container_name: comment-service
+    ports:
+      - 8083:8083
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /comment-service/dir:/app
+    depends_on:
+      - gateway-service
+      - mongo-db-comment-service
+      - rabbitmq
 
   mongo-db-user-service:
     image: mongo:3.6
@@ -104,25 +105,25 @@ services:
       - my-moments
     container_name: mongo-db-user-service
 
-#  mongo-db-post-service:
-#    image: mongo:3.6
-#    ports:
-#      - 27019:27017
-#    volumes:
-#      - /var/lib/mongo-db-post-service:/data/db
-#    networks:
-#      - my-moments
-#    container_name: mongo-db-post-service
-#
-#  mongo-db-comment-service:
-#    image: mongo:3.6
-#    ports:
-#      - 27021:27017
-#    volumes:
-#      - /var/lib/mongo-db-comment-service:/data/db
-#    networks:
-#      - my-moments
-#    container_name: mongo-db-comment-service
+  mongo-db-post-service:
+    image: mongo:3.6
+    ports:
+      - 27019:27017
+    volumes:
+      - /var/lib/mongo-db-post-service:/data/db
+    networks:
+      - my-moments
+    container_name: mongo-db-post-service
+
+  mongo-db-comment-service:
+    image: mongo:3.6
+    ports:
+      - 27021:27017
+    volumes:
+      - /var/lib/mongo-db-comment-service:/data/db
+    networks:
+      - my-moments
+    container_name: mongo-db-comment-service
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
