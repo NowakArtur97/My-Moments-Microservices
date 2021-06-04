@@ -1,6 +1,8 @@
 package com.nowakArtur97.myMoments.gatewayService.gateway;
 
 import com.nowakArtur97.myMoments.gatewayService.exception.JwtTokenMissingException;
+import com.nowakArtur97.myMoments.gatewayService.exception.UsernameNotFoundException;
+import com.nowakArtur97.myMoments.gatewayService.user.UserService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -15,6 +17,8 @@ import reactor.core.publisher.Mono;
 class JwtGatewayFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
+
+    private final UserService userService;
 
     @Override
     public Mono<Void> filter(ServerWebExchange serverWebExchange, GatewayFilterChain filterChain) {
@@ -42,12 +46,18 @@ class JwtGatewayFilter implements GatewayFilter {
             throw new JwtTokenMissingException("JWT token is missing in request headers.");
         }
 
-        if (jwtUtil.isTokenValid(jwt, username)) {
+        return userService.findByUsername(username)
+                .switchIfEmpty(Mono.error(() ->
+                        new UsernameNotFoundException("User with name: '" + username + "' not found.")))
+                .flatMap(userDocument -> {
 
-            return filterChain.filter(serverWebExchange);
+                    if (jwtUtil.isTokenValid(jwt, userDocument.getUsername())) {
 
-        } else {
-            throw new JwtException("Invalid JWT token.");
-        }
+                        return filterChain.filter(serverWebExchange);
+
+                    } else {
+                        throw new JwtException("Invalid JWT token.");
+                    }
+                });
     }
 }

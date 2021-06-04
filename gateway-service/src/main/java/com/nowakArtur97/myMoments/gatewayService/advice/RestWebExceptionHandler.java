@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.gatewayService.advice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nowakArtur97.myMoments.gatewayService.exception.JwtTokenMissingException;
+import com.nowakArtur97.myMoments.gatewayService.exception.UsernameNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,9 @@ class RestWebExceptionHandler implements WebExceptionHandler {
     @Override
     public Mono<Void> handle(ServerWebExchange serverWebExchange, Throwable exception) {
 
-        if (exception instanceof JwtTokenMissingException || exception instanceof ExpiredJwtException) {
+        if (exception instanceof UsernameNotFoundException
+                || exception instanceof JwtTokenMissingException
+                || exception instanceof ExpiredJwtException) {
 
             return setErrorResponse(HttpStatus.UNAUTHORIZED, serverWebExchange, exception);
 
