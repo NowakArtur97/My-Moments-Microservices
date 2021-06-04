@@ -81,7 +81,12 @@ public class PostService {
 
         log.info("Creating a new Post for user: {}", username);
 
-        return postRepository.save(new PostDocument(postDTO.getCaption(), username, postDTO.getPhotos()));
+        Mono<PostDocument> postDocumentMono = postRepository
+                .save(new PostDocument(postDTO.getCaption(), username, postDTO.getPhotos()));
+
+        log.info("Successfully created a Post by user: {}", username);
+
+        return postDocumentMono;
     }
 
     public Mono<PostDocument> updatePost(String postId, String username, @Valid PostDTO postDTO) {
@@ -96,9 +101,11 @@ public class PostService {
                         postDocument.setCaption(postDTO.getCaption());
                         postDocument.setPhotos(postDTO.getPhotos());
 
+                        Mono<PostDocument> postDocumentMono = postRepository.save(postDocument);
+
                         log.info("Successfully updated a Post with id: {} by user: {}", postId, username);
 
-                        return postRepository.save(postDocument);
+                        return postDocumentMono;
                     } else {
 
                         log.info("User: {} tried to update someone else's Post with id: {}", username, postId);
@@ -118,9 +125,11 @@ public class PostService {
 
                     if (username.equals(postDocument.getAuthor())) {
 
+                        Mono<Void> voidMono = postRepository.delete(postDocument);
+
                         log.info("Successfully deleted a Post with id: {} by user: {}", postId, username);
 
-                        return postRepository.delete(postDocument);
+                        return voidMono;
                     } else {
 
                         log.info("User: {} tried to delete someone else's Post with id: {}", username, postId);
