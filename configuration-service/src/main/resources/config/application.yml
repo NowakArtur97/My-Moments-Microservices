@@ -1,35 +1,4 @@
 #
-# Spring
-#
-#spring:
-#  #
-#  # Config Server
-#  #
-#  cloud:
-#    config:
-#      server:
-#        git:
-#          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
-#          searchPaths:
-#            - configuration-service/src/main/resources/config
-#          default-label: main
-#      allow-override: true
-#      override-none: true
-#      override-system-properties: false
-#    vault:
-#      host: 192.168.99.100
-#      port: 8200
-#      scheme: https
-#      uri: https://192.168.99.100:8200
-#      connection-timeout: 5000
-#      read-timeout: 15000
-#      config:
-#        order: -10
-#      token: s.v6N8y9uTo9a29LwD2CbMpC9G
-##      token: 00000000-0000-0000-0000-000000000000
-#      kv:
-#        enabled: true
-#
 # Spring Boot Actuator
 #
 management:
@@ -67,7 +36,7 @@ my-moments:
   # JWT
   #
   jwt:
-    secretKey: secret
+#    secretKey: secret # already in vault
     validity: 72000000
     authenticated-ant-matchers: /api/v1/**
     ignored-endpoints:
