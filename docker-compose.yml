@@ -6,179 +6,191 @@ networks:
     name: my-moments
 
 services:
-  configuration-service:
-    restart: on-failure
-    build: ./configuration-service
-    networks:
-      - my-moments
-    container_name: configuration-service
-    ports:
-      - 8888:8888
-    volumes:
-      - /configuration-service/dir:/app
+#  configuration-service:
+#    restart: on-failure
+#    build: ./configuration-service
+#    networks:
+#      - my-moments
+#    container_name: configuration-service
+#    ports:
+#      - 8888:8888
+#    volumes:
+#      - /configuration-service/dir:/app
+#
+#  discovery-service:
+#    restart: on-failure
+#    build: ./discovery-service
+#    networks:
+#      - my-moments
+#    container_name: discovery-service
+#    ports:
+#      - 8761:8761
+#    volumes:
+#      - /discovery-service/dir:/app
+#
+#  gateway-service:
+#    restart: on-failure
+#    build: ./gateway-service
+#    networks:
+#      - my-moments
+#    container_name: gateway-service
+#    ports:
+#      - 8989:8989
+#    volumes:
+#      - /gateway-service/dir:/app
+#    depends_on:
+#      - discovery-service
+#      - configuration-service
+#      - logstash
+#      - zipkin
+#      - mongo-db-user-service
+#
+#  user-service:
+#    restart: on-failure
+#    build: ./user-service
+#    networks:
+#      - my-moments
+#    container_name: user-service
+#    ports:
+#      - 8081:8081
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    volumes:
+#      - /user-service/dir:/app
+#    depends_on:
+#      - gateway-service
+#      - rabbitmq
+#
+#  post-service:
+#    restart: on-failure
+#    build: ./post-service
+#    networks:
+#      - my-moments
+#    container_name: post-service
+#    ports:
+#      - 8082:8082
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    volumes:
+#      - /post-service/dir:/app
+#    depends_on:
+#      - gateway-service
+#      - mongo-db-post-service
+#      - rabbitmq
+#
+#  comment-service:
+#    restart: on-failure
+#    build: ./comment-service
+#    networks:
+#      - my-moments
+#    container_name: comment-service
+#    ports:
+#      - 8083:8083
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    volumes:
+#      - /comment-service/dir:/app
+#    depends_on:
+#      - gateway-service
+#      - mongo-db-comment-service
+#      - rabbitmq
+#
+#  mongo-db-user-service:
+#    image: mongo:3.6
+#    ports:
+#      - 27017:27017
+#    volumes:
+#      - /var/lib/mongo-db-uesr-service:/data/db
+#    networks:
+#      - my-moments
+#    container_name: mongo-db-user-service
+#
+#  mongo-db-post-service:
+#    image: mongo:3.6
+#    ports:
+#      - 27019:27017
+#    volumes:
+#      - /var/lib/mongo-db-post-service:/data/db
+#    networks:
+#      - my-moments
+#    container_name: mongo-db-post-service
+#
+#  mongo-db-comment-service:
+#    image: mongo:3.6
+#    ports:
+#      - 27021:27017
+#    volumes:
+#      - /var/lib/mongo-db-comment-service:/data/db
+#    networks:
+#      - my-moments
+#    container_name: mongo-db-comment-service
+#
+#  rabbitmq:
+#    image: rabbitmq:3-management-alpine
+#    networks:
+#      - my-moments
+#    container_name: rabbitmq
+#    environment:
+#      RABBITMQ_DEFAULT_USER: my-moments-user
+#      RABBITMQ_DEFAULT_PASS: my-moments-password
+#    ports:
+#      - 5672:5672
+#      - 15672:15672
+#
+#  zipkin:
+#    image: openzipkin/zipkin:2.23.2
+#    restart: on-failure
+#    networks:
+#      - my-moments
+#    container_name: zipkin
+#    ports:
+#      - 9411:9411
+#
+#  elasticsearch:
+#    build: ./elk/elasticsearch
+#    restart: on-failure
+#    networks:
+#      - my-moments
+#    ports:
+#      - 9200:9200
+#    container_name: elasticsearch
+#    environment:
+#      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+#
+#  logstash:
+#    build: ./elk/logstash
+#    restart: on-failure
+#    command: logstash -f /etc/logstash/conf.d/logstash.conf
+#    networks:
+#      - my-moments
+#    ports:
+#      - 5000:5000
+#      - 9600:9600
+#    container_name: logstash
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+#    depends_on:
+#      - elasticsearch
+#
+#  kibana:
+#    build: ./elk/kibana
+#    restart: on-failure
+#    networks:
+#      - my-moments
+#    ports:
+#      - 5601:5601
+#    container_name: kibana
+#    depends_on:
+#      - elasticsearch
 
-  discovery-service:
-    restart: on-failure
-    build: ./discovery-service
-    networks:
-      - my-moments
-    container_name: discovery-service
-    ports:
-      - 8761:8761
-    volumes:
-      - /discovery-service/dir:/app
-
-  gateway-service:
-    restart: on-failure
-    build: ./gateway-service
-    networks:
-      - my-moments
-    container_name: gateway-service
-    ports:
-      - 8989:8989
-    volumes:
-      - /gateway-service/dir:/app
-    depends_on:
-      - discovery-service
-      - configuration-service
-      - logstash
-      - zipkin
-      - mongo-db-user-service
-
-  user-service:
-    restart: on-failure
-    build: ./user-service
-    networks:
-      - my-moments
-    container_name: user-service
-    ports:
-      - 8081:8081
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    volumes:
-      - /user-service/dir:/app
-    depends_on:
-      - gateway-service
-      - rabbitmq
-
-  post-service:
-    restart: on-failure
-    build: ./post-service
-    networks:
-      - my-moments
-    container_name: post-service
-    ports:
-      - 8082:8082
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    volumes:
-      - /post-service/dir:/app
-    depends_on:
-      - gateway-service
-      - mongo-db-post-service
-      - rabbitmq
-
-  comment-service:
-    restart: on-failure
-    build: ./comment-service
-    networks:
-      - my-moments
-    container_name: comment-service
-    ports:
-      - 8083:8083
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    volumes:
-      - /comment-service/dir:/app
-    depends_on:
-      - gateway-service
-      - mongo-db-comment-service
-      - rabbitmq
-
-  mongo-db-user-service:
-    image: mongo:3.6
-    ports:
-      - 27017:27017
-    volumes:
-      - /var/lib/mongo-db-uesr-service:/data/db
-    networks:
-      - my-moments
-    container_name: mongo-db-user-service
-
-  mongo-db-post-service:
-    image: mongo:3.6
-    ports:
-      - 27019:27017
-    volumes:
-      - /var/lib/mongo-db-post-service:/data/db
-    networks:
-      - my-moments
-    container_name: mongo-db-post-service
-
-  mongo-db-comment-service:
-    image: mongo:3.6
-    ports:
-      - 27021:27017
-    volumes:
-      - /var/lib/mongo-db-comment-service:/data/db
-    networks:
-      - my-moments
-    container_name: mongo-db-comment-service
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    networks:
-      - my-moments
-    container_name: rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: my-moments-user
-      RABBITMQ_DEFAULT_PASS: my-moments-password
-    ports:
-      - 5672:5672
-      - 15672:15672
-
-  zipkin:
-    image: openzipkin/zipkin:2.23.2
-    restart: on-failure
-    networks:
-      - my-moments
-    container_name: zipkin
-    ports:
-      - 9411:9411
-
-  elasticsearch:
-    build: ./elk/elasticsearch
-    restart: on-failure
+  vault:
+    build: ./vault
+    container_name: vault
     networks:
       - my-moments
     ports:
-      - 9200:9200
-    container_name: elasticsearch
-    environment:
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-
-  logstash:
-    build: ./elk/logstash
-    restart: on-failure
-    command: logstash -f /etc/logstash/conf.d/logstash.conf
-    networks:
-      - my-moments
-    ports:
-      - 5000:5000
-      - 9600:9600
-    container_name: logstash
-    environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    depends_on:
-      - elasticsearch
-
-  kibana:
-    build: ./elk/kibana
-    restart: on-failure
-    networks:
-      - my-moments
-    ports:
-      - 5601:5601
-    container_name: kibana
-    depends_on:
-      - elasticsearch
+      - 8200:8200
+    restart: always
+    cap_add:
+      - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/vault.json

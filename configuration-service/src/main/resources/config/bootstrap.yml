@@ -4,6 +4,30 @@
 spring:
   application:
     name: configuration-service
+  #
+  # Config Server
+  #
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
+          searchPaths:
+            - configuration-service/src/main/resources/config
+          default-label: main
+      allow-override: true
+      override-none: true
+      override-system-properties: false
+    #
+    # Vault
+    #
+    vault:
+      application-name: configuration-service
+      host: 192.168.99.100
+      port: 8200
+      scheme: http
+      token: s.6938s60GiFiFLYxm9w4mbddb # token from vault
+      authentication: TOKEN
 #
 # Server
 #
