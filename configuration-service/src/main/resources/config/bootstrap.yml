@@ -15,19 +15,35 @@ spring:
           searchPaths:
             - configuration-service/src/main/resources/config
           default-label: main
+        vault:
+          application-name: configuration-service
+          host: 192.168.99.100
+          token: a113196a-ae9c-c43a-9cb9-cdf76a686d29 # token from vault
+          authentication: TOKEN
       allow-override: true
       override-none: true
       override-system-properties: false
     #
     # Vault
     #
-    vault:
-      application-name: configuration-service
-      host: 192.168.99.100
-      port: 8200
-      scheme: http
-      token: # token from vault
-      authentication: TOKEN
+#    vault:
+#      application-name: configuration-service
+#      host: 192.168.99.100
+#      token: a113196a-ae9c-c43a-9cb9-cdf76a686d29 # token from vault
+#      authentication: NONE
+#      authentication: CUBBYHOLE
+#      uri: http://192.168.99.100:8200/v1/cubbyhole
+#      paths: /configuration-service
+#      kv:
+#        enabled: true
+#      generic:
+#        enabled: false
+#        backend: kv
+#        profile-separator: '/'
+#        default-context: kv
+#        application-name: configuration-service
+#      config:
+#        order: -10
 #
 # Server
 #

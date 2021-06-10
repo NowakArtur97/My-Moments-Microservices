@@ -22,11 +22,8 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-vault-config
-	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-vault-config', version: '3.0.0'
-	// https://mvnrepository.com/artifact/org.springframework.vault/spring-vault-core
-	implementation group: 'org.springframework.vault', name: 'spring-vault-core', version: '2.3.2'
-
+	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-vault-config
+	testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-vault-config', version: '2.1.5.RELEASE'
 }
 
 dependencyManagement {
