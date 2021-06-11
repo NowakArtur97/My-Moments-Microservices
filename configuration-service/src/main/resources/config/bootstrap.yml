@@ -18,7 +18,7 @@ spring:
         vault:
           application-name: configuration-service
           host: 192.168.99.100
-          token: a113196a-ae9c-c43a-9cb9-cdf76a686d29 # token from vault
+          token: 00000000-0000-0000-0000-000000000000 # token from vault
           authentication: TOKEN
       allow-override: true
       override-none: true

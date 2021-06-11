@@ -23,7 +23,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-vault-config
-	testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-vault-config', version: '2.1.5.RELEASE'
+	testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-vault-config', version: '3.0.3'
 }
 
 dependencyManagement {
