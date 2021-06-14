@@ -1,2 +1,0 @@
-#!/bin/sh
-wait 15 && export VAULT_ADDR='http://127.0.0.1:8200' && export VAULT_TOKEN="00000000-0000-0000-0000-000000000000" && vault kv put -format=json /secret/configuration-service @/vault/file/configuration-service.json && vault kv get secret/configuration-service
