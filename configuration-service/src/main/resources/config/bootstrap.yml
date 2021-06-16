@@ -5,90 +5,33 @@ spring:
   application:
     name: configuration-service
   profiles:
-    active: vault
+    active: vault, git # unlock Vault and Git configs
   #
   # Config Server
   #
   cloud:
-    vault:
-      token: vault-plaintext-root-token
-      application-name: configuration-service
     config:
       server:
-        #        token: vault-plaintext-root-token
-        ##        git:
-        ##          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
-        ##          searchPaths:
-        ##            - configuration-service/src/main/resources/config
-        ##          default-label: main
-        ##          order: 2
+        allow-override: true
+        override-none: true
+        override-system-properties: false
+        #
+        # Vault
+        #
         vault:
-          application-name: configuration-service
           host: 192.168.99.100
           token: vault-plaintext-root-token
           kvVersion: 2
-          generic:
-            enabled: true
-            backend: secret
-            profile-separator: '/'
-#            default-context: configuration-service
-            application-name: configuration-service
-          kv:
-            enabled: true
-            backend: secret
-        composite:
-          - type: vault
-            application-name: configuration-service
-            host: 192.168.99.100
-            scheme: http
-            token: vault-plaintext-root-token
-            authentication: TOKEN
-            order: 1
-            skip-ssl-validation: true
-            kv-version: 2
-            kv:
-              enabled: true
-              backend: secret
-              profile-separator: '/'
-#              default-context: configuration-service
-#              application-name: configuration-service
-      allow-override: true
-      override-none: true
-      override-system-properties: false
-
-  #
-  # Config Server
-  #
-#  cloud:
-#    config:
-#      server:
-##        token: vault-plaintext-root-token
-###        git:
-###          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
-###          searchPaths:
-###            - configuration-service/src/main/resources/config
-###          default-label: main
-###          order: 2
-#        token: vault-plaintext-root-token
-#        composite:
-#          - type: vault
-#            application-name: configuration-service
-#            host: 192.168.99.100
-#            scheme: http
-#            token: vault-plaintext-root-token
-#            authentication: TOKEN
-#            order: 1
-#            skip-ssl-validation: true
-#            kv-version: 2
-#            kv:
-#              enabled: true
-#              backend: secret
-#              profile-separator: '/'
-#              default-context: configuration-service
-#              application-name: configuration-service
-#      allow-override: true
-#      override-none: true
-#      override-system-properties: false
+          order: 1
+        #
+        # GitHub
+        #
+        git:
+          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
+          searchPaths:
+            - configuration-service/src/main/resources/config
+          default-label: main
+          order: 2
 #
 # Server
 #

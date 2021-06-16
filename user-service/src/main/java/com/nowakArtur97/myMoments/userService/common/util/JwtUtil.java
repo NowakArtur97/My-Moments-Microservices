@@ -1,6 +1,5 @@
 package com.nowakArtur97.myMoments.userService.common.util;
 
-
 import com.nowakArtur97.myMoments.userService.configuration.security.JwtConfigurationProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,14 +19,11 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 @EnableConfigurationProperties(value = JwtConfigurationProperties.class)
-@Slf4j
 public class JwtUtil {
 
     private final JwtConfigurationProperties jwtConfigurationProperties;
 
     public String generateToken(UserDetails userDetails) {
-
-        log.info(jwtConfigurationProperties.getSecretKey());
 
         Map<String, Object> claims = new HashMap<>();
 
