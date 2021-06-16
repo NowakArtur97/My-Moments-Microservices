@@ -10,23 +10,48 @@ spring:
   cloud:
     config:
       server:
-        git:
-          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
-          searchPaths:
-            - configuration-service/src/main/resources/config
-          default-label: main
+#        git:
+#          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
+#          searchPaths:
+#            - configuration-service/src/main/resources/config
+#          default-label: main
+#          order: 2
         vault:
-          application-name: configuration-service
-          host: 192.168.99.100
-          token: 00000000-0000-0000-0000-000000000000 # token from vault
-          authentication: TOKEN
-      allow-override: true
-      override-none: true
-      override-system-properties: false
+#          application-name: configuration-service
+#          host: 192.168.99.100
+#          scheme: http
+          token: vault-plaintext-root-token
+#          authentication: TOKEN
+#          order: 1
+#          skip-ssl-validation: true
+#          kv-version: 2
+#          kv:
+#            enabled: true
+#            backend: secret
+#            profile-separator: '/'
+#            default-context: configuration-service
+#            application-name: configuration-service
+#      allow-override: true
+#      override-none: true
+#      override-system-properties: false
     #
     # Vault
     #
-#    vault:
+    vault:
+      application-name: configuration-service
+      host: 192.168.99.100
+      token: vault-plaintext-root-token
+      scheme: http
+      authentication: TOKEN
+      order: 1
+      kv-version: 2
+      kv:
+        enabled: true
+        backend: secret
+        profile-separator: '/'
+        default-context: configuration-service
+        application-name: configuration-service
+
 #      application-name: configuration-service
 #      host: 192.168.99.100
 #      token: a113196a-ae9c-c43a-9cb9-cdf76a686d29 # token from vault

@@ -13,7 +13,7 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "2020.0.2")
+	set('springCloudVersion', "2020.0.3")
 }
 
 dependencies {
@@ -22,8 +22,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-vault-config
-	testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-vault-config', version: '3.0.3'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-vault-config'
 }
 
 dependencyManagement {
