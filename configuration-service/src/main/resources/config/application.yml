@@ -1,4 +1,35 @@
 #
+# Spring
+#
+spring:
+  application:
+    name: configuration-service
+#  #
+#  # Config Server
+#  #
+#  cloud:
+#    config:
+#      server:
+#        token: vault-plaintext-root-token
+#        vault:
+#          application-name: configuration-service
+#          host: 192.168.99.100
+#          scheme: http
+#          token: vault-plaintext-root-token
+#          authentication: TOKEN
+#          order: 1
+#          skip-ssl-validation: true
+#          kv-version: 2
+#          kv:
+#            enabled: true
+#            backend: secret
+#            profile-separator: '/'
+#            default-context: configuration-service
+#            application-name: configuration-service
+#      allow-override: true
+#      override-none: true
+#      override-system-properties: false
+#
 # Spring Boot Actuator
 #
 management:
@@ -36,7 +67,7 @@ my-moments:
   # JWT
   #
   jwt:
-    secretKey: ${secretKey} # already in vault
+#    secretKey: ${secretKey} # already in vault
     validity: 72000000
     authenticated-ant-matchers: /api/v1/**
     ignored-endpoints:
