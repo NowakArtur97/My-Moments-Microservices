@@ -10,65 +10,30 @@ spring:
   cloud:
     config:
       server:
-#        git:
-#          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
-#          searchPaths:
-#            - configuration-service/src/main/resources/config
-#          default-label: main
-#          order: 2
+        git:
+          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
+          searchPaths:
+            - configuration-service/src/main/resources/config
+          default-label: main
+          order: 2
         vault:
-#          application-name: configuration-service
-#          host: 192.168.99.100
-#          scheme: http
+          application-name: configuration-service
+          host: 192.168.99.100
+          scheme: http
           token: vault-plaintext-root-token
-#          authentication: TOKEN
-#          order: 1
-#          skip-ssl-validation: true
-#          kv-version: 2
-#          kv:
-#            enabled: true
-#            backend: secret
-#            profile-separator: '/'
-#            default-context: configuration-service
-#            application-name: configuration-service
-#      allow-override: true
-#      override-none: true
-#      override-system-properties: false
-    #
-    # Vault
-    #
-    vault:
-      application-name: configuration-service
-      host: 192.168.99.100
-      token: vault-plaintext-root-token
-      scheme: http
-      authentication: TOKEN
-      order: 1
-      kv-version: 2
-      kv:
-        enabled: true
-        backend: secret
-        profile-separator: '/'
-        default-context: configuration-service
-        application-name: configuration-service
-
-#      application-name: configuration-service
-#      host: 192.168.99.100
-#      token: a113196a-ae9c-c43a-9cb9-cdf76a686d29 # token from vault
-#      authentication: NONE
-#      authentication: CUBBYHOLE
-#      uri: http://192.168.99.100:8200/v1/cubbyhole
-#      paths: /configuration-service
-#      kv:
-#        enabled: true
-#      generic:
-#        enabled: false
-#        backend: kv
-#        profile-separator: '/'
-#        default-context: kv
-#        application-name: configuration-service
-#      config:
-#        order: -10
+          authentication: TOKEN
+          order: 1
+          skip-ssl-validation: true
+          kv-version: 2
+          kv:
+            enabled: true
+            backend: secret
+            profile-separator: '/'
+            default-context: configuration-service
+            application-name: configuration-service
+      allow-override: true
+      override-none: true
+      override-system-properties: false
 #
 # Server
 #

@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,14 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 @EnableConfigurationProperties(value = JwtConfigurationProperties.class)
+@Slf4j
 public class JwtUtil {
 
     private final JwtConfigurationProperties jwtConfigurationProperties;
 
     public String generateToken(UserDetails userDetails) {
+
+        log.info(jwtConfigurationProperties.getSecretKey());
 
         Map<String, Object> claims = new HashMap<>();
 

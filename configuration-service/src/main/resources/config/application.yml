@@ -1,34 +1,3 @@
-spring:
-  #
-  # Config Server
-  #
-  cloud:
-    config:
-      allow-override: true
-      override-none: true
-      override-system-properties: false
-      server:
-        git:
-          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
-          searchPaths:
-            - configuration-service/src/main/resources/config
-          default-label: main
-          order: 2
-        vault:
-          application-name: configuration-service
-          host: 192.168.99.100
-          scheme: http
-          token: vault-plaintext-root-token
-          authentication: TOKEN
-          order: 1
-          skip-ssl-validation: true
-          kv-version: 2
-          kv:
-            enabled: true
-            backend: secret
-            profile-separator: '/'
-            default-context: configuration-service
-            application-name: configuration-service
 #
 # Spring Boot Actuator
 #
