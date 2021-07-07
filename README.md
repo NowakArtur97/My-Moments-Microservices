@@ -64,7 +64,6 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 - Java 11
 - Spring (Boot, MVC, Security, Data MongoDB, Webflux, Data MongoDB Reactive, Devtools, Actuator, Retry, Cloud (Eureka Client, Eureka Server, Config Server, Gateway, Resilience4j, Stream Binder Rabbit, Sleuth, Zipkin, Bootstrap)) - 2.4.5
 - Swagger (Core, Bean Validators, UI) - 2.92
-- Flyway - 7.11.0
 - Lombok - 1.18.16
 - jUnit5 - 5.7.2
 - Mockito - 3.8.0
