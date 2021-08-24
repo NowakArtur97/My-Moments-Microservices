@@ -9,15 +9,15 @@ networks:
         - subnet: 172.21.0.0/24
 
 services:
-  mongo-db-user-service:
+  mongo-db-post-service:
     image: mongo:3.6
     networks:
       - my-moments
     ports:
-      - 27017:27017
+      - 27019:27019
     volumes:
       - ./data/db:/data/db
-    container_name: mongo-db-user-service
+    container_name: mongo-db-post-service
 
   configuration-service:
     restart: on-failure
