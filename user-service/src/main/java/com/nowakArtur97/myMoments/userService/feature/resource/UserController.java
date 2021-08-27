@@ -55,6 +55,7 @@ class UserController {
     ResponseEntity<UserModel> updateUser(
             @ApiParam(value = "The user's data", name = "user", required = true)
             @RequestPart(value = "user", required = false) String user,
+            // required = false - Not required to bypass the exception with a missing request part and return a validation failed message
             @ApiParam(value = "The user's image", name = "image")
             @RequestPart(value = "image", required = false) MultipartFile image,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) throws IOException {

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.http.codec.multipart.Part;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,12 +22,11 @@ class PostObjectMapper {
 
     public Mono<PostDTO> getPostDTOFromString(String postAsString, Flux<FilePart> photos) {
 
-        return photos.flatMap(filePart ->
-                filePart.content().map(dataBuffer ->
-                        new Binary(BsonBinarySubType.BINARY, new byte[dataBuffer.readableByteCount()])))
+        return photos.map(Part::content)
+                .flatMap(DataBufferUtil::mergeDataBuffers)
+                .map(bytes -> new Binary(BsonBinarySubType.BINARY, bytes))
                 .collectList()
-                .map(images ->
-                        getPostDTO(postAsString, images))
+                .map(images -> getPostDTO(postAsString, images))
                 .switchIfEmpty(Mono.just(getPostDTO(postAsString, Collections.emptyList())));
     }
 

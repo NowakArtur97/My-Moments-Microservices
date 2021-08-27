@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.postService.feature.resource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nowakArtur97.myMoments.postService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.postService.feature.document.PostService;
@@ -95,10 +96,12 @@ class PostController {
     Mono<ResponseEntity<PostModel>> cretePost(
             @ApiParam(value = "The post's photos", name = "photos", required = true)
             @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
+            // required = false - Not required to bypass the exception with a missing request part
+            // and return a validation failed message
             @ApiParam(value = "The post's data", name = "post")
             @RequestPart(value = "post", required = false) String post,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
-    ) {
+    ) throws JsonProcessingException {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .zipWith(postObjectMapper.getPostDTOFromString(post, photos))
@@ -121,6 +124,8 @@ class PostController {
             @PathVariable("id") String id,
             @ApiParam(value = "The post's photos", name = "photos", required = true)
             @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
+            // required = false - Not required to bypass the exception with a missing request part
+            // and return a validation failed message
             @ApiParam(value = "The post's data", name = "post")
             @RequestPart(value = "post", required = false) String post,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
