@@ -4,7 +4,9 @@ import com.nowakArtur97.myMoments.postService.feature.document.Post;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.bson.types.Binary;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -23,6 +25,9 @@ public class PostModel implements Post {
 
     @ApiModelProperty(notes = "The post's author")
     protected String author;
+
+    @ApiModelProperty(notes = "The post's photos")
+    protected List<byte[]> photos;
 
     @Override
     public boolean equals(Object o) {

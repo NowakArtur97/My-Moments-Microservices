@@ -23,6 +23,8 @@ public class PostTestBuilder {
 
     private List<Binary> photosBinary = new ArrayList<>();
 
+    private List<byte[]> photosBytes = new ArrayList<>();
+
     private List<CommentModel> comments = new ArrayList<>();
 
     public PostTestBuilder withId(String id) {
@@ -80,10 +82,10 @@ public class PostTestBuilder {
 
             case MODEL:
 
-                if(comments == null  || comments.isEmpty()){
-                    post = new PostModel(id, caption, author);
-                }else {
-                    post = new PostModelWithComments(id, caption, author, comments);
+                if (comments == null || comments.isEmpty()) {
+                    post = new PostModel(id, caption, author, photosBytes);
+                } else {
+                    post = new PostModelWithComments(id, caption, author, photosBytes, comments);
                 }
 
                 break;
@@ -106,6 +108,8 @@ public class PostTestBuilder {
         author = "author";
 
         photosBinary = new ArrayList<>();
+
+        photosBytes = new ArrayList<>();
 
         comments = new ArrayList<>();
     }

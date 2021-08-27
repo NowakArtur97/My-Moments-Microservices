@@ -19,8 +19,8 @@ public class PostModelWithComments extends PostModel {
     @ApiModelProperty(notes = "The post's comments")
     private List<CommentModel> comments;
 
-    public PostModelWithComments(String id, String caption, String author, List<CommentModel> comments) {
-        super(id, caption, author);
+    public PostModelWithComments(String id, String caption, String author, List<byte[]> photos, List<CommentModel> comments) {
+        super(id, caption, author, photos);
         this.comments = comments;
     }
 }

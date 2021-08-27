@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.postService.configuration;
 
+import com.nowakArtur97.myMoments.postService.feature.resource.BinaryListConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,8 @@ class ModelMapperConfiguration {
     ModelMapper getModelMapper() {
 
         ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.addConverter(new BinaryListConverter());
 
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.LOOSE)
