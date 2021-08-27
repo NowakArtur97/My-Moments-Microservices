@@ -55,6 +55,13 @@ public class PostTestBuilder {
         return this;
     }
 
+    public PostTestBuilder withBytes(List<byte[]> photos) {
+
+        this.photosBytes = photos;
+
+        return this;
+    }
+
     public PostTestBuilder withComments(List<CommentModel> comments) {
 
         this.comments = comments;

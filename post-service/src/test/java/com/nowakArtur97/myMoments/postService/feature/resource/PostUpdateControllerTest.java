@@ -84,12 +84,14 @@ class PostUpdateControllerTest {
         String header = "Bearer token";
         String author = "user";
 
-        PostDTO postDTOExpected = (PostDTO) postTestBuilder.build(ObjectType.CREATE_DTO);
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        PostDTO postDTOExpected = (PostDTO) postTestBuilder.withBinary(List.of(imageExpected)).build(ObjectType.CREATE_DTO);
         String postAsString = ObjectTestMapper.asJsonString(postDTOExpected);
         PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withId(postId).withAuthor(author)
-                .withCaption(updatedCaption).build(ObjectType.DOCUMENT);
+                .withCaption(updatedCaption).withBinary(List.of(imageExpected)).build(ObjectType.DOCUMENT);
         PostModel postModelExpected = (PostModel) postTestBuilder.withId(postId).withAuthor(author).withCaption(updatedCaption)
-                .build(ObjectType.MODEL);
+                .withBytes(List.of(imageBytesExpected)).build(ObjectType.MODEL);
 
         MultiValueMap<String, Object> objectMultiValueMap = new LinkedMultiValueMap<>();
         objectMultiValueMap.add("post", postAsString);
@@ -124,6 +126,9 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(postModelExpected.getCaption(), postModelActual.getCaption(),
                                             () -> "should return post with caption: " + postModelExpected.getCaption()
                                                     + ", but was: " + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),
@@ -150,14 +155,17 @@ class PostUpdateControllerTest {
         String header = "Bearer token";
         String author = "user";
 
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
         String emptyCaption = "";
-        PostDTO postDTOExpectedToString = (PostDTO) postTestBuilder.withCaption(null).build(ObjectType.CREATE_DTO);
+        PostDTO postDTOExpectedToString = (PostDTO) postTestBuilder.withCaption(null).withBinary(List.of(imageExpected))
+                .build(ObjectType.CREATE_DTO);
         PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption("").build(ObjectType.CREATE_DTO);
         String postAsString = ObjectTestMapper.asJsonString(postDTOExpectedToString);
         PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withId(postId).withAuthor(author)
-                .withCaption("").build(ObjectType.DOCUMENT);
+                .withCaption("").withBinary(List.of(imageExpected)).build(ObjectType.DOCUMENT);
         PostModel postModelExpected = (PostModel) postTestBuilder.withId(postId).withAuthor("user").withCaption("")
-                .build(ObjectType.MODEL);
+                .withBytes(List.of(imageBytesExpected)).build(ObjectType.MODEL);
 
         MultiValueMap<String, Object> objectMultiValueMap = new LinkedMultiValueMap<>();
         objectMultiValueMap.add("post", postAsString);
@@ -192,6 +200,9 @@ class PostUpdateControllerTest {
                                     () -> assertEquals(emptyCaption, postModelActual.getCaption(),
                                             () -> "should return post with caption: " + emptyCaption + ", but was: "
                                                     + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),
@@ -214,7 +225,6 @@ class PostUpdateControllerTest {
     @Test
     void when_update_not_existing_post_should_return_error_response() {
 
-        String postId = "postId";
         String header = "Bearer token";
         String author = "user";
 

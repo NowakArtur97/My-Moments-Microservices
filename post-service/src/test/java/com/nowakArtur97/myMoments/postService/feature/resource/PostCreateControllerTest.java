@@ -85,11 +85,14 @@ class PostCreateControllerTest {
         String header = "Bearer token";
         String author = "user";
 
-        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image.jpg".getBytes());
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
         PostDTO postDTOExpected = (PostDTO) postTestBuilder.withBinary(List.of(imageExpected)).build(ObjectType.CREATE_DTO);
         String postAsString = ObjectTestMapper.asJsonString(postDTOExpected);
-        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(author).build(ObjectType.DOCUMENT);
-        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(author).build(ObjectType.MODEL);
+        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(author)
+                .withBinary(List.of(imageExpected)).build(ObjectType.DOCUMENT);
+        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(author).withBytes(List.of(imageBytesExpected))
+                .build(ObjectType.MODEL);
 
         MultiValueMap<String, Object> objectMultiValueMap = new LinkedMultiValueMap<>();
         objectMultiValueMap.add("post", postAsString);
@@ -123,6 +126,9 @@ class PostCreateControllerTest {
                                     () -> assertEquals(postModelExpected.getCaption(), postModelActual.getCaption(),
                                             () -> "should return post with caption: " + postModelExpected.getCaption()
                                                     + ", but was: " + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),
@@ -148,16 +154,17 @@ class PostCreateControllerTest {
         String author = "user";
 
         String emptyCaption = "";
-        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, "image.jpg".getBytes());
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
         PostDTO postDTOExpectedAsString = (PostDTO) postTestBuilder.withCaption(null).withBinary(List.of(imageExpected))
                 .build(ObjectType.CREATE_DTO);
         PostDTO postDTOExpected = (PostDTO) postTestBuilder.withCaption(emptyCaption).withBinary(List.of(imageExpected))
                 .build(ObjectType.CREATE_DTO);
         String postAsString = ObjectTestMapper.asJsonString(postDTOExpectedAsString);
         PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withCaption(emptyCaption)
-                .withAuthor(author).build(ObjectType.DOCUMENT);
+                .withAuthor(author).withBinary(List.of(imageExpected)).build(ObjectType.DOCUMENT);
         PostModel postModelExpected = (PostModel) postTestBuilder.withCaption(emptyCaption)
-                .withAuthor(author).build(ObjectType.MODEL);
+                .withAuthor(author).withBytes(List.of(imageBytesExpected)).build(ObjectType.MODEL);
 
         MultiValueMap<String, Object> objectMultiValueMap = new LinkedMultiValueMap<>();
         objectMultiValueMap.add("post", postAsString);
@@ -191,6 +198,9 @@ class PostCreateControllerTest {
                                     () -> assertEquals(emptyCaption, postModelActual.getCaption(),
                                             () -> "should return post with caption: " + emptyCaption + ", but was: "
                                                     + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),

@@ -7,6 +7,8 @@ import com.nowakArtur97.myMoments.postService.feature.document.PostService;
 import com.nowakArtur97.myMoments.postService.jwt.JwtUtil;
 import com.nowakArtur97.myMoments.postService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.postService.testUtil.generator.NameWithSpacesGenerator;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -87,11 +89,13 @@ class PostGetControllerTest {
         CommentModel commentModelExpected2 = new CommentModel("id2", "content2", "author2",
                 LocalDateTime.now(), LocalDateTime.now());
         List<CommentModel> commentsExpected = List.of(commentModelExpected, commentModelExpected2);
-        PostsCommentsModel postsCommentsModelExpected
-                = new PostsCommentsModel();
-        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withId(postId).build(ObjectType.DOCUMENT);
+        PostsCommentsModel postsCommentsModelExpected = new PostsCommentsModel();
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withId(postId).withBinary(List.of(imageExpected))
+                .build(ObjectType.DOCUMENT);
         PostModelWithComments postModelExpected = (PostModelWithComments) postTestBuilder.withId(postId)
-                .withComments(commentsExpected).build(ObjectType.MODEL);
+                .withComments(commentsExpected).withBytes(List.of(imageBytesExpected)).build(ObjectType.MODEL);
 
         when(postService.getCommentsByPostId(postId)).thenReturn(Mono.just(postsCommentsModelExpected));
         when(postService.findPostById(postId)).thenReturn(Mono.just(postDocumentExpected));
@@ -116,6 +120,9 @@ class PostGetControllerTest {
                                     () -> assertEquals(postModelExpected.getCaption(), postModelActual.getCaption(),
                                             () -> "should return post with caption: " + postModelExpected.getCaption()
                                                     + ", but was: " + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),
@@ -185,12 +192,20 @@ class PostGetControllerTest {
         String username = "user";
         String header = "Bearer token";
 
-        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(username).build(ObjectType.DOCUMENT);
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        byte[] imageBytesExpected2 = "image2.jpg".getBytes();
+        byte[] imageBytesExpected3 = "image3.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        Binary imageExpected2 = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        Binary imageExpected3 = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(username)
+                .withBinary(List.of(imageExpected, imageExpected2)).build(ObjectType.DOCUMENT);
         PostDocument postDocumentExpected2 = (PostDocument) postTestBuilder.withCaption("caption 2").withAuthor(username)
-                .build(ObjectType.DOCUMENT);
-        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(username).build(ObjectType.MODEL);
+                .withBinary(List.of(imageExpected3)).build(ObjectType.DOCUMENT);
+        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(username)
+                .withBytes(List.of(imageBytesExpected, imageBytesExpected2)).build(ObjectType.MODEL);
         PostModel postModelExpected2 = (PostModel) postTestBuilder.withCaption("caption 2").withAuthor(username)
-                .build(ObjectType.MODEL);
+                .withBytes(List.of(imageBytesExpected3)).build(ObjectType.MODEL);
 
         when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
         when(postService.findPostsByAuthor(username)).thenReturn(Flux.just(postDocumentExpected, postDocumentExpected2));
@@ -218,6 +233,9 @@ class PostGetControllerTest {
                                     () -> assertEquals(postModelExpected.getCaption(), postModelActual.getCaption(),
                                             () -> "should return post with caption: " + postModelExpected.getCaption()
                                                     + ", but was: " + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),
@@ -226,6 +244,9 @@ class PostGetControllerTest {
                                     () -> assertEquals(postModelExpected2.getCaption(), postModelActual2.getCaption(),
                                             () -> "should return post with caption: " + postModelExpected2.getCaption()
                                                     + ", but was: " + postModelActual2.getCaption()),
+                                    () -> assertEquals(postModelExpected2.getPhotos().size(), postModelActual2.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected2.getPhotos().size()
+                                                    + ", but was: " + postModelActual2.getPhotos().size()),
                                     () -> assertEquals(postModelExpected2.getAuthor(), postModelActual2.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected2.getAuthor()
                                                     + ", but was: " + postModelActual2.getAuthor()),
@@ -290,12 +311,18 @@ class PostGetControllerTest {
         String username = "user";
         String header = "Bearer token";
 
-        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(username).build(ObjectType.DOCUMENT);
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        byte[] imageBytesExpected2 = "image2.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        Binary imageExpected2 = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(username)
+                .withBinary(List.of(imageExpected)).build(ObjectType.DOCUMENT);
         PostDocument postDocumentExpected2 = (PostDocument) postTestBuilder.withCaption("caption 2").withAuthor(username)
-                .build(ObjectType.DOCUMENT);
-        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(username).build(ObjectType.MODEL);
+                .withBinary(List.of(imageExpected2)).build(ObjectType.DOCUMENT);
+        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(username)
+                .withBytes(List.of(imageBytesExpected)).build(ObjectType.MODEL);
         PostModel postModelExpected2 = (PostModel) postTestBuilder.withCaption("caption 2").withAuthor(username)
-                .build(ObjectType.MODEL);
+                .withBytes(List.of(imageBytesExpected2)).build(ObjectType.MODEL);
 
         when(postService.findPostsByAuthor(username)).thenReturn(Flux.just(postDocumentExpected, postDocumentExpected2));
         when(modelMapper.map(postDocumentExpected, PostModel.class)).thenReturn(postModelExpected);
@@ -322,6 +349,9 @@ class PostGetControllerTest {
                                     () -> assertEquals(postModelExpected.getCaption(), postModelActual.getCaption(),
                                             () -> "should return post with caption: " + postModelExpected.getCaption()
                                                     + ", but was: " + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
                                     () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected.getAuthor()
                                                     + ", but was: " + postModelActual.getAuthor()),
@@ -330,6 +360,9 @@ class PostGetControllerTest {
                                     () -> assertEquals(postModelExpected2.getCaption(), postModelActual2.getCaption(),
                                             () -> "should return post with caption: " + postModelExpected2.getCaption()
                                                     + ", but was: " + postModelActual2.getCaption()),
+                                    () -> assertEquals(postModelExpected2.getPhotos().size(), postModelActual2.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected2.getPhotos().size()
+                                                    + ", but was: " + postModelActual2.getPhotos().size()),
                                     () -> assertEquals(postModelExpected2.getAuthor(), postModelActual2.getAuthor(),
                                             () -> "should return post with author: " + postModelExpected2.getAuthor()
                                                     + ", but was: " + postModelActual2.getAuthor()),
