@@ -9,15 +9,18 @@ networks:
         - subnet: 172.21.0.0/24
 
 services:
-  mongo-db-post-service:
-    image: mongo:3.6
+  discovery-service:
+    restart: on-failure
+    build:
+      context: ../
+      dockerfile: discovery-service/Dockerfile-dev
     networks:
       - my-moments
     ports:
-      - 27019:27019
+      - 8761:8761
     volumes:
-      - ./data/db:/data/db
-    container_name: mongo-db-post-service
+      - /discovery-service/dir:/app
+    container_name: discovery-service
 
   configuration-service:
     restart: on-failure
@@ -62,3 +65,13 @@ services:
     environment:
       VAULT_ADDR: "http://vault-server:8200"
     container_name: vault-client
+
+  mongo-db-post-service:
+    image: mongo:3.6
+    networks:
+      - my-moments
+    ports:
+      - 27019:27017
+    volumes:
+      - ./data/db:/data/db
+    container_name: mongo-db-post-service
