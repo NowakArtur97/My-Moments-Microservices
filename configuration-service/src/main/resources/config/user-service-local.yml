@@ -6,7 +6,6 @@ my-moments:
   # JWT
   #
   jwt:
-    secret: topSecret # property for disabled Vault
     ignored-endpoints:
       - /registration
       - /authentication
