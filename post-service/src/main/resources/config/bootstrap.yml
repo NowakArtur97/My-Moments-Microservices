@@ -6,6 +6,19 @@ spring:
     name: post-service
   profiles:
     active: ${SPRING_ACTIVE_PROFILE:dev}
+  cloud:
+    #
+    # Config Client
+    #
+    config:
+      uri: http://192.168.99.100:8888
+      profile: ${SPRING_ACTIVE_PROFILE:dev}
+      fail-fast: true
+      retry:
+        initial-interval: 1500
+        multiplier: 1.5
+        max-attempts: 10000
+        max-interval: 1000
 #
 # Server
 #

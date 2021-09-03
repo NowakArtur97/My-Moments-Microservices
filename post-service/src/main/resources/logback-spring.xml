@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>192.168.99.100:5000</destination>
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <mdc />
-                <context />
-                <logLevel />
-                <loggerName />
-                <pattern>
+    <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+            <destination>192.168.99.100:5000</destination>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <mdc/>
+                    <context/>
+                    <logLevel/>
+                    <loggerName/>
                     <pattern>
-                        {
-                        "serviceName": "post-service"
-                        }
+                        <pattern>
+                            {
+                            "serviceName": "post-service"
+                            }
+                        </pattern>
                     </pattern>
-                </pattern>
-                <threadName />
-                <message />
-                <logstashMarkers />
-                <stackTrace />
-            </providers>
-        </encoder>
-    </appender>
-    <root level="info">
-        <appender-ref ref="logstash" />
-    </root>
+                    <threadName/>
+                    <message/>
+                    <logstashMarkers/>
+                    <stackTrace/>
+                </providers>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="logstash"/>
+        </root>
+    </springProfile>
+    <springProfile name="dev">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
 </configuration>

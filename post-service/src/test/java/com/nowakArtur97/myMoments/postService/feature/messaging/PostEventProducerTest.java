@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
@@ -18,6 +19,9 @@ import static org.mockito.Mockito.*;
 @DisplayNameGeneration(NameWithSpacesGenerator.class)
 @Tag("PostEventProducer_Tests")
 class PostEventProducerTest {
+
+    private static final String DEV_PROFILE = "dev";
+    private static final String LOCAL_PROFILE = "local";
 
     private PostEventProducer postEventProducer;
 
@@ -34,7 +38,9 @@ class PostEventProducerTest {
     }
 
     @Test
-    void when_send_post_delete_event_should_send_event() {
+    void when_send_post_delete_event_and_profile_is_not_dev_should_send_event() {
+
+        ReflectionTestUtils.setField(postEventProducer, "activeProfile", LOCAL_PROFILE);
 
         String postIdPayload = "postId";
 
@@ -45,5 +51,17 @@ class PostEventProducerTest {
 
         assertAll(() -> verify(messageChannel, times(1)).send(any(Message.class)),
                 () -> verifyNoMoreInteractions(postEventStream));
+    }
+
+    @Test
+    void when_send_post_delete_event_and_profile_is_dev_should_not_send_event() {
+
+        ReflectionTestUtils.setField(postEventProducer, "activeProfile", DEV_PROFILE);
+
+        String postIdPayload = "postId";
+
+        postEventProducer.sendPostDeleteEvent(postIdPayload);
+
+        assertAll(() -> verifyNoInteractions(postEventStream));
     }
 }

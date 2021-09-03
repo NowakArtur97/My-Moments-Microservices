@@ -1,4 +1,4 @@
 spring:
   cloud:
     config:
-      profile: ${SPRING_ACTIVE_PROFILE:dev}
+      profile: dev
