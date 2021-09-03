@@ -2,8 +2,6 @@
 # Spring
 #
 spring:
-  profiles:
-    active: git
   #
   # Config Server
   #
