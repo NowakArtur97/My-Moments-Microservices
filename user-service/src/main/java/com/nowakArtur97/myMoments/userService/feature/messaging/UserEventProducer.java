@@ -2,6 +2,7 @@ package com.nowakArtur97.myMoments.userService.feature.messaging;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,16 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserEventProducer {
 
+    private static final String DEV_PROFILE = "dev";
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
+
     private final UserEventStream userEventStream;
 
     public void sendUserUpdateEvent(UserUpdateEventPayload userUpdateEventPayload) {
 
-        if (shouldSendMessage(userUpdateEventPayload)) {
+        if (shouldSendMessage(userUpdateEventPayload) && !activeProfile.equals(DEV_PROFILE)) {
 
             log.info("Sending User Update Event for User: {}", userUpdateEventPayload.getNewUsername());
 
@@ -31,10 +37,13 @@ public class UserEventProducer {
 
     public void sendUserDeleteEvent(String usernamePayload) {
 
-        Message<String> message = MessageBuilder.withPayload(usernamePayload).build();
+        if (!activeProfile.equals(DEV_PROFILE)) {
 
-        log.info("Sending User Delete Event for User: {}", usernamePayload);
+            Message<String> message = MessageBuilder.withPayload(usernamePayload).build();
 
-        userEventStream.userDeleteChannel().send(message);
+            log.info("Sending User Delete Event for User: {}", usernamePayload);
+
+            userEventStream.userDeleteChannel().send(message);
+        }
     }
 }

@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
@@ -19,6 +20,9 @@ import static org.mockito.Mockito.*;
 @DisplayNameGeneration(NameWithSpacesGenerator.class)
 @Tag("UserEventProducer_Tests")
 class UserEventProducerTest {
+
+    private static final String DEV_PROFILE = "dev";
+    private static final String LOCAL_PROFILE = "local";
 
     private UserEventProducer userEventProducer;
 
@@ -35,7 +39,9 @@ class UserEventProducerTest {
     }
 
     @Test
-    void when_send_user_update_event_with_updated_username_should_send_event() {
+    void when_send_user_update_event_with_updated_username_and_profile_is_not_dev_should_send_event() {
+
+        ReflectionTestUtils.setField(userEventProducer, "activeProfile", LOCAL_PROFILE);
 
         UserUpdateEventPayload userUpdateEventPayload =
                 new UserUpdateEventPayload("previousUsername", "newUsername");
@@ -50,7 +56,22 @@ class UserEventProducerTest {
     }
 
     @Test
-    void when_send_user_update_event_without_updated_username_should_not_send_event() {
+    void when_send_user_update_event_with_updated_username_and_profile_is_dev_should_not_send_event() {
+
+        ReflectionTestUtils.setField(userEventProducer, "activeProfile", DEV_PROFILE);
+
+        UserUpdateEventPayload userUpdateEventPayload =
+                new UserUpdateEventPayload("previousUsername", "newUsername");
+
+        userEventProducer.sendUserUpdateEvent(userUpdateEventPayload);
+
+        assertAll(() -> verifyNoInteractions(userEventStream));
+    }
+
+    @Test
+    void when_send_user_update_event_without_updated_username_and_profile_is_not_dev_should_not_send_event() {
+
+        ReflectionTestUtils.setField(userEventProducer, "activeProfile", LOCAL_PROFILE);
 
         UserUpdateEventPayload userUpdateEventPayload =
                 new UserUpdateEventPayload("sameUsername", "sameUsername");
@@ -61,7 +82,9 @@ class UserEventProducerTest {
     }
 
     @Test
-    void when_send_user_delete_event_should_send_event() {
+    void when_send_user_delete_event_and_profile_is_not_dev_should_send_event() {
+
+        ReflectionTestUtils.setField(userEventProducer, "activeProfile", LOCAL_PROFILE);
 
         String usernamePayload = "username";
 
@@ -72,5 +95,17 @@ class UserEventProducerTest {
 
         assertAll(() -> verify(messageChannel, times(1)).send(any(Message.class)),
                 () -> verifyNoMoreInteractions(userEventStream));
+    }
+
+    @Test
+    void when_send_user_delete_event_and_profile_is_dev_should_not_send_event() {
+
+        ReflectionTestUtils.setField(userEventProducer, "activeProfile", DEV_PROFILE);
+
+        String usernamePayload = "username";
+
+        userEventProducer.sendUserDeleteEvent(usernamePayload);
+
+        assertAll(() -> verifyNoInteractions(userEventStream));
     }
 }
