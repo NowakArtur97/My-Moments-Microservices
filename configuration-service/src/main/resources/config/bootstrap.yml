@@ -5,7 +5,7 @@ spring:
   application:
     name: configuration-service
   profiles:
-    active: ${SPRING_ACTIVE_PROFILE:local}
+    active: ${SPRING_ACTIVE_PROFILE:dev}
 #
 # Server
 #
