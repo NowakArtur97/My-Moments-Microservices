@@ -19,9 +19,9 @@ spring:
         userDeleteChannel:
           destination: user.delete
           contentType: application/json
-  #
-  # Custom properties
-  #
+#
+# Custom properties
+#
 my-moments:
   #
   # JWT

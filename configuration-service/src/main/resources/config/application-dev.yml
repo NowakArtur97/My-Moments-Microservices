@@ -23,9 +23,3 @@ spring:
   #
   sleuth:
     enabled: false
-my-moments:
-  #
-  # JWT / properties when Vault is disabled
-  #
-  jwt:
-    secret: topSecret

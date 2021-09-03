@@ -1,0 +1,9 @@
+#
+# Custom properties
+#
+my-moments:
+  #
+  # JWT / properties when Vault is disabled
+  #
+  jwt:
+    secret: topSecret
