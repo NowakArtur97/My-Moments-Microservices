@@ -1,0 +1,37 @@
+#
+# Spring
+#
+spring:
+  profiles:
+    active: vault, git # unlock Vault and Git configs
+  #
+  # Config Server
+  #
+  cloud:
+    config:
+      server:
+        allow-override: true
+        override-none: true
+        override-system-properties: false
+        #
+        # Vault
+        #
+        vault:
+          host: 192.168.99.100
+          token: vault-plaintext-root-token
+          kvVersion: 2
+          order: 1
+        #
+        # GitHub
+        #
+        git:
+          uri: https://github.com/NowakArtur97/My-Moments-Microservices.git
+          searchPaths:
+            - configuration-service/src/main/resources/config
+          default-label: main
+          order: 2
+#
+# Server
+#
+server:
+  port: 8888

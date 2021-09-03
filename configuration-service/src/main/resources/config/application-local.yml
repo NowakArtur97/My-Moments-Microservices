@@ -3,7 +3,10 @@
 #
 eureka:
   client:
-    enabled: false
+    serviceUrl:
+      defaultZone: http://192.168.99.100:8761/eureka/
+  instance:
+    preferIpAddress: true
 spring:
   #
   # RabbitMQ
@@ -17,15 +20,11 @@ spring:
   # Zipkin
   #
   zipkin:
-    enabled: false
+    enabled: true
+    base-url: http://192.168.99.100:9411
   #
   # Sleuth
   #
   sleuth:
-    enabled: false
-my-moments:
-  #
-  # JWT / properties when Vault is disabled
-  #
-  jwt:
-    secret: topSecret
+    sampler:
+      probability: 1
