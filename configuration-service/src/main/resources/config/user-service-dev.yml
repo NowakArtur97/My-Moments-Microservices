@@ -3,27 +3,7 @@
 #
 my-moments:
   #
-  # JWT
+  # JWT / properties when Vault is disabled
   #
   jwt:
-    secret: topSecret # property for disabled Vault
-    ignored-endpoints:
-      - /registration
-      - /authentication
-      - /v2/api-docs
-      - /configuration/ui
-      - /swagger-resources
-      - /configuration/security
-      - /swagger-ui.html
-      - /swagger-ui/
-      - /webjars
-    ignored-ant-matchers:
-      - /api/v1/registration/**
-      - /api/v1/authentication/**
-      - /v2/api-docs
-      - /configuration/ui
-      - /swagger-resources/**
-      - /configuration/security
-      - /swagger-ui.html
-      - /swagger-ui/
-      - /webjars/**
+    secret-key: topSecret
