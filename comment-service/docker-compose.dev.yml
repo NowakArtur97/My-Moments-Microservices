@@ -1,0 +1,33 @@
+version: '3.7'
+
+networks:
+  my-moments:
+    driver: bridge
+    name: my-moments
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+services:
+  configuration-service:
+    restart: on-failure
+    build:
+      context: ../
+      dockerfile: configuration-service/Dockerfile-dev
+    networks:
+      - my-moments
+    ports:
+      - 8888:8888
+    volumes:
+      - /configuration-service/dir:/app
+    container_name: configuration-service
+
+  mongo-db-comment-service:
+    image: mongo:3.6
+    networks:
+      - my-moments
+    ports:
+      - 27021:27017
+    volumes:
+      - ./data/db:/data/db
+    container_name: mongo-db-comment-service

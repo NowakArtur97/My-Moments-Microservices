@@ -66,15 +66,15 @@ services:
       VAULT_ADDR: "http://vault-server:8200"
     container_name: vault-client
 
-  mongo-db-post-service:
+  mongo-db-comment-service:
     image: mongo:3.6
     networks:
       - my-moments
     ports:
-      - 27019:27017
+      - 27021:27017
     volumes:
       - ./data/db:/data/db
-    container_name: mongo-db-post-service
+    container_name: mongo-db-comment-service
 
   rabbitmq:
     image: rabbitmq:3-management-alpine

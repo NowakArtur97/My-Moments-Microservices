@@ -1,24 +1,9 @@
-spring:
+#
+# Custom properties
+#
+my-moments:
   #
-  # Mongo DB
+  # JWT / properties when Vault is disabled
   #
-  data:
-    mongodb:
-      database: my-moments-comment-service
-      host: 192.168.99.100
-      port: 27021
-  #
-  # Messaging
-  #
-  cloud:
-    stream:
-      bindings:
-        userUpdateChannel:
-          destination: user.update
-          contentType: application/json
-        userDeleteChannel:
-          destination: user.delete
-          contentType: application/json
-        postDeleteChannel:
-          destination: post.delete
-          contentType: application/json
+  jwt:
+    secret-key: topSecret
