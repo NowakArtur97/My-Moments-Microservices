@@ -1,0 +1,42 @@
+version: '3.7'
+
+networks:
+  my-moments:
+    driver: bridge
+    external: false
+    name: my-moments
+
+services:
+  configuration-service:
+    restart: on-failure
+    build:
+      context: ../
+      dockerfile: configuration-service/Dockerfile-dev
+    networks:
+      - my-moments
+    ports:
+      - 8888:8888
+    volumes:
+      - /configuration-service/dir:/app
+    container_name: configuration-service
+
+  neo4j:
+    restart: always
+    image: neo4j:4.3.3
+    networks:
+      - my-moments
+    volumes:
+      - ./conf:/conf
+      - ./data:/data
+      - ./import:/import
+      - ./logs:/logs
+      - ./plugins:/plugins
+    environment:
+      - NEO4J_AUTH=neo4j/secret
+      - NEO4J_dbms_memory_pagecache_size=512MB
+      - NEO4J_dbms.memory.heap.initial_size=512MB
+      - NEO4J_dbms_memory_heap_max__size=512MB
+    ports:
+      - 7474:7474
+      - 7687:7687
+    container_name: neo4j
