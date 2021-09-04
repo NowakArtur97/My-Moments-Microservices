@@ -8,7 +8,7 @@ until vault status > /dev/null 2>&1 || [ "$VAULT_RETRIES" -eq 0 ]; do
 done
 
 echo "Authenticating to vault..."
-vault login token=vault-plaintext-root-token
+vault login token=vault-token
 
 echo "Initializing vault..."
 vault secrets enable -version=2 -path=/secret/application kv

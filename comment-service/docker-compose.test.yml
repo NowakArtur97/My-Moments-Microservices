@@ -1,10 +1,10 @@
 version: '3.7'
 
 services:
-  mongo-db-user-service:
+  mongo-db-comment-service:
     image: mongo:3.6
     ports:
-      - 27017:27017
+      - 27021:27017
     volumes:
       - ./data/db:/data/db
-    container_name: mongo-db-user-service
+    container_name: mongo-db-comment-service
