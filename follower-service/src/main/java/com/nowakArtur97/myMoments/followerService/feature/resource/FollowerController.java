@@ -23,7 +23,7 @@ class FollowerController {
 
     private final FollowerService followerService;
 
-    @PostMapping("/{usernameToFollow}")
+    @PostMapping("/{username}")
     @ApiOperation("Follow user")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully followed User"),
@@ -31,7 +31,7 @@ class FollowerController {
     Mono<ResponseEntity<Void>> followUser(
             @ApiParam(value = "Username of the User being followed", name = "username", type = "string",
                     required = true, example = "username")
-            @PathVariable("usernameToFollow") String usernameToFollow,
+            @PathVariable("username") String usernameToFollow,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
