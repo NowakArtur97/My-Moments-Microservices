@@ -1,6 +1,5 @@
 package com.nowakArtur97.myMoments.postService.feature.resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nowakArtur97.myMoments.postService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.postService.feature.document.PostService;
@@ -101,7 +100,7 @@ class PostController {
             @ApiParam(value = "The post's data", name = "post")
             @RequestPart(value = "post", required = false) String post,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
-    ) throws JsonProcessingException {
+    ) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .zipWith(postObjectMapper.getPostDTOFromString(post, photos))
