@@ -6,12 +6,12 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @RelationshipProperties
 @NoArgsConstructor
-class FriendshipRelationship extends AbstractNode {
+class FollowingRelationship extends AbstractNode {
 
     @TargetNode
-    private UserNode friendNode;
+    private UserNode followerNode;
 
-    public FriendshipRelationship(UserNode friendNode) {
-        this.friendNode = friendNode;
+    public FollowingRelationship(UserNode followerNode) {
+        this.followerNode = followerNode;
     }
 }

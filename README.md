@@ -62,7 +62,7 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 ## Built With
 
 - Java 11
-- Spring (Boot, MVC, Security, Data MongoDB, Webflux, Data MongoDB Reactive, Devtools, Actuator, Retry, Cloud (Eureka Client, Eureka Server, Config Server, Gateway, Resilience4j, Stream Binder Rabbit, Sleuth, Zipkin, Bootstrap)) - 2.4.5
+- Spring (Boot, MVC, Security, Data MongoDB, Webflux, Data MongoDB Reactive, Data Neo4j, Devtools, Actuator, Retry, Cloud (Eureka Client, Eureka Server, Config Server, Gateway, Resilience4j, Stream Binder Rabbit, Sleuth, Zipkin, Bootstrap)) - 2.4.5
 - Swagger (Core, Bean Validators, UI) - 2.92
 - Lombok - 1.18.16
 - jUnit5 - 5.7.2
@@ -78,6 +78,7 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 - Zipkin
 - Logback
 - MongoDB
+- Neo4j
 - Vault
 - Elasticsearch
 - Kibana
@@ -104,7 +105,8 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 
 ## To Do
 
-- More endpoints
+- User recommendations
+- Adding fake data at specified intervals
 
 ## Endpoints List:
 
@@ -141,6 +143,12 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 | `POST`     | `/api/v1/posts/{postId}/comments`        | `Add a comment to the post`
 | `PUT`     | `/api/v1/posts/{postId}/comments/{commentId}`        | `Update the comment content`                                      |
 | `DELETE`     | `/api/v1/posts/{postId}/comments/{commentId}`        | `Delete comment`                                      |
+
+### Followers
+
+| Method    | URI                          | Action                                                               |
+| --------- | ---------------------------- | -------------------------------------------------------------------- |
+| `POST`     | `/api/v1/followers/{username}`        | `Follow the User`
 
 ## Status
 

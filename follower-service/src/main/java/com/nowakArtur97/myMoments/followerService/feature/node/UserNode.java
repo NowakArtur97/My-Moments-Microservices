@@ -9,18 +9,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Node(primaryLabel = "User")
+@Getter
 @ToString
 class UserNode extends AbstractNode {
 
     private String username;
 
     @Relationship(type = Relationships.FOLLOWING_RELATIONSHIP)
-    @Getter
-    private final Set<FriendshipRelationship> friendships;
+    private final Set<FollowingRelationship> following;
 
     public UserNode() {
 
-        this.friendships = new HashSet<>();
+        this.following = new HashSet<>();
     }
 
     public UserNode(String username) {
