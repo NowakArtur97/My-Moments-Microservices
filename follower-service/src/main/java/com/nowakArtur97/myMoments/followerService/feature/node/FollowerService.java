@@ -10,24 +10,24 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class FollowerService {
 
-    private final UserService userService;
+    private final UserService userRepository;
 
     // TODO: FollowerService: TEST
     public Mono<Void> followUser(String username, String usernameToFollow) {
 
         log.info("Following a User with name: {} by user: {}", usernameToFollow, username);
 
-        return userService.findByUsername(username)
-                .switchIfEmpty(Mono.just(new UserNode(username)))
-                .zipWith(userService.findByUsername(usernameToFollow)
-                        .switchIfEmpty(Mono.just((new UserNode(usernameToFollow)))))
+        return userRepository.findUserByUsername(username)
+                .switchIfEmpty(userRepository.createUser(username))
+                .zipWith(userRepository.findUserByUsername(usernameToFollow)
+                        .switchIfEmpty(userRepository.createUser((usernameToFollow))))
                 .flatMap((tuple) -> {
                     UserNode follower = tuple.getT1();
                     UserNode following = tuple.getT2();
 
                     follower.getFollowing().add(new FollowingRelationship(following));
 
-                    userService.save(follower);
+                    userRepository.saveUser(follower);
 
                     log.info("Successfully followed a User with name: {} by user: {}", usernameToFollow, username);
 
