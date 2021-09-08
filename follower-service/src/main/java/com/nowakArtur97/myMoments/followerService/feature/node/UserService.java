@@ -12,13 +12,11 @@ class UserService {
 
     private final UserRepository userRepository;
 
-    // TODO: UserService: TEST
     Mono<UserNode> findUserByUsername(String username) {
 
         return userRepository.findByUsername(username);
     }
 
-    // TODO: UserService: TEST
     Mono<UserNode> createUser(String username) {
 
         log.info("Creating a new User: {}", username);
@@ -30,7 +28,6 @@ class UserService {
         return userNodeMono;
     }
 
-    // TODO: UserService: TEST
     Mono<UserNode> saveUser(UserNode userNode) {
 
         log.info("Saving a User: {}", userNode.getUsername());

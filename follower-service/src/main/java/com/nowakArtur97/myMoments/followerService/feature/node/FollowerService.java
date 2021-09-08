@@ -10,17 +10,16 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class FollowerService {
 
-    private final UserService userRepository;
+    private final UserService userService;
 
-    // TODO: FollowerService: TEST
     public Mono<Void> followUser(String username, String usernameToFollow) {
 
         log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
 
-        return userRepository.findUserByUsername(username)
-                .switchIfEmpty(userRepository.createUser(username))
-                .zipWith(userRepository.findUserByUsername(usernameToFollow)
-                        .switchIfEmpty(userRepository.createUser((usernameToFollow))))
+        return userService.findUserByUsername(username)
+                .switchIfEmpty(userService.createUser(username))
+                .zipWith(userService.findUserByUsername(usernameToFollow)
+                        .switchIfEmpty(userService.createUser((usernameToFollow))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
@@ -41,7 +40,7 @@ public class FollowerService {
 
                         log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
 
-                        return userRepository.saveUser(follower)
+                        return userService.saveUser(follower)
                                 .flatMap(user -> Mono.empty());
                     }
                 });
