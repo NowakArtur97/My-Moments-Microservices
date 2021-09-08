@@ -1,7 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
@@ -14,7 +13,6 @@ import java.util.UUID;
 
 @Node
 @EqualsAndHashCode(of = "uuid")
-@NoArgsConstructor
 abstract class AbstractNode {
 
     @Id

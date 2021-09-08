@@ -1,7 +1,7 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -10,29 +10,30 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Node(primaryLabel = "User")
+@NoArgsConstructor
 @Getter
-@Setter
 @ToString
 class UserNode extends AbstractNode {
 
     private String username;
 
-    @Relationship(type = "IS_FOLLOWING")
+    @Relationship(type = Relationships.FOLLOWING_RELATIONSHIP)
     private Set<FollowingRelationship> following;
 
-    @Relationship(type = "IS_FOLLOWED")
+    @Relationship(type = Relationships.FOLLOWED_RELATIONSHIP)
     private Set<FollowingRelationship> followers;
-
-    public UserNode() {
-
-        super();
-        this.following = new HashSet<>();
-        this.followers = new HashSet<>();
-    }
 
     public UserNode(String username) {
 
         this();
         this.username = username;
+        this.following = new HashSet<>();
+        this.followers = new HashSet<>();
+    }
+
+    public void follow(UserNode following) {
+
+        getFollowing().add(new FollowingRelationship(following));
+        following.getFollowers().add(new FollowingRelationship(this));
     }
 }
