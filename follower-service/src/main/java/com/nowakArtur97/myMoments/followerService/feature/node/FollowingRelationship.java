@@ -10,7 +10,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-class FollowingRelationship extends AbstractNode {
+public class FollowingRelationship extends AbstractNode {
 
     @TargetNode
     private UserNode followerNode;

@@ -27,7 +27,7 @@ public class FollowerService {
                     UserNode following = tuple.getT2();
 
                     boolean isAlreadyFollowing = follower.getFollowing().stream()
-                            .anyMatch(f -> f.getFollowerNode().getUsername().equals(usernameToFollow));
+                            .anyMatch(f -> f.getFollowerNode().equals(following));
 
                     if (isAlreadyFollowing) {
 

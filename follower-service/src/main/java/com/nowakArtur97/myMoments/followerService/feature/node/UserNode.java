@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @ToString
-class UserNode extends AbstractNode {
+public class UserNode extends AbstractNode {
 
     private String username;
 
@@ -29,6 +29,14 @@ class UserNode extends AbstractNode {
         this.username = username;
         this.following = new HashSet<>();
         this.followers = new HashSet<>();
+    }
+
+    public UserNode(String username, Set<FollowingRelationship> following, Set<FollowingRelationship> followers) {
+
+        this();
+        this.username = username;
+        this.following = following;
+        this.followers = followers;
     }
 
     public void follow(UserNode following) {
