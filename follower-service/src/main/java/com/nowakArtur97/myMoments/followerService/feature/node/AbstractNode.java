@@ -1,32 +1,26 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
-import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Node;
-
-import java.util.Date;
-import java.util.UUID;
-
-@Node
-@EqualsAndHashCode(of = "uuid")
+//@Node
+//@EqualsAndHashCode(of = "uuid")
 abstract class AbstractNode {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+//    @Id
+//    @GeneratedValue
+//    private Long id;
 
-    private final String uuid = UUID.randomUUID().toString();
+//    private final String uuid;
+//
+//    @CreatedDate
+//    private Date createDate;
+//
+//    @LastModifiedDate
+//    private Date modifyDate;
+//
+//    @Version
+//    private Long version;
 
-    @CreatedDate
-    private Date createDate;
+    public AbstractNode() {
 
-    @LastModifiedDate
-    private Date modifyDate;
-
-    @Version
-    private Long version;
+//        uuid = UUID.randomUUID().toString();
+    }
 }
