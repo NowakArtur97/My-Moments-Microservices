@@ -6,9 +6,12 @@ import com.nowakArtur97.myMoments.followerService.testUtil.generator.NameWithSpa
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,18 +27,83 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    private static MockedStatic<UUID> mocked;
+
     private static UserTestBuilder userTestBuilder;
 
     @BeforeAll
     static void setUpBuilderAndUUID() {
 
         userTestBuilder = new UserTestBuilder();
+
+        UUID uuid = UUID.randomUUID();
+        mocked = mockStatic(UUID.class);
+        mocked.when(UUID::randomUUID).thenReturn(uuid);
+    }
+
+    @AfterAll
+    static void cleanUp() {
+
+        if (!mocked.isClosed()) {
+            mocked.close();
+        }
     }
 
     @BeforeEach
     void setUp() {
 
         userService = new UserService(userRepository);
+    }
+
+    @Nested
+    class CreateUserTest {
+
+        @Test
+        void when_create_user_should_return_user() {
+
+            String username = "user";
+            UserNode userExpected = userTestBuilder.withUsername(username).build(ObjectType.NODE);
+
+            when(userRepository.save(userExpected)).thenReturn(Mono.just(userExpected));
+
+            Mono<UserNode> userActualMono = userService.createUser(username);
+
+            StepVerifier.create(userActualMono)
+                    .thenConsumeWhile(
+                            userActual -> {
+                                assertUser(userExpected, userActual);
+                                assertAll(
+                                        () -> verify(userRepository, times(1)).save(userExpected),
+                                        () -> verifyNoMoreInteractions(userRepository));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+    }
+
+    @Nested
+    class SaveUserTest {
+
+        @Test
+        void when_save_user_should_return_user() {
+
+            UserNode userExpected = userTestBuilder.build(ObjectType.NODE);
+
+            when(userRepository.save(userExpected)).thenReturn(Mono.just(userExpected));
+
+            Mono<UserNode> userActualMono = userService.saveUser(userExpected);
+
+            StepVerifier.create(userActualMono)
+                    .thenConsumeWhile(
+                            userActual -> {
+                                assertUser(userExpected, userActual);
+                                assertAll(
+                                        () -> verify(userRepository, times(1)).save(userExpected),
+                                        () -> verifyNoMoreInteractions(userRepository));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
     }
 
     @Nested
