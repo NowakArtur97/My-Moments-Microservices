@@ -19,9 +19,9 @@ import reactor.core.publisher.Mono;
         @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
 class FollowerController {
 
-    private final JwtUtil jwtUtil;
-
     private final FollowerService followerService;
+
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/{username}")
     @ApiOperation("Follow user")
