@@ -17,25 +17,12 @@ public class FollowerService {
 
         log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
 
-//        UserNode follower = new UserNode(username);
-//        FollowingRelationship followingRelationship = new FollowingRelationship(follower);
-//        UserNode following = new UserNode(usernameToFollow);
-//
-//        following.getFollowers().add(followingRelationship);
-//        follower.getFollowing().add(new FollowingRelationship(following));
-//
-//        log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
-//
-//        return userRepository.saveUser(following)
-////                .then(userRepository.saveUser(following))
-//                .flatMap(user -> Mono.empty());
-
         return userRepository.findUserByUsername(username)
-                .switchIfEmpty(Mono.just(new UserNode(username)))
-//                .switchIfEmpty(userRepository.createUser(username))
+//                .switchIfEmpty(Mono.just(new UserNode(username)))
+                .switchIfEmpty(userRepository.createUser(username))
                 .zipWith(userRepository.findUserByUsername(usernameToFollow)
-                        .switchIfEmpty(Mono.just(new UserNode(usernameToFollow))))
-//                        .switchIfEmpty(userRepository.createUser((usernameToFollow))))
+//                        .switchIfEmpty(Mono.just(new UserNode(usernameToFollow))))
+                        .switchIfEmpty(userRepository.createUser((usernameToFollow))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
@@ -47,7 +34,6 @@ public class FollowerService {
                     log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
 
                     return userRepository.saveUser(follower)
-//                            .then(userRepository.saveUser(following))
                             .flatMap(user -> Mono.empty());
                 });
     }

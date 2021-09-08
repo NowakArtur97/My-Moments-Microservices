@@ -3,8 +3,6 @@ package com.nowakArtur97.myMoments.followerService.feature.node;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
@@ -15,11 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-class UserNode {//extends AbstractNode {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+class UserNode extends AbstractNode {
 
     private String username;
 
