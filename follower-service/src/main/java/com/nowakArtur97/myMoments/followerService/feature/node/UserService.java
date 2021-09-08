@@ -41,15 +41,4 @@ class UserService {
 
         return userNodeMono;
     }
-//
-//    public Flux<UserNode> saveAll(List<UserNode> users) {
-//
-//        log.info("Creating new Users: {}", users.stream().map(UserNode::getUsername).collect(Collectors.toList()));
-//
-//        Flux<UserNode> usersNodesFlux = userRepository.saveAll(users);
-//
-//        users.forEach(userNode -> log.info("Successfully created a User: {}", userNode.getUsername()));
-//
-//        return usersNodesFlux;
-//    }
 }

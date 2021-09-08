@@ -18,23 +18,32 @@ public class FollowerService {
         log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
 
         return userRepository.findUserByUsername(username)
-//                .switchIfEmpty(Mono.just(new UserNode(username)))
                 .switchIfEmpty(userRepository.createUser(username))
                 .zipWith(userRepository.findUserByUsername(usernameToFollow)
-//                        .switchIfEmpty(Mono.just(new UserNode(usernameToFollow))))
                         .switchIfEmpty(userRepository.createUser((usernameToFollow))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
                     UserNode following = tuple.getT2();
 
-                    follower.getFollowing().add(new FollowingRelationship(following));
-                    following.getFollowers().add(new FollowingRelationship(follower));
+                    boolean isAlreadyFollowing = follower.getFollowing().stream()
+                            .anyMatch(f -> f.getFollowerNode().getUsername().equals(usernameToFollow));
 
-                    log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
+                    if (isAlreadyFollowing) {
 
-                    return userRepository.saveUser(follower)
-                            .flatMap(user -> Mono.empty());
+                        log.info("User with name: {} is already following: {}", usernameToFollow, username);
+
+                        return Mono.empty();
+
+                    } else {
+
+                        follower.follow(following);
+
+                        log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
+
+                        return userRepository.saveUser(follower)
+                                .flatMap(user -> Mono.empty());
+                    }
                 });
     }
 }
