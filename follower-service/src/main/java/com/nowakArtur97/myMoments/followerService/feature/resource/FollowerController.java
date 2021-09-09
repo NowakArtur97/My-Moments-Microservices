@@ -7,11 +7,15 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/followers")
+@Validated
 @RequiredArgsConstructor
 @Api(tags = {FollowerTag.RESOURCE})
 @ApiResponses(value = {
@@ -23,18 +27,19 @@ class FollowerController {
 
     private final JwtUtil jwtUtil;
 
-    @PostMapping
+    @PostMapping("/{username}")
     @ApiOperation("Follow user")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully followed User"),
-            @ApiResponse(code = 400, message = "Incorrectly entered follower's data", response = ErrorResponse.class)})
+            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
     Mono<ResponseEntity<Void>> followUser(
-            @ApiParam(value = "The follower's data", name = "userToFollow", type = "string",
-                    required = true) @RequestBody FollowerDTO userToFollow,
+            @ApiParam(value = "Username of the User being followed", name = "username", type = "string",
+                    required = true, example = "username")
+            @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String usernameToFollow,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
-                .flatMap((username) -> followerService.followUser(username, userToFollow))
+                .flatMap((username) -> followerService.followUser(username, usernameToFollow))
                 .map((followerDocumentVoid) -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
                         .body(followerDocumentVoid));
     }

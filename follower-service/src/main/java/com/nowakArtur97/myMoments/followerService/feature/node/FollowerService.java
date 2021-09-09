@@ -1,25 +1,18 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
-import com.nowakArtur97.myMoments.followerService.feature.resource.FollowerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
-import javax.validation.Valid;
-
 @Service
-@Validated
 @RequiredArgsConstructor
 @Slf4j
 public class FollowerService {
 
     private final UserService userService;
 
-    public Mono<Void> followUser(String username, @Valid FollowerDTO usernameToFollowDTO) {
-
-        String usernameToFollow = usernameToFollowDTO.getUsername();
+    public Mono<Void> followUser(String username, String usernameToFollow) {
 
         log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
 
