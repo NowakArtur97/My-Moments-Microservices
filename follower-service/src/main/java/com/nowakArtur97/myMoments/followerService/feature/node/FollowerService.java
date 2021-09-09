@@ -71,6 +71,7 @@ public class FollowerService {
                         log.info("Successfully unfollowed a User with name: {} by User: {}", usernameToUnfollow, username);
 
                         return userService.saveUser(follower)
+                                .then(userService.saveUser(following))
                                 .flatMap(user -> Mono.empty());
 
                     } else {
