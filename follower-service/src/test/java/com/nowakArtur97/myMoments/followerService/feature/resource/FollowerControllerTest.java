@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.feature.resource;
 
+import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
 import com.nowakArtur97.myMoments.followerService.jwt.JwtUtil;
 import com.nowakArtur97.myMoments.followerService.testUtil.generator.NameWithSpacesGenerator;
@@ -15,10 +16,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -79,5 +81,45 @@ class FollowerControllerTest {
                 () -> verifyNoMoreInteractions(jwtUtil),
                 () -> verify(followerService, times(1)).followUser(username, usernameToFollow),
                 () -> verifyNoMoreInteractions(followerService));
+    }
+
+    @Test
+    void when_follow_user_without_username_should_return_error_response() {
+
+        String header = "Bearer token";
+        String invalidUsernameToFollow = " ";
+
+        Mono<ErrorResponse> errorResponseMono = webTestClient.post()
+                .uri(FOLLOW_BASE_PATH, invalidUsernameToFollow)
+                .header("Authorization", header)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .returnResult(ErrorResponse.class)
+                .getResponseBody()
+                .single();
+
+        StepVerifier.create(errorResponseMono)
+                .thenConsumeWhile(
+                        errorResponse -> {
+                            assertAll(
+                                    () -> assertEquals("Follower's username cannot be empty.",
+                                            errorResponse.getErrors().get(0),
+                                            () -> "should return error response with message: " +
+                                                    "'Follower's username cannot be empty.'" + ", but was: "
+                                                    + errorResponse.getErrors().get(0)),
+                                    () -> assertEquals(1, errorResponse.getErrors().size(),
+                                            () -> "should return error response with 1 message, but was: "
+                                                    + errorResponse.getErrors().size()),
+                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                            () -> "should return error response with not null timestamp, but was: null"),
+                                    () -> assertEquals(400, errorResponse.getStatus(),
+                                            () -> "should return error response with 400 status, but was: "
+                                                    + errorResponse.getStatus()),
+                                    () -> verifyNoInteractions(jwtUtil),
+                                    () -> verifyNoInteractions(followerService));
+                            return true;
+                        }
+                ).verifyComplete();
     }
 }
