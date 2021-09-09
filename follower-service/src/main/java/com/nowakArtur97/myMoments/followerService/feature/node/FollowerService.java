@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
+import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class FollowerService {
 
                     if (isAlreadyFollowing) {
 
-                        log.info("User with name: {} is already following: {}", usernameToFollow, username);
+                        log.info("User with name: {} is already following: {}", username, usernameToFollow);
 
                         return Mono.empty();
 
@@ -51,31 +52,33 @@ public class FollowerService {
         log.info("Unfollowing a User with name: {} by User: {}", usernameToUnfollow, username);
 
         return userService.findUserByUsername(username)
-                .switchIfEmpty(userService.createUser(username))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Follower with username: '" + username + "' not found.")))
                 .zipWith(userService.findUserByUsername(usernameToUnfollow)
-                        .switchIfEmpty(userService.createUser((usernameToUnfollow))))
+                        .switchIfEmpty(Mono.error(
+                                new ResourceNotFoundException("Follower with username: '" + username + "' not found."))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
                     UserNode following = tuple.getT2();
 
-                    boolean isAlreadyFollowing = follower.getFollowing().stream()
+                    boolean isFollowing = follower.getFollowing().stream()
                             .anyMatch(f -> f.getFollowerNode().equals(following));
 
-                    if (isAlreadyFollowing) {
+                    if (isFollowing) {
 
-                        log.info("User with name: {} is already following: {}", usernameToUnfollow, username);
+                        follower.unfollow(following);
 
-                        return Mono.empty();
-
-                    } else {
-
-                        follower.follow(following);
-
-                        log.info("Successfully followed a User with name: {} by User: {}", usernameToUnfollow, username);
+                        log.info("Successfully unfollowed a User with name: {} by User: {}", usernameToUnfollow, username);
 
                         return userService.saveUser(follower)
                                 .flatMap(user -> Mono.empty());
+
+                    } else {
+
+                        log.info("User with name: {} is not following: {}", username, usernameToUnfollow);
+
+                        return Mono.error(
+                                new ResourceNotFoundException("User with name: '" + username + "' is not following: '" + usernameToUnfollow + "'."));
                     }
                 });
     }

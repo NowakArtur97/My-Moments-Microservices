@@ -1,6 +1,8 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
@@ -13,6 +15,7 @@ import java.util.UUID;
 
 @Node
 @EqualsAndHashCode(of = "uuid")
+@Setter(AccessLevel.PRIVATE)
 abstract class AbstractNode {
 
     @Id

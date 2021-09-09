@@ -44,4 +44,10 @@ public class UserNode extends AbstractNode {
         getFollowing().add(new FollowingRelationship(following));
         following.getFollowers().add(new FollowingRelationship(this));
     }
+
+    public void unfollow(UserNode following) {
+
+        getFollowing().removeIf(relationship -> relationship.getFollowerNode().equals(following));
+        following.getFollowers().removeIf(relationship -> relationship.getFollowerNode().equals(this));
+    }
 }

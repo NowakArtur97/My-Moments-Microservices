@@ -106,7 +106,7 @@ class FollowerControllerTest {
                                     () -> assertEquals("Follower's username cannot be empty.",
                                             errorResponse.getErrors().get(0),
                                             () -> "should return error response with message: " +
-                                                    "'Follower's username cannot be empty.'" + ", but was: "
+                                                    "'Username cannot be empty.'" + ", but was: "
                                                     + errorResponse.getErrors().get(0)),
                                     () -> assertEquals(1, errorResponse.getErrors().size(),
                                             () -> "should return error response with 1 message, but was: "

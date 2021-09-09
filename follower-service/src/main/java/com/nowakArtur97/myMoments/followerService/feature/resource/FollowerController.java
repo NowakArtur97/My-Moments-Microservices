@@ -40,7 +40,23 @@ class FollowerController {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMap((username) -> followerService.followUser(username, usernameToFollow))
-                .map((followerDocumentVoid) -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
-                        .body(followerDocumentVoid));
+                .map((followerVoid) -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(followerVoid));
+    }
+
+    @DeleteMapping("/{username}")
+    @ApiOperation("Unfollow user")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Successfully unfollowed User"),
+            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "Could not find User with provided username", response = ErrorResponse.class)})
+    Mono<ResponseEntity<Void>> unfollowUser(
+            @ApiParam(value = "Username of the User being unfollowed", name = "username", type = "string",
+                    required = true, example = "username")
+            @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String usernameToFollow,
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+
+        return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
+                .flatMap((username) -> followerService.unfollowUser(username, usernameToFollow))
+                .map((followerVoid) -> ResponseEntity.noContent().build());
     }
 }
