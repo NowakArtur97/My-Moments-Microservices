@@ -23,19 +23,18 @@ class FollowerController {
 
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/{username}")
+    @PostMapping
     @ApiOperation("Follow user")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully followed User"),
-            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
+            @ApiResponse(code = 400, message = "Incorrectly entered follower's data", response = ErrorResponse.class)})
     Mono<ResponseEntity<Void>> followUser(
-            @ApiParam(value = "Username of the User being followed", name = "username", type = "string",
-                    required = true, example = "username")
-            @PathVariable("username") String usernameToFollow,
+            @ApiParam(value = "The follower's data", name = "userToFollow", type = "string",
+                    required = true) @RequestBody FollowerDTO userToFollow,
             @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
-                .flatMap((username) -> followerService.followUser(username, usernameToFollow))
+                .flatMap((username) -> followerService.followUser(username, userToFollow))
                 .map((followerDocumentVoid) -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
                         .body(followerDocumentVoid));
     }
