@@ -217,7 +217,21 @@ class FollowerServiceTest {
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
                                     () -> verifyNoMoreInteractions(userService))
-                    ).verifyErrorMessage("User is already following: " + usernameToFollow + ".");
+                    ).verifyErrorMessage("User with username: '" + username + "' is already following: " + usernameToFollow + ".");
+        }
+
+        @Test
+        void when_follow_user_own_account_should_throw_exception() {
+
+            String username = "user";
+
+            Mono<Void> voidActualMono = followerService.followUser(username, username);
+
+            StepVerifier.create(voidActualMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verifyNoInteractions(userService))
+                    ).verifyErrorMessage("User with username: '" + username + "' cannot follow himself.");
         }
     }
 }

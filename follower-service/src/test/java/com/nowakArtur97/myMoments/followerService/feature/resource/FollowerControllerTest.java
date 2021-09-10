@@ -90,14 +90,13 @@ class FollowerControllerTest {
 
         String header = "Bearer token";
         String username = "user";
-        String usernameToFollow = "usernameToFollow";
 
         when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
-        String exceptionMessage = "User is already following: " + usernameToFollow + ".";
-        when(followerService.followUser(username, usernameToFollow)).thenThrow(new ForbiddenException(exceptionMessage));
+        String exceptionMessage = "User with username: '" + username + "' cannot follow himself.";
+        when(followerService.followUser(username, username)).thenThrow(new ForbiddenException(exceptionMessage));
 
         Mono<ErrorResponse> errorResponseMono = webTestClient.post()
-                .uri(FOLLOW_BASE_PATH, usernameToFollow)
+                .uri(FOLLOW_BASE_PATH, username)
                 .header("Authorization", header)
                 .exchange()
                 .expectStatus()
@@ -119,11 +118,11 @@ class FollowerControllerTest {
                                     () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(HttpStatus.FORBIDDEN.value(), errorResponse.getStatus(),
-                                            () -> "should return error response with " + HttpStatus.FORBIDDEN.value() + " status, but was: "
-                                                    + errorResponse.getStatus()),
+                                            () -> "should return error response with " + HttpStatus.FORBIDDEN.value()
+                                                    + " status, but was: " + errorResponse.getStatus()),
                                     () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(header),
                                     () -> verifyNoMoreInteractions(jwtUtil),
-                                    () -> verify(followerService, times(1)).followUser(username, usernameToFollow),
+                                    () -> verify(followerService, times(1)).followUser(username, username),
                                     () -> verifyNoMoreInteractions(followerService));
                             return true;
                         }
@@ -131,7 +130,7 @@ class FollowerControllerTest {
     }
 
     @Test
-    void when_follow_user_without_username_should_return_error_response() {
+    void when_follow_user_own_account_should_return_error_response() {
 
         String header = "Bearer token";
         String invalidUsernameToFollow = " ";
@@ -161,8 +160,8 @@ class FollowerControllerTest {
                                     () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
                                     () -> assertEquals(HttpStatus.BAD_REQUEST.value(), errorResponse.getStatus(),
-                                            () -> "should return error response with " + HttpStatus.BAD_REQUEST.value() + " status, but was: "
-                                                    + errorResponse.getStatus()),
+                                            () -> "should return error response with " + HttpStatus.BAD_REQUEST.value()
+                                                    + " status, but was: " + errorResponse.getStatus()),
                                     () -> verifyNoInteractions(jwtUtil),
                                     () -> verifyNoInteractions(followerService));
                             return true;

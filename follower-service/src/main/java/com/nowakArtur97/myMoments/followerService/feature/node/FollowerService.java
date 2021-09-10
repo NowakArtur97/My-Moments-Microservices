@@ -18,6 +18,11 @@ public class FollowerService {
 
         log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
 
+        if (username.equals(usernameToFollow)) {
+            return Mono.error(
+                    new ForbiddenException("User with username: '" + username + "' cannot follow himself."));
+        }
+
         return userService.findUserByUsername(username)
                 .switchIfEmpty(Mono.defer(() -> userService.createUser(username)))
                 .zipWith(userService.findUserByUsername(usernameToFollow)
@@ -32,9 +37,9 @@ public class FollowerService {
 
                     if (isAlreadyFollowing) {
 
-                        log.info("User with name: {} is already following: {}", username, usernameToFollow);
-
-                        return Mono.error(new ForbiddenException("User is already following: " + usernameToFollow + "."));
+                        return Mono.error(
+                                new ForbiddenException("User with username: '" + username + "' is already following: "
+                                        + usernameToFollow + "."));
 
                     } else {
 
@@ -52,8 +57,13 @@ public class FollowerService {
 
         log.info("Unfollowing a User with name: {} by User: {}", usernameToUnfollow, username);
 
+        if (username.equals(usernameToUnfollow)) {
+            return Mono.error(
+                    new ForbiddenException("User cannot unfollow himself."));
+        }
+
         return userService.findUserByUsername(username)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Follower with username: '" + username + "' not found.")))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")))
                 .zipWith(userService.findUserByUsername(usernameToUnfollow)
                         .switchIfEmpty(Mono.error(
                                 new ResourceNotFoundException("Follower with username: '" + username + "' not found."))))
@@ -77,10 +87,9 @@ public class FollowerService {
 
                     } else {
 
-                        log.info("User with name: {} is not following: {}", username, usernameToUnfollow);
-
                         return Mono.error(
-                                new ResourceNotFoundException("User with name: '" + username + "' is not following: '" + usernameToUnfollow + "'."));
+                                new ResourceNotFoundException("User with name: '" + username + "' is not following: '"
+                                        + usernameToUnfollow + "'."));
                     }
                 });
     }
