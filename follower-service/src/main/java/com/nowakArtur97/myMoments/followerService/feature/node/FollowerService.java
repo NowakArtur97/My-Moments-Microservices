@@ -19,7 +19,7 @@ public class FollowerService {
         log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
 
         return userService.findUserByUsername(username)
-                .switchIfEmpty(userService.createUser(username))
+                .switchIfEmpty(Mono.defer(() -> userService.createUser(username)))
                 .zipWith(userService.findUserByUsername(usernameToFollow)
                         .switchIfEmpty(Mono.defer(() -> userService.createUser(usernameToFollow))))
                 .flatMap((tuple) -> {
@@ -34,7 +34,7 @@ public class FollowerService {
 
                         log.info("User with name: {} is already following: {}", username, usernameToFollow);
 
-                        return Mono.error(new ForbiddenException("User is already following: " + usernameToFollow));
+                        return Mono.error(new ForbiddenException("User is already following: " + usernameToFollow + "."));
 
                     } else {
 
