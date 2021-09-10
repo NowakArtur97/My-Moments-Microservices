@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
+import com.nowakArtur97.myMoments.followerService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class FollowerService {
         return userService.findUserByUsername(username)
                 .switchIfEmpty(userService.createUser(username))
                 .zipWith(userService.findUserByUsername(usernameToFollow)
-                        .switchIfEmpty(userService.createUser((usernameToFollow))))
+                        .switchIfEmpty(Mono.defer(() -> userService.createUser(usernameToFollow))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
@@ -33,7 +34,7 @@ public class FollowerService {
 
                         log.info("User with name: {} is already following: {}", username, usernameToFollow);
 
-                        return Mono.empty();
+                        return Mono.error(new ForbiddenException("User is already following: " + usernameToFollow));
 
                     } else {
 
