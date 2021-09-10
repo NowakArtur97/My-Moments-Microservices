@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.followerService.feature.resource;
 
 import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
+import com.nowakArtur97.myMoments.followerService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
 import com.nowakArtur97.myMoments.followerService.jwt.JwtUtil;
 import com.nowakArtur97.myMoments.followerService.testUtil.generator.NameWithSpacesGenerator;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -84,6 +86,51 @@ class FollowerControllerTest {
     }
 
     @Test
+    void when_follow_user_for_a_second_time_should_throw_exception() {
+
+        String header = "Bearer token";
+        String username = "user";
+        String usernameToFollow = "usernameToFollow";
+
+        when(jwtUtil.extractUsernameFromHeader(header)).thenReturn(username);
+        String exceptionMessage = "User is already following: " + usernameToFollow + ".";
+        when(followerService.followUser(username, usernameToFollow)).thenThrow(new ForbiddenException(exceptionMessage));
+
+        Mono<ErrorResponse> errorResponseMono = webTestClient.post()
+                .uri(FOLLOW_BASE_PATH, usernameToFollow)
+                .header("Authorization", header)
+                .exchange()
+                .expectStatus()
+                .isForbidden()
+                .returnResult(ErrorResponse.class)
+                .getResponseBody()
+                .single();
+
+        StepVerifier.create(errorResponseMono)
+                .thenConsumeWhile(
+                        errorResponse -> {
+                            assertAll(() -> assertEquals(exceptionMessage,
+                                    errorResponse.getErrors().get(0),
+                                    () -> "should return error response with message: " + exceptionMessage + ", but was: "
+                                            + errorResponse.getErrors().get(0)),
+                                    () -> assertEquals(1, errorResponse.getErrors().size(),
+                                            () -> "should return error response with 1 message, but was: "
+                                                    + errorResponse.getErrors().size()),
+                                    () -> assertNotNull(errorResponse.getTimestamp(),
+                                            () -> "should return error response with not null timestamp, but was: null"),
+                                    () -> assertEquals(HttpStatus.FORBIDDEN.value(), errorResponse.getStatus(),
+                                            () -> "should return error response with " + HttpStatus.FORBIDDEN.value() + " status, but was: "
+                                                    + errorResponse.getStatus()),
+                                    () -> verify(jwtUtil, times(1)).extractUsernameFromHeader(header),
+                                    () -> verifyNoMoreInteractions(jwtUtil),
+                                    () -> verify(followerService, times(1)).followUser(username, usernameToFollow),
+                                    () -> verifyNoMoreInteractions(followerService));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
+
+    @Test
     void when_follow_user_without_username_should_return_error_response() {
 
         String header = "Bearer token";
@@ -103,7 +150,7 @@ class FollowerControllerTest {
                 .thenConsumeWhile(
                         errorResponse -> {
                             assertAll(
-                                    () -> assertEquals("Follower's username cannot be empty.",
+                                    () -> assertEquals("Username cannot be empty.",
                                             errorResponse.getErrors().get(0),
                                             () -> "should return error response with message: " +
                                                     "'Username cannot be empty.'" + ", but was: "
@@ -113,8 +160,8 @@ class FollowerControllerTest {
                                                     + errorResponse.getErrors().size()),
                                     () -> assertNotNull(errorResponse.getTimestamp(),
                                             () -> "should return error response with not null timestamp, but was: null"),
-                                    () -> assertEquals(400, errorResponse.getStatus(),
-                                            () -> "should return error response with 400 status, but was: "
+                                    () -> assertEquals(HttpStatus.BAD_REQUEST.value(), errorResponse.getStatus(),
+                                            () -> "should return error response with " + HttpStatus.BAD_REQUEST.value() + " status, but was: "
                                                     + errorResponse.getStatus()),
                                     () -> verifyNoInteractions(jwtUtil),
                                     () -> verifyNoInteractions(followerService));
