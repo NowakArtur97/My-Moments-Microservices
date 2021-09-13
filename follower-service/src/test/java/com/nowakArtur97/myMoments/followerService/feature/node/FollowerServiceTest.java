@@ -74,8 +74,6 @@ class FollowerServiceTest {
 
             when(userService.findUserByUsername(username)).thenReturn(Mono.empty());
             when(userService.findUserByUsername(usernameToFollow)).thenReturn(Mono.empty());
-            when(userService.createUser(username)).thenReturn(Mono.just(followerExpected));
-            when(userService.createUser(usernameToFollow)).thenReturn(Mono.just(followerExpected));
             when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
             when(userService.saveUser(followingWithFollowerExpected)).thenReturn(Mono.just(followingWithFollowerExpected));
 
@@ -86,8 +84,6 @@ class FollowerServiceTest {
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
-                                    () -> verify(userService, times(1)).createUser(username),
-                                    () -> verify(userService, times(1)).createUser(usernameToFollow),
                                     () -> verify(userService, times(2))
                                             .saveUser(followerWithFollowingExpected),
                                     () -> verify(userService, times(2))
@@ -112,7 +108,6 @@ class FollowerServiceTest {
 
             when(userService.findUserByUsername(username)).thenReturn(Mono.empty());
             when(userService.findUserByUsername(usernameToFollow)).thenReturn(Mono.just(followingExpected));
-            when(userService.createUser(username)).thenReturn(Mono.just(followerExpected));
             when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
             when(userService.saveUser(followingWithFollowerExpected)).thenReturn(Mono.just(followingWithFollowerExpected));
 
@@ -123,7 +118,6 @@ class FollowerServiceTest {
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
-                                    () -> verify(userService, times(1)).createUser(username),
                                     () -> verify(userService, times(2))
                                             .saveUser(followerWithFollowingExpected),
                                     () -> verify(userService, times(2))
@@ -148,7 +142,6 @@ class FollowerServiceTest {
 
             when(userService.findUserByUsername(username)).thenReturn(Mono.just(followerExpected));
             when(userService.findUserByUsername(usernameToFollow)).thenReturn(Mono.empty());
-            when(userService.createUser(usernameToFollow)).thenReturn(Mono.just(followerExpected));
             when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
             when(userService.saveUser(followingWithFollowerExpected)).thenReturn(Mono.just(followingWithFollowerExpected));
 
@@ -159,7 +152,6 @@ class FollowerServiceTest {
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
-                                    () -> verify(userService, times(1)).createUser(usernameToFollow),
                                     () -> verify(userService, times(2))
                                             .saveUser(followerWithFollowingExpected),
                                     () -> verify(userService, times(2))

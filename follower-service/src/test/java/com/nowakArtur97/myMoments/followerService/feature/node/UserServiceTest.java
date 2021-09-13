@@ -56,32 +56,6 @@ class UserServiceTest {
     }
 
     @Nested
-    class CreateUserTest {
-
-        @Test
-        void when_create_user_should_return_user() {
-
-            String username = "user";
-            UserNode userExpected = userTestBuilder.withUsername(username).build(ObjectType.NODE);
-
-            when(userRepository.save(userExpected)).thenReturn(Mono.just(userExpected));
-
-            Mono<UserNode> userActualMono = userService.createUser(username);
-
-            StepVerifier.create(userActualMono)
-                    .thenConsumeWhile(
-                            userActual -> {
-                                assertUser(userExpected, userActual);
-                                assertAll(
-                                        () -> verify(userRepository, times(1)).save(userExpected),
-                                        () -> verifyNoMoreInteractions(userRepository));
-                                return true;
-                            }
-                    ).verifyComplete();
-        }
-    }
-
-    @Nested
     class SaveUserTest {
 
         @Test

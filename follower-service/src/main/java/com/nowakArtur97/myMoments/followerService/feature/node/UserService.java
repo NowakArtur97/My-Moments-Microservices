@@ -17,17 +17,6 @@ class UserService {
         return userRepository.findByUsername(username);
     }
 
-    Mono<UserNode> createUser(String username) {
-
-        log.info("Creating a new User: {}", username);
-
-        Mono<UserNode> userNodeMono = userRepository.save(new UserNode(username));
-
-        log.info("Successfully created a User: {}", username);
-
-        return userNodeMono;
-    }
-
     Mono<UserNode> saveUser(UserNode userNode) {
 
         log.info("Saving a User: {}", userNode.getUsername());

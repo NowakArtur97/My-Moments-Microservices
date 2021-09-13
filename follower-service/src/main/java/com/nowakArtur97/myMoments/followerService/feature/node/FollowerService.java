@@ -24,9 +24,9 @@ public class FollowerService {
         }
 
         return userService.findUserByUsername(username)
-                .switchIfEmpty(Mono.defer(() -> userService.createUser(username)))
+                .switchIfEmpty(Mono.defer(() -> Mono.just(new UserNode(username))))
                 .zipWith(userService.findUserByUsername(usernameToFollow)
-                        .switchIfEmpty(Mono.defer(() -> userService.createUser(usernameToFollow))))
+                        .switchIfEmpty(Mono.defer(() -> Mono.just(new UserNode(usernameToFollow)))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
@@ -86,10 +86,6 @@ public class FollowerService {
                         return userService.saveUser(follower)
                                 .then(userService.saveUser(following))
                                 .flatMap(user -> Mono.empty());
-//                        return userService.saveAll(List.of(follower, following))
-//                                .collectList()
-////                                .then(userService.saveUser(following))
-//                                .flatMap(user -> Mono.empty());
 
                     } else {
 
