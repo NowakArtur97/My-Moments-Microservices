@@ -88,8 +88,10 @@ class FollowerServiceTest {
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
                                     () -> verify(userService, times(1)).createUser(username),
                                     () -> verify(userService, times(1)).createUser(usernameToFollow),
-                                    () -> verify(userService, times(1))
+                                    () -> verify(userService, times(2))
                                             .saveUser(followerWithFollowingExpected),
+                                    () -> verify(userService, times(2))
+                                            .saveUser(followingWithFollowerExpected),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
@@ -122,8 +124,10 @@ class FollowerServiceTest {
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
                                     () -> verify(userService, times(1)).createUser(username),
-                                    () -> verify(userService, times(1))
+                                    () -> verify(userService, times(2))
                                             .saveUser(followerWithFollowingExpected),
+                                    () -> verify(userService, times(2))
+                                            .saveUser(followingWithFollowerExpected),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
@@ -156,8 +160,10 @@ class FollowerServiceTest {
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
                                     () -> verify(userService, times(1)).createUser(usernameToFollow),
-                                    () -> verify(userService, times(1))
+                                    () -> verify(userService, times(2))
                                             .saveUser(followerWithFollowingExpected),
+                                    () -> verify(userService, times(2))
+                                            .saveUser(followingWithFollowerExpected),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
@@ -188,8 +194,10 @@ class FollowerServiceTest {
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
-                                    () -> verify(userService, times(1))
+                                    () -> verify(userService, times(2))
                                             .saveUser(followerWithFollowingExpected),
+                                    () -> verify(userService, times(2))
+                                            .saveUser(followingWithFollowerExpected),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
@@ -199,7 +207,7 @@ class FollowerServiceTest {
 
             String username = "user";
             String usernameToFollow = "userToFollow";
-            UserNode followingWithFollowerExpected = userTestBuilder.withUsername(usernameToFollow).build(ObjectType.NODE);
+            UserNode followingWithFollowerExpected = userTestBuilder.withUsername(username).build(ObjectType.NODE);
             UserNode followerWithFollowingExpected = userTestBuilder.withUsername(usernameToFollow).build(ObjectType.NODE);
             FollowingRelationship followingRelationshipExpected = new FollowingRelationship(followingWithFollowerExpected);
             FollowingRelationship followedRelationshipExpected = new FollowingRelationship(followerWithFollowingExpected);
@@ -232,6 +240,103 @@ class FollowerServiceTest {
                             assertAll(
                                     () -> verifyNoInteractions(userService))
                     ).verifyErrorMessage("User with username: '" + username + "' cannot follow himself.");
+        }
+    }
+
+    @Nested
+    class UnfollowUserTest {
+
+        @Test
+        void when_unfollow_user_should_unfollow_user() {
+
+            String username = "user";
+            String usernameToUnfollow = "userToUnfollow";
+
+            UserNode followingWithFollowerExpected = userTestBuilder.withUsername(username).build(ObjectType.NODE);
+            UserNode followerWithFollowingExpected = userTestBuilder.withUsername(usernameToUnfollow).build(ObjectType.NODE);
+            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(followingWithFollowerExpected);
+            FollowingRelationship followedRelationshipExpected = new FollowingRelationship(followerWithFollowingExpected);
+            followingWithFollowerExpected.getFollowing().add(followingRelationshipExpected);
+            followerWithFollowingExpected.getFollowing().add(followedRelationshipExpected);
+            UserNode followerExpected = userTestBuilder.withUsername(username).build(ObjectType.NODE);
+            UserNode followingExpected = userTestBuilder.withUsername(usernameToUnfollow).build(ObjectType.NODE);
+
+            when(userService.findUserByUsername(username)).thenReturn(Mono.just(followingWithFollowerExpected));
+            when(userService.findUserByUsername(usernameToUnfollow)).thenReturn(Mono.just(followerWithFollowingExpected));
+            when(userService.saveUser(followerExpected)).thenReturn(Mono.just(followerExpected));
+            when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
+
+            Mono<Void> voidActualMono = followerService.unfollowUser(username, usernameToUnfollow);
+
+            StepVerifier.create(voidActualMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1)).findUserByUsername(username),
+                                    () -> verify(userService, times(1)).findUserByUsername(usernameToUnfollow),
+                                    () -> verify(userService, times(2)).saveUser(followerExpected),
+                                    () -> verify(userService, times(2)).saveUser(followingExpected),
+                                    () -> verifyNoMoreInteractions(userService))
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_unfollow_by_not_existing_user_should_throw_exception() {
+
+            String username = "notExistingUser";
+            String usernameToUnfollow = "userToUnfollow";
+            UserNode followerWithFollowingExpected = userTestBuilder.withUsername(usernameToUnfollow).build(ObjectType.NODE);
+            FollowingRelationship followedRelationshipExpected = new FollowingRelationship(followerWithFollowingExpected);
+            followerWithFollowingExpected.getFollowing().add(followedRelationshipExpected);
+
+            when(userService.findUserByUsername(username)).thenReturn(Mono.empty());
+            when(userService.findUserByUsername(usernameToUnfollow)).thenReturn(Mono.just(followerWithFollowingExpected));
+
+            Mono<Void> voidActualMono = followerService.unfollowUser(username, usernameToUnfollow);
+
+            StepVerifier.create(voidActualMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1)).findUserByUsername(username),
+                                    () -> verify(userService, times(1)).findUserByUsername(usernameToUnfollow),
+                                    () -> verifyNoMoreInteractions(userService))
+                    ).verifyErrorMessage("User with username: '" + username + "' not found.");
+        }
+
+        @Test
+        void when_unfollow_not_existing_user_should_throw_exception() {
+
+            String username = "user";
+            String usernameToUnfollow = "notExistingUserToUnfollow";
+            UserNode followingWithFollowerExpected = userTestBuilder.withUsername(username).build(ObjectType.NODE);
+            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(followingWithFollowerExpected);
+            followingWithFollowerExpected.getFollowing().add(followingRelationshipExpected);
+
+            when(userService.findUserByUsername(username)).thenReturn(Mono.just(followingWithFollowerExpected));
+            when(userService.findUserByUsername(usernameToUnfollow)).thenReturn(Mono.empty());
+
+            Mono<Void> voidActualMono = followerService.unfollowUser(username, usernameToUnfollow);
+
+            StepVerifier.create(voidActualMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userService, times(1)).findUserByUsername(username),
+                                    () -> verify(userService, times(1)).findUserByUsername(usernameToUnfollow),
+                                    () -> verifyNoMoreInteractions(userService))
+                    ).verifyErrorMessage("Follower with username: '" + usernameToUnfollow + "' not found.");
+        }
+
+        @Test
+        void when_unfollow_user_own_account_should_throw_exception() {
+
+            String username = "user";
+
+            Mono<Void> voidActualMono = followerService.unfollowUser(username, username);
+
+            StepVerifier.create(voidActualMono)
+                    .then(() ->
+                            assertAll(
+                                    () -> verifyNoInteractions(userService))
+                    ).verifyErrorMessage("User with username: '" + username + "' cannot unfollow himself.");
         }
     }
 }

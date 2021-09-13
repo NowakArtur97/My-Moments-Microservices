@@ -60,14 +60,15 @@ public class FollowerService {
 
         if (username.equals(usernameToUnfollow)) {
             return Mono.error(
-                    new ForbiddenException("User cannot unfollow himself."));
+                    new ForbiddenException("User with username: '" + username + "' cannot unfollow himself."));
         }
 
         return userService.findUserByUsername(username)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")))
+                .switchIfEmpty(Mono.defer(() ->
+                        Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found."))))
                 .zipWith(userService.findUserByUsername(usernameToUnfollow)
-                        .switchIfEmpty(Mono.error(
-                                new ResourceNotFoundException("Follower with username: '" + username + "' not found."))))
+                        .switchIfEmpty(Mono.defer(() ->
+                                Mono.error(new ResourceNotFoundException("Follower with username: '" + usernameToUnfollow + "' not found.")))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
