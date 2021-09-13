@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
 
@@ -30,6 +29,7 @@ abstract class AbstractNode {
     @LastModifiedDate
     private Date modifyDate;
 
-    @Version
-    private Long version;
+//    TODO: REMOVE
+//    @Version
+//    private Long version;
 }

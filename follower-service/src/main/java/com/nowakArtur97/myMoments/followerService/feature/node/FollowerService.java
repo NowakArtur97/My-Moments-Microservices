@@ -48,6 +48,7 @@ public class FollowerService {
                         log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
 
                         return userService.saveUser(follower)
+                                .then(userService.saveUser(following))
                                 .flatMap(user -> Mono.empty());
                     }
                 });
@@ -84,6 +85,10 @@ public class FollowerService {
                         return userService.saveUser(follower)
                                 .then(userService.saveUser(following))
                                 .flatMap(user -> Mono.empty());
+//                        return userService.saveAll(List.of(follower, following))
+//                                .collectList()
+////                                .then(userService.saveUser(following))
+//                                .flatMap(user -> Mono.empty());
 
                     } else {
 
