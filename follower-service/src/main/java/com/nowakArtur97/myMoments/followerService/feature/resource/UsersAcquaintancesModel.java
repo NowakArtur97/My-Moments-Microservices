@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @ApiModel(description = "Details about the User's Acquaintances")
-class UsersAcquaintancesModel {
+public class UsersAcquaintancesModel {
 
     @ApiModelProperty(notes = "The user's acquaintances")
     private final List<UserModel> users;

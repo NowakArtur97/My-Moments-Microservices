@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @ApiModel(description = "Details about the User")
-class UserModel {
+public class UserModel {
 
     @ApiModelProperty(notes = "The user's name")
     private String username;

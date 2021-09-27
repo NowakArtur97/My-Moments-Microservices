@@ -2,12 +2,16 @@ package com.nowakArtur97.myMoments.followerService.feature.node;
 
 import com.nowakArtur97.myMoments.followerService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
+import com.nowakArtur97.myMoments.followerService.feature.resource.UserModel;
+import com.nowakArtur97.myMoments.followerService.feature.resource.UsersAcquaintancesModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -99,11 +103,17 @@ public class FollowerService {
     }
 
     // TODO: TEST
-    public Mono<Set<FollowingRelationship>> findFollowers(String username) {
+    public Mono<UsersAcquaintancesModel> findAcquaintances(String username,
+                                                           Function<UserNode, Set<FollowingRelationship>> function) {
 
-        log.info("Looking up Followers by username: {}", username);
+        log.info("Looking up Acquaintances by username: {}", username);
 
         return userService.findUserByUsername(username)
-                .map(UserNode::getFollowers);
+                .map(function)
+                .map(followingRelationships -> followingRelationships.stream()
+                        .map(follower -> new UserModel(follower.getFollowerNode().getUsername()))
+                        .collect(Collectors.toList()))
+                .map(UsersAcquaintancesModel::new)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")));
     }
 }

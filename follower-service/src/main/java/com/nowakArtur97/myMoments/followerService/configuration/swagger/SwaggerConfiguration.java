@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.followerService.configuration.swagger;
 
 import com.nowakArtur97.myMoments.followerService.feature.resource.FollowerTag;
+import com.nowakArtur97.myMoments.followerService.feature.resource.FollowingTag;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,8 @@ class SwaggerConfiguration {
                 .build()
                 .apiInfo(getApiDetails(swaggerConfigurationProperties))
                 .tags(
-                        new Tag(FollowerTag.RESOURCE, FollowerTag.DESCRIPTION)
+                        new Tag(FollowerTag.RESOURCE, FollowerTag.DESCRIPTION),
+                        new Tag(FollowingTag.RESOURCE, FollowingTag.DESCRIPTION)
                 ).securityContexts(List.of(getSecurityContext(swaggerConfigurationProperties)))
                 .securitySchemes(List.of(getApiKey(swaggerConfigurationProperties)));
     }

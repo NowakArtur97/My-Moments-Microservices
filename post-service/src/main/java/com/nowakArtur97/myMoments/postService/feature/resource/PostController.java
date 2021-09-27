@@ -77,7 +77,7 @@ class PostController {
             @ApiResponse(code = 200, message = "User's posts found", response = UsersPostsModel.class),
             @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
     Mono<ResponseEntity<UsersPostsModel>> getUsersPosts(
-            @ApiParam(value = "Username of the User being looked up", name = "username", type = "integer", required = true,
+            @ApiParam(value = "Username of the Posts being looked up", name = "username", type = "integer", required = true,
                     example = "user") @RequestParam("username") String username) {
 
         return postService.findPostsByAuthor(username)

@@ -1,8 +1,8 @@
 package com.nowakArtur97.myMoments.followerService.feature.resource;
 
 import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
-import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
+import com.nowakArtur97.myMoments.followerService.feature.node.UserNode;
 import com.nowakArtur97.myMoments.followerService.jwt.JwtUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/followers")
@@ -36,18 +35,13 @@ class FollowerController {
             @ApiResponse(code = 200, message = "Successfully found followers", response = UsersAcquaintancesModel.class),
             @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
     Mono<ResponseEntity<UsersAcquaintancesModel>> getFollowers(
-            @ApiParam(value = "Username of the User being followed", name = "username", type = "string",
+            @ApiParam(value = "Username of the Followers being looked up", name = "username", type = "string",
                     required = true, example = "username")
             @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String username
     ) {
 
-        return followerService.findFollowers(username)
-                .map(followingRelationships -> followingRelationships.stream()
-                        .map(follower -> new UserModel(follower.getFollowerNode().getUsername()))
-                        .collect(Collectors.toList()))
-                .map(UsersAcquaintancesModel::new)
-                .map(ResponseEntity::ok)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")));
+        return followerService.findAcquaintances(username, UserNode::getFollowers)
+                .map(ResponseEntity::ok);
     }
 
     @PostMapping("/{username}")
