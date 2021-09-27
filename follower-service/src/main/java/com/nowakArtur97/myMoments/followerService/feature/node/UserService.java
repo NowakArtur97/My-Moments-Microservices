@@ -14,6 +14,8 @@ class UserService {
 
     Mono<UserNode> findUserByUsername(String username) {
 
+        log.info("Looking up a User by username: {}", username);
+
         return userRepository.findByUsername(username);
     }
 

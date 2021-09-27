@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.followerService.feature.resource;
 
 import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
+import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
 import com.nowakArtur97.myMoments.followerService.jwt.JwtUtil;
 import io.swagger.annotations.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/followers")
@@ -26,6 +28,27 @@ class FollowerController {
     private final FollowerService followerService;
 
     private final JwtUtil jwtUtil;
+
+    // TODO: TEST
+    @GetMapping(path = "/{username}")
+    @ApiOperation(value = "Find User's Followers by Username", notes = "Provide a name to look up specific Followers")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully found followers", response = UsersAcquaintancesModel.class),
+            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
+    Mono<ResponseEntity<UsersAcquaintancesModel>> getFollowers(
+            @ApiParam(value = "Username of the User being followed", name = "username", type = "string",
+                    required = true, example = "username")
+            @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String username
+    ) {
+
+        return followerService.findFollowers(username)
+                .map(followingRelationships -> followingRelationships.stream()
+                        .map(follower -> new UserModel(follower.getFollowerNode().getUsername()))
+                        .collect(Collectors.toList()))
+                .map(UsersAcquaintancesModel::new)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")));
+    }
 
     @PostMapping("/{username}")
     @ApiOperation("Follow user")

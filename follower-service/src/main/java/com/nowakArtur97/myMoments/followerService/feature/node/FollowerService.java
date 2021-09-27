@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -94,5 +96,14 @@ public class FollowerService {
                                         + usernameToUnfollow + "'."));
                     }
                 });
+    }
+
+    // TODO: TEST
+    public Mono<Set<FollowingRelationship>> findFollowers(String username) {
+
+        log.info("Looking up Followers by username: {}", username);
+
+        return userService.findUserByUsername(username)
+                .map(UserNode::getFollowers);
     }
 }
