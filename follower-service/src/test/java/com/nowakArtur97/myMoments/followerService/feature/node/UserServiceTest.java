@@ -61,7 +61,7 @@ class UserServiceTest {
         @Test
         void when_save_user_should_return_user() {
 
-            UserNode userExpected = userTestBuilder.build(ObjectType.NODE);
+            UserNode userExpected = (UserNode) userTestBuilder.build(ObjectType.NODE);
 
             when(userRepository.save(userExpected)).thenReturn(Mono.just(userExpected));
 
@@ -87,7 +87,7 @@ class UserServiceTest {
         void when_find_existing_user_by_username_should_return_user() {
 
             String username = "user";
-            UserNode userExpected = userTestBuilder.withUsername(username).build(ObjectType.NODE);
+            UserNode userExpected = (UserNode) userTestBuilder.withUsername(username).build(ObjectType.NODE);
 
             when(userRepository.findByUsername(username)).thenReturn(Mono.just(userExpected));
 

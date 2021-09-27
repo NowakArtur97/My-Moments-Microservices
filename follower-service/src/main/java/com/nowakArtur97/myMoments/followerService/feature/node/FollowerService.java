@@ -102,7 +102,6 @@ public class FollowerService {
                 });
     }
 
-    // TODO: TEST
     public Mono<UsersAcquaintancesModel> findAcquaintances(String username,
                                                            Function<UserNode, Set<FollowingRelationship>> function) {
 

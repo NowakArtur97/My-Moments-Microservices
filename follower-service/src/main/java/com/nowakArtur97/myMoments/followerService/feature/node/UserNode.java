@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
+import com.nowakArtur97.myMoments.followerService.feature.resource.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @ToString
-public class UserNode extends AbstractNode {
+public class UserNode extends AbstractNode implements User {
 
     private String username;
 
