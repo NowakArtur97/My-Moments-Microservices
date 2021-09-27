@@ -28,7 +28,6 @@ class FollowerController {
 
     private final JwtUtil jwtUtil;
 
-    // TODO: TEST
     @GetMapping(path = "/{username}")
     @ApiOperation(value = "Find User's Followers by Username", notes = "Provide a name to look up specific Followers")
     @ApiResponses({

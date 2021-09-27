@@ -27,7 +27,6 @@ class FollowingController {
 
     private final FollowerService followerService;
 
-    // TODO: TEST
     @GetMapping(path = "/{username}")
     @ApiOperation(value = "Find User's Following by Username", notes = "Provide a name to look up specific Following")
     @ApiResponses({

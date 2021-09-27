@@ -87,8 +87,7 @@ class FollowerServiceTest {
                                                 () -> "should return followers: " + followingWithFollowerExpected.getFollowers()
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> assertTrue(followingWithFollowerExpected.getFollowers().stream()
-                                                        .anyMatch(following ->
-                                                                following.getFollowerNode().getUsername().equals(followerName)),
+                                                        .anyMatch(user -> user.getFollowerNode().getUsername().equals(followerName)),
                                                 () -> "should return follower with name: " + followerName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> verify(userService, times(1)).findUserByUsername(username),
@@ -113,9 +112,8 @@ class FollowerServiceTest {
                     .thenConsumeWhile(
                             acquaintancesActual -> {
                                 assertAll(
-                                        () -> assertTrue(followingWithFollowerExpected.getFollowers().isEmpty(),
-                                                () -> "should not return any followers, but was: "
-                                                        + followingWithFollowerExpected.getFollowers()),
+                                        () -> assertTrue(acquaintancesActual.getUsers().isEmpty(),
+                                                () -> "should not return any followers, but was: " + acquaintancesActual.getUsers()),
                                         () -> verify(userService, times(1)).findUserByUsername(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
@@ -170,8 +168,7 @@ class FollowerServiceTest {
                                                 () -> "should return following: " + followingWithFollowerExpected.getFollowing()
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> assertTrue(followingWithFollowerExpected.getFollowing().stream()
-                                                        .anyMatch(following ->
-                                                                following.getFollowerNode().getUsername().equals(followingName)),
+                                                        .anyMatch(user -> user.getFollowerNode().getUsername().equals(followingName)),
                                                 () -> "should return following with name: " + followingName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> verify(userService, times(1)).findUserByUsername(username),
@@ -196,9 +193,8 @@ class FollowerServiceTest {
                     .thenConsumeWhile(
                             acquaintancesActual -> {
                                 assertAll(
-                                        () -> assertTrue(followingWithFollowerExpected.getFollowing().isEmpty(),
-                                                () -> "should not return any following, but was: "
-                                                        + followingWithFollowerExpected.getFollowing()),
+                                        () -> assertTrue(acquaintancesActual.getUsers().isEmpty(),
+                                                () -> "should not return any following, but was: " + acquaintancesActual.getUsers()),
                                         () -> verify(userService, times(1)).findUserByUsername(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
