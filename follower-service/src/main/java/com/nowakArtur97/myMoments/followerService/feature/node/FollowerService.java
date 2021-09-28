@@ -21,17 +21,15 @@ public class FollowerService {
 
     public Mono<Void> followUser(String username, String usernameToFollow) {
 
-        log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
-
         if (username.equals(usernameToFollow)) {
             return Mono.error(
                     new ForbiddenException("User with username: '" + username + "' cannot follow himself."));
         }
 
         return userService.findUserByUsername(username)
-                .switchIfEmpty(Mono.defer(() -> Mono.just(new UserNode(username))))
+                .switchIfEmpty(Mono.defer(() -> userService.saveUser(new UserNode(username))))
                 .zipWith(userService.findUserByUsername(usernameToFollow)
-                        .switchIfEmpty(Mono.defer(() -> Mono.just(new UserNode(usernameToFollow)))))
+                        .switchIfEmpty(Mono.defer(() -> userService.saveUser(new UserNode(usernameToFollow)))))
                 .flatMap((tuple) -> {
 
                     UserNode follower = tuple.getT1();
@@ -47,14 +45,9 @@ public class FollowerService {
                                         + usernameToFollow + "."));
 
                     } else {
-
-                        follower.follow(following);
-
-                        log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
-
-                        return userService.saveUser(follower)
-                                .then(userService.saveUser(following))
-                                .flatMap(user -> Mono.empty());
+                        
+                        return userService.followUser(username, usernameToFollow)
+                                .flatMap(__ -> Mono.empty());
                     }
                 });
     }

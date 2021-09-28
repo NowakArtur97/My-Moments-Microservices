@@ -8,4 +8,9 @@ final class Queries {
     public static final String FIND_FOLLOWERS = USER_MATCH + Relationships.FOLLOWED_RELATIONSHIP + USERS_RETURN;
 
     public static final String FIND_FOLLOWED = USER_MATCH + Relationships.FOLLOWING_RELATIONSHIP + USERS_RETURN;
+
+    public static final String FOLLOW = "MATCH (u:User {username: $username})" +
+            "MATCH (f:User {username: $usernameToFollow})" +
+            "MERGE (u)-[:IS_FOLLOWING]->(f)" +
+            "MERGE (f)-[:IS_FOLLOWED]->(u)";
 }

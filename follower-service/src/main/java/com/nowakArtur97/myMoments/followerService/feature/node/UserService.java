@@ -44,4 +44,15 @@ class UserService {
 
         return userNodeMono;
     }
+
+    Mono<Void> followUser(String username, String usernameToFollow) {
+
+        log.info("Following a User with name: {} by User: {}", usernameToFollow, username);
+
+        Mono<Void> followVoid = userRepository.follow(username, usernameToFollow);
+
+        log.info("Successfully followed a User with name: {} by User: {}", usernameToFollow, username);
+
+        return followVoid;
+    }
 }
