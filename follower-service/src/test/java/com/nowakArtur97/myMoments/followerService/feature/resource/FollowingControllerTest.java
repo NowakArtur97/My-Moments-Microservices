@@ -1,7 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.feature.resource;
 
 import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
-import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.followerService.feature.UserTestBuilder;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
 import com.nowakArtur97.myMoments.followerService.testUtil.enums.ObjectType;
@@ -20,7 +19,6 @@ import reactor.test.StepVerifier;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -75,8 +73,7 @@ class FollowingControllerTest {
             UserModel userModel = (UserModel) userTestBuilder.withUsername(followerName).build(ObjectType.MODEL);
             UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(List.of(userModel));
 
-            when(followerService.findAcquaintances(any(String.class), any(Function.class)))
-                    .thenReturn(Mono.just(usersAcquaintancesModelExpected));
+            when(followerService.findFollowed(username)).thenReturn(Mono.just(usersAcquaintancesModelExpected));
 
             Mono<UsersAcquaintancesModel> usersAcquaintancesModelMono = webTestClient.get()
                     .uri(FOLLOWING_WITH_USERNAME_PATH, username)
@@ -100,8 +97,7 @@ class FollowingControllerTest {
                                                         .anyMatch(user -> user.getUsername().equals(followerName)),
                                                 () -> "should return follower with name: " + followerName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
-                                        () -> verify(followerService, times(1))
-                                                .findAcquaintances(any(String.class), any(Function.class)),
+                                        () -> verify(followerService, times(1)).findFollowed(username),
                                         () -> verifyNoMoreInteractions(followerService));
                                 return true;
                             }
@@ -116,8 +112,7 @@ class FollowingControllerTest {
 
             UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel();
 
-            when(followerService.findAcquaintances(any(String.class), any(Function.class)))
-                    .thenReturn(Mono.just(usersAcquaintancesModelExpected));
+            when(followerService.findFollowed(username)).thenReturn(Mono.just(usersAcquaintancesModelExpected));
 
             Mono<UsersAcquaintancesModel> usersAcquaintancesModelMono = webTestClient.get()
                     .uri(FOLLOWING_WITH_USERNAME_PATH, username)
@@ -136,52 +131,7 @@ class FollowingControllerTest {
                                         () -> assertTrue(usersAcquaintancesModelExpected.getUsers().isEmpty(),
                                                 () -> "should not return any following, but was: "
                                                         + acquaintancesActual.getUsers()),
-                                        () -> verify(followerService, times(1))
-                                                .findAcquaintances(any(String.class), any(Function.class)),
-                                        () -> verifyNoMoreInteractions(followerService));
-                                return true;
-                            }
-                    ).verifyComplete();
-        }
-
-        @Test
-        void when_find_not_existing_user_following_should_throw_exception() {
-
-            String header = "Bearer token";
-            String username = "user";
-
-            String exceptionMessage = "User with username: '" + username + "' not found.";
-
-            when(followerService.findAcquaintances(any(String.class), any(Function.class)))
-                    .thenReturn(Mono.error(new ResourceNotFoundException(exceptionMessage)));
-
-            Mono<ErrorResponse> errorResponseMono = webTestClient.get()
-                    .uri(FOLLOWING_WITH_USERNAME_PATH, username)
-                    .header("Authorization", header)
-                    .exchange()
-                    .expectStatus()
-                    .isNotFound()
-                    .returnResult(ErrorResponse.class)
-                    .getResponseBody()
-                    .single();
-
-            StepVerifier.create(errorResponseMono)
-                    .thenConsumeWhile(
-                            errorResponse -> {
-                                assertAll(() -> assertEquals(exceptionMessage,
-                                        errorResponse.getErrors().get(0),
-                                        () -> "should return error response with message: " + exceptionMessage + ", but was: "
-                                                + errorResponse.getErrors().get(0)),
-                                        () -> assertEquals(1, errorResponse.getErrors().size(),
-                                                () -> "should return error response with 1 message, but was: "
-                                                        + errorResponse.getErrors().size()),
-                                        () -> assertNotNull(errorResponse.getTimestamp(),
-                                                () -> "should return error response with not null timestamp, but was: null"),
-                                        () -> assertEquals(HttpStatus.NOT_FOUND.value(), errorResponse.getStatus(),
-                                                () -> "should return error response with " + HttpStatus.NOT_FOUND.value()
-                                                        + " status, but was: " + errorResponse.getStatus()),
-                                        () -> verify(followerService, times(1))
-                                                .findAcquaintances(any(String.class), any(Function.class)),
+                                        () -> verify(followerService, times(1)).findFollowed(username),
                                         () -> verifyNoMoreInteractions(followerService));
                                 return true;
                             }

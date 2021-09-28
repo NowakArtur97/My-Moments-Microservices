@@ -116,7 +116,6 @@ public class FollowerService {
         return users
                 .map(follower -> new UserModel(follower.getUsername()))
                 .collect(Collectors.toList())
-                .map(UsersAcquaintancesModel::new)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")));
+                .map(UsersAcquaintancesModel::new);
     }
 }

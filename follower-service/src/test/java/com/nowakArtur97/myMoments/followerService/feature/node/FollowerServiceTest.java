@@ -9,9 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -64,33 +66,32 @@ class FollowerServiceTest {
 
             String username = "user";
             String followerName = "follower";
+            String followerName2 = "follower2";
 
-            UserNode followingWithFollowerExpected = (UserNode) userTestBuilder.withUsername(username).build(ObjectType.NODE);
-            UserNode followerWithFollowingExpected = (UserNode) userTestBuilder.withUsername(followerName).build(ObjectType.NODE);
+            UserNode follower = (UserNode) userTestBuilder.withUsername(followerName).build(ObjectType.NODE);
+            UserNode follower2 = (UserNode) userTestBuilder.withUsername(followerName2).build(ObjectType.NODE);
+            List<UserNode> followers = List.of(follower, follower2);
 
-            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(followingWithFollowerExpected);
-            FollowingRelationship followedRelationshipExpected = new FollowingRelationship(followerWithFollowingExpected);
+            when(userService.findFollowers(username)).thenReturn(Flux.fromIterable(followers));
 
-            followingWithFollowerExpected.getFollowers().add(followedRelationshipExpected);
-            followerWithFollowingExpected.getFollowing().add(followingRelationshipExpected);
-
-            when(userService.findUserByUsername(username)).thenReturn(Mono.just(followingWithFollowerExpected));
-
-            Mono<UsersAcquaintancesModel> acquaintancesActualMono = followerService.findAcquaintances(username, UserNode::getFollowers);
+            Mono<UsersAcquaintancesModel> acquaintancesActualMono = followerService.findFollowers(username);
 
             StepVerifier.create(acquaintancesActualMono)
                     .thenConsumeWhile(
                             acquaintancesActual -> {
                                 assertAll(
-                                        () -> assertEquals(followingWithFollowerExpected.getFollowers().size(),
-                                                acquaintancesActual.getUsers().size(),
-                                                () -> "should return followers: " + followingWithFollowerExpected.getFollowers()
+                                        () -> assertEquals(followers.size(), acquaintancesActual.getUsers().size(),
+                                                () -> "should return followers: " + followers.size()
                                                         + ", but was: " + acquaintancesActual.getUsers()),
-                                        () -> assertTrue(followingWithFollowerExpected.getFollowers().stream()
-                                                        .anyMatch(user -> user.getFollowerNode().getUsername().equals(followerName)),
+                                        () -> assertTrue(acquaintancesActual.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(followerName)),
                                                 () -> "should return follower with name: " + followerName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
-                                        () -> verify(userService, times(1)).findUserByUsername(username),
+                                        () -> assertTrue(acquaintancesActual.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(followerName2)),
+                                                () -> "should return follower with name: " + followerName2
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> verify(userService, times(1)).findFollowers(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
                             }
@@ -102,11 +103,9 @@ class FollowerServiceTest {
 
             String username = "user";
 
-            UserNode followingWithFollowerExpected = (UserNode) userTestBuilder.withUsername(username).build(ObjectType.NODE);
+            when(userService.findFollowers(username)).thenReturn(Flux.empty());
 
-            when(userService.findUserByUsername(username)).thenReturn(Mono.just(followingWithFollowerExpected));
-
-            Mono<UsersAcquaintancesModel> acquaintancesActualMono = followerService.findAcquaintances(username, UserNode::getFollowers);
+            Mono<UsersAcquaintancesModel> acquaintancesActualMono = followerService.findFollowers(username);
 
             StepVerifier.create(acquaintancesActualMono)
                     .thenConsumeWhile(
@@ -114,7 +113,7 @@ class FollowerServiceTest {
                                 assertAll(
                                         () -> assertTrue(acquaintancesActual.getUsers().isEmpty(),
                                                 () -> "should not return any followers, but was: " + acquaintancesActual.getUsers()),
-                                        () -> verify(userService, times(1)).findUserByUsername(username),
+                                        () -> verify(userService, times(1)).findFollowers(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
                             }
@@ -122,56 +121,36 @@ class FollowerServiceTest {
         }
 
         @Test
-        void when_find_not_existing_user_followers_should_throw_exception() {
-
-            String notExistingUser = "notExistingUser";
-
-            when(userService.findUserByUsername(notExistingUser)).thenReturn(Mono.empty());
-
-            Mono<UsersAcquaintancesModel> acquaintancesActualMono
-                    = followerService.findAcquaintances(notExistingUser, UserNode::getFollowers);
-
-            StepVerifier.create(acquaintancesActualMono)
-                    .then(() ->
-                            assertAll(
-                                    () -> verify(userService, times(1)).findUserByUsername(notExistingUser),
-                                    () -> verifyNoMoreInteractions(userService))
-                    ).verifyErrorMessage("User with username: '" + notExistingUser + "' not found.");
-        }
-
-        @Test
         void when_find_existing_user_following_should_return_following() {
 
             String username = "user";
-            String followingName = "following";
+            String followedName = "followed";
+            String followedName2 = "followed2";
 
-            UserNode followingWithFollowerExpected = (UserNode) userTestBuilder.withUsername(username).build(ObjectType.NODE);
-            UserNode followerWithFollowingExpected = (UserNode) userTestBuilder.withUsername(followingName).build(ObjectType.NODE);
+            UserNode followed = (UserNode) userTestBuilder.withUsername(followedName).build(ObjectType.NODE);
+            UserNode followed2 = (UserNode) userTestBuilder.withUsername(followedName2).build(ObjectType.NODE);
+            List<UserNode> following = List.of(followed, followed2);
 
-            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(followingWithFollowerExpected);
-            FollowingRelationship followedRelationshipExpected = new FollowingRelationship(followerWithFollowingExpected);
+            when(userService.findFollowed(username)).thenReturn(Flux.fromIterable(following));
 
-            followingWithFollowerExpected.getFollowing().add(followedRelationshipExpected);
-            followerWithFollowingExpected.getFollowers().add(followingRelationshipExpected);
-
-            when(userService.findUserByUsername(username)).thenReturn(Mono.just(followingWithFollowerExpected));
-
-            Mono<UsersAcquaintancesModel> acquaintancesActualMono =
-                    followerService.findAcquaintances(username, UserNode::getFollowing);
+            Mono<UsersAcquaintancesModel> acquaintancesActualMono = followerService.findFollowed(username);
 
             StepVerifier.create(acquaintancesActualMono)
                     .thenConsumeWhile(
                             acquaintancesActual -> {
                                 assertAll(
-                                        () -> assertEquals(followingWithFollowerExpected.getFollowing().size(),
-                                                acquaintancesActual.getUsers().size(),
-                                                () -> "should return following: " + followingWithFollowerExpected.getFollowing()
+                                        () -> assertEquals(following.size(), acquaintancesActual.getUsers().size(),
+                                                () -> "should return following: " + following.size()
                                                         + ", but was: " + acquaintancesActual.getUsers()),
-                                        () -> assertTrue(followingWithFollowerExpected.getFollowing().stream()
-                                                        .anyMatch(user -> user.getFollowerNode().getUsername().equals(followingName)),
-                                                () -> "should return following with name: " + followingName
+                                        () -> assertTrue(acquaintancesActual.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(followedName)),
+                                                () -> "should return following with name: " + followedName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
-                                        () -> verify(userService, times(1)).findUserByUsername(username),
+                                        () -> assertTrue(acquaintancesActual.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(followedName2)),
+                                                () -> "should return following with name: " + followedName2
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> verify(userService, times(1)).findFollowed(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
                             }
@@ -183,11 +162,9 @@ class FollowerServiceTest {
 
             String username = "user";
 
-            UserNode followingWithFollowerExpected = (UserNode) userTestBuilder.withUsername(username).build(ObjectType.NODE);
+            when(userService.findFollowed(username)).thenReturn(Flux.empty());
 
-            when(userService.findUserByUsername(username)).thenReturn(Mono.just(followingWithFollowerExpected));
-
-            Mono<UsersAcquaintancesModel> acquaintancesActualMono = followerService.findAcquaintances(username, UserNode::getFollowing);
+            Mono<UsersAcquaintancesModel> acquaintancesActualMono = followerService.findFollowed(username);
 
             StepVerifier.create(acquaintancesActualMono)
                     .thenConsumeWhile(
@@ -195,29 +172,11 @@ class FollowerServiceTest {
                                 assertAll(
                                         () -> assertTrue(acquaintancesActual.getUsers().isEmpty(),
                                                 () -> "should not return any following, but was: " + acquaintancesActual.getUsers()),
-                                        () -> verify(userService, times(1)).findUserByUsername(username),
+                                        () -> verify(userService, times(1)).findFollowed(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
                             }
                     ).verifyComplete();
-        }
-
-        @Test
-        void when_find_not_existing_user_following_should_throw_exception() {
-
-            String notExistingUser = "notExistingUser";
-
-            when(userService.findUserByUsername(notExistingUser)).thenReturn(Mono.empty());
-
-            Mono<UsersAcquaintancesModel> acquaintancesActualMono
-                    = followerService.findAcquaintances(notExistingUser, UserNode::getFollowing);
-
-            StepVerifier.create(acquaintancesActualMono)
-                    .then(() ->
-                            assertAll(
-                                    () -> verify(userService, times(1)).findUserByUsername(notExistingUser),
-                                    () -> verifyNoMoreInteractions(userService))
-                    ).verifyErrorMessage("User with username: '" + notExistingUser + "' not found.");
         }
     }
 
