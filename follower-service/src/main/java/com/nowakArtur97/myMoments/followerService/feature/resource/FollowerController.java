@@ -2,7 +2,6 @@ package com.nowakArtur97.myMoments.followerService.feature.resource;
 
 import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
-import com.nowakArtur97.myMoments.followerService.feature.node.UserNode;
 import com.nowakArtur97.myMoments.followerService.jwt.JwtUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +38,7 @@ class FollowerController {
             @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String username
     ) {
 
-        return followerService.findAcquaintances(username, UserNode::getFollowers)
+        return followerService.findFollowers(username)
                 .map(ResponseEntity::ok);
     }
 

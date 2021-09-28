@@ -102,6 +102,15 @@ public class FollowerService {
                 });
     }
 
+    public Mono<UsersAcquaintancesModel> findFollowers(String username) {
+        
+        return userService.findFollowers(username)
+                .map(follower -> new UserModel(follower.getUsername()))
+                .collect(Collectors.toList())
+                .map(UsersAcquaintancesModel::new)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")));
+    }
+
     public Mono<UsersAcquaintancesModel> findAcquaintances(String username,
                                                            Function<UserNode, Set<FollowingRelationship>> function) {
 
