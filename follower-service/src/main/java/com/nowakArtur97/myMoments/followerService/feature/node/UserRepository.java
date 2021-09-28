@@ -11,4 +11,7 @@ interface UserRepository extends ReactiveNeo4jRepository<UserNode, Long> {
 
     @Query(Queries.FIND_FOLLOWERS)
     Flux<UserNode> findFollowers(String username);
+
+    @Query(Queries.FIND_FOLLOWED)
+    Flux<UserNode> findFollowed(String username);
 }

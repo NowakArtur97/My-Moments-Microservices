@@ -7,10 +7,9 @@ import com.nowakArtur97.myMoments.followerService.feature.resource.UsersAcquaint
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -103,24 +102,20 @@ public class FollowerService {
     }
 
     public Mono<UsersAcquaintancesModel> findFollowers(String username) {
-        
-        return userService.findFollowers(username)
-                .map(follower -> new UserModel(follower.getUsername()))
-                .collect(Collectors.toList())
-                .map(UsersAcquaintancesModel::new)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")));
+
+        return mapFluxToUsersAcquaintancesModel(userService.findFollowers(username), username);
     }
 
-    public Mono<UsersAcquaintancesModel> findAcquaintances(String username,
-                                                           Function<UserNode, Set<FollowingRelationship>> function) {
+    public Mono<UsersAcquaintancesModel> findFollowed(String username) {
 
-        log.info("Looking up Acquaintances by username: {}", username);
+        return mapFluxToUsersAcquaintancesModel(userService.findFollowed(username), username);
+    }
 
-        return userService.findUserByUsername(username)
-                .map(function)
-                .map(followingRelationships -> followingRelationships.stream()
-                        .map(follower -> new UserModel(follower.getFollowerNode().getUsername()))
-                        .collect(Collectors.toList()))
+    private Mono<UsersAcquaintancesModel> mapFluxToUsersAcquaintancesModel(Flux<UserNode> users, String username) {
+
+        return users
+                .map(follower -> new UserModel(follower.getUsername()))
+                .collect(Collectors.toList())
                 .map(UsersAcquaintancesModel::new)
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("User with username: '" + username + "' not found.")));
     }

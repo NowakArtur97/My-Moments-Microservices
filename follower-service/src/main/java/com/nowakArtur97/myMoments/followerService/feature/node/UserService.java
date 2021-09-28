@@ -27,6 +27,13 @@ class UserService {
         return userRepository.findFollowers(username);
     }
 
+    Flux<UserNode> findFollowed(String username) {
+
+        log.info("Looking up Followed of a User: {}", username);
+
+        return userRepository.findFollowed(username);
+    }
+
     Mono<UserNode> saveUser(UserNode userNode) {
 
         log.info("Saving a User: {}", userNode.getUsername());

@@ -2,7 +2,6 @@ package com.nowakArtur97.myMoments.followerService.feature.resource;
 
 import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
-import com.nowakArtur97.myMoments.followerService.feature.node.UserNode;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ class FollowingController {
             @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String username
     ) {
 
-        return followerService.findAcquaintances(username, UserNode::getFollowing)
+        return followerService.findFollowed(username)
                 .map(ResponseEntity::ok);
     }
 }
