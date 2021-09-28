@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -119,6 +120,88 @@ class UserServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userRepository, times(1)).findByUsername(username),
+                                    () -> verifyNoMoreInteractions(userRepository))
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_find_user_followers_should_return_followers() {
+
+            String username = "user";
+            String username2 = "user2";
+            String username3 = "user3";
+            UserNode userExpected = (UserNode) userTestBuilder.withUsername(username2).build(ObjectType.NODE);
+            UserNode userExpected2 = (UserNode) userTestBuilder.withUsername(username3).build(ObjectType.NODE);
+
+            when(userRepository.findFollowers(username)).thenReturn(Flux.just(userExpected, userExpected2));
+
+            Flux<UserNode> usersActualFlux = userService.findFollowers(username);
+
+            StepVerifier.create(usersActualFlux)
+                    .expectNextMatches(userActual -> assertUser(userExpected, userActual))
+                    .expectNextMatches(userActual -> assertUser(userExpected2, userActual))
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userRepository, times(1)).findFollowers(username),
+                                    () -> verifyNoMoreInteractions(userRepository))
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_find_user_followers_of_user_without_followers_should_return_empty_flux() {
+
+            String username = "user";
+
+            when(userRepository.findFollowers(username)).thenReturn(Flux.empty());
+
+            Flux<UserNode> usersActualFlux = userService.findFollowers(username);
+
+            StepVerifier.create(usersActualFlux)
+                    .expectNextCount(0)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userRepository, times(1)).findFollowers(username),
+                                    () -> verifyNoMoreInteractions(userRepository))
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_find_user_following_should_return_following() {
+
+            String username = "user";
+            String username2 = "user2";
+            String username3 = "user3";
+            UserNode userExpected = (UserNode) userTestBuilder.withUsername(username2).build(ObjectType.NODE);
+            UserNode userExpected2 = (UserNode) userTestBuilder.withUsername(username3).build(ObjectType.NODE);
+
+            when(userRepository.findFollowed(username)).thenReturn(Flux.just(userExpected, userExpected2));
+
+            Flux<UserNode> usersActualFlux = userService.findFollowed(username);
+
+            StepVerifier.create(usersActualFlux)
+                    .expectNextMatches(userActual -> assertUser(userExpected, userActual))
+                    .expectNextMatches(userActual -> assertUser(userExpected2, userActual))
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userRepository, times(1)).findFollowed(username),
+                                    () -> verifyNoMoreInteractions(userRepository))
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_find_user_followed_of_user_without_followed_should_return_empty_flux() {
+
+            String username = "user";
+
+            when(userRepository.findFollowed(username)).thenReturn(Flux.empty());
+
+            Flux<UserNode> usersActualFlux = userService.findFollowed(username);
+
+            StepVerifier.create(usersActualFlux)
+                    .expectNextCount(0)
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(userRepository, times(1)).findFollowed(username),
                                     () -> verifyNoMoreInteractions(userRepository))
                     ).verifyComplete();
         }

@@ -20,7 +20,6 @@ class UserService {
         return userRepository.findByUsername(username);
     }
 
-    // TODO: TEST
     Flux<UserNode> findFollowers(String username) {
 
         log.info("Looking up Followers of a User: {}", username);
@@ -28,7 +27,6 @@ class UserService {
         return userRepository.findFollowers(username);
     }
 
-    // TODO: TEST
     Flux<UserNode> findFollowed(String username) {
 
         log.info("Looking up Followed of a User: {}", username);
