@@ -56,29 +56,45 @@ class UserServiceTest {
         userService = new UserService(userRepository);
     }
 
-    @Nested
-    class SaveUserTest {
+    @Test
+    void when_save_user_should_return_user() {
 
-        @Test
-        void when_save_user_should_return_user() {
+        UserNode userExpected = (UserNode) userTestBuilder.build(ObjectType.NODE);
 
-            UserNode userExpected = (UserNode) userTestBuilder.build(ObjectType.NODE);
+        when(userRepository.save(userExpected)).thenReturn(Mono.just(userExpected));
 
-            when(userRepository.save(userExpected)).thenReturn(Mono.just(userExpected));
+        Mono<UserNode> userActualMono = userService.saveUser(userExpected);
 
-            Mono<UserNode> userActualMono = userService.saveUser(userExpected);
+        StepVerifier.create(userActualMono)
+                .thenConsumeWhile(
+                        userActual -> {
+                            assertUser(userExpected, userActual);
+                            assertAll(
+                                    () -> verify(userRepository, times(1)).save(userExpected),
+                                    () -> verifyNoMoreInteractions(userRepository));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
 
-            StepVerifier.create(userActualMono)
-                    .thenConsumeWhile(
-                            userActual -> {
-                                assertUser(userExpected, userActual);
-                                assertAll(
-                                        () -> verify(userRepository, times(1)).save(userExpected),
-                                        () -> verifyNoMoreInteractions(userRepository));
-                                return true;
-                            }
-                    ).verifyComplete();
-        }
+    @Test
+    void when_follow_user_should_return_void() {
+
+        String username = "user";
+        String usernameToFollow = "userToFollow";
+
+        Void expectedVoid = mock(Void.class);
+        when(userRepository.follow(username, usernameToFollow)).thenReturn(Mono.just(expectedVoid));
+
+        Mono<Void> followVoid = userService.followUser(username, usernameToFollow);
+
+        StepVerifier.create(followVoid)
+                .expectNext(expectedVoid)
+                .then(() ->
+                        assertAll(
+                                () -> verify(userRepository, times(1)).follow(username, usernameToFollow),
+                                () -> verifyNoMoreInteractions(userRepository))
+                );
     }
 
     @Nested

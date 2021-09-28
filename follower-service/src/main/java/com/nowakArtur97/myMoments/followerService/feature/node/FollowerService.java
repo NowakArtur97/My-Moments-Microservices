@@ -45,7 +45,7 @@ public class FollowerService {
                                         + usernameToFollow + "."));
 
                     } else {
-                        
+
                         return userService.followUser(username, usernameToFollow)
                                 .flatMap(__ -> Mono.empty());
                     }
@@ -83,7 +83,7 @@ public class FollowerService {
 
                         return userService.saveUser(follower)
                                 .then(userService.saveUser(following))
-                                .flatMap(user -> Mono.empty());
+                                .flatMap(__ -> Mono.empty());
 
                     } else {
 

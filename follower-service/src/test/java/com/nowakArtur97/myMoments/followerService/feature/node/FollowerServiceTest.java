@@ -192,18 +192,12 @@ class FollowerServiceTest {
             UserNode followerExpected = (UserNode) userTestBuilder.withUsername(notExistingUser).build(ObjectType.NODE);
             UserNode followingExpected = (UserNode) userTestBuilder.withUsername(notExistingUserToFollow).build(ObjectType.NODE);
 
-            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(followingExpected);
-            FollowingRelationship followedRelationshipExpected = new FollowingRelationship(followerExpected);
-
-            UserNode followingWithFollowerExpected = (UserNode) userTestBuilder.withUsername(notExistingUserToFollow)
-                    .withFollowers(Set.of(followedRelationshipExpected)).build(ObjectType.NODE);
-            UserNode followerWithFollowingExpected = (UserNode) userTestBuilder.withUsername(notExistingUserToFollow)
-                    .withFollowing(Set.of(followingRelationshipExpected)).build(ObjectType.NODE);
-
             when(userService.findUserByUsername(notExistingUser)).thenReturn(Mono.empty());
             when(userService.findUserByUsername(notExistingUserToFollow)).thenReturn(Mono.empty());
+            when(userService.saveUser(followerExpected)).thenReturn(Mono.just(followerExpected));
             when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
-            when(userService.saveUser(followingWithFollowerExpected)).thenReturn(Mono.just(followingWithFollowerExpected));
+            Void mock = mock(Void.class);
+            when(userService.followUser(notExistingUser, notExistingUserToFollow)).thenReturn(Mono.just(mock));
 
             Mono<Void> voidActualMono = followerService.followUser(notExistingUser, notExistingUserToFollow);
 
@@ -211,11 +205,12 @@ class FollowerServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(notExistingUser),
-                                    () -> verify(userService, times(1)).findUserByUsername(notExistingUserToFollow),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followerWithFollowingExpected),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followingWithFollowerExpected),
+                                    () -> verify(userService, times(1))
+                                            .findUserByUsername(notExistingUserToFollow),
+                                    () -> verify(userService, times(2)).saveUser(followerExpected),
+                                    () -> verify(userService, times(2)).saveUser(followingExpected),
+                                    () -> verify(userService, times(1))
+                                            .followUser(notExistingUser, notExistingUserToFollow),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
@@ -241,6 +236,8 @@ class FollowerServiceTest {
             when(userService.findUserByUsername(usernameToFollow)).thenReturn(Mono.just(followingExpected));
             when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
             when(userService.saveUser(followingWithFollowerExpected)).thenReturn(Mono.just(followingWithFollowerExpected));
+            Void mock = mock(Void.class);
+            when(userService.followUser(notExistingUser, usernameToFollow)).thenReturn(Mono.just(mock));
 
             Mono<Void> voidActualMono = followerService.followUser(notExistingUser, usernameToFollow);
 
@@ -249,10 +246,10 @@ class FollowerServiceTest {
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(notExistingUser),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followerWithFollowingExpected),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followingWithFollowerExpected),
+                                    () -> verify(userService, times(1)).saveUser(followerWithFollowingExpected),
+                                    () -> verify(userService, times(1)).saveUser(followingWithFollowerExpected),
+                                    () -> verify(userService, times(1))
+                                            .followUser(notExistingUser, usernameToFollow),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
@@ -278,6 +275,8 @@ class FollowerServiceTest {
             when(userService.findUserByUsername(notExistingUserToFollow)).thenReturn(Mono.empty());
             when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
             when(userService.saveUser(followingWithFollowerExpected)).thenReturn(Mono.just(followingWithFollowerExpected));
+            Void mock = mock(Void.class);
+            when(userService.followUser(username, notExistingUserToFollow)).thenReturn(Mono.just(mock));
 
             Mono<Void> voidActualMono = followerService.followUser(username, notExistingUserToFollow);
 
@@ -285,11 +284,12 @@ class FollowerServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(username),
-                                    () -> verify(userService, times(1)).findUserByUsername(notExistingUserToFollow),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followerWithFollowingExpected),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followingWithFollowerExpected),
+                                    () -> verify(userService, times(1))
+                                            .findUserByUsername(notExistingUserToFollow),
+                                    () -> verify(userService, times(1)).saveUser(followerWithFollowingExpected),
+                                    () -> verify(userService, times(1)).saveUser(followingWithFollowerExpected),
+                                    () -> verify(userService, times(1))
+                                            .followUser(username, notExistingUserToFollow),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
@@ -303,18 +303,10 @@ class FollowerServiceTest {
             UserNode followerExpected = (UserNode) userTestBuilder.withUsername(username).build(ObjectType.NODE);
             UserNode followingExpected = (UserNode) userTestBuilder.withUsername(usernameToFollow).build(ObjectType.NODE);
 
-            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(followingExpected);
-            FollowingRelationship followedRelationshipExpected = new FollowingRelationship(followerExpected);
-
-            UserNode followingWithFollowerExpected = (UserNode) userTestBuilder.withUsername(usernameToFollow)
-                    .withFollowers(Set.of(followedRelationshipExpected)).build(ObjectType.NODE);
-            UserNode followerWithFollowingExpected = (UserNode) userTestBuilder.withUsername(usernameToFollow)
-                    .withFollowing(Set.of(followingRelationshipExpected)).build(ObjectType.NODE);
-
             when(userService.findUserByUsername(username)).thenReturn(Mono.just(followerExpected));
             when(userService.findUserByUsername(usernameToFollow)).thenReturn(Mono.just(followingExpected));
-            when(userService.saveUser(followingExpected)).thenReturn(Mono.just(followingExpected));
-            when(userService.saveUser(followingWithFollowerExpected)).thenReturn(Mono.just(followingWithFollowerExpected));
+            Void mock = mock(Void.class);
+            when(userService.followUser(username, usernameToFollow)).thenReturn(Mono.just(mock));
 
             Mono<Void> voidActualMono = followerService.followUser(username, usernameToFollow);
 
@@ -323,10 +315,7 @@ class FollowerServiceTest {
                             assertAll(
                                     () -> verify(userService, times(1)).findUserByUsername(username),
                                     () -> verify(userService, times(1)).findUserByUsername(usernameToFollow),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followerWithFollowingExpected),
-                                    () -> verify(userService, times(2))
-                                            .saveUser(followingWithFollowerExpected),
+                                    () -> verify(userService, times(1)).followUser(username, usernameToFollow),
                                     () -> verifyNoMoreInteractions(userService))
                     ).verifyComplete();
         }
