@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/following")
 @Validated
 @RequiredArgsConstructor
-@Api(tags = {FollowerTag.RESOURCE})
+@Api(tags = {FollowingTag.RESOURCE})
 @ApiResponses(value = {
         @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
         @ApiResponse(code = 403, message = "Access to the resource is prohibited")})

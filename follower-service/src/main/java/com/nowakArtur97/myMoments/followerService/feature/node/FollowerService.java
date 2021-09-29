@@ -54,8 +54,6 @@ public class FollowerService {
 
     public Mono<Void> unfollowUser(String username, String usernameToUnfollow) {
 
-        log.info("Unfollowing a User with name: {} by User: {}", usernameToUnfollow, username);
-
         if (username.equals(usernameToUnfollow)) {
             return Mono.error(
                     new ForbiddenException("User with username: '" + username + "' cannot unfollow himself."));
@@ -77,18 +75,13 @@ public class FollowerService {
 
                     if (isFollowing) {
 
-                        follower.unfollow(following);
-
-                        log.info("Successfully unfollowed a User with name: {} by User: {}", usernameToUnfollow, username);
-
-                        return userService.saveUser(follower)
-                                .then(userService.saveUser(following))
+                        return userService.unfollowUser(username, usernameToUnfollow)
                                 .flatMap(__ -> Mono.empty());
 
                     } else {
 
                         return Mono.error(
-                                new ResourceNotFoundException("User with name: '" + username + "' is not following: '"
+                                new ForbiddenException("User with name: '" + username + "' is not following: '"
                                         + usernameToUnfollow + "'."));
                     }
                 });

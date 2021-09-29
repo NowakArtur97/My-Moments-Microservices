@@ -55,4 +55,15 @@ class UserService {
 
         return followVoid;
     }
+
+    Mono<Void> unfollowUser(String username, String usernameToFollow) {
+
+        log.info("Unfollowing a User with name: {} by User: {}", usernameToFollow, username);
+
+        Mono<Void> unfollowVoid = userRepository.unfollow(username, usernameToFollow);
+
+        log.info("Successfully unfollowed a User with name: {} by User: {}", usernameToFollow, username);
+
+        return unfollowVoid;
+    }
 }

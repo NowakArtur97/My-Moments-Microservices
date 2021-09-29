@@ -13,4 +13,11 @@ final class Queries {
             "MATCH (f:User {username: $usernameToFollow})" +
             "MERGE (u)-[:IS_FOLLOWING]->(f)" +
             "MERGE (f)-[:IS_FOLLOWED]->(u)";
+
+    public static final String UNFOLLOW = "MATCH (u:User {username: $username})" +
+            "-[fr:IS_FOLLOWING]->" +
+            "(f:User {username: $usernameToUnfollow})" +
+            "-[fr2:IS_FOLLOWED]->" +
+            "(u:User {username: $username}) " +
+            "DELETE fr,fr2";
 }

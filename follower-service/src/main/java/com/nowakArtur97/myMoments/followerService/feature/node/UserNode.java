@@ -39,16 +39,4 @@ public class UserNode extends AbstractNode implements User {
         this.following = following;
         this.followers = followers;
     }
-
-    public void follow(UserNode following) {
-
-        getFollowing().add(new FollowingRelationship(following));
-        following.getFollowers().add(new FollowingRelationship(this));
-    }
-
-    public void unfollow(UserNode following) {
-
-        getFollowing().removeIf(relationship -> relationship.getFollowerNode().equals(following));
-        following.getFollowers().removeIf(relationship -> relationship.getFollowerNode().equals(this));
-    }
 }

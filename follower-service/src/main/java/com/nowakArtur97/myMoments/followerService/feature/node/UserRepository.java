@@ -17,4 +17,7 @@ interface UserRepository extends ReactiveNeo4jRepository<UserNode, Long> {
 
     @Query(Queries.FOLLOW)
     Mono<Void> follow(String username, String usernameToFollow);
+
+    @Query(Queries.UNFOLLOW)
+    Mono<Void> unfollow(String username, String usernameToUnfollow);
 }
