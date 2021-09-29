@@ -97,6 +97,26 @@ class UserServiceTest {
                 );
     }
 
+    @Test
+    void when_unfollow_user_should_return_void() {
+
+        String username = "user";
+        String usernameToUnfollow = "userToUnfollow";
+
+        Void expectedVoid = mock(Void.class);
+        when(userRepository.unfollow(username, usernameToUnfollow)).thenReturn(Mono.just(expectedVoid));
+
+        Mono<Void> followVoid = userService.unfollowUser(username, usernameToUnfollow);
+
+        StepVerifier.create(followVoid)
+                .expectNext(expectedVoid)
+                .then(() ->
+                        assertAll(
+                                () -> verify(userRepository, times(1)).unfollow(username, usernameToUnfollow),
+                                () -> verifyNoMoreInteractions(userRepository))
+                );
+    }
+
     @Nested
     class FindUserTest {
 
