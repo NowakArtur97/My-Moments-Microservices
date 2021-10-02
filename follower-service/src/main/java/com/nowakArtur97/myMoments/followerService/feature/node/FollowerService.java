@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class FollowerService {
+
+    private final static Integer DEFAULT_DEGREE = 2;
 
     private final UserService userService;
 
@@ -95,6 +98,13 @@ public class FollowerService {
     public Mono<UsersAcquaintancesModel> findFollowed(String username) {
 
         return mapFluxToUsersAcquaintancesModel(userService.findFollowed(username), username);
+    }
+
+
+    public Mono<UsersAcquaintancesModel> recommendUsers(String username, Optional<Integer> minDegree, Optional<Integer> maxDegree) {
+
+        return mapFluxToUsersAcquaintancesModel(userService.recommendUsers(username, minDegree.orElse(DEFAULT_DEGREE),
+                maxDegree.orElse(DEFAULT_DEGREE)), username);
     }
 
     private Mono<UsersAcquaintancesModel> mapFluxToUsersAcquaintancesModel(Flux<UserNode> users, String username) {

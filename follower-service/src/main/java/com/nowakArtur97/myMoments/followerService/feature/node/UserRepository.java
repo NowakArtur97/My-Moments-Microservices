@@ -15,6 +15,9 @@ interface UserRepository extends ReactiveNeo4jRepository<UserNode, Long> {
     @Query(Queries.FIND_FOLLOWED)
     Flux<UserNode> findFollowed(String username);
 
+    @Query(Queries.RECOMMEND)
+    Flux<UserNode> recommend(String username, String minDegree, String maxDegree);
+
     @Query(Queries.FOLLOW)
     Mono<Void> follow(String username, String usernameToFollow);
 

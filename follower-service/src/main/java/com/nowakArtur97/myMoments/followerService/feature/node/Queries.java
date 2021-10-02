@@ -9,9 +9,9 @@ final class Queries {
 
     public static final String FIND_FOLLOWED = USER_MATCH + Relationships.FOLLOWING_RELATIONSHIP + USERS_RETURN;
 
-    public static final String FOLLOW = "MATCH (u:User {username: $username})" +
-            "MATCH (f:User {username: $usernameToFollow})" +
-            "MERGE (u)-[:IS_FOLLOWING]->(f)" +
+    public static final String FOLLOW = "MATCH (u:User {username: $username}) " +
+            "MATCH (f:User {username: $usernameToFollow}) " +
+            "MERGE (u)-[:IS_FOLLOWING]->(f) " +
             "MERGE (f)-[:IS_FOLLOWED]->(u)";
 
     public static final String UNFOLLOW = "MATCH (u:User {username: $username})" +
@@ -21,10 +21,10 @@ final class Queries {
             "(u:User {username: $username}) " +
             "DELETE fr,fr2";
 
-    public static final String RECOMMENDATIONS = "MATCH (u:User {username: $username})" +
-            "-[:IS_FOLLOWING*$minDegree..$maxDegree]->(f:User)" +
-            "WHERE NOT (u)-[:IS_FOLLOWING]->(f)" +
-            "AND u <> f" +
-            "RETURN f, COUNT(*)" +
+    public static final String RECOMMEND = "MATCH (u:User {username: $username})" +
+            "-[:IS_FOLLOWING*$minDegree..$maxDegree]->(f:User) " +
+            "WHERE NOT (u)-[:IS_FOLLOWING]->(f) " +
+            "AND u <> f " +
+            "RETURN f, COUNT(*) " +
             "ORDER BY COUNT(*) DESC, f";
 }

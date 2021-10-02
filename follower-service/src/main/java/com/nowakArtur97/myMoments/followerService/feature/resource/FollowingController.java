@@ -6,13 +6,11 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/following")
@@ -38,6 +36,27 @@ class FollowingController {
     ) {
 
         return followerService.findFollowed(username)
+                .map(ResponseEntity::ok);
+    }
+
+    @GetMapping(path = "/recommendations/{username}/")
+    @ApiOperation(value = "Recommend Users to Follow", notes = "Provide a name, min and max degree to look up Users")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully found Users to recommendUsers", response = UsersAcquaintancesModel.class),
+            @ApiResponse(code = 400, message = "Invalid User's name or degree supplied", response = ErrorResponse.class)})
+    Mono<ResponseEntity<UsersAcquaintancesModel>> recommendUsers(
+            @ApiParam(value = "Username of the recommended Users being looked up", name = "username", type = "string",
+                    required = true, example = "username")
+            @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String username,
+            @ApiParam(value = "Min degree of the recommended Users being looked up", name = "minDegree", type = "integer",
+                    required = true, example = "1", defaultValue = "2")
+            @RequestParam(name = "minDegree", required = false) Optional<Integer> minDegree,
+            @ApiParam(value = "Max degree of the recommended Users being looked up", name = "maxDegree", type = "integer",
+                    required = true, example = "1", defaultValue = "2")
+            @RequestParam(name = "maxDegree", required = false) Optional<Integer> maxDegree
+    ) {
+
+        return followerService.recommendUsers(username, minDegree, maxDegree)
                 .map(ResponseEntity::ok);
     }
 }

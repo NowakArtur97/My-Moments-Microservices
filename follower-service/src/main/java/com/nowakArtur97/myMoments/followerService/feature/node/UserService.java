@@ -34,6 +34,13 @@ class UserService {
         return userRepository.findFollowed(username);
     }
 
+    Flux<UserNode> recommendUsers(String username, Integer minDegree, Integer maxDegree) {
+
+        log.info("Looking up Users to recommend for User: {} with degree from:{} to: {}", username, minDegree, maxDegree);
+
+        return userRepository.recommend(username, String.valueOf(minDegree), String.valueOf(maxDegree));
+    }
+
     Mono<UserNode> saveUser(UserNode userNode) {
 
         log.info("Saving a User: {}", userNode.getUsername());
