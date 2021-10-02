@@ -20,4 +20,11 @@ final class Queries {
             "-[fr2:IS_FOLLOWED]->" +
             "(u:User {username: $username}) " +
             "DELETE fr,fr2";
+
+    public static final String RECOMMENDATIONS = "MATCH (u:User {username: $username})" +
+            "-[:IS_FOLLOWING*$minDegree..$maxDegree]->(f:User)" +
+            "WHERE NOT (u)-[:IS_FOLLOWING]->(f)" +
+            "AND u <> f" +
+            "RETURN f, COUNT(*)" +
+            "ORDER BY COUNT(*) DESC, f";
 }
