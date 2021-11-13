@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.neo4j.core.ReactiveNeo4jClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -27,6 +28,8 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private ReactiveNeo4jClient reactiveClient;
 
     private static MockedStatic<UUID> mocked;
 
@@ -53,7 +56,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
 
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, reactiveClient);
     }
 
     @Test

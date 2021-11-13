@@ -22,7 +22,7 @@ final class Queries {
             "DELETE fr,fr2";
 
     public static final String RECOMMEND = "MATCH (u:User {username: $username})" +
-            "-[:IS_FOLLOWING*$minDegree..$maxDegree]->(f:User) " +
+            "-[:IS_FOLLOWING* $minDegree .. $maxDegree]->(f:User) " +
             "WHERE NOT (u)-[:IS_FOLLOWING]->(f) " +
             "AND u <> f " +
             "RETURN f, COUNT(*) " +

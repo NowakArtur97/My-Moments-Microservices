@@ -22,6 +22,9 @@ import java.util.Optional;
         @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
 class FollowingController {
 
+    private final static int DEFAULT_MIN_DEGREE = 2;
+    private final static int DEFAULT_MAX_DEGREE = 2;
+
     private final FollowerService followerService;
 
     @GetMapping(path = "/{username}")
@@ -56,7 +59,7 @@ class FollowingController {
             @RequestParam(name = "maxDegree", required = false) Optional<Integer> maxDegree
     ) {
 
-        return followerService.recommendUsers(username, minDegree, maxDegree)
+        return followerService.recommendUsers(username, minDegree.orElse(DEFAULT_MIN_DEGREE), maxDegree.orElse(DEFAULT_MAX_DEGREE))
                 .map(ResponseEntity::ok);
     }
 }
