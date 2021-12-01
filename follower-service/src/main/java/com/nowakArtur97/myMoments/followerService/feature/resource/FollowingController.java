@@ -42,7 +42,7 @@ class FollowingController {
                 .map(ResponseEntity::ok);
     }
 
-    @GetMapping(path = "/recommendations/{username}/")
+    @GetMapping(path = "/recommendations/{username}")
     @ApiOperation(value = "Recommend Users to Follow", notes = "Provide a name, min and max degree to look up Users")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully found Users to recommendUsers", response = UsersAcquaintancesModel.class),

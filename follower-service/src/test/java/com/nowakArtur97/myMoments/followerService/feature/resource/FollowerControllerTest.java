@@ -10,7 +10,6 @@ import com.nowakArtur97.myMoments.followerService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.followerService.testUtil.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,9 +36,6 @@ class FollowerControllerTest {
     private int serverPort;
 
     private String FOLLOWERS_WITH_USERNAME_PATH;
-
-    @InjectMocks
-    private FollowerController followerController;
 
     @MockBean
     private FollowerService followerService;

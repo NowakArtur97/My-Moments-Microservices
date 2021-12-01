@@ -28,6 +28,7 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private ReactiveNeo4jClient reactiveClient;
 
@@ -74,7 +75,8 @@ class UserServiceTest {
                             assertUser(userExpected, userActual);
                             assertAll(
                                     () -> verify(userRepository, times(1)).save(userExpected),
-                                    () -> verifyNoMoreInteractions(userRepository));
+                                    () -> verifyNoMoreInteractions(userRepository),
+                                    () -> verifyNoInteractions(reactiveClient));
                             return true;
                         }
                 ).verifyComplete();
@@ -96,8 +98,8 @@ class UserServiceTest {
                 .then(() ->
                         assertAll(
                                 () -> verify(userRepository, times(1)).follow(username, usernameToFollow),
-                                () -> verifyNoMoreInteractions(userRepository))
-                );
+                                () -> verifyNoMoreInteractions(userRepository),
+                                () -> verifyNoInteractions(reactiveClient)));
     }
 
     @Test
@@ -115,8 +117,10 @@ class UserServiceTest {
                 .expectNext(expectedVoid)
                 .then(() ->
                         assertAll(
-                                () -> verify(userRepository, times(1)).unfollow(username, usernameToUnfollow),
-                                () -> verifyNoMoreInteractions(userRepository))
+                                () -> verify(userRepository, times(1))
+                                        .unfollow(username, usernameToUnfollow),
+                                () -> verifyNoMoreInteractions(userRepository),
+                                () -> verifyNoInteractions(reactiveClient))
                 );
     }
 
@@ -139,7 +143,8 @@ class UserServiceTest {
                                 assertUser(userExpected, userActual);
                                 assertAll(
                                         () -> verify(userRepository, times(1)).findByUsername(username),
-                                        () -> verifyNoMoreInteractions(userRepository));
+                                        () -> verifyNoMoreInteractions(userRepository),
+                                        () -> verifyNoInteractions(reactiveClient));
                                 return true;
                             }
                     ).verifyComplete();
@@ -159,7 +164,8 @@ class UserServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userRepository, times(1)).findByUsername(username),
-                                    () -> verifyNoMoreInteractions(userRepository))
+                                    () -> verifyNoMoreInteractions(userRepository),
+                                    () -> verifyNoInteractions(reactiveClient))
                     ).verifyComplete();
         }
 
@@ -182,7 +188,8 @@ class UserServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userRepository, times(1)).findFollowers(username),
-                                    () -> verifyNoMoreInteractions(userRepository))
+                                    () -> verifyNoMoreInteractions(userRepository),
+                                    () -> verifyNoInteractions(reactiveClient))
                     ).verifyComplete();
         }
 
@@ -200,7 +207,8 @@ class UserServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userRepository, times(1)).findFollowers(username),
-                                    () -> verifyNoMoreInteractions(userRepository))
+                                    () -> verifyNoMoreInteractions(userRepository),
+                                    () -> verifyNoInteractions(reactiveClient))
                     ).verifyComplete();
         }
 
@@ -223,7 +231,8 @@ class UserServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userRepository, times(1)).findFollowed(username),
-                                    () -> verifyNoMoreInteractions(userRepository))
+                                    () -> verifyNoMoreInteractions(userRepository),
+                                    () -> verifyNoInteractions(reactiveClient))
                     ).verifyComplete();
         }
 
@@ -241,7 +250,8 @@ class UserServiceTest {
                     .then(() ->
                             assertAll(
                                     () -> verify(userRepository, times(1)).findFollowed(username),
-                                    () -> verifyNoMoreInteractions(userRepository))
+                                    () -> verifyNoMoreInteractions(userRepository),
+                                    () -> verifyNoInteractions(reactiveClient))
                     ).verifyComplete();
         }
     }

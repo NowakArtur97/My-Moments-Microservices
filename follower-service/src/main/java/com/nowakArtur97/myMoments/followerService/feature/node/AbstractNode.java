@@ -28,6 +28,4 @@ abstract class AbstractNode {
 
     @LastModifiedDate
     private Date modifyDate;
-
-    // TODO: AbstractNode: Add Version
 }

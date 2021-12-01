@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +34,7 @@ class FollowingControllerTest {
     private int serverPort;
 
     private String FOLLOWING_WITH_USERNAME_PATH;
+    private String RECOMMENDATIONS_WITH_USERNAME_PATH;
 
     @MockBean
     private FollowerService followerService;
@@ -58,6 +60,7 @@ class FollowingControllerTest {
 
         String FOLLOWING_BASE_PATH = "http://localhost:" + serverPort + "/api/v1/following";
         FOLLOWING_WITH_USERNAME_PATH = FOLLOWING_BASE_PATH + "/{username}";
+        RECOMMENDATIONS_WITH_USERNAME_PATH = "/api/v1/following/recommendations/{username}";
     }
 
     @Nested
@@ -172,6 +175,263 @@ class FollowingControllerTest {
                                                 () -> "should return error response with " + HttpStatus.BAD_REQUEST.value()
                                                         + " status, but was: " + errorResponse.getStatus()),
                                         () -> verifyNoInteractions(followerService));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+    }
+
+    @Nested
+    class RecommendUserTest {
+
+        private final static int DEFAULT_MIN_DEGREE = 2;
+        private final static int DEFAULT_MAX_DEGREE = 2;
+
+        @Test
+        void when_recommend_users_with_default_parameters_should_return_list_of_users() {
+
+            String header = "Bearer token";
+            String username = "user";
+            String expectedUserName1 = "user1";
+            String expectedUserName2 = "user2";
+
+            UserModel userModel1 = (UserModel) userTestBuilder.withUsername(expectedUserName1).build(ObjectType.MODEL);
+            UserModel userModel2 = (UserModel) userTestBuilder.withUsername(expectedUserName2).build(ObjectType.MODEL);
+            UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(List.of(userModel1, userModel2));
+
+            when(followerService.recommendUsers(username, DEFAULT_MIN_DEGREE, DEFAULT_MAX_DEGREE))
+                    .thenReturn(Mono.just(usersAcquaintancesModelExpected));
+
+            Mono<UsersAcquaintancesModel> usersAcquaintancesModelMono = webTestClient.get()
+                    .uri(RECOMMENDATIONS_WITH_USERNAME_PATH, username)
+                    .header("Authorization", header)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .returnResult(UsersAcquaintancesModel.class)
+                    .getResponseBody()
+                    .single();
+
+            StepVerifier.create(usersAcquaintancesModelMono)
+                    .thenConsumeWhile(
+                            acquaintancesActual -> {
+                                assertAll(
+                                        () -> assertEquals(usersAcquaintancesModelExpected.getUsers().size(),
+                                                acquaintancesActual.getUsers().size(),
+                                                () -> "should return following: " + usersAcquaintancesModelExpected.getUsers()
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName1)),
+                                                () -> "should return follower with name: " + expectedUserName1
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName2)),
+                                                () -> "should return follower with name: " + expectedUserName2
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> verify(followerService, times(1))
+                                                .recommendUsers(username, DEFAULT_MIN_DEGREE, DEFAULT_MAX_DEGREE),
+                                        () -> verifyNoMoreInteractions(followerService));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_recommend_users_with_custom_parameters_should_return_list_of_users() {
+
+            String header = "Bearer token";
+            String username = "user";
+            Integer minDegree = 2;
+            Integer maxDegree = 4;
+            String expectedUserName1 = "user1";
+            String expectedUserName2 = "user2";
+
+            UserModel userModel1 = (UserModel) userTestBuilder.withUsername(expectedUserName1).build(ObjectType.MODEL);
+            UserModel userModel2 = (UserModel) userTestBuilder.withUsername(expectedUserName2).build(ObjectType.MODEL);
+            UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(List.of(userModel1, userModel2));
+
+            when(followerService.recommendUsers(username, minDegree, maxDegree))
+                    .thenReturn(Mono.just(usersAcquaintancesModelExpected));
+
+            Mono<UsersAcquaintancesModel> usersAcquaintancesModelMono = webTestClient.get()
+                    .uri(uriBuilder ->
+                            uriBuilder
+                                    .path(RECOMMENDATIONS_WITH_USERNAME_PATH.replace("{username}", username))
+                                    .queryParam("minDegree", minDegree)
+                                    .queryParam("maxDegree", maxDegree)
+                                    .queryParam("state", "cGF5bWVudGlkPTRiMmZlMG")
+                                    .build(username))
+                    .header("Authorization", header)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .returnResult(UsersAcquaintancesModel.class)
+                    .getResponseBody()
+                    .single();
+
+            StepVerifier.create(usersAcquaintancesModelMono)
+                    .thenConsumeWhile(
+                            acquaintancesActual -> {
+                                assertAll(
+                                        () -> assertEquals(usersAcquaintancesModelExpected.getUsers().size(),
+                                                acquaintancesActual.getUsers().size(),
+                                                () -> "should return following: " + usersAcquaintancesModelExpected.getUsers()
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName1)),
+                                                () -> "should return follower with name: " + expectedUserName1
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName2)),
+                                                () -> "should return follower with name: " + expectedUserName2
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> verify(followerService, times(1))
+                                                .recommendUsers(username, minDegree, maxDegree),
+                                        () -> verifyNoMoreInteractions(followerService));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_recommend_users_with_custom_and_default_parameters_should_return_list_of_users() {
+
+            String header = "Bearer token";
+            String username = "user";
+            Integer minDegree = 2;
+            String expectedUserName1 = "user1";
+            String expectedUserName2 = "user2";
+
+            UserModel userModel1 = (UserModel) userTestBuilder.withUsername(expectedUserName1).build(ObjectType.MODEL);
+            UserModel userModel2 = (UserModel) userTestBuilder.withUsername(expectedUserName2).build(ObjectType.MODEL);
+            UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(List.of(userModel1, userModel2));
+
+            when(followerService.recommendUsers(username, minDegree, DEFAULT_MAX_DEGREE))
+                    .thenReturn(Mono.just(usersAcquaintancesModelExpected));
+
+            Mono<UsersAcquaintancesModel> usersAcquaintancesModelMono = webTestClient.get()
+                    .uri(uriBuilder ->
+                            uriBuilder
+                                    .path(RECOMMENDATIONS_WITH_USERNAME_PATH)
+                                    .queryParam("minDegree", minDegree)
+                                    .build(username))
+                    .header("Authorization", header)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .returnResult(UsersAcquaintancesModel.class)
+                    .getResponseBody()
+                    .single();
+
+            StepVerifier.create(usersAcquaintancesModelMono)
+                    .thenConsumeWhile(
+                            acquaintancesActual -> {
+                                assertAll(
+                                        () -> assertEquals(usersAcquaintancesModelExpected.getUsers().size(),
+                                                acquaintancesActual.getUsers().size(),
+                                                () -> "should return following: " + usersAcquaintancesModelExpected.getUsers()
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName1)),
+                                                () -> "should return follower with name: " + expectedUserName1
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName2)),
+                                                () -> "should return follower with name: " + expectedUserName2
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> verify(followerService, times(1))
+                                                .recommendUsers(username, minDegree, DEFAULT_MAX_DEGREE),
+                                        () -> verifyNoMoreInteractions(followerService));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+
+        @Test
+        void when_recommend_users_with_default_and_custom_parameters_should_return_list_of_users() {
+
+            String header = "Bearer token";
+            String username = "user";
+            Integer maxDegree = 4;
+            String expectedUserName1 = "user1";
+            String expectedUserName2 = "user2";
+
+            UserModel userModel1 = (UserModel) userTestBuilder.withUsername(expectedUserName1).build(ObjectType.MODEL);
+            UserModel userModel2 = (UserModel) userTestBuilder.withUsername(expectedUserName2).build(ObjectType.MODEL);
+            UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(List.of(userModel1, userModel2));
+
+            when(followerService.recommendUsers(username, DEFAULT_MIN_DEGREE, maxDegree))
+                    .thenReturn(Mono.just(usersAcquaintancesModelExpected));
+
+            Mono<UsersAcquaintancesModel> usersAcquaintancesModelMono = webTestClient.get()
+                    .uri(uriBuilder ->
+                            uriBuilder
+                                    .path(RECOMMENDATIONS_WITH_USERNAME_PATH.replace("{username}", username))
+                                    .queryParam("maxDegree", maxDegree)
+                                    .build(username))
+                    .header("Authorization", header)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .returnResult(UsersAcquaintancesModel.class)
+                    .getResponseBody()
+                    .single();
+
+            StepVerifier.create(usersAcquaintancesModelMono)
+                    .thenConsumeWhile(
+                            acquaintancesActual -> {
+                                assertAll(
+                                        () -> assertEquals(usersAcquaintancesModelExpected.getUsers().size(),
+                                                acquaintancesActual.getUsers().size(),
+                                                () -> "should return following: " + usersAcquaintancesModelExpected.getUsers()
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName1)),
+                                                () -> "should return follower with name: " + expectedUserName1
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().stream()
+                                                        .anyMatch(user -> user.getUsername().equals(expectedUserName2)),
+                                                () -> "should return follower with name: " + expectedUserName2
+                                                        + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> verify(followerService, times(1))
+                                                .recommendUsers(username, DEFAULT_MIN_DEGREE, maxDegree),
+                                        () -> verifyNoMoreInteractions(followerService));
+                                return true;
+                            }
+                    ).verifyComplete();
+        }
+
+
+        @Test
+        void when_recommend_users_but_nothing_was_found_should_return_empty_list() {
+
+            String header = "Bearer token";
+            String username = "user";
+
+            UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(Collections.emptyList());
+
+            when(followerService.recommendUsers(username, DEFAULT_MIN_DEGREE, DEFAULT_MAX_DEGREE))
+                    .thenReturn(Mono.just(usersAcquaintancesModelExpected));
+
+            Mono<UsersAcquaintancesModel> usersAcquaintancesModelMono = webTestClient.get()
+                    .uri(RECOMMENDATIONS_WITH_USERNAME_PATH, username)
+                    .header("Authorization", header)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .returnResult(UsersAcquaintancesModel.class)
+                    .getResponseBody()
+                    .single();
+
+            StepVerifier.create(usersAcquaintancesModelMono)
+                    .thenConsumeWhile(
+                            acquaintancesActual -> {
+                                assertAll(
+                                        () -> assertTrue(usersAcquaintancesModelExpected.getUsers().isEmpty(),
+                                                () -> "should return empty list, but was: " + acquaintancesActual.getUsers()),
+                                        () -> verify(followerService, times(1))
+                                                .recommendUsers(username, DEFAULT_MIN_DEGREE, DEFAULT_MAX_DEGREE),
+                                        () -> verifyNoMoreInteractions(followerService));
                                 return true;
                             }
                     ).verifyComplete();
