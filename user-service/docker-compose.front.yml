@@ -1,0 +1,49 @@
+version: '3.7'
+
+networks:
+  my-moments:
+    driver: bridge
+    name: my-moments
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+services:
+  user-service:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile-front
+    networks:
+      - my-moments
+    ports:
+      - 8081:8081
+    volumes:
+      - /user-service/dir:/app
+    depends_on:
+      - configuration-service
+      - mongo-db-user-service
+    container_name: user-service
+
+  configuration-service:
+    restart: on-failure
+    networks:
+      - my-moments
+    build:
+      context: ../
+      dockerfile: configuration-service/Dockerfile-dev
+    ports:
+      - 8888:8888
+    volumes:
+      - /configuration-service/dir:/app
+    container_name: configuration-service
+
+  mongo-db-user-service:
+    image: mongo:3.6
+    networks:
+      - my-moments
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+    container_name: mongo-db-user-service
