@@ -2,8 +2,6 @@
 # Spring
 #
 spring:
-  profiles:
-    active: vault, git # unlock Vault and Git configs
   #
   # Config Server
   #
@@ -18,7 +16,7 @@ spring:
         #
         vault:
           host: 192.168.99.100
-          token: vault-plaintext-root-token
+          token: vault-token
           kvVersion: 2
           order: 1
         #

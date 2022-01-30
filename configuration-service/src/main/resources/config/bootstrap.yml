@@ -6,6 +6,7 @@ spring:
     name: configuration-service
   profiles:
     active: ${SPRING_ACTIVE_PROFILE:dev}
+#    active: vault, git, local # unlock Vault and Git configs
 #
 # Server
 #
