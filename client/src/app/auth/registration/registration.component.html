@@ -13,6 +13,9 @@
       </label>
       <input
         [(ngModel)]="userRegistrationDTO.username"
+        required
+        minlength="4"
+        maxlength="40"
         type="text"
         name="username"
         id="username"
@@ -29,6 +32,8 @@
       </label>
       <input
         [(ngModel)]="userRegistrationDTO.email"
+        required
+        email
         type="text"
         name="email"
         id="email"
@@ -45,6 +50,9 @@
       </label>
       <input
         [(ngModel)]="userRegistrationDTO.password"
+        required
+        minlength="6"
+        maxlength="30"
         type="text"
         name="password"
         id="password"
@@ -61,6 +69,9 @@
       </label>
       <input
         [(ngModel)]="userRegistrationDTO.matchingPassword"
+        required
+        minlength="6"
+        maxlength="30"
         type="text"
         name="matching_password"
         id="matching_password"
@@ -69,7 +80,13 @@
       />
     </div>
     <div class="registration_form__controls">
-      <button type="submit" class="registration_form">Register</button>
+      <button
+        [disabled]="!registrationForm.valid"
+        type="submit"
+        class="registration_form"
+      >
+        Register
+      </button>
     </div>
   </form>
 </section>
