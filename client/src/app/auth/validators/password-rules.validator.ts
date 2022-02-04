@@ -16,8 +16,31 @@ const uncommonRule = (formControl: AbstractControl): ValidationErrors | null =>
     ? { commonPassword: true }
     : null;
 
+const withUpperCaseRule = (
+  formControl: AbstractControl
+): ValidationErrors | null =>
+  /[A-Z]+/.test(formControl.value) ? null : { withoutUppercase: true };
+
+const withLowerCaseRule = (
+  formControl: AbstractControl
+): ValidationErrors | null =>
+  /[a-z]+/.test(formControl.value) ? null : { withoutUppercase: true };
+
+const withSpecialCharacterRule = (
+  formControl: AbstractControl
+): ValidationErrors | null =>
+  /[\\!"#\$%&'()*\+,-.\/:;<=>?@\[\]^_`{|}~]/.test(formControl.value)
+    ? null
+    : { withoutUppercase: true };
+
 function passwordRules(formControl: AbstractControl): ValidationErrors | null {
-  return [noWhiteSpacesRule, uncommonRule]
+  return [
+    noWhiteSpacesRule,
+    uncommonRule,
+    withUpperCaseRule,
+    withLowerCaseRule,
+    withSpecialCharacterRule,
+  ]
     .map((validator) => {
       return validator(formControl);
     })
