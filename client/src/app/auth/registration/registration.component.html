@@ -2,6 +2,8 @@
   <form
     #registrationForm="ngForm"
     (ngSubmit)="onRegister()"
+    [appNotInclude]="['password', 'username']"
+    [appNotInclude]="['matching_password', 'username']"
     class="registration_form"
   >
     <div class="registration_form__controls">
@@ -54,7 +56,7 @@
         minlength="6"
         maxlength="30"
         appPasswordRules
-        type="password"
+        type="text"
         name="password"
         id="password"
         class="registration_form__input"
@@ -74,7 +76,7 @@
         minlength="6"
         maxlength="30"
         appPasswordRules
-        type="password"
+        type="text"
         name="matching_password"
         id="matching_password"
         class="registration_form__input"
@@ -82,13 +84,10 @@
       />
     </div>
     <div class="registration_form__controls">
-      <button
-        [disabled]="!registrationForm.valid"
-        type="submit"
-        class="registration_form"
-      >
-        Register
-      </button>
+      <button type="submit" class="registration_form">Register</button>
+      <!-- <button [disabled]="!registrationForm.valid" type="submit" class="registration_form">
+          Register
+        </button> -->
     </div>
   </form>
 </section>

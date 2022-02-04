@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 import UserRegistrationDTO from '../models/user-registration-dto.model';
 
@@ -8,6 +9,8 @@ import UserRegistrationDTO from '../models/user-registration-dto.model';
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit {
+  @ViewChild('registrationForm', { static: true }) registrationForm!: NgForm;
+
   userRegistrationDTO: UserRegistrationDTO = {
     username: '',
     email: '',
@@ -20,6 +23,6 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {}
 
   onRegister(): void {
-    console.log(this.userRegistrationDTO);
+    console.log(this.registrationForm.controls['matching_password'].errors);
   }
 }
