@@ -6,21 +6,21 @@ import {
   Validator,
 } from '@angular/forms';
 
-import noWhiteSpaces from '../validators/white-space.validator';
+import passwordRules from '../validators/password-rules.validator';
 
 @Directive({
-  selector: '[appNoWhiteSpaces]',
+  selector: '[appPasswordRules]',
   providers: [
     {
       provide: NG_VALIDATORS,
-      useExisting: NoWhiteSpacesDirective,
+      useExisting: PasswordRulesDirective,
       multi: true,
     },
   ],
 })
-export class NoWhiteSpacesDirective implements Validator {
+export class PasswordRulesDirective implements Validator {
   constructor() {}
 
   validate = (control: AbstractControl): ValidationErrors | null =>
-    noWhiteSpaces(control);
+    passwordRules(control);
 }
