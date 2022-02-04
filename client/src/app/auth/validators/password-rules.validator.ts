@@ -19,19 +19,26 @@ const uncommonRule = (formControl: AbstractControl): ValidationErrors | null =>
 const withUpperCaseRule = (
   formControl: AbstractControl
 ): ValidationErrors | null =>
-  /[A-Z]+/.test(formControl.value) ? null : { withoutUppercase: true };
+  /[A-Z]+/.test(formControl.value) ? null : { withoutUpperCase: true };
 
 const withLowerCaseRule = (
   formControl: AbstractControl
 ): ValidationErrors | null =>
-  /[a-z]+/.test(formControl.value) ? null : { withoutUppercase: true };
+  /[a-z]+/.test(formControl.value) ? null : { withoutUpperLase: true };
 
 const withSpecialCharacterRule = (
   formControl: AbstractControl
 ): ValidationErrors | null =>
   /[\\!"#\$%&'()*\+,-.\/:;<=>?@\[\]^_`{|}~]/.test(formControl.value)
     ? null
-    : { withoutUppercase: true };
+    : { withoutSpecialCharacter: true };
+
+const without3RepeatedCharactersRule = (
+  formControl: AbstractControl
+): ValidationErrors | null =>
+  /(.)\1{2,}/.test(formControl.value)
+    ? { with3RepeatedCharacters: true }
+    : null;
 
 function passwordRules(formControl: AbstractControl): ValidationErrors | null {
   return [
@@ -40,6 +47,7 @@ function passwordRules(formControl: AbstractControl): ValidationErrors | null {
     withUpperCaseRule,
     withLowerCaseRule,
     withSpecialCharacterRule,
+    without3RepeatedCharactersRule,
   ]
     .map((validator) => {
       return validator(formControl);
