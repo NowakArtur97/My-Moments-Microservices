@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { AbstractControl, NgForm } from '@angular/forms';
 
 import UserRegistrationDTO from '../models/user-registration-dto.model';
 
@@ -23,6 +23,24 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {}
 
   onRegister(): void {
-    console.log(this.registrationForm.controls['matching_password'].errors);
+    if (this.registrationForm.controls['matching_password'].errors) {
+      console.log(this.password.errors);
+    }
+  }
+
+  get username(): AbstractControl {
+    return this.registrationForm.controls['username'];
+  }
+
+  get email(): AbstractControl {
+    return this.registrationForm.controls['email'];
+  }
+
+  get password(): AbstractControl {
+    return this.registrationForm.controls['password'];
+  }
+
+  get matchingPassword(): AbstractControl {
+    return this.registrationForm.controls['matchingPassword'];
   }
 }

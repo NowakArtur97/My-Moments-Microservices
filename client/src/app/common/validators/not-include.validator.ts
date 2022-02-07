@@ -22,7 +22,7 @@ function notInclude(
     ) {
       controlToCheck.setErrors({
         ...controlToCheck.errors,
-        notInclude: true,
+        shouldNotInclude: true,
       });
     }
     return null;

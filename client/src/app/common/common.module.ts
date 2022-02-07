@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { MustMatchDirective } from './directives/must-match.directive';
 import { NotIncludeDirective } from './directives/not-include.directive';
 
+const validationDirectives = [NotIncludeDirective, MustMatchDirective];
+
 @NgModule({
-  declarations: [NotIncludeDirective],
+  declarations: [validationDirectives],
   imports: [CommonModule],
-  exports: [NotIncludeDirective],
+  exports: [validationDirectives],
 })
 export class AppCommonModule {}
