@@ -2,8 +2,8 @@
   <form
     #registrationForm="ngForm"
     (ngSubmit)="onRegister()"
+    [ngFormOptions]="{ updateOn: 'change' }"
     [appNotInclude]="['password', 'username']"
-    [appNotInclude]="['matching_password', 'username']"
     [appMustMatch]="['password', 'matching_password']"
     class="registration_form"
   >
