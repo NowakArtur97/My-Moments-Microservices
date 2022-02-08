@@ -49,9 +49,9 @@ function passwordRules(formControl: AbstractControl): ValidationErrors | null {
     withSpecialCharacterRule,
     without3RepeatedCharactersRule,
   ]
-    .map((validator) => {
-      return validator(formControl);
-    })
+    .map((validator) => 
+       validator(formControl)
+    )
     .filter((result) => !!result);
 }
 
