@@ -1,16 +1,8 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import flattenObject from 'src/app/common/util/flaten-object.util';
+import notBlank from 'src/app/common/validators/not-blank.validator';
 
 import commonPasswords from './common-passwords-list';
-
-const WHITE_SPACE = ' ';
-
-const noWhiteSpacesRule = (
-  formControl: AbstractControl
-): ValidationErrors | null =>
-  String(formControl.value).includes(WHITE_SPACE)
-    ? { hasWhiteSpaces: true }
-    : null;
 
 const uncommonRule = (formControl: AbstractControl): ValidationErrors | null =>
   commonPasswords.includes(String(formControl.value))
@@ -43,7 +35,7 @@ const without3RepeatedCharactersRule = (
 
 function passwordRules(formControl: AbstractControl): ValidationErrors | null {
   const errors = [
-    noWhiteSpacesRule,
+    notBlank,
     uncommonRule,
     withUpperCaseRule,
     withLowerCaseRule,

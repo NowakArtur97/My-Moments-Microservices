@@ -30,8 +30,8 @@ export class RegistrationComponent
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
 
   onRegister(): void {
-    if (this.registrationForm.controls['matching_password'].errors) {
-      console.log(this.password.errors);
+    if (this.registrationForm.controls['email'].errors) {
+      console.log(this.email.errors);
     }
   }
 
