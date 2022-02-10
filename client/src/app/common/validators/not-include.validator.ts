@@ -18,7 +18,9 @@ function notInclude(
     if (
       controlToCheckValue &&
       controlToNotBeIncludedValue &&
-      controlToCheckValue.includes(controlToNotBeIncludedValue)
+      String(controlToCheckValue)
+        .toLowerCase()
+        .includes(String(controlToNotBeIncludedValue).toLowerCase())
     ) {
       controlToCheck.setErrors({
         ...controlToCheck.errors,

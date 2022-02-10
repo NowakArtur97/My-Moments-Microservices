@@ -312,5 +312,19 @@ describe('RegistrationComponent', () => {
         expect(Object.keys({ ...errors }).length).toEqual(1);
       });
     });
+
+    it('with password containing username should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        component.username.setValue('User');
+        password.setValue('userX123@');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.shouldNotInclude).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
   });
 });
