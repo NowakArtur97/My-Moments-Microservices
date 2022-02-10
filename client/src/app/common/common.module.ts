@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { MustMatchDirective } from './directives/must-match.directive';
-import { NotBlankDirective } from './directives/not-blank.directive';
+import { NoWhiteSpacesDirective } from './directives/no-white-spaces.directive';
 import { NotIncludeDirective } from './directives/not-include.directive';
 
 const validationDirectives = [
   NotIncludeDirective,
   MustMatchDirective,
-  NotBlankDirective,
+  NoWhiteSpacesDirective,
 ];
 
 @NgModule({

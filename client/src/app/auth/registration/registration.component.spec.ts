@@ -59,6 +59,18 @@ describe('RegistrationComponent', () => {
       });
     });
 
+    it('with username with white spaces should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const userName = component.username;
+        userName.setValue('user1 23');
+        const errors = userName.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.hasWhiteSpaces).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(1);
+      });
+    });
+
     it('with too short username should be invalid', async () => {
       fixture.whenStable().then(() => {
         const userName = component.username;
@@ -99,6 +111,18 @@ describe('RegistrationComponent', () => {
       fixture.whenStable().then(() => {
         const email = component.email;
         email.setValue('email.com');
+        const errors = email.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.email).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(1);
+      });
+    });
+
+    it('with email with white spaces should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const email = component.email;
+        email.setValue('email 123@email.com');
         const errors = email.errors;
 
         expect(errors).not.toBeNull();

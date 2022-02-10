@@ -1,6 +1,6 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import flattenObject from 'src/app/common/util/flaten-object.util';
-import notBlank from 'src/app/common/validators/not-blank.validator';
+import notBlank from 'src/app/common/validators/no-white-spaces.validator';
 
 import commonPasswords from './common-passwords-list';
 
