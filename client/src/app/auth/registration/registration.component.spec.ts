@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppCommonModule } from 'src/app/common/common.module';
 
+import { PasswordRulesDirective } from '../directives/password-rules.directive';
 import UserRegistrationDTO from '../models/user-registration-dto.model';
 import { RegistrationComponent } from './registration.component';
 
@@ -19,7 +20,7 @@ describe('RegistrationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RegistrationComponent],
+      declarations: [RegistrationComponent, PasswordRulesDirective],
       imports: [FormsModule, BrowserModule, AppCommonModule],
     }).compileComponents();
   });
@@ -102,6 +103,212 @@ describe('RegistrationComponent', () => {
 
         expect(errors).not.toBeNull();
         expect(errors!.email).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(1);
+      });
+    });
+
+    it('with empty password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        password.setValue('');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.required).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(errors!.withoutLowerCase).toBeTruthy();
+        expect(errors!.withoutUpperCase).toBeTruthy();
+        expect(errors!.withoutSpecialCharacter).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(5);
+      });
+    });
+
+    it('with white spaces password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        password.setValue('Pass 123@');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.hasWhiteSpaces).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('without small letter password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        password.setValue('PASS123@');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.withoutLowerCase).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('without upper letter password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        password.setValue('pass123@');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.withoutUpperCase).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('without special character password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        password.setValue('pass123PASS');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.withoutSpecialCharacter).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('with three repetead characters password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        password.setValue('aaaASD@');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.with3RepeatedCharacters).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('with common password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        password.setValue('password');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.commonPassword).toBeTruthy();
+        expect(errors!.withoutUpperCase).toBeTruthy();
+        expect(errors!.withoutSpecialCharacter).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(4);
+      });
+    });
+
+    it('with empty matching password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const matchingPassword = component.matchingPassword;
+        matchingPassword.setValue('');
+        const errors = matchingPassword.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.required).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(errors!.withoutLowerCase).toBeTruthy();
+        expect(errors!.withoutUpperCase).toBeTruthy();
+        expect(errors!.withoutSpecialCharacter).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(5);
+      });
+    });
+
+    it('with white spaces matching password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const matchingPassword = component.matchingPassword;
+        matchingPassword.setValue('Pass 123@');
+        const errors = matchingPassword.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.hasWhiteSpaces).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('without small letter matching password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const matchingPassword = component.matchingPassword;
+        matchingPassword.setValue('PASS123@');
+        const errors = matchingPassword.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.withoutLowerCase).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('without upper letter matching password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const matchingPassword = component.matchingPassword;
+        matchingPassword.setValue('pass123@');
+        const errors = matchingPassword.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.withoutUpperCase).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('without special character matching password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const matchingPassword = component.matchingPassword;
+        matchingPassword.setValue('pass123PASS');
+        const errors = matchingPassword.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.withoutSpecialCharacter).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('with three repetead characters matching password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const matchingPassword = component.matchingPassword;
+        matchingPassword.setValue('aaaASD@');
+        const errors = matchingPassword.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.with3RepeatedCharacters).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(2);
+      });
+    });
+
+    it('with common matching matching password should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const matchingPassword = component.matchingPassword;
+        matchingPassword.setValue('password');
+        const errors = matchingPassword.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.commonPassword).toBeTruthy();
+        expect(errors!.withoutUpperCase).toBeTruthy();
+        expect(errors!.withoutSpecialCharacter).toBeTruthy();
+        expect(errors!.mustMatch).toBeTruthy();
+        expect(Object.keys({ ...errors }).length).toEqual(4);
+      });
+    });
+
+    it('with not matched passwords should be invalid', async () => {
+      fixture.whenStable().then(() => {
+        const password = component.password;
+        const matchingPassword = component.matchingPassword;
+        password.setValue('validPass123@');
+        matchingPassword.setValue('123validPass@');
+        const errors = password.errors;
+
+        expect(errors).not.toBeNull();
+        expect(errors!.mustMatch).toBeTruthy();
         expect(Object.keys({ ...errors }).length).toEqual(1);
       });
     });
