@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import flattenObject from 'src/app/common/util/flaten-object.util';
 
 import commonPasswords from './common-passwords-list';
 
@@ -24,7 +25,7 @@ const withUpperCaseRule = (
 const withLowerCaseRule = (
   formControl: AbstractControl
 ): ValidationErrors | null =>
-  /[a-z]+/.test(formControl.value) ? null : { withoutUpperLase: true };
+  /[a-z]+/.test(formControl.value) ? null : { withoutLowerCase: true };
 
 const withSpecialCharacterRule = (
   formControl: AbstractControl
@@ -41,7 +42,7 @@ const without3RepeatedCharactersRule = (
     : null;
 
 function passwordRules(formControl: AbstractControl): ValidationErrors | null {
-  return [
+  const errors = [
     noWhiteSpacesRule,
     uncommonRule,
     withUpperCaseRule,
@@ -49,10 +50,9 @@ function passwordRules(formControl: AbstractControl): ValidationErrors | null {
     withSpecialCharacterRule,
     without3RepeatedCharactersRule,
   ]
-    .map((validator) => 
-       validator(formControl)
-    )
+    .map((validator) => validator(formControl))
     .filter((result) => !!result);
+  return flattenObject(errors);
 }
 
 export default passwordRules;
