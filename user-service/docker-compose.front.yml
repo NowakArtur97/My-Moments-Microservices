@@ -13,7 +13,6 @@ services:
     restart: on-failure
     build:
       context: .
-      dockerfile: Dockerfile-front
     networks:
       - my-moments
     ports:

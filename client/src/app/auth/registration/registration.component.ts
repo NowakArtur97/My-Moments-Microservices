@@ -3,6 +3,7 @@ import { AbstractControl, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import UserRegistrationDTO from '../models/user-registration-dto.model';
+import { RegistrationService } from '../services/registration.service';
 
 @Component({
   selector: 'app-registration',
@@ -21,7 +22,7 @@ export class RegistrationComponent
     matchingPassword: '',
   };
 
-  constructor() {}
+  constructor(private registrationService: RegistrationService) {}
 
   ngOnInit(): void {}
 
@@ -30,9 +31,7 @@ export class RegistrationComponent
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
 
   onRegister(): void {
-    if (this.registrationForm.controls['email'].errors) {
-      console.log(this.email.errors);
-    }
+    this.registrationService.registerUser(this.userRegistrationDTO);
   }
 
   private refreshFormFieldsAfterChange() {
