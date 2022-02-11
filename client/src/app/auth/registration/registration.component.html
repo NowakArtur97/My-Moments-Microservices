@@ -91,15 +91,8 @@
           Register
         </button> -->
     </div>
-    <p *ngIf="password?.errors?.mustMatch">
-      Passwords <strong>don't match</strong>.
-    </p>
-    <p *ngIf="password?.errors?.shouldNotInclude">
-      Password <strong>mustn't contain User Name</strong>.
-    </p>
-    <p *ngIf="password?.errors?.minlength || password?.errors?.maxlength">
-      Password must be between <strong>7</strong> and
-      <strong>30</strong> characters.
+    <p *ngIf="authErrors[0]">
+      {{ authErrors[0] }}
     </p>
   </form>
 </section>

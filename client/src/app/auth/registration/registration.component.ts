@@ -21,10 +21,16 @@ export class RegistrationComponent
     password: '',
     matchingPassword: '',
   };
+  authErrors: string[] = [];
+  authErrorsSunscription$!: Subscription;
 
   constructor(private registrationService: RegistrationService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authErrorsSunscription$ = this.registrationService.authError.subscribe(
+      (authError) => (this.authErrors = authError?.errors || [])
+    );
+  }
 
   ngOnDestroy = (): void => this.registerFormSubscriptions$?.unsubscribe();
 
