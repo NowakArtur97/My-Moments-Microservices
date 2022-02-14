@@ -91,8 +91,11 @@
           Register
         </button> -->
     </div>
-    <p *ngIf="authErrors[0]">
-      {{ authErrors[0] }}
+    <p
+      *ngFor="let authError of authErrors"
+      class="registration_form__error_message"
+    >
+      {{ authError }}
     </p>
   </form>
 </section>

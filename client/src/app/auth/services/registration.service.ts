@@ -14,17 +14,23 @@ export class RegistrationService {
 
   constructor(private httpClient: HttpClient) {}
 
-  registerUser = (userData: UserRegistrationDTO) =>
+  registerUser(userData: UserRegistrationDTO) {
+    const multipartData = new FormData();
+    multipartData.append('user', JSON.stringify(userData));
     this.httpClient
       .post<AuthenticationResponse>(
         `${environment.userServiceUrl}/registration/register`,
-        userData
+        multipartData
       )
       .subscribe(
         (authenticationResponse: AuthenticationResponse) => {
           this.authenticatedUser.next(authenticationResponse);
+          this.authError.next(null);
         },
-        (error: HttpErrorResponse) =>
-          this.authError.next(error.error as ErrorResponse)
+        (error: HttpErrorResponse) => {
+          console.log(error);
+          this.authError.next(error.error as ErrorResponse);
+        }
       );
+  }
 }

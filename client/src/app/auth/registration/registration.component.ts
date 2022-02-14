@@ -37,6 +37,7 @@ export class RegistrationComponent
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
 
   onRegister(): void {
+    console.log(this.registrationForm);
     this.registrationService.registerUser(this.userRegistrationDTO);
   }
 
