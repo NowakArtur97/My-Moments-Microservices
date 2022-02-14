@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -21,7 +22,12 @@ describe('RegistrationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [RegistrationComponent, PasswordRulesDirective],
-      imports: [FormsModule, BrowserModule, AppCommonModule],
+      imports: [
+        FormsModule,
+        BrowserModule,
+        AppCommonModule,
+        HttpClientTestingModule,
+      ],
     }).compileComponents();
   });
 
