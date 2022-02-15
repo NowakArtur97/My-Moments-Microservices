@@ -8,13 +8,13 @@ import AuthenticationResponse from '../models/authentication-response.model';
 import UserRegistrationDTO from '../models/user-registration-dto.model';
 
 @Injectable({ providedIn: 'root' })
-export class RegistrationService {
+export class AuthService {
   authError = new BehaviorSubject<ErrorResponse | null>(null);
   authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);
 
   constructor(private httpClient: HttpClient) {}
 
-  registerUser(userData: UserRegistrationDTO) {
+  registerUser(userData: UserRegistrationDTO): void {
     const multipartData = new FormData();
     multipartData.append('user', JSON.stringify(userData));
     this.httpClient

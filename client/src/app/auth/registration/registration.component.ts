@@ -3,7 +3,7 @@ import { AbstractControl, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import UserRegistrationDTO from '../models/user-registration-dto.model';
-import { RegistrationService } from '../services/registration.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-registration',
@@ -13,6 +13,12 @@ import { RegistrationService } from '../services/registration.service';
 export class RegistrationComponent
   implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('registrationForm') registrationForm!: NgForm;
+  private controlsKeys = {
+    username: 'username',
+    email: 'email',
+    password: 'password',
+    matchingPassword: 'matching_password',
+  };
 
   private registerFormSubscriptions$ = new Subscription();
   userRegistrationDTO: UserRegistrationDTO = {
@@ -24,10 +30,10 @@ export class RegistrationComponent
   authErrors: string[] = [];
   authErrorsSunscription$!: Subscription;
 
-  constructor(private registrationService: RegistrationService) {}
+  constructor(private athService: AuthService) {}
 
   ngOnInit(): void {
-    this.authErrorsSunscription$ = this.registrationService.authError.subscribe(
+    this.authErrorsSunscription$ = this.athService.authError.subscribe(
       (authError) => (this.authErrors = authError?.errors || [])
     );
   }
@@ -38,10 +44,10 @@ export class RegistrationComponent
 
   onRegister(): void {
     console.log(this.registrationForm);
-    this.registrationService.registerUser(this.userRegistrationDTO);
+    this.athService.registerUser(this.userRegistrationDTO);
   }
 
-  private refreshFormFieldsAfterChange() {
+  private refreshFormFieldsAfterChange(): void {
     if (this.username) {
       this.registerFormSubscriptions$.add(
         this.username.valueChanges.subscribe(() => {
@@ -63,18 +69,18 @@ export class RegistrationComponent
   }
 
   get username(): AbstractControl {
-    return this.registrationForm?.controls['username'];
+    return this.registrationForm?.controls[this.controlsKeys.username];
   }
 
   get email(): AbstractControl {
-    return this.registrationForm?.controls['email'];
+    return this.registrationForm?.controls[this.controlsKeys.email];
   }
 
   get password(): AbstractControl {
-    return this.registrationForm?.controls['password'];
+    return this.registrationForm?.controls[this.controlsKeys.password];
   }
 
   get matchingPassword(): AbstractControl {
-    return this.registrationForm?.controls['matching_password'];
+    return this.registrationForm?.controls[this.controlsKeys.matchingPassword];
   }
 }

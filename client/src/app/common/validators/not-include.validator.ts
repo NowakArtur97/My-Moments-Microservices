@@ -3,7 +3,7 @@ import { FormGroup, ValidationErrors } from '@angular/forms';
 function notInclude(
   controlNameToCheck: string,
   controlNameToNotBeIncluded: string
-) {
+): any {
   return (formGroup: FormGroup): ValidationErrors | null => {
     const controlToCheck = formGroup.controls[controlNameToCheck];
     const controlToNotBeIncluded =

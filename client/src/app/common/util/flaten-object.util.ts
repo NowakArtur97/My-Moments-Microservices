@@ -1,4 +1,4 @@
-function flattenObject(obj: any, prefix = '') {
+function flattenObject(obj: any, prefix = ''): any {
   const flattened: any = {};
 
   Object.keys(obj).forEach((key) => {

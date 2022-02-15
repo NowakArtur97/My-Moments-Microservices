@@ -1,6 +1,6 @@
 import { FormGroup, ValidationErrors } from '@angular/forms';
 
-function mustMatch(controlName: string, matchingControlName: string) {
+function mustMatch(controlName: string, matchingControlName: string): any {
   return (formGroup: FormGroup): ValidationErrors | null => {
     const control = formGroup.controls[controlName];
     const matchingControl = formGroup.controls[matchingControlName];

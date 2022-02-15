@@ -7,23 +7,23 @@ import { environment } from 'src/environments/environment.local';
 
 import AuthenticationResponse from '../models/authentication-response.model';
 import UserRegistrationDTO from '../models/user-registration-dto.model';
-import { RegistrationService } from './registration.service';
+import { AuthService } from './auth.service';
 
-describe('RegistrationService', () => {
+describe('AuthService', () => {
   let injector: TestBed;
-  let registrationService: RegistrationService;
+  let authService: AuthService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [RegistrationService],
+      providers: [AuthService],
     });
   });
 
   beforeEach(() => {
     injector = getTestBed();
-    registrationService = injector.inject(RegistrationService);
+    authService = injector.inject(AuthService);
     httpMock = injector.inject(HttpTestingController);
   });
 
@@ -44,13 +44,13 @@ describe('RegistrationService', () => {
         expirationTimeInMilliseconds: 3600000,
       };
 
-      registrationService.authenticatedUser.pipe(skip(1)).subscribe((res) => {
+      authService.authenticatedUser.pipe(skip(1)).subscribe((res) => {
         expect(res).toEqual(authResponse);
       });
-      registrationService.authError.pipe(skip(1)).subscribe((res) => {
+      authService.authError.pipe(skip(1)).subscribe((res) => {
         expect(res).toEqual(null);
       });
-      registrationService.registerUser(registrationData);
+      authService.registerUser(registrationData);
 
       const req = httpMock.expectOne(
         `${environment.userServiceUrl}/registration/register`
@@ -79,10 +79,10 @@ describe('RegistrationService', () => {
         url: '',
       });
 
-      registrationService.authError.pipe(skip(2)).subscribe((res) => {
+      authService.authError.pipe(skip(2)).subscribe((res) => {
         expect(res).toEqual(errorResponse);
       });
-      registrationService.registerUser(registrationData);
+      authService.registerUser(registrationData);
 
       const req = httpMock.expectOne(
         `${environment.userServiceUrl}/registration/register`
