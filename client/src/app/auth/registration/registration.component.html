@@ -1,17 +1,14 @@
-<section class="registration_form__wrapper">
+<section class="auth_form__wrapper">
   <form
     #registrationForm="ngForm"
-    (ngSubmit)="onRegister()"
+    (ngSubmit)="onSubmit()"
     [ngFormOptions]="{ updateOn: 'change' }"
     [appNotInclude]="['password', 'username']"
     [appMustMatch]="['password', 'matching_password']"
-    class="registration_form"
+    class="auth_form"
   >
-    <div class="registration_form__controls">
-      <label
-        for="username"
-        class="registration_form__label"
-        aria-placeholder="Username"
+    <div class="auth_form__controls">
+      <label for="username" class="auth_form__label" aria-placeholder="Username"
         >Username:
       </label>
       <input
@@ -23,15 +20,12 @@
         type="text"
         name="username"
         id="username"
-        class="registration_form__input"
+        class="auth_form__input"
         placeholder="Username"
       />
     </div>
-    <div class="registration_form__controls">
-      <label
-        for="email"
-        class="registration_form__label"
-        aria-placeholder="Email"
+    <div class="auth_form__controls">
+      <label for="email" class="auth_form__label" aria-placeholder="Email"
         >Email:
       </label>
       <input
@@ -41,15 +35,12 @@
         type="text"
         name="email"
         id="email"
-        class="registration_form__input"
+        class="auth_form__input"
         placeholder="Email"
       />
     </div>
-    <div class="registration_form__controls">
-      <label
-        for="password"
-        class="registration_form__label"
-        aria-placeholder="Password"
+    <div class="auth_form__controls">
+      <label for="password" class="auth_form__label" aria-placeholder="Password"
         >Password:
       </label>
       <input
@@ -61,14 +52,14 @@
         type="text"
         name="password"
         id="password"
-        class="registration_form__input"
+        class="auth_form__input"
         placeholder="Password"
       />
     </div>
-    <div class="registration_form__controls">
+    <div class="auth_form__controls">
       <label
         for="matching_password"
-        class="registration_form__label"
+        class="auth_form__label"
         aria-placeholder="Matching Password"
         >Matching Password:
       </label>
@@ -81,20 +72,17 @@
         type="text"
         name="matching_password"
         id="matching_password"
-        class="registration_form__input"
+        class="auth_form__input"
         placeholder="Matching Password"
       />
     </div>
-    <div class="registration_form__controls">
-      <button type="submit" class="registration_form">Sign Up</button>
-      <!-- <button [disabled]="!registrationForm.valid" type="submit" class="registration_form">
+    <div class="auth_form__controls">
+      <button type="submit" class="auth_form">Sign Up</button>
+      <!-- <button [disabled]="!registrationForm.valid" type="submit" class="auth_form">
           Sign Up
         </button> -->
     </div>
-    <p
-      *ngFor="let authError of authErrors"
-      class="registration_form__error_message"
-    >
+    <p *ngFor="let authError of authErrors" class="auth_form__error_message">
       {{ authError }}
     </p>
   </form>

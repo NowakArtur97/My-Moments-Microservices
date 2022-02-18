@@ -1,14 +1,7 @@
-<section class="authentication_form__wrapper">
-  <form
-    #authenticationForm="ngForm"
-    (ngSubmit)="onAuthenticate()"
-    class="authentication_form"
-  >
-    <div class="authentication_form__controls">
-      <label
-        for="username"
-        class="authentication_form__label"
-        aria-placeholder="Username"
+<section class="auth_form__wrapper">
+  <form #authenticationForm="ngForm" (ngSubmit)="onSubmit()" class="auth_form">
+    <div class="auth_form__controls">
+      <label for="username" class="auth_form__label" aria-placeholder="Username"
         >Username:
       </label>
       <input
@@ -17,15 +10,12 @@
         type="text"
         name="username"
         id="username"
-        class="authentication_form__input"
+        class="auth_form__input"
         placeholder="Username"
       />
     </div>
-    <div class="authentication_form__controls">
-      <label
-        for="email"
-        class="authentication_form__label"
-        aria-placeholder="Email"
+    <div class="auth_form__controls">
+      <label for="email" class="auth_form__label" aria-placeholder="Email"
         >Email:
       </label>
       <input
@@ -35,15 +25,12 @@
         type="text"
         name="email"
         id="email"
-        class="authentication_form__input"
+        class="auth_form__input"
         placeholder="Email"
       />
     </div>
-    <div class="authentication_form__controls">
-      <label
-        for="password"
-        class="authentication_form__label"
-        aria-placeholder="Password"
+    <div class="auth_form__controls">
+      <label for="password" class="auth_form__label" aria-placeholder="Password"
         >Password:
       </label>
       <input
@@ -52,20 +39,17 @@
         type="text"
         name="password"
         id="password"
-        class="authentication_form__input"
+        class="auth_form__input"
         placeholder="Password"
       />
     </div>
-    <div class="authentication_form__controls">
-      <button type="submit" class="authentication_form">Sign In</button>
-      <!-- <button [disabled]="!authenticationForm.valid" type="submit" class="authentication_form">
+    <div class="auth_form__controls">
+      <button type="submit" class="auth_form">Sign In</button>
+      <!-- <button [disabled]="!authenticationForm.valid" type="submit" class="auth_form">
           Sign In
         </button> -->
     </div>
-    <p
-      *ngFor="let authError of authErrors"
-      class="authentication_form__error_message"
-    >
+    <p *ngFor="let authError of authErrors" class="auth_form__error_message">
       {{ authError }}
     </p>
   </form>

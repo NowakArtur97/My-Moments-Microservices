@@ -1,6 +1,5 @@
-export default interface UserRegistrationDTO {
-  username: string;
-  email: string;
-  password: string;
+import AuthenticationRequest from './authentication-request.model';
+
+export default interface UserRegistrationDTO extends AuthenticationRequest {
   matchingPassword: string;
 }

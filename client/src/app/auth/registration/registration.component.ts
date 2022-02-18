@@ -1,25 +1,22 @@
-import { AfterViewChecked, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, NgForm } from '@angular/forms';
+import { AfterViewChecked, Component } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
+import { AuthBaseComponent } from '../auth-base/auth-base.component';
 import UserRegistrationDTO from '../models/user-registration-dto.model';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css'],
+  styleUrls: [
+    './registration.component.css',
+    '../auth-base/auth-base.component.css',
+  ],
 })
 export class RegistrationComponent
-  implements OnInit, OnDestroy, AfterViewChecked {
-  @ViewChild('registrationForm') registrationForm!: NgForm;
-  private controlsKeys = {
-    username: 'username',
-    email: 'email',
-    password: 'password',
-    matchingPassword: 'matching_password',
-  };
-
+  extends AuthBaseComponent
+  implements AfterViewChecked {
   private registerFormSubscriptions$ = new Subscription();
   userRegistrationDTO: UserRegistrationDTO = {
     username: '',
@@ -27,24 +24,15 @@ export class RegistrationComponent
     password: '',
     matchingPassword: '',
   };
-  authErrors: string[] = [];
-  authErrorsSunscription$!: Subscription;
 
-  constructor(private athService: AuthService) {}
-
-  ngOnInit(): void {
-    this.authErrorsSunscription$ = this.athService.authError.subscribe(
-      (authError) => (this.authErrors = authError?.errors || [])
-    );
+  constructor(protected authService: AuthService) {
+    super(authService);
   }
-
-  ngOnDestroy = (): void => this.registerFormSubscriptions$?.unsubscribe();
 
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
 
-  onRegister(): void {
-    console.log(this.registrationForm);
-    this.athService.registerUser(this.userRegistrationDTO);
+  onSubmit(): void {
+    this.authService.registerUser(this.userRegistrationDTO);
   }
 
   private refreshFormFieldsAfterChange(): void {
@@ -68,19 +56,8 @@ export class RegistrationComponent
     }
   }
 
-  get username(): AbstractControl {
-    return this.registrationForm?.controls[this.controlsKeys.username];
-  }
-
-  get email(): AbstractControl {
-    return this.registrationForm?.controls[this.controlsKeys.email];
-  }
-
-  get password(): AbstractControl {
-    return this.registrationForm?.controls[this.controlsKeys.password];
-  }
-
   get matchingPassword(): AbstractControl {
-    return this.registrationForm?.controls[this.controlsKeys.matchingPassword];
+    const controlName = 'matching_password';
+    return this.authForm?.controls[controlName];
   }
 }
