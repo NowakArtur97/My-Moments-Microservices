@@ -4,13 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppCommonModule } from '../common/common.module';
+import { AuthenticationComponent } from './authentication/authentication.component';
 import { PasswordRulesDirective } from './directives/password-rules.directive';
 import { RegistrationComponent } from './registration/registration.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
 
 @NgModule({
-  declarations: [RegistrationComponent, PasswordRulesDirective, AuthenticationComponent],
+  declarations: [
+    RegistrationComponent,
+    PasswordRulesDirective,
+    AuthenticationComponent,
+  ],
   imports: [FormsModule, BrowserModule, HttpClientModule, AppCommonModule],
-  exports: [RegistrationComponent],
+  exports: [RegistrationComponent, AuthenticationComponent],
 })
 export class AuthModule {}
