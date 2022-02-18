@@ -1,6 +1,6 @@
 <section class="auth_form__wrapper">
   <form
-    #registrationForm="ngForm"
+    #authForm="ngForm"
     (ngSubmit)="onSubmit()"
     [ngFormOptions]="{ updateOn: 'change' }"
     [appNotInclude]="['password', 'username']"
