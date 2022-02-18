@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import ErrorResponse from 'src/app/common/models/error-response.model';
 import { environment } from 'src/environments/environment.local';
 
+import AuthenticationRequest from '../models/authentication-request.model';
 import AuthenticationResponse from '../models/authentication-response.model';
 import UserRegistrationDTO from '../models/user-registration-dto.model';
 
@@ -23,14 +24,37 @@ export class AuthService {
         multipartData
       )
       .subscribe(
-        (authenticationResponse: AuthenticationResponse) => {
-          this.authenticatedUser.next(authenticationResponse);
-          this.authError.next(null);
-        },
-        (error: HttpErrorResponse) => {
-          console.log(error);
-          this.authError.next(error.error as ErrorResponse);
-        }
+        (authenticationResponse: AuthenticationResponse) =>
+          this.handleSuccessfullAuthentication(authenticationResponse),
+        (httpErrorResponse: HttpErrorResponse) =>
+          this.handleAuthenticationErrors(httpErrorResponse)
       );
+  }
+
+  loginUser(authenticationRequest: AuthenticationRequest): void {
+    this.httpClient
+      .post<AuthenticationResponse>(
+        `${environment.userServiceUrl}/authentication`,
+        authenticationRequest
+      )
+      .subscribe(
+        (authenticationResponse: AuthenticationResponse) =>
+          this.handleSuccessfullAuthentication(authenticationResponse),
+        (httpErrorResponse: HttpErrorResponse) =>
+          this.handleAuthenticationErrors(httpErrorResponse)
+      );
+  }
+
+  private handleSuccessfullAuthentication(
+    authenticationResponse: AuthenticationResponse
+  ): void {
+    this.authenticatedUser.next(authenticationResponse);
+    this.authError.next(null);
+  }
+
+  private handleAuthenticationErrors(
+    httpErrorResponse: HttpErrorResponse
+  ): void {
+    this.authError.next(httpErrorResponse.error as ErrorResponse);
   }
 }

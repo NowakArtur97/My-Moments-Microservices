@@ -6,9 +6,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppCommonModule } from '../common/common.module';
 import { PasswordRulesDirective } from './directives/password-rules.directive';
 import { RegistrationComponent } from './registration/registration.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 @NgModule({
-  declarations: [RegistrationComponent, PasswordRulesDirective],
+  declarations: [RegistrationComponent, PasswordRulesDirective, AuthenticationComponent],
   imports: [FormsModule, BrowserModule, HttpClientModule, AppCommonModule],
   exports: [RegistrationComponent],
 })
