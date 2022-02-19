@@ -1,53 +1,62 @@
 <section class="auth_form__wrapper">
   <form #authForm="ngForm" (ngSubmit)="onSubmit()" class="auth_form">
-    <div class="auth_form__controls">
-      <label for="username" class="auth_form__label" aria-placeholder="Username"
-        >Username:
-      </label>
-      <input
-        [(ngModel)]="authenticationRequest.username"
-        required
-        type="text"
-        name="username"
-        id="username"
-        class="auth_form__input"
-        placeholder="Username"
-      />
-    </div>
-    <div class="auth_form__controls">
-      <label for="email" class="auth_form__label" aria-placeholder="Email"
-        >Email:
-      </label>
-      <input
-        [(ngModel)]="authenticationRequest.email"
-        required
-        email
-        type="text"
-        name="email"
-        id="email"
-        class="auth_form__input"
-        placeholder="Email"
-      />
-    </div>
-    <div class="auth_form__controls">
-      <label for="password" class="auth_form__label" aria-placeholder="Password"
-        >Password:
-      </label>
-      <input
-        [(ngModel)]="authenticationRequest.password"
-        required
-        type="text"
-        name="password"
-        id="password"
-        class="auth_form__input"
-        placeholder="Password"
-      />
-    </div>
-    <div class="auth_form__controls">
-      <button type="submit" class="auth_form">Sign In</button>
-      <!-- <button [disabled]="!authenticationForm.valid" type="submit" class="auth_form">
+    <h1 class="auth_form__title">Sign In</h1>
+    <div class="auth_form__controls_wrapper">
+      <div class="auth_form__controls">
+        <label
+          for="username"
+          class="auth_form__label"
+          aria-placeholder="Username"
+          >Username:
+        </label>
+        <input
+          [(ngModel)]="authenticationRequest.username"
+          required
+          type="text"
+          name="username"
+          id="username"
+          class="auth_form__input"
+          placeholder="Username"
+        />
+      </div>
+      <div class="auth_form__controls">
+        <label for="email" class="auth_form__label" aria-placeholder="Email"
+          >Email:
+        </label>
+        <input
+          [(ngModel)]="authenticationRequest.email"
+          required
+          email
+          type="text"
+          name="email"
+          id="email"
+          class="auth_form__input"
+          placeholder="Email"
+        />
+      </div>
+      <div class="auth_form__controls">
+        <label
+          for="password"
+          class="auth_form__label"
+          aria-placeholder="Password"
+          >Password:
+        </label>
+        <input
+          [(ngModel)]="authenticationRequest.password"
+          required
+          type="text"
+          name="password"
+          id="password"
+          class="auth_form__input"
+          placeholder="Password"
+        />
+      </div>
+      <div class="auth_form__controls">
+        <button type="submit" class="auth_form__button">Sign In</button>
+        <!-- <button [disabled]="!authenticationForm.valid" type="submit" class="auth_form__button">
           Sign In
         </button> -->
+      </div>
     </div>
     <p *ngFor="let authError of authErrors" class="auth_form__error_message">
       {{ authError }}

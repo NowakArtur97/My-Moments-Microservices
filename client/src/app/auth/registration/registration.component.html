@@ -7,80 +7,89 @@
     [appMustMatch]="['password', 'matching_password']"
     class="auth_form"
   >
-    <div class="auth_form__controls">
-      <label for="username" class="auth_form__label" aria-placeholder="Username"
-        >Username:
-      </label>
-      <input
-        [(ngModel)]="userRegistrationDTO.username"
-        required
-        minlength="4"
-        maxlength="40"
-        appNoWhiteSpaces
-        type="text"
-        name="username"
-        id="username"
-        class="auth_form__input"
-        placeholder="Username"
-      />
-    </div>
-    <div class="auth_form__controls">
-      <label for="email" class="auth_form__label" aria-placeholder="Email"
-        >Email:
-      </label>
-      <input
-        [(ngModel)]="userRegistrationDTO.email"
-        required
-        email
-        type="text"
-        name="email"
-        id="email"
-        class="auth_form__input"
-        placeholder="Email"
-      />
-    </div>
-    <div class="auth_form__controls">
-      <label for="password" class="auth_form__label" aria-placeholder="Password"
-        >Password:
-      </label>
-      <input
-        [(ngModel)]="userRegistrationDTO.password"
-        required
-        minlength="6"
-        maxlength="30"
-        appPasswordRules
-        type="text"
-        name="password"
-        id="password"
-        class="auth_form__input"
-        placeholder="Password"
-      />
-    </div>
-    <div class="auth_form__controls">
-      <label
-        for="matching_password"
-        class="auth_form__label"
-        aria-placeholder="Matching Password"
-        >Matching Password:
-      </label>
-      <input
-        [(ngModel)]="userRegistrationDTO.matchingPassword"
-        required
-        minlength="6"
-        maxlength="30"
-        appPasswordRules
-        type="text"
-        name="matching_password"
-        id="matching_password"
-        class="auth_form__input"
-        placeholder="Matching Password"
-      />
-    </div>
-    <div class="auth_form__controls">
-      <button type="submit" class="auth_form">Sign Up</button>
-      <!-- <button [disabled]="!registrationForm.valid" type="submit" class="auth_form">
+    <h1 class="auth_form__title">Sign Up</h1>
+    <div class="auth_form__controls_wrapper">
+      <div class="auth_form__controls">
+        <label
+          for="username"
+          class="auth_form__label"
+          aria-placeholder="Username"
+          >Username:
+        </label>
+        <input
+          [(ngModel)]="userRegistrationDTO.username"
+          required
+          minlength="4"
+          maxlength="40"
+          appNoWhiteSpaces
+          type="text"
+          name="username"
+          id="username"
+          class="auth_form__input"
+          placeholder="Username"
+        />
+      </div>
+      <div class="auth_form__controls">
+        <label for="email" class="auth_form__label" aria-placeholder="Email"
+          >Email:
+        </label>
+        <input
+          [(ngModel)]="userRegistrationDTO.email"
+          required
+          email
+          type="text"
+          name="email"
+          id="email"
+          class="auth_form__input"
+          placeholder="Email"
+        />
+      </div>
+      <div class="auth_form__controls">
+        <label
+          for="password"
+          class="auth_form__label"
+          aria-placeholder="Password"
+          >Password:
+        </label>
+        <input
+          [(ngModel)]="userRegistrationDTO.password"
+          required
+          minlength="6"
+          maxlength="30"
+          appPasswordRules
+          type="text"
+          name="password"
+          id="password"
+          class="auth_form__input"
+          placeholder="Password"
+        />
+      </div>
+      <div class="auth_form__controls">
+        <label
+          for="matching_password"
+          class="auth_form__label"
+          aria-placeholder="Matching Password"
+          >Matching Password:
+        </label>
+        <input
+          [(ngModel)]="userRegistrationDTO.matchingPassword"
+          required
+          minlength="6"
+          maxlength="30"
+          appPasswordRules
+          type="text"
+          name="matching_password"
+          id="matching_password"
+          class="auth_form__input"
+          placeholder="Matching Password"
+        />
+      </div>
+      <div class="auth_form__controls">
+        <button type="submit" class="auth_form__button">Sign Up</button>
+        <!-- <button [disabled]="!registrationForm.valid" type="submit" class="auth_form__button">
           Sign Up
         </button> -->
+      </div>
     </div>
     <p *ngFor="let authError of authErrors" class="auth_form__error_message">
       {{ authError }}
