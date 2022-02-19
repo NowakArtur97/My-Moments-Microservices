@@ -18,12 +18,15 @@
 }
 
 .auth_form__title {
+  flex-basis: 10%;
+
   font-size: 6em;
   font-weight: normal;
 }
 
 .auth_form__controls_wrapper {
-  flex-grow: 1;
+  flex-basis: 80%;
+  width: 85%;
 
   display: flex;
   flex-direction: column;
@@ -32,34 +35,44 @@
 }
 
 .auth_form__controls {
+  flex-basis: 20%;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
 
-  height: 100%;
+  height: 80%;
   width: 100%;
 }
 
 .auth_form__label {
-  border: 1em hsl(0, 0%, 7%);
   font-size: 2em;
 }
 
 .auth_form__input {
+  width: 100%;
   padding: 2% 1%;
-  border: none;
+  border: 1em hsl(0, 0%, 7%);
+  border-radius: 5%;
 
   background-color: hsl(0, 0%, 7%);
 
   font-size: 1.5em;
   text-align: center;
   color: hsl(0, 0%, 100%);
+
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.auth_form__input:focus {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 7%);
 }
 
 .auth_form__button {
   height: 50%;
-  width: 100%;
+  width: 80%;
 
   border: 1em hsl(0, 0%, 7%);
   border-radius: 5%;
@@ -76,4 +89,68 @@
 .auth_form__button:hover {
   background-color: hsl(0, 0%, 100%);
   color: hsl(0, 0%, 7%);
+}
+
+.auth_form__switch_view {
+  flex-basis: 5%;
+}
+
+.auth_form__switch_text {
+  font-size: 1.5em;
+  color: hsl(0, 0%, 60%);
+  cursor: pointer;
+
+  transition: color 0.3s;
+}
+
+.auth_form__switch_text:hover {
+  color: hsl(0, 0%, 100%);
+}
+
+@media (min-width: 736px) {
+  .auth_form__title {
+    font-size: 7em;
+  }
+
+  .auth_form__label {
+    font-size: 2.25em;
+  }
+
+  .auth_form__input {
+    border-radius: 2%;
+    font-size: 1.75em;
+  }
+
+  .auth_form__button {
+    width: 70%;
+    font-size: 2.25em;
+  }
+
+  .auth_form__switch_text {
+    font-size: 1.75em;
+  }
+}
+
+@media (min-width: 820px) {
+  .auth_form__title {
+    font-size: 8em;
+  }
+
+  .auth_form__label {
+    font-size: 2.5em;
+  }
+
+  .auth_form__input {
+    border-radius: 2%;
+    font-size: 2em;
+  }
+
+  .auth_form__button {
+    width: 50%;
+    font-size: 2.5em;
+  }
+
+  .auth_form__switch_text {
+    font-size: 2em;
+  }
 }

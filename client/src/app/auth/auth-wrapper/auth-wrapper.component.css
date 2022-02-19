@@ -13,11 +13,17 @@
   height: 50%;
   min-height: 500px;
   width: 80%;
-  max-width: 300px;
+  max-width: 550px;
 
   border-radius: 5%;
 
   overflow: hidden;
 
   background-color: hsl(0, 0%, 9%);
+}
+
+@media (min-width: 736px) {
+  .auth_wrapper {
+    height: 70%;
+  }
 }
