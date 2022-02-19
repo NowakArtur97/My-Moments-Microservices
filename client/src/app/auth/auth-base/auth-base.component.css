@@ -14,7 +14,7 @@
   height: 100%;
   width: 100%;
 
-  padding: 5% 2%;
+  padding: 2% 2%;
 }
 
 .auth_form__title {
@@ -96,6 +96,7 @@
 }
 
 .auth_form__switch_text {
+  text-align: center;
   font-size: 1.5em;
   color: hsl(0, 0%, 60%);
   cursor: pointer;

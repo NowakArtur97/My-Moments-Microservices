@@ -1,7 +1,10 @@
-.auth_background {
+.auth_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+
   display: flex;
   justify-content: center;
-  align-items: center;
 
   height: 100vh;
   width: 100vw;
@@ -9,21 +12,28 @@
   background-color: hsl(0, 0%, 7%);
 }
 
-.auth_wrapper {
-  height: 50%;
+.auth_forms {
   min-height: 500px;
+  height: 50%;
   width: 80%;
   max-width: 550px;
 
   border-radius: 5%;
 
-  overflow: hidden;
-
   background-color: hsl(0, 0%, 9%);
 }
 
-@media (min-width: 736px) {
+@media (orientation: portrait) {
   .auth_wrapper {
+    align-items: center;
+  }
+}
+
+@media (min-width: 890px) {
+  .auth_forms {
     height: 70%;
+  }
+  .auth_wrapper {
+    align-items: center;
   }
 }
