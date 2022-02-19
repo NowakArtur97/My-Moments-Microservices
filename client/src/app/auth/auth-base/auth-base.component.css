@@ -1,8 +1,16 @@
 .auth_form__wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+
   height: 100%;
   width: 100%;
 
   color: hsl(0, 0%, 100%);
+}
+
+.auth_form__wrapper--right {
+  left: 100%;
 }
 
 .auth_form {

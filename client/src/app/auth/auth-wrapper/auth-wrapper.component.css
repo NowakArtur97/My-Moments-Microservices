@@ -1,5 +1,5 @@
 .auth_wrapper {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
 
@@ -13,12 +13,16 @@
 }
 
 .auth_forms {
+  position: absolute;
+
   min-height: 500px;
   height: 50%;
   width: 80%;
   max-width: 550px;
 
   border-radius: 5%;
+
+  overflow: hidden;
 
   background-color: hsl(0, 0%, 9%);
 }
