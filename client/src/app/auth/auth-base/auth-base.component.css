@@ -9,6 +9,10 @@
   color: hsl(0, 0%, 100%);
 }
 
+.auth_form__wrapper--left {
+  left: 0;
+}
+
 .auth_form__wrapper--right {
   left: 100%;
 }

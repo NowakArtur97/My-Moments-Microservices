@@ -1,4 +1,7 @@
-<section class="auth_form__wrapper">
+<section
+  [ngStyle]="{ left: !isInLoginView ? '0' : '-100%' }"
+  class="auth_form__wrapper auth_form__wrapper--right"
+>
   <form
     #authForm="ngForm"
     (ngSubmit)="onSubmit()"
@@ -92,9 +95,10 @@
       </div>
     </div>
     <div class="auth_form__switch_view">
-      <p class="auth_form__switch_text">New Here? Sign Up Here</p>
+      <p (click)="onChangeView()" class="auth_form__switch_text">
+        New Here? Sign Up Here
+      </p>
     </div>
-
     <p *ngFor="let authError of authErrors" class="auth_form__error_message">
       {{ authError }}
     </p>

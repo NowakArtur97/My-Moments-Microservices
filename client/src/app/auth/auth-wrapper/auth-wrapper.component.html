@@ -1,6 +1,12 @@
 <div class="auth_wrapper">
   <div class="auth_forms">
-    <app-registration></app-registration>
-    <!-- <app-authentication></app-authentication> -->
+    <app-registration
+      (viewChanged)="onChangeView()"
+      [isInLoginView]="isInLoginView"
+    ></app-registration>
+    <app-authentication
+      (viewChanged)="onChangeView()"
+      [isInLoginView]="isInLoginView"
+    ></app-authentication>
   </div>
 </div>

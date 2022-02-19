@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -14,6 +14,10 @@ export abstract class AuthBaseComponent implements OnInit, OnDestroy {
   authErrors: string[] = [];
   private authErrorsSunscription$!: Subscription;
 
+  @Output()
+  private viewChanged: EventEmitter<void> = new EventEmitter<void>();
+  @Input() isInLoginView!: boolean;
+
   constructor(protected authService: AuthService) {}
 
   ngOnInit(): void {
@@ -25,6 +29,8 @@ export abstract class AuthBaseComponent implements OnInit, OnDestroy {
   ngOnDestroy = (): void => this.authErrorsSunscription$.unsubscribe();
 
   abstract onSubmit(): void;
+
+  onChangeView = (): void => this.viewChanged.emit();
 
   get username(): AbstractControl {
     const controlName = 'username';
