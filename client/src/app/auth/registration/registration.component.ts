@@ -26,7 +26,7 @@ export class RegistrationComponent
   };
 
   constructor(protected authService: AuthService) {
-    super(authService);
+    super(authService, '0', '100%');
   }
 
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();

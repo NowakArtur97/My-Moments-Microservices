@@ -1,5 +1,11 @@
 <section
-  [ngStyle]="{ left: !isInLoginView ? '0' : '-100%' }"
+  [@switch]="{
+    value: isInLoginView ? 'hidden' : 'present',
+    params: {
+      presentLeftValue: presentLeftValue,
+      hiddenLeftValue: hiddenLeftValue
+    }
+  }"
   class="auth_form__wrapper auth_form__wrapper--right"
 >
   <form

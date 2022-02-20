@@ -20,7 +20,7 @@ export class AuthenticationComponent extends AuthBaseComponent {
   };
 
   constructor(protected authService: AuthService) {
-    super(authService);
+    super(authService, '0', '-100%');
   }
 
   onSubmit(): void {

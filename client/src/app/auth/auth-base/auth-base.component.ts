@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -7,6 +8,25 @@ import { AuthService } from '../services/auth.service';
 @Component({
   template: '',
   styleUrls: ['./auth-base.component.css'],
+  animations: [
+    trigger('switch', [
+      state(
+        'present',
+        style({
+          left: '{{presentLeftValue}}',
+        }),
+        { params: { presentLeftValue: '100%' } }
+      ),
+      state(
+        'hidden',
+        style({
+          left: '{{hiddenLeftValue}}',
+        }),
+        { params: { hiddenLeftValue: 0 } }
+      ),
+      transition('present <=> hidden', [animate('500ms ease-in-out')]),
+    ]),
+  ],
 })
 export abstract class AuthBaseComponent implements OnInit, OnDestroy {
   @ViewChild('authForm') authForm!: NgForm;
@@ -18,7 +38,11 @@ export abstract class AuthBaseComponent implements OnInit, OnDestroy {
   private viewChanged: EventEmitter<void> = new EventEmitter<void>();
   @Input() isInLoginView!: boolean;
 
-  constructor(protected authService: AuthService) {}
+  constructor(
+    protected authService: AuthService,
+    public presentLeftValue: String,
+    public hiddenLeftValue: String
+  ) {}
 
   ngOnInit(): void {
     this.authErrorsSunscription$ = this.authService.authError.subscribe(

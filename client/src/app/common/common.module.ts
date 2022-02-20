@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MustMatchDirective } from './directives/must-match.directive';
 import { NoWhiteSpacesDirective } from './directives/no-white-spaces.directive';
@@ -13,7 +14,7 @@ const validationDirectives = [
 
 @NgModule({
   declarations: [validationDirectives],
-  imports: [CommonModule],
+  imports: [CommonModule, BrowserAnimationsModule],
   exports: [validationDirectives],
 })
 export class AppCommonModule {}
