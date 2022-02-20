@@ -7,6 +7,7 @@
   width: 100%;
 
   color: hsl(0, 0%, 100%);
+  background-color: hsl(0, 0%, 9%);
 }
 
 .auth_form__wrapper--left {
@@ -165,5 +166,11 @@
 
   .auth_form__switch_text {
     font-size: 2em;
+  }
+}
+
+@media (min-width: 890px) {
+  .auth_form__wrapper {
+    width: 50%;
   }
 }

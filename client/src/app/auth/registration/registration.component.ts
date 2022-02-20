@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component } from '@angular/core';
+import { AfterViewChecked, Component, HostListener } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -23,13 +23,18 @@ export class RegistrationComponent
   };
 
   constructor(protected authService: AuthService) {
-    super(authService, '0', '100%');
+    super(authService, window.innerWidth > 890 ? '50%' : '0', '100%');
   }
 
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
 
   onSubmit(): void {
     this.authService.registerUser(this.userRegistrationDTO);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.presentLeftValue = window.innerWidth > 890 ? '50%' : '0';
   }
 
   private refreshFormFieldsAfterChange(): void {
