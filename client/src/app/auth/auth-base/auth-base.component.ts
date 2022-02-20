@@ -15,7 +15,7 @@ import { AuthService } from '../services/auth.service';
         style({
           left: '{{presentLeftValue}}',
         }),
-        { params: { presentLeftValue: '100%' } }
+        { params: { presentLeftValue: 0 } }
       ),
       state(
         'hidden',

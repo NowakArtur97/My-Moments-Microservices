@@ -7,10 +7,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
-  styleUrls: [
-    './authentication.component.css',
-    '../auth-base/auth-base.component.css',
-  ],
+  styleUrls: ['../auth-base/auth-base.component.css'],
 })
 export class AuthenticationComponent extends AuthBaseComponent {
   authenticationRequest: AuthenticationRequest = {

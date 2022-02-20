@@ -9,10 +9,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: [
-    './registration.component.css',
-    '../auth-base/auth-base.component.css',
-  ],
+  styleUrls: ['../auth-base/auth-base.component.css'],
 })
 export class RegistrationComponent
   extends AuthBaseComponent
