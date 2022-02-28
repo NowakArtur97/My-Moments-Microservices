@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 import { BackgroundService } from './background.service';
 
@@ -8,11 +8,24 @@ import { BackgroundService } from './background.service';
   styleUrls: ['./background.component.css'],
 })
 export class BackgroundComponent implements OnInit {
-  images: String[];
+  tiles!: String[][];
+  tileHeight!: String;
+  gridColumns!: String;
+
+  @HostListener('window:resize', ['$event'])
+  private onResize(): void {
+    this.setupTiles();
+  }
 
   constructor(private backgroundService: BackgroundService) {
-    this.images = this.backgroundService.getRandomImages();
+    this.setupTiles();
   }
 
   ngOnInit(): void {}
+
+  setupTiles() {
+    this.tiles = this.backgroundService.getRandomImages();
+    this.tileHeight = this.backgroundService.getTileHeight();
+    this.gridColumns = `repeat(${this.tiles.length}, 1fr)`;
+  }
 }

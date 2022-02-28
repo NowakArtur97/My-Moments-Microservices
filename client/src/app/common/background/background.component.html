@@ -1,7 +1,11 @@
-<div class="background_wrapper">
-  <div *ngFor="let image of images" class="background__images">
+<div
+  [ngStyle]="{ 'grid-template-columns': gridColumns }"
+  class="background_wrapper"
+>
+  <div *ngFor="let imagesColumn of tiles" class="background__images">
     <div
-      [ngStyle]="{ 'background-image': image }"
+      *ngFor="let image of imagesColumn"
+      [ngStyle]="{ 'background-image': image, height: tileHeight }"
       class="background__image"
     ></div>
   </div>

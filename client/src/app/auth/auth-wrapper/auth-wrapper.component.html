@@ -1,7 +1,13 @@
 <div class="auth_wrapper">
   <div class="auth_wrapper__forms">
-    <div class="auth_wrapper__image auth_wrapper__image--left"></div>
-    <div class="auth_wrapper__image auth_wrapper__image--right"></div>
+    <div
+      [ngStyle]="{ opacity: isInLoginView ? 0 : 1 }"
+      class="auth_wrapper__image auth_wrapper__image--left"
+    ></div>
+    <div
+      [ngStyle]="{ opacity: isInLoginView ? 1 : 0 }"
+      class="auth_wrapper__image auth_wrapper__image--right"
+    ></div>
     <app-registration
       (viewChanged)="onChangeView()"
       [isInLoginView]="isInLoginView"

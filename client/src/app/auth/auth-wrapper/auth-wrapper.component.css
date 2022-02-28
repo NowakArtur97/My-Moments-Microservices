@@ -8,8 +8,6 @@
 
   height: 100vh;
   width: 100vw;
-
-  background-color: hsl(0, 0%, 7%);
 }
 
 .auth_wrapper__forms {
@@ -23,8 +21,6 @@
   border-radius: 5%;
 
   overflow: hidden;
-
-  background-color: hsl(0, 0%, 9%);
 }
 
 .auth_wrapper__image {
@@ -33,6 +29,8 @@
   height: 100%;
 
   background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .auth_wrapper__image--left {
