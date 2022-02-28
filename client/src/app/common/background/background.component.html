@@ -1,0 +1,8 @@
+<div class="background_wrapper">
+  <div *ngFor="let image of images" class="background__images">
+    <div
+      [ngStyle]="{ 'background-image': image }"
+      class="background__image"
+    ></div>
+  </div>
+</div>

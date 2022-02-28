@@ -1,0 +1,30 @@
+.background_wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.background__images {
+  display: grid;
+}
+
+.background__image {
+  object-fit: cover;
+  width: 100%;
+  height: 108px;
+
+  background-image: url("../../../assets/pictures/astronaut-small.jpg");
+  background-size: cover;
+  background-position: center center;
+}
+
+@media (min-width: 1920px) {
+  .background__image {
+    background-image: url("../../../assets/pictures/astronaut-medium.jpg");
+  }
+}
+
+@media (min-width: 2560px) {
+  .background__image {
+    background-image: url("../../../assets/pictures/astronaut-big.jpg");
+  }
+}
