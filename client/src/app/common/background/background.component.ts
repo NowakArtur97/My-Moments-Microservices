@@ -12,22 +12,25 @@ import { BackgroundService } from './background.service';
       state(
         'down',
         style({
-          transform: 'translateY(-100px)',
-        })
+          transform: 'translateY(-{{tilesTopOffset }} )',
+        }),
+        { params: { tilesTopOffset: '0' } }
       ),
       state(
         'up',
         style({
-          transform: 'translateY(100px)',
-        })
+          transform: 'translateY({{tilesTopOffset }} )',
+        }),
+        { params: { tilesTopOffset: '0' } }
       ),
-      transition('down => up', animate('300ms linear')),
-      transition('up => down', animate('300ms linear')),
+      transition('down => up', animate('3000ms')),
+      transition('up => down', animate('3000ms')),
     ]),
   ],
 })
 export class BackgroundComponent implements OnInit, AfterViewInit {
   private readonly TILES_ANIMATIONS_STATES = { UP: 'up', DOWN: 'down' };
+  tilesTopOffset!: String;
   state = this.TILES_ANIMATIONS_STATES.UP;
   tiles!: String[][];
   tileHeight!: String;
@@ -44,11 +47,24 @@ export class BackgroundComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {}
 
-  ngAfterViewInit() {
+  setupTiles() {
+    this.tiles = this.backgroundService.getRandomImages();
+    const tileHeight = this.backgroundService.getTileHeight();
+    this.tileHeight = `${tileHeight}px`;
+    this.tilesTopOffset = `-${
+      tileHeight *
+      (this.backgroundService.NUMBER_OF_BACKUP_IMAGES_FOR_ANIMATION / 2)
+    }px`;
+    console.log(this.tilesTopOffset);
+    this.gridColumns = `repeat(${this.tiles.length}, 1fr)`;
+  }
+
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.state = this.TILES_ANIMATIONS_STATES.DOWN;
     }, 0);
   }
+
   onEnd(event: AnimationEvent) {
     this.state = this.TILES_ANIMATIONS_STATES.UP;
     if (event.toState === this.TILES_ANIMATIONS_STATES.UP) {
@@ -56,11 +72,5 @@ export class BackgroundComponent implements OnInit, AfterViewInit {
         this.state = this.TILES_ANIMATIONS_STATES.DOWN;
       }, 0);
     }
-  }
-
-  setupTiles() {
-    this.tiles = this.backgroundService.getRandomImages();
-    this.tileHeight = this.backgroundService.getTileHeight();
-    this.gridColumns = `repeat(${this.tiles.length}, 1fr)`;
   }
 }

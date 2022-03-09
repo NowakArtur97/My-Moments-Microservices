@@ -1,9 +1,9 @@
 <div
-  [ngStyle]="{ 'grid-template-columns': gridColumns }"
+  [ngStyle]="{ 'grid-template-columns': gridColumns, top: 'tilesTopOffset' }"
   class="background_wrapper"
 >
   <div
-    [@move]="state"
+    [@move]="{ value: state, params: { tilesTopOffset: tilesTopOffset } }"
     (@move.done)="onEnd($event)"
     *ngFor="let imagesColumn of tiles"
     class="background__images"

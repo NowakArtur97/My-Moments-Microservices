@@ -28,6 +28,7 @@ export class BackgroundService {
       height: 12,
     },
   };
+  readonly NUMBER_OF_BACKUP_IMAGES_FOR_ANIMATION = 4;
 
   getRandomImages(): String[][] {
     const size = this.getSizeBasedOnResolution();
@@ -47,9 +48,13 @@ export class BackgroundService {
     imagesPaths: String[]
   ) {
     const images: String[][] = [];
-    for (let row = 0; row < tilesSize.width; row++) {
+    for (let column = 0; column < tilesSize.width; column++) {
       const nestedArray = [];
-      for (let column = 0; column < tilesSize.height; column++) {
+      for (
+        let row = 0;
+        row < tilesSize.height + this.NUMBER_OF_BACKUP_IMAGES_FOR_ANIMATION;
+        row++
+      ) {
         const image = this.toUrl(
           imagesPaths[Math.floor(Math.random() * imagesPaths.length)]
         );
@@ -60,8 +65,7 @@ export class BackgroundService {
     return images;
   }
 
-  getTileHeight = (): String =>
-    `${window.innerHeight / this.getTilesSize().height}px`;
+  getTileHeight = (): number => window.innerHeight / this.getTilesSize().height;
 
   getTilesSize(): { width: number; height: number } {
     const windowWidth = window.outerWidth;
