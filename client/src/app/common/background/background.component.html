@@ -2,7 +2,12 @@
   [ngStyle]="{ 'grid-template-columns': gridColumns }"
   class="background_wrapper"
 >
-  <div *ngFor="let imagesColumn of tiles" class="background__images">
+  <div
+    [@move]="state"
+    (@move.done)="onEnd($event)"
+    *ngFor="let imagesColumn of tiles"
+    class="background__images"
+  >
     <div
       *ngFor="let image of imagesColumn"
       [ngStyle]="{ 'background-image': image, height: tileHeight }"
