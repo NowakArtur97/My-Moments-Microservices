@@ -34,7 +34,7 @@ export class RegistrationComponent
 
   setupAnimationValues(): void {
     this.presentLeftValue = window.innerWidth > 890 ? 50 : 0;
-    this.hiddenLeftValue = -100;
+    this.hiddenLeftValue = 100;
   }
 
   @HostListener('window:resize', ['$event'])
