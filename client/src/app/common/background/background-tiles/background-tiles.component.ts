@@ -63,7 +63,7 @@ export class BackgroundTilesComponent implements OnInit, AfterViewInit {
 
   onAnimationFinished = (): void => this.restartAnimation();
 
-  private restartAnimation() {
+  private restartAnimation(): void {
     window.clearTimeout(this.animationTimeout);
     this.animationTimeout = setTimeout(() => {
       this.state =
