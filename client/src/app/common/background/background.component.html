@@ -3,7 +3,10 @@
   class="background_wrapper"
 >
   <div
-    [@move]="{ value: state, params: { tilesTopOffset: tilesTopOffset } }"
+    [@move]="{
+      value: state,
+      params: { tilesTopOffset: tilesTopOffset, randomTiming: randomTiming }
+    }"
     (@move.done)="onEnd($event)"
     *ngFor="let imagesColumn of tiles"
     class="background__images"
