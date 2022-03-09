@@ -1,6 +1,7 @@
 .background_wrapper {
   display: grid;
   position: absolute;
+  top: 0;
   left: 0;
 
   width: 100vw;
@@ -9,14 +10,9 @@
   overflow: hidden;
 }
 
-.background__images {
-  display: grid;
-}
-
-.background__image {
-  object-fit: cover;
-  width: 100%;
-
-  background-size: cover;
-  background-position: center center;
+.background {
+  position: absolute;
+  inset: 0;
+  background-color: hsl(0, 0%, 9%);
+  opacity: 0.6;
 }

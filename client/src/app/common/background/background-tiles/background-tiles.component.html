@@ -1,0 +1,15 @@
+<div
+  [ngStyle]="{ top: '-' + tilesTopOffset + 'px' }"
+  [@move]="{
+    value: state,
+    params: { tilesTopOffset: tilesTopOffset, randomTiming: randomTiming }
+  }"
+  (@move.done)="onAnimationFinished()"
+  class="background__images"
+>
+  <div
+    *ngFor="let image of images"
+    [ngStyle]="{ 'background-image': image, height: tileHeight }"
+    class="background__image"
+  ></div>
+</div>

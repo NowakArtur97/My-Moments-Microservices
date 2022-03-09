@@ -17,10 +17,15 @@ export class AuthenticationComponent extends AuthBaseComponent {
   };
 
   constructor(protected authService: AuthService) {
-    super(authService, '0', '-100%');
+    super(authService);
   }
 
   onSubmit(): void {
     this.authService.loginUser(this.authenticationRequest);
+  }
+
+  setupAnimationValues(): void {
+    this.presentLeftValue = 0;
+    this.hiddenLeftValue = -100;
   }
 }

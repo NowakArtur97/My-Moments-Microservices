@@ -23,7 +23,7 @@ export class RegistrationComponent
   };
 
   constructor(protected authService: AuthService) {
-    super(authService, window.innerWidth > 890 ? '50%' : '0', '100%');
+    super(authService);
   }
 
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
@@ -32,9 +32,14 @@ export class RegistrationComponent
     this.authService.registerUser(this.userRegistrationDTO);
   }
 
+  setupAnimationValues(): void {
+    this.presentLeftValue = window.innerWidth > 890 ? 50 : 0;
+    this.hiddenLeftValue = -100;
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(): void {
-    this.presentLeftValue = window.innerWidth > 890 ? '50%' : '0';
+    this.presentLeftValue = window.innerWidth > 890 ? 50 : 0;
   }
 
   private refreshFormFieldsAfterChange(): void {

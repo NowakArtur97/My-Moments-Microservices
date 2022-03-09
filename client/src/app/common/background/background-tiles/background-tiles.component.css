@@ -1,0 +1,12 @@
+.background__images {
+  display: grid;
+  position: relative;
+}
+
+.background__image {
+  object-fit: cover;
+  width: 100%;
+
+  background-size: cover;
+  background-position: center center;
+}
