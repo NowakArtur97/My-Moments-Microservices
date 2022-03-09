@@ -30,24 +30,24 @@ export class BackgroundService {
   };
   readonly NUMBER_OF_BACKUP_IMAGES_FOR_ANIMATION = 4;
 
-  getRandomImages(): String[][] {
+  getRandomImages(): string[][] {
     const size = this.getSizeBasedOnResolution();
     const tilesSize = this.getTilesSize();
     const imagesPaths = this.getImagesPaths(size);
     return this.createTiles(tilesSize, imagesPaths);
   }
 
-  private getImagesPaths = (size: String): String[] =>
+  private getImagesPaths = (size: string): string[] =>
     this.IMAGES_NAMES.map((name) => this.getImagePath(name, size));
 
-  private getImagePath = (name: String, size: String): String =>
+  private getImagePath = (name: string, size: string): string =>
     `${this.IMAGES_PATH}${name}${this.IMAGES_SEPARATOR}${size}${this.IMAGES_EXTENSION}`;
 
   private createTiles(
     tilesSize: { width: number; height: number },
-    imagesPaths: String[]
-  ) {
-    const images: String[][] = [];
+    imagesPaths: string[]
+  ): string[][] {
+    const images: string[][] = [];
     for (let column = 0; column < tilesSize.width; column++) {
       const nestedArray = [];
       for (
@@ -78,9 +78,9 @@ export class BackgroundService {
     }
   }
 
-  private toUrl = (image: String): String => `url(${image})`;
+  private toUrl = (image: string): string => `url(${image})`;
 
-  private getSizeBasedOnResolution(): String {
+  private getSizeBasedOnResolution(): string {
     const windowWidth = window.innerWidth;
     if (windowWidth >= this.WINDOW_WIDTHS.big) {
       return this.IMAGE_SIZES.medium;

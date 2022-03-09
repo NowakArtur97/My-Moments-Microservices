@@ -40,8 +40,8 @@ export abstract class AuthBaseComponent implements OnInit, OnDestroy {
 
   constructor(
     protected authService: AuthService,
-    public presentLeftValue: String,
-    public hiddenLeftValue: String
+    public presentLeftValue: string,
+    public hiddenLeftValue: string
   ) {}
 
   ngOnInit(): void {

@@ -33,7 +33,7 @@ export class RegistrationComponent
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize() {
+  onResize(): void {
     this.presentLeftValue = window.innerWidth > 890 ? '50%' : '0';
   }
 

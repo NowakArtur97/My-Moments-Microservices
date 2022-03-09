@@ -37,10 +37,10 @@ export class BackgroundComponent implements OnInit, AfterViewInit {
   private readonly ANIMATIONS_TIMINGS = { MIN: 1000, MAX: 3000 };
 
   state = this.TILES_ANIMATIONS_STATES.UP;
-  tiles!: String[][];
-  tileHeight!: String;
-  gridColumns!: String;
-  tilesTopOffset!: String;
+  tiles!: string[][];
+  tileHeight!: string;
+  gridColumns!: string;
+  tilesTopOffset!: string;
   randomTiming!: number;
 
   @HostListener('window:resize', ['$event'])
@@ -54,7 +54,7 @@ export class BackgroundComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {}
 
-  setupTiles() {
+  setupTiles(): void {
     this.tiles = this.backgroundService.getRandomImages();
     const tileHeight = this.backgroundService.getTileHeight();
     this.tileHeight = `${tileHeight}px`;
@@ -72,7 +72,7 @@ export class BackgroundComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  onEnd(event: AnimationEvent) {
+  onEnd(event: AnimationEvent): void {
     this.state = this.TILES_ANIMATIONS_STATES.UP;
     this.randomTiming = this.generateRandomTiming();
     if (event.toState === this.TILES_ANIMATIONS_STATES.UP) {
