@@ -29,9 +29,8 @@ export class RegistrationComponent
 
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
 
-  onSubmit(): void {
+  onSubmit = (): void =>
     this.authService.registerUser(this.userRegistrationDTO);
-  }
 
   setupAnimationValues(): void {
     this.setupLeftOffset();
@@ -39,9 +38,7 @@ export class RegistrationComponent
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(): void {
-    this.setupLeftOffset();
-  }
+  onResize = (): void => this.setupLeftOffset();
 
   private refreshFormFieldsAfterChange(): void {
     if (this.username) {
@@ -69,7 +66,7 @@ export class RegistrationComponent
     return this.authForm?.controls[controlName];
   }
 
-  private setupLeftOffset() {
+  private setupLeftOffset(): void {
     this.presentLeftValueInPercentage =
       window.innerWidth > AUTH_FORMS_WIDTH_TO_TWO_COLUMNS_CHANGE ? 50 : 0;
   }

@@ -80,14 +80,10 @@ export class AuthWrapperComponent implements OnInit {
     this.onHideErrorMessages();
   }
 
-  onHideErrorMessages(): void {
-    this.authService.authError.next(null);
-  }
+  onHideErrorMessages = (): void => this.authService.authError.next(null);
 
   @HostListener('window:resize', ['$event'])
-  private onResize(): void {
-    this.setErrorsLeftOffset();
-  }
+  private onResize = (): void => this.setErrorsLeftOffset();
 
   private setErrorsLeftOffset(): void {
     this.errorsLeftOffset =

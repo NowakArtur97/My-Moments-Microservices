@@ -20,9 +20,7 @@ export class AuthenticationComponent extends AuthBaseComponent {
     super(authService);
   }
 
-  onSubmit(): void {
-    this.authService.loginUser(this.authenticationRequest);
-  }
+  onSubmit = (): void => this.authService.loginUser(this.authenticationRequest);
 
   setupAnimationValues(): void {
     this.presentLeftValueInPercentage = 0;
