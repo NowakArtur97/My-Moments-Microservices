@@ -1,11 +1,23 @@
 <div class="auth_wrapper">
   <div class="auth_wrapper__forms">
     <div
-      [ngStyle]="{ opacity: isInLoginView ? 0 : 1 }"
+      [@switch]="{
+        value: isInLoginView ? 'present' : 'hidden',
+        params: {
+          presentLeftValue: presentLeftValue,
+          hiddenLeftValue: hiddenLeftValue
+        }
+      }"
       class="auth_wrapper__image auth_wrapper__image--left"
     ></div>
     <div
-      [ngStyle]="{ opacity: isInLoginView ? 1 : 0 }"
+      [@switch]="{
+        value: isInLoginView ? 'hidden' : 'present',
+        params: {
+          presentLeftValue: presentLeftValue,
+          hiddenLeftValue: hiddenLeftValue
+        }
+      }"
       class="auth_wrapper__image auth_wrapper__image--right"
     ></div>
     <app-registration
