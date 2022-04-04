@@ -8,6 +8,8 @@
 
   height: 100vh;
   width: 100vw;
+
+  color: hsl(0, 0%, 100%);
 }
 
 .auth_wrapper__forms {
@@ -49,9 +51,85 @@
   background-image: url("../../../assets/pictures/road-small.jpg");
 }
 
+.auth_wrapper__error_wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  position: absolute;
+  top: 0;
+  left: 0%;
+
+  width: 100%;
+  height: 100%;
+  padding: 2% 2%;
+
+  background-color: hsl(0, 0%, 9%);
+  opacity: 0.9;
+}
+
+.auth_wrapper__error_messages,
+.auth_wrapper__error_button_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 85%;
+}
+
+.auth_wrapper__error_messages {
+  flex-basis: 80%;
+  flex-direction: column;
+}
+
+.auth_wrapper__error_button_wrapper {
+  flex-basis: 20%;
+}
+
+.auth_wrapper__error_message {
+  font-size: 2em;
+  text-align: center;
+}
+
+.auth_wrapper__error_button {
+  height: 40%;
+  width: 60%;
+
+  border: 1em hsl(0, 0%, 7%);
+  border-radius: 5%;
+  background-color: hsl(0, 0%, 7%);
+
+  font-size: 2em;
+  color: hsl(0, 0%, 100%);
+
+  transition: background-color 0.3s, color 0.3s;
+
+  cursor: pointer;
+}
+
+.auth_wrapper__error_button:hover {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 7%);
+}
+
 @media (orientation: portrait) {
   .auth_wrapper {
     align-items: center;
+  }
+}
+
+@media (min-width: 736px) {
+  .auth_wrapper__error_message,
+  .auth_wrapper__error_button {
+    font-size: 2.25em;
+  }
+}
+
+@media (min-width: 820px) {
+  .auth_wrapper__error_message,
+  .auth_wrapper__error_button {
+    font-size: 2.5em;
   }
 }
 
@@ -71,6 +149,11 @@
 
   .auth_wrapper__image--right {
     display: block;
+  }
+
+  .auth_wrapper__error_wrapper {
+    left: 50%;
+    width: 50%;
   }
 }
 

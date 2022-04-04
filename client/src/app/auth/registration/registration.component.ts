@@ -1,6 +1,7 @@
 import { AfterViewChecked, Component, HostListener } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { AUTH_FORMS_WIDTH_TO_TWO_COLUMNS_CHANGE } from 'src/app/common/const.data';
 
 import { AuthBaseComponent } from '../auth-base/auth-base.component';
 import UserRegistrationDTO from '../models/user-registration-dto.model';
@@ -33,13 +34,13 @@ export class RegistrationComponent
   }
 
   setupAnimationValues(): void {
-    this.presentLeftValue = window.innerWidth > 890 ? 50 : 0;
-    this.hiddenLeftValue = 100;
+    this.setupLeftOffset();
+    this.hiddenLeftValueInPercentage = 100;
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(): void {
-    this.presentLeftValue = window.innerWidth > 890 ? 50 : 0;
+    this.setupLeftOffset();
   }
 
   private refreshFormFieldsAfterChange(): void {
@@ -66,5 +67,10 @@ export class RegistrationComponent
   get matchingPassword(): AbstractControl {
     const controlName = 'matching_password';
     return this.authForm?.controls[controlName];
+  }
+
+  private setupLeftOffset() {
+    this.presentLeftValueInPercentage =
+      window.innerWidth > AUTH_FORMS_WIDTH_TO_TWO_COLUMNS_CHANGE ? 50 : 0;
   }
 }

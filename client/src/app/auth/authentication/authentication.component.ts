@@ -25,7 +25,7 @@ export class AuthenticationComponent extends AuthBaseComponent {
   }
 
   setupAnimationValues(): void {
-    this.presentLeftValue = 0;
-    this.hiddenLeftValue = -100;
+    this.presentLeftValueInPercentage = 0;
+    this.hiddenLeftValueInPercentage = -100;
   }
 }

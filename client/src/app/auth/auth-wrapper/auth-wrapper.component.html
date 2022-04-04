@@ -4,8 +4,8 @@
       [@switch]="{
         value: isInLoginView ? 'present' : 'hidden',
         params: {
-          presentLeftValue: presentLeftValue,
-          hiddenLeftValue: hiddenLeftValue
+          presentLeftValue: imagesPresentLeftValue,
+          hiddenLeftValue: imagesHiddenLeftValue
         }
       }"
       class="auth_wrapper__image auth_wrapper__image--left"
@@ -14,8 +14,8 @@
       [@switch]="{
         value: isInLoginView ? 'hidden' : 'present',
         params: {
-          presentLeftValue: presentLeftValue,
-          hiddenLeftValue: hiddenLeftValue
+          presentLeftValue: imagesPresentLeftValue,
+          hiddenLeftValue: imagesHiddenLeftValue
         }
       }"
       class="auth_wrapper__image auth_wrapper__image--right"
@@ -28,5 +28,26 @@
       (viewChanged)="onChangeView()"
       [isInLoginView]="isInLoginView"
     ></app-authentication>
+    <div
+      [ngStyle]="{ left: isInLoginView ? '0' : errorsLeftOffset }"
+      [@showErrors]="{
+        value: hasErrors ? 'incorrect' : 'correct'
+      }"
+      class="auth_wrapper__error_wrapper"
+    >
+      <div class="auth_wrapper__error_messages">
+        <p *ngFor="let error of errors" class="auth_wrapper__error_message">
+          {{ error }}
+        </p>
+      </div>
+      <div class="auth_wrapper__error_button_wrapper">
+        <button
+          (click)="onHideErrorMessages()"
+          class="auth_wrapper__error_button"
+        >
+          Close
+        </button>
+      </div>
+    </div>
   </div>
 </div>

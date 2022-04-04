@@ -31,10 +31,9 @@ import { AuthService } from '../services/auth.service';
 export abstract class AuthBaseComponent implements OnInit, OnDestroy {
   @ViewChild('authForm') authForm!: NgForm;
 
-  authErrors: string[] = [];
   private authErrorsSunscription$!: Subscription;
-  public presentLeftValue!: number;
-  public hiddenLeftValue!: number;
+  public presentLeftValueInPercentage!: number;
+  public hiddenLeftValueInPercentage!: number;
 
   @Output()
   private viewChanged: EventEmitter<void> = new EventEmitter<void>();
@@ -44,11 +43,7 @@ export abstract class AuthBaseComponent implements OnInit, OnDestroy {
     this.setupAnimationValues();
   }
 
-  ngOnInit(): void {
-    this.authErrorsSunscription$ = this.authService.authError.subscribe(
-      (authError) => (this.authErrors = authError?.errors || [])
-    );
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy = (): void => this.authErrorsSunscription$.unsubscribe();
 

@@ -33,10 +33,7 @@ export class BackgroundTilesComponent implements OnInit, AfterViewInit {
   private readonly TILES_ANIMATIONS_STATES = { UP: 'up', DOWN: 'down' };
   private readonly ANIMATIONS_TIMINGS = { MIN: 8000, MAX: 12000 };
 
-  state =
-    Math.random() > 0.5
-      ? this.TILES_ANIMATIONS_STATES.UP
-      : this.TILES_ANIMATIONS_STATES.DOWN;
+  state!: string;
   tileHeight!: string;
   tilesTopOffset!: number;
   randomTiming!: number;
@@ -48,7 +45,12 @@ export class BackgroundTilesComponent implements OnInit, AfterViewInit {
     this.setupTiles();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.state =
+      Math.random() > 0.5
+        ? this.TILES_ANIMATIONS_STATES.UP
+        : this.TILES_ANIMATIONS_STATES.DOWN;
+  }
 
   setupTiles(): void {
     const tileHeight = this.backgroundService.getTileHeight();

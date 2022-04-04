@@ -2,8 +2,8 @@
   [@switch]="{
     value: isInLoginView ? 'hidden' : 'present',
     params: {
-      presentLeftValue: presentLeftValue,
-      hiddenLeftValue: hiddenLeftValue
+      presentLeftValue: presentLeftValueInPercentage,
+      hiddenLeftValue: hiddenLeftValueInPercentage
     }
   }"
   class="auth_form__wrapper auth_form__wrapper--right"
@@ -105,8 +105,5 @@
         Already Have An Account? Sign In Here
       </p>
     </div>
-    <p *ngFor="let authError of authErrors" class="auth_form__error_message">
-      {{ authError }}
-    </p>
   </form>
 </section>

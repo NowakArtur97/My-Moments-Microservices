@@ -6,7 +6,6 @@
   height: 100%;
   width: 100%;
 
-  color: hsl(0, 0%, 100%);
   background-color: hsl(0, 0%, 9%);
   opacity: 0.9;
 }
@@ -127,7 +126,8 @@
     font-size: 7em;
   }
 
-  .auth_form__label {
+  .auth_form__label,
+  .auth_form__button {
     font-size: 2.25em;
   }
 
@@ -138,7 +138,6 @@
 
   .auth_form__button {
     width: 70%;
-    font-size: 2.25em;
   }
 
   .auth_form__switch_text {
@@ -151,7 +150,8 @@
     font-size: 8em;
   }
 
-  .auth_form__label {
+  .auth_form__label,
+  .auth_form__button {
     font-size: 2.5em;
   }
 
@@ -162,7 +162,6 @@
 
   .auth_form__button {
     width: 50%;
-    font-size: 2.5em;
   }
 
   .auth_form__switch_text {
