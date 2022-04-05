@@ -20,14 +20,16 @@ export class JwtInterceptor implements HttpInterceptor {
         const isNotSecured =
           request.url.includes('authentication') ||
           request.url.includes('registration');
-        if (isNotSecured || !!token) {
-          return next.handle(request);
-        } else {
-          const modifiedRequest = request.clone({
-            headers: new HttpHeaders().set('Authorization', `Bearer ${token}`),
-          });
-          return next.handle(modifiedRequest);
-        }
+        return isNotSecured || !!token
+          ? next.handle(request)
+          : next.handle(
+              request.clone({
+                headers: new HttpHeaders().set(
+                  'Authorization',
+                  `Bearer ${token}`
+                ),
+              })
+            );
       })
     );
   }

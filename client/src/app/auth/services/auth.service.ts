@@ -1,6 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { ROUTES } from 'src/app/common/const.data';
 import ErrorResponse from 'src/app/common/models/error-response.model';
 import { environment } from 'src/environments/environment.local';
 
@@ -13,7 +15,7 @@ export class AuthService {
   authError = new BehaviorSubject<ErrorResponse | null>(null);
   authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private router: Router) {}
 
   registerUser(userData: UserRegistrationDTO): void {
     const multipartData = new FormData();
@@ -48,13 +50,16 @@ export class AuthService {
   private handleSuccessfullAuthentication(
     authenticationResponse: AuthenticationResponse
   ): void {
+    console.log(authenticationResponse);
     this.authenticatedUser.next(authenticationResponse);
     this.authError.next(null);
+    this.router.navigate([`/${ROUTES.posts}`]);
   }
 
   private handleAuthenticationErrors(
     httpErrorResponse: HttpErrorResponse
   ): void {
+    console.log(httpErrorResponse);
     this.authError.next(httpErrorResponse.error as ErrorResponse);
   }
 }
