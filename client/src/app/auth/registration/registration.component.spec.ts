@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppCommonModule } from 'src/app/common/common.module';
 
 import { PasswordRulesDirective } from '../directives/password-rules.directive';
@@ -27,6 +28,7 @@ describe('RegistrationComponent', () => {
         BrowserModule,
         AppCommonModule,
         HttpClientTestingModule,
+        RouterTestingModule,
       ],
     }).compileComponents();
   });

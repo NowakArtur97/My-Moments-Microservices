@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppCommonModule } from 'src/app/common/common.module';
 
 import AuthenticationRequest from '../models/authentication-request.model';
@@ -25,6 +26,7 @@ describe('AuthenticationComponent', () => {
         BrowserModule,
         AppCommonModule,
         HttpClientTestingModule,
+        RouterTestingModule,
       ],
     }).compileComponents();
   });

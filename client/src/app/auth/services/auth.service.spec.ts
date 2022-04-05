@@ -1,7 +1,10 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { skip } from 'rxjs/operators';
+import { ROUTES } from 'src/app/common/const.data';
 import ErrorResponse from 'src/app/common/models/error-response.model';
 import { environment } from 'src/environments/environment.local';
 
@@ -14,10 +17,12 @@ describe('AuthService', () => {
   let injector: TestBed;
   let authService: AuthService;
   let httpMock: HttpTestingController;
+  let router: Router;
+  let navigateSpy: jasmine.Spy;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
       providers: [AuthService],
     });
   });
@@ -26,6 +31,9 @@ describe('AuthService', () => {
     injector = getTestBed();
     authService = injector.inject(AuthService);
     httpMock = injector.inject(HttpTestingController);
+    router = injector.inject(Router);
+
+    navigateSpy = spyOn(router, 'navigate');
   });
 
   afterEach(() => {
@@ -33,7 +41,7 @@ describe('AuthService', () => {
   });
 
   describe('when register user', () => {
-    it('with correct data should register user and emit authenticated user data and clear auth errors', () => {
+    it('with correct data should register user, emit authenticated user data, clear auth errors and redirect', () => {
       const registrationData: UserRegistrationDTO = {
         username: 'username',
         email: 'email@email.com',
@@ -58,6 +66,8 @@ describe('AuthService', () => {
       );
       expect(req.request.method).toBe('POST');
       req.flush(authResponse);
+
+      expect(navigateSpy).toHaveBeenCalledWith([`/${ROUTES.posts}`]);
     });
 
     it('with incorrect data should emit auth errors', () => {
@@ -94,7 +104,7 @@ describe('AuthService', () => {
   });
 
   describe('when authenticate user', () => {
-    it('with correct data should authenticate user and emit authenticated user data and clear auth errors', () => {
+    it('with correct data should authenticate user, emit authenticated user data, clear auth errors and redirect', () => {
       const authenticationRequest: AuthenticationRequest = {
         username: 'username',
         email: 'email@email.com',
@@ -118,6 +128,8 @@ describe('AuthService', () => {
       );
       expect(req.request.method).toBe('POST');
       req.flush(authResponse);
+
+      expect(navigateSpy).toHaveBeenCalledWith([`/${ROUTES.posts}`]);
     });
 
     it('with incorrect data should emit auth errors', () => {
