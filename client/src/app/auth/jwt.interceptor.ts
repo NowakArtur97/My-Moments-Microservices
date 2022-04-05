@@ -21,10 +21,8 @@ export class JwtInterceptor implements HttpInterceptor {
           request.url.includes('authentication') ||
           request.url.includes('registration');
         if (isNotSecured || !!token) {
-          console.log('NOT SECURED');
           return next.handle(request);
         } else {
-          console.log('SECURED');
           const modifiedRequest = request.clone({
             headers: new HttpHeaders().set('Authorization', `Bearer ${token}`),
           });
