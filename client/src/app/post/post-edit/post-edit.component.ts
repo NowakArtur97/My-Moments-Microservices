@@ -19,22 +19,26 @@ export class PostEditComponent implements OnInit {
     const inputFiles = input.files;
     if (inputFiles) {
       const numberOfFiles = inputFiles.length;
-      for (let i = 0; i < numberOfFiles; i++) {
-        const fileReader = new FileReader();
-        fileReader.onload = (event: any) => {
-          const imageSnippet: ImageSnippet = {
-            src: event.target.result,
-            file: inputFiles[i],
-          };
-          this.files.push(imageSnippet);
-          if (i == 0) {
-            this.loadImageToCanvas(imageSnippet.src);
-          }
-        };
-        fileReader.readAsDataURL(inputFiles[i]);
+      for (let index = 0; index < numberOfFiles; index++) {
+        this.loadData(inputFiles, index);
+        if (index === 0) {
+          this.loadImageToCanvas(this.files[index].src);
+        }
       }
     }
   }
+
+  private loadData(inputFiles: FileList, index: number): void {
+    const fileReader = new FileReader();
+    fileReader.onload = (event: any) => {
+      this.files.push({
+        src: event.target.result,
+        file: inputFiles[index],
+      });
+    };
+    fileReader.readAsDataURL(inputFiles[index]);
+  }
+
   private loadImageToCanvas(src: string): void {
     const image = new Image();
     image.src = src;
