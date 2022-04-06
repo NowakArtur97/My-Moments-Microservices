@@ -67,9 +67,8 @@ export class AuthService {
     );
   }
 
-  private isErrorResponse(httpErrorResponse: HttpErrorResponse): boolean {
-    return (httpErrorResponse.error as ErrorResponse).errors !== undefined;
-  }
+  private isErrorResponse = (httpErrorResponse: HttpErrorResponse): boolean =>
+    (httpErrorResponse.error as ErrorResponse).errors !== undefined;
 
   private getDefaultErrorResponse(): ErrorResponse {
     return {

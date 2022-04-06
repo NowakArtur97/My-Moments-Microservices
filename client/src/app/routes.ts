@@ -12,8 +12,8 @@ const routes: Routes = [
     path: 'posts',
     component: PostWrapperComponent,
     // canActivate: [AuthGuard],
-    children: [{ path: 'new', component: PostEditComponent }],
   },
+  { path: 'new', component: PostEditComponent },
   { path: '**', component: AuthWrapperComponent },
 ];
 export default routes;

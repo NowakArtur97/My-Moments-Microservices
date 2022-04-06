@@ -1,1 +1,16 @@
-<p>post-edit works!</p>
+<div class="post_edit__wrapper">
+  <div class="post_edit__image">
+    <div class="post_edit__image_button_wrapper">
+      <input
+        #imageInput
+        (change)="onUploadImage(imageInput)"
+        multiple
+        type="file"
+        class="post_edit__image_button"
+        accept="image/*"
+      />
+      <canvas #canvas class="post_edit__canvas"></canvas>
+    </div>
+  </div>
+  <div class="post_edit__editor">asd</div>
+</div>

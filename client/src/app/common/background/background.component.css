@@ -8,11 +8,16 @@
   height: 100vh;
 
   overflow: hidden;
+
+  z-index: -1;
 }
 
 .background {
   position: absolute;
   inset: 0;
+
   background-color: hsl(0, 0%, 9%);
   opacity: 0.6;
+
+  z-index: -1;
 }
