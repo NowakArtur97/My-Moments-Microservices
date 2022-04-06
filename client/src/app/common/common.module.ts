@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BackgroundTilesComponent } from './background/background-tiles/background-tiles.component';
@@ -20,7 +21,7 @@ const validationDirectives = [
     BackgroundComponent,
     BackgroundTilesComponent,
   ],
-  imports: [CommonModule, BrowserAnimationsModule],
-  exports: [validationDirectives, BackgroundComponent],
+  imports: [CommonModule, BrowserModule, BrowserAnimationsModule],
+  exports: [validationDirectives, CommonModule, BackgroundComponent],
 })
 export class AppCommonModule {}

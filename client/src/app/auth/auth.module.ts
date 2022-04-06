@@ -1,7 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 
 import { AppCommonModule } from '../common/common.module';
 import { AuthWrapperComponent } from './auth-wrapper/auth-wrapper.component';
@@ -16,7 +15,7 @@ import { RegistrationComponent } from './registration/registration.component';
     AuthenticationComponent,
     AuthWrapperComponent,
   ],
-  imports: [FormsModule, BrowserModule, HttpClientModule, AppCommonModule],
+  imports: [FormsModule, HttpClientModule, AppCommonModule],
   exports: [AuthWrapperComponent],
 })
 export class AuthModule {}

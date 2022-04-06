@@ -8,7 +8,7 @@ import ImageSnippet from '../models/image-snippet.model';
   styleUrls: ['./post-edit.component.css'],
 })
 export class PostEditComponent implements OnInit {
-  private files: ImageSnippet[] = [];
+  files: ImageSnippet[] = [];
   @ViewChild('canvas') canvas!: ElementRef;
 
   constructor() {}
@@ -17,16 +17,13 @@ export class PostEditComponent implements OnInit {
 
   onUploadImage(input: HTMLInputElement): void {
     const inputFiles = input.files;
-    const previews = [];
     if (inputFiles) {
       const numberOfFiles = inputFiles.length;
       for (let i = 0; i < numberOfFiles; i++) {
         const fileReader = new FileReader();
         fileReader.onload = (event: any) => {
-          const result = event.target.result;
-          previews.push(result);
           const imageSnippet: ImageSnippet = {
-            src: result,
+            src: event.target.result,
             file: inputFiles[i],
           };
           this.files.push(imageSnippet);

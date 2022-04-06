@@ -53,7 +53,7 @@
         <input
           [(ngModel)]="authenticationRequest.password"
           required
-          type="text"
+          type="password"
           name="password"
           id="password"
           class="auth_form__input"
@@ -62,9 +62,6 @@
       </div>
       <div class="auth_form__controls">
         <button type="submit" class="auth_form__button">Sign In</button>
-        <!-- <button [disabled]="!authenticationForm.valid" type="submit" class="auth_form__button">
-          Sign In
-        </button> -->
       </div>
     </div>
     <div class="auth_form__switch_view">

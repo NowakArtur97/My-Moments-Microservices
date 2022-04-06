@@ -1,15 +1,29 @@
 <div class="post_edit__wrapper">
   <div class="post_edit__image">
     <div class="post_edit__image_button_wrapper">
-      <input
+      <!-- <input
+        *ngIf="files.length === 0"
         #imageInput
         (change)="onUploadImage(imageInput)"
         multiple
         type="file"
         class="post_edit__image_button"
         accept="image/*"
+      /> -->
+      <img
+        #canvas
+        src="../../../assets/pictures/astronaut-small.jpg"
+        alt=""
+        class="post_edit__canvas"
       />
-      <canvas #canvas class="post_edit__canvas"></canvas>
+      <!-- <img
+        *ngIf="files.length > 0"
+        #canvas
+        src="../../../assets/pictures/astronaut-small.jpg"
+        alt=""
+        class="post_edit__canvas"
+      /> -->
+      <!-- <canvas #canvas class="post_edit__canvas"></canvas> -->
     </div>
   </div>
   <div class="post_edit__editor">asd</div>

@@ -7,10 +7,17 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { JwtInterceptor } from './auth/jwt.interceptor';
 import { AppCommonModule } from './common/common.module';
+import { PostModule } from './post/post.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, AuthModule, AppCommonModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AppCommonModule,
+    AuthModule,
+    PostModule,
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
