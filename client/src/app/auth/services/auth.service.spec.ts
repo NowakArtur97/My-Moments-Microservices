@@ -4,7 +4,7 @@ import { getTestBed, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { skip } from 'rxjs/operators';
-import { ROUTES } from 'src/app/common/const.data';
+import { APP_ROUTES } from 'src/app/common/const.data';
 import ErrorResponse from 'src/app/common/models/error-response.model';
 import { environment } from 'src/environments/environment.local';
 
@@ -67,7 +67,7 @@ describe('AuthService', () => {
       expect(req.request.method).toBe('POST');
       req.flush(authResponse);
 
-      expect(navigateSpy).toHaveBeenCalledWith([`/${ROUTES.posts}`]);
+      expect(navigateSpy).toHaveBeenCalledWith([`/${APP_ROUTES.posts}`]);
     });
 
     it('with incorrect data should emit auth errors', () => {
@@ -129,7 +129,7 @@ describe('AuthService', () => {
       expect(req.request.method).toBe('POST');
       req.flush(authResponse);
 
-      expect(navigateSpy).toHaveBeenCalledWith([`/${ROUTES.posts}`]);
+      expect(navigateSpy).toHaveBeenCalledWith([`/${APP_ROUTES.posts}`]);
     });
 
     it('with incorrect data should emit auth errors', () => {

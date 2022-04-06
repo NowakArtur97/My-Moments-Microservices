@@ -3,7 +3,7 @@ import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
-import { ROUTES } from '../common/const.data';
+import { APP_ROUTES } from '../common/const.data';
 import { AuthService } from './services/auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
         if (authenticatedUser) {
           return true;
         } else {
-          return this.router.createUrlTree([`/${ROUTES.auth}`]);
+          return this.router.createUrlTree([`/${APP_ROUTES.auth}`]);
         }
       })
     );

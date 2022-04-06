@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { ROUTES } from 'src/app/common/const.data';
+import { APP_ROUTES } from 'src/app/common/const.data';
 import ErrorResponse from 'src/app/common/models/error-response.model';
 import { environment } from 'src/environments/environment.local';
 
@@ -53,7 +53,7 @@ export class AuthService {
     console.log(authenticationResponse);
     this.authenticatedUser.next(authenticationResponse);
     this.authError.next(null);
-    this.router.navigate([`/${ROUTES.posts}`]);
+    this.router.navigate([`/${APP_ROUTES.posts}`]);
   }
 
   private handleAuthenticationErrors(
