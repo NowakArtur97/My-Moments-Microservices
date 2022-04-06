@@ -60,6 +60,22 @@ export class AuthService {
     httpErrorResponse: HttpErrorResponse
   ): void {
     console.log(httpErrorResponse);
-    this.authError.next(httpErrorResponse.error as ErrorResponse);
+    this.authError.next(
+      this.isErrorResponse(httpErrorResponse)
+        ? (httpErrorResponse.error as ErrorResponse)
+        : this.getDefaultErrorResponse()
+    );
+  }
+
+  private isErrorResponse(httpErrorResponse: HttpErrorResponse): boolean {
+    return (httpErrorResponse.error as ErrorResponse).errors !== undefined;
+  }
+
+  private getDefaultErrorResponse(): ErrorResponse {
+    return {
+      status: 500,
+      timestamp: new Date(),
+      errors: ['Something went wrong.', 'Please try again in a moment.'],
+    };
   }
 }
