@@ -29,13 +29,15 @@
   <div *ngIf="files.length > 0" class="post_edit__editor_wrapper">
     <div class="post_edit__editor_tabs">
       <div
-        [ngClass]="{ 'post_edit__editor_tab--inactive': isInFiltersTab }"
+        (click)="onChangeTab(true)"
+        [ngClass]="{ 'post_edit__editor_tab--inactive': !isInFiltersTab }"
         class="post_edit__editor_tab"
       >
         Filters
       </div>
       <div
-        [ngClass]="{ 'post_edit__editor_tab--inactive': !isInFiltersTab }"
+        (click)="onChangeTab(false)"
+        [ngClass]="{ 'post_edit__editor_tab--inactive': isInFiltersTab }"
         class="post_edit__editor_tab"
       >
         Edition

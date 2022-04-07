@@ -29,6 +29,10 @@ export class PostEditComponent implements OnInit {
     }
   }
 
+  onChangeTab(isInFiltersTab: boolean): void {
+    this.isInFiltersTab = isInFiltersTab;
+  }
+
   private loadData(inputFiles: FileList, index: number): void {
     const fileReader = new FileReader();
     fileReader.onload = (event: any) => {
