@@ -1,15 +1,23 @@
 .post_edit__wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
 
   width: 100vw;
   height: 100vh;
+  min-height: 411px;
+  max-width: 731px;
+
+  background-color: hsl(0, 0%, 9%);
+  opacity: 0.9;
+
+  color: hsl(0, 0%, 100%);
 }
 
 .post_edit__image {
-  flex-basis: 348px;
-  width: 348px;
+  flex-basis: 60%;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -52,12 +60,47 @@
 }
 
 .post_edit__canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.post_edit__editor_wrapper {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+}
+
+.post_edit__editor_tabs {
+  display: flex;
+}
+
+.post_edit__editor_tab {
+  flex-grow: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2%;
+  border-bottom: 0.2em solid hsl(0, 0%, 100%);
+
+  font-size: 2em;
+}
+
+.post_edit__editor_tab--inactive {
+  color: hsla(0, 0%, 100%, 0.6);
+  border-bottom: 0.2em solid hsla(0, 0%, 100%, 0.6);
 }
 
 .post_edit__editor {
-  width: 100%;
-  flex-grow: 1;
+}
 
-  background-color: hsl(0, 0%, 9%);
-  opacity: 0.9;
+@media (min-width: 348px) {
+  .post_edit__canvas {
+    width: 348px;
+    height: 348px;
+  }
 }

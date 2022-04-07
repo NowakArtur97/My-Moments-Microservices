@@ -9,6 +9,7 @@ import ImageSnippet from '../models/image-snippet.model';
 })
 export class PostEditComponent implements OnInit {
   files: ImageSnippet[] = [];
+  isInFiltersTab = true;
   @ViewChild('canvas') canvas!: ElementRef;
 
   constructor() {}

@@ -9,6 +9,6 @@ import { PostWrapperComponent } from './post-wrapper/post-wrapper.component';
 @NgModule({
   declarations: [PostWrapperComponent, PostEditComponent],
   imports: [FormsModule, HttpClientModule, AppCommonModule],
-  exports: [PostWrapperComponent, PostEditComponent],
+  exports: [PostWrapperComponent],
 })
 export class PostModule {}
