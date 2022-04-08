@@ -56,9 +56,13 @@
   align-items: center;
 }
 
-.post_edit__canvas {
+.post_edit__image {
   height: 100%;
   width: 100%;
+}
+
+.post_edit__canvas {
+  display: none;
 }
 
 .post_edit__editor_wrapper {

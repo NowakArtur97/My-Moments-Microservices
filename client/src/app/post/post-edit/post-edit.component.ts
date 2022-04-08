@@ -1,5 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
+import filters from '../filters';
+import Filter from '../models/filter.model';
 import ImageSnippet from '../models/image-snippet.model';
 
 @Component({
@@ -10,9 +12,11 @@ import ImageSnippet from '../models/image-snippet.model';
 export class PostEditComponent implements OnInit {
   files: ImageSnippet[] = [];
   isInFiltersTab = true;
-  @ViewChild('canvas') canvas!: ElementRef;
+  filters: Filter[] = filters;
+  @ViewChild('canvas', { static: false }) canvas!: ElementRef;
+  @ViewChild('image', { static: false }) image!: ElementRef;
 
-  constructor() {}
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {}
 
@@ -21,10 +25,7 @@ export class PostEditComponent implements OnInit {
     if (inputFiles) {
       const numberOfFiles = inputFiles.length;
       for (let index = 0; index < numberOfFiles; index++) {
-        this.loadData(inputFiles, index);
-        if (index === 0) {
-          this.loadImageToCanvas(this.files[index].src);
-        }
+        this.loadData(inputFiles[index]);
       }
     }
   }
@@ -33,24 +34,35 @@ export class PostEditComponent implements OnInit {
     this.isInFiltersTab = isInFiltersTab;
   }
 
-  private loadData(inputFiles: FileList, index: number): void {
+  private loadData(file: File): void {
     const fileReader = new FileReader();
-    fileReader.onload = (event: any) => {
-      this.files.push({
+    fileReader.onloadend = (event: any) => {
+      const imageSnipper: ImageSnippet = {
         src: event.target.result,
-        file: inputFiles[index],
-      });
+        file,
+      };
+      this.files.push(imageSnipper);
+      if (this.files.length === 1) {
+        this.changeDetectorRef.detectChanges();
+        this.loadImageToCanvas(imageSnipper.src);
+      }
     };
-    fileReader.readAsDataURL(inputFiles[index]);
+    fileReader.readAsDataURL(file);
   }
 
   private loadImageToCanvas(src: string): void {
-    const image = new Image();
-    image.src = src;
+    this.changeDetectorRef.detectChanges();
+    (this.image.nativeElement as HTMLImageElement).src = src;
     const canvasElement: HTMLCanvasElement = this.canvas.nativeElement;
     const context: CanvasRenderingContext2D = canvasElement.getContext('2d')!;
-    image.onload = () => {
-      context.drawImage(image, 0, 0, canvasElement.width, canvasElement.height);
+    (this.image.nativeElement as HTMLImageElement).onload = () => {
+      context.drawImage(
+        this.canvas.nativeElement,
+        0,
+        0,
+        canvasElement.width,
+        canvasElement.height
+      );
     };
   }
 }

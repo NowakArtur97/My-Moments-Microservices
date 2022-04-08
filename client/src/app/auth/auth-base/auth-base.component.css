@@ -67,7 +67,7 @@
   width: 100%;
   padding: 2% 1%;
   border: 1em hsl(0, 0%, 7%);
-  border-radius: 5%;
+  border-radius: 2%;
 
   background-color: hsl(0, 0%, 7%);
 
@@ -88,7 +88,6 @@
   width: 80%;
 
   border: 1em hsl(0, 0%, 7%);
-  border-radius: 5%;
   background-color: hsl(0, 0%, 7%);
 
   font-size: 2em;

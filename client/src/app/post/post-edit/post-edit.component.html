@@ -20,13 +20,8 @@
     </button>
   </div>
   <div *ngIf="files.length > 0" class="post_edit__image_wrapper">
-    <img
-      #canvas
-      src="../../../assets/pictures/astronaut-small.jpg"
-      alt=""
-      class="post_edit__canvas"
-    />
-    <!-- <canvas #canvas class="post_edit__canvas"></canvas> -->
+    <img #image src="#" alt="Current image" class="post_edit__image" />
+    <canvas #canvas class="post_edit__canvas"></canvas>
   </div>
   <div *ngIf="files.length > 0" class="post_edit__editor_wrapper">
     <div class="post_edit__editor_tabs">
@@ -45,6 +40,17 @@
         Edition
       </div>
     </div>
-    <div class="post_edit__editor_content"></div>
+    <div class="post_edit__editor_content">
+      <div *ngIf="isInFiltersTab" class="post_edit__filters">
+        <div *ngFor="let filter of filters" class="post_edit__filter">
+          <div
+            [ngStyle]="{ 'background-image': files[0] }"
+            class="post_edit__filter_image"
+          ></div>
+          <div class="post_edit__filter_name">{{ filter.name }}</div>
+        </div>
+      </div>
+      <div *ngIf="!isInFiltersTab" class="post_edit__editor_image"></div>
+    </div>
   </div>
 </div>
