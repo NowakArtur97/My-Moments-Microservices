@@ -1,24 +1,26 @@
-<div class="post_edit__wrapper">
-  <div class="post_edit__image">
-    <div *ngIf="files.length === 0" class="post_edit__image_button_wrapper">
-      <input
-        #imageInput
-        (change)="onUploadImage(imageInput)"
-        multiple
-        type="file"
-        class="post_edit__image_input"
-        accept="image/*"
-      />
-      <button
-        (click)="imageInput.click()"
-        type="button"
-        class="post_edit__image_button"
-      >
-        Upload images
-      </button>
-    </div>
+<div
+  [ngStyle]="{ 'align-items': files.length === 0 ? 'center' : 'start' }"
+  class="post_edit__wrapper"
+>
+  <div *ngIf="files.length === 0" class="post_edit__image_button_wrapper">
+    <input
+      #imageInput
+      (change)="onUploadImage(imageInput)"
+      multiple
+      type="file"
+      class="post_edit__image_input"
+      accept="image/*"
+    />
+    <button
+      (click)="imageInput.click()"
+      type="button"
+      class="post_edit__image_button"
+    >
+      Upload images
+    </button>
+  </div>
+  <div *ngIf="files.length > 0" class="post_edit__image_wrapper">
     <img
-      *ngIf="files.length > 0"
       #canvas
       src="../../../assets/pictures/astronaut-small.jpg"
       alt=""
@@ -43,6 +45,6 @@
         Edition
       </div>
     </div>
-    <div class="post_edit__editor"></div>
+    <div class="post_edit__editor_content"></div>
   </div>
 </div>

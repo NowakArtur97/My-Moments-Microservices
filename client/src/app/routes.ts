@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 
 import { AuthWrapperComponent } from './auth/auth-wrapper/auth-wrapper.component';
 import { APP_ROUTES } from './common/const.data';
-import { PostEditComponent } from './post/post-edit/post-edit.component';
 import { PostWrapperComponent } from './post/post-wrapper/post-wrapper.component';
 
 const routes: Routes = [
@@ -13,7 +12,7 @@ const routes: Routes = [
     component: PostWrapperComponent,
     // canActivate: [AuthGuard],
   },
-  { path: 'new', component: PostEditComponent },
+  { path: 'new', component: PostWrapperComponent },
   { path: '**', component: AuthWrapperComponent },
 ];
 export default routes;
