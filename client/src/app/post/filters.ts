@@ -5,6 +5,29 @@ class DummyFilter implements Filter {
 
   apply(): void {}
 }
-const filters = [new DummyFilter()];
+const filters = [
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+  new DummyFilter(),
+];
 
 export default filters;

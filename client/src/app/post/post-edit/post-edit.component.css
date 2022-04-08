@@ -112,6 +112,33 @@
   align-items: center;
 
   flex-basis: auto;
+
+  min-height: 100%;
+
+  overflow-y: scroll;
+}
+
+.post_edit__filters {
+  display: grid;
+  align-items: center;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(3, 1fr);
+
+  max-height: 100%;
+
+  overflow: scroll;
+}
+
+.post_edit__filter_image {
+  width: 100%;
+}
+
+.post_edit__filter_name {
+  padding: 4% 2%;
+
+  font-size: 1.25em;
+  text-transform: capitalize;
+  text-align: center;
 }
 
 @media (min-width: 640px) {
@@ -143,6 +170,10 @@
 
   .post_edit__editor_tab--inactive {
     font-size: 1.75em;
+  }
+
+  .post_edit__filter_name {
+    font-size: 1.5em;
   }
 }
 
@@ -185,6 +216,10 @@
 
   .post_edit__editor_tab--inactive {
     font-size: 2em;
+  }
+
+  .post_edit__filter_name {
+    font-size: 1.75em;
   }
 }
 
