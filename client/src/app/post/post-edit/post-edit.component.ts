@@ -11,6 +11,7 @@ import ImageSnippet from '../models/image-snippet.model';
 })
 export class PostEditComponent implements OnInit {
   files: ImageSnippet[] = [];
+  currentFile!: ImageSnippet;
   isInFiltersTab = true;
   filters: Filter[] = filters;
   @ViewChild('canvas', { static: false }) canvas!: ElementRef;
@@ -43,11 +44,16 @@ export class PostEditComponent implements OnInit {
       };
       this.files.push(imageSnipper);
       if (this.files.length === 1) {
-        this.changeDetectorRef.detectChanges();
-        this.loadImageToCanvas(imageSnipper.src);
+        this.loadFirstImage();
       }
     };
     fileReader.readAsDataURL(file);
+  }
+
+  private loadFirstImage() {
+    this.currentFile = this.files[0];
+    this.changeDetectorRef.detectChanges();
+    this.loadImageToCanvas(this.currentFile.src);
   }
 
   private loadImageToCanvas(src: string): void {
