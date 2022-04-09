@@ -12,8 +12,8 @@ import ImageSnippet from '../models/image-snippet.model';
 export class PostEditComponent implements OnInit {
   private readonly FILTERS_LOAD_INTERVAL_IN_MS = 50;
 
-  @ViewChild('canvas', { static: false }) mainImageCanvas!: ElementRef;
   @ViewChild('image', { static: false }) mainImage!: ElementRef;
+  @ViewChild('canvas', { static: false }) mainImageCanvas!: ElementRef;
   @ViewChildren('filterCanvas', { read: ElementRef })
   filtersCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
 
@@ -24,7 +24,7 @@ export class PostEditComponent implements OnInit {
   mainCanvasContext!: CanvasRenderingContext2D;
   isInFiltersTab = true;
 
-  filtersInterval!: NodeJS.Timeout;
+  filtersInterval!: any;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
@@ -43,7 +43,6 @@ export class PostEditComponent implements OnInit {
 
   onChangeTab(isInFiltersTab: boolean): void {
     this.isInFiltersTab = isInFiltersTab;
-
     if (isInFiltersTab) {
       this.loadFilters();
     }
@@ -51,13 +50,7 @@ export class PostEditComponent implements OnInit {
 
   onApplyFilter(filter: Filter): void {
     filter.apply(this.mainCanvasContext);
-    this.mainCanvasContext.drawImage(
-      this.mainImage.nativeElement,
-      0,
-      0,
-      this.mainCanvasElement.width,
-      this.mainCanvasElement.height
-    );
+    this.drawImageOnMainCanvasContext();
   }
 
   private loadData(file: File): void {
@@ -75,7 +68,7 @@ export class PostEditComponent implements OnInit {
     fileReader.readAsDataURL(file);
   }
 
-  private loadFirstImage() {
+  private loadFirstImage(): void {
     this.currentFile = this.files[0];
     this.changeDetectorRef.detectChanges();
     this.loadImageToCanvas();
@@ -88,13 +81,7 @@ export class PostEditComponent implements OnInit {
     this.mainCanvasElement = this.mainImageCanvas.nativeElement;
     this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
-      this.mainCanvasContext.drawImage(
-        this.mainImage.nativeElement,
-        0,
-        0,
-        this.mainCanvasElement.width,
-        this.mainCanvasElement.height
-      );
+      this.drawImageOnMainCanvasContext();
     };
   }
 
@@ -109,17 +96,29 @@ export class PostEditComponent implements OnInit {
         const filterCanvas = this.filtersCanvases.get(index)!;
         const context = filterCanvas.nativeElement.getContext('2d')!;
         filter.apply(context);
-        context.drawImage(
-          this.mainImage.nativeElement,
-          0,
-          0,
-          filterCanvas.nativeElement.width,
-          filterCanvas.nativeElement.height
-        );
+        this.drawImageOnCanvasContext(context, filterCanvas.nativeElement);
         index++;
       } else {
         clearInterval(this.filtersInterval);
       }
     }, this.FILTERS_LOAD_INTERVAL_IN_MS);
   }
+
+  private drawImageOnMainCanvasContext = (): void =>
+    this.drawImageOnCanvasContext(
+      this.mainCanvasContext,
+      this.mainCanvasElement
+    );
+
+  private drawImageOnCanvasContext = (
+    context: CanvasRenderingContext2D,
+    canvasElement: HTMLCanvasElement
+  ): void =>
+    context.drawImage(
+      this.mainImage.nativeElement,
+      0,
+      0,
+      canvasElement.width,
+      canvasElement.height
+    );
 }

@@ -1,9 +1,11 @@
 import Filter from './models/filter.model';
 
-class DummyFilter implements Filter {
-  name = 'dummy';
+class EmptyFilter implements Filter {
+  name = 'oryginal';
 
-  apply(context: CanvasRenderingContext2D): void {}
+  apply(context: CanvasRenderingContext2D): void {
+    context.filter = 'none';
+  }
 }
 
 class SaturateFilter implements Filter {
@@ -14,6 +16,6 @@ class SaturateFilter implements Filter {
   }
 }
 
-const allFilters = [new DummyFilter(), new SaturateFilter()];
+const allFilters = [new EmptyFilter(), new SaturateFilter()];
 
 export default allFilters;
