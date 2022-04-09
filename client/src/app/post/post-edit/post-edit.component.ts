@@ -20,7 +20,8 @@ export class PostEditComponent implements OnInit {
   files: ImageSnippet[] = [];
   currentFile!: ImageSnippet;
   filters: Filter[] = [];
-  mainImageContext!: CanvasRenderingContext2D;
+  mainCanvasElement!: HTMLCanvasElement;
+  mainCanvasContext!: CanvasRenderingContext2D;
   isInFiltersTab = true;
 
   filtersInterval!: NodeJS.Timeout;
@@ -49,13 +50,13 @@ export class PostEditComponent implements OnInit {
   }
 
   onApplyFilter(filter: Filter): void {
-    filter.apply(this.mainImageContext);
-    this.mainImageContext.drawImage(
-      this.mainImageCanvas.nativeElement,
+    filter.apply(this.mainCanvasContext);
+    this.mainCanvasContext.drawImage(
+      this.mainImage.nativeElement,
       0,
       0,
-      this.mainImageCanvas.nativeElement.width,
-      this.mainImageCanvas.nativeElement.height
+      this.mainCanvasElement.width,
+      this.mainCanvasElement.height
     );
   }
 
@@ -77,21 +78,22 @@ export class PostEditComponent implements OnInit {
   private loadFirstImage() {
     this.currentFile = this.files[0];
     this.changeDetectorRef.detectChanges();
-    this.loadImageToCanvas(this.currentFile.src);
+    this.loadImageToCanvas();
   }
 
-  private loadImageToCanvas(src: string): void {
+  private loadImageToCanvas(): void {
     this.changeDetectorRef.detectChanges();
-    (this.mainImage.nativeElement as HTMLImageElement).src = src;
-    const canvasElement: HTMLCanvasElement = this.mainImageCanvas.nativeElement;
-    this.mainImageContext = canvasElement.getContext('2d')!;
+    (this.mainImage
+      .nativeElement as HTMLImageElement).src = this.currentFile.src;
+    this.mainCanvasElement = this.mainImageCanvas.nativeElement;
+    this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
-      this.mainImageContext.drawImage(
-        this.mainImageCanvas.nativeElement,
+      this.mainCanvasContext.drawImage(
+        this.mainImage.nativeElement,
         0,
         0,
-        canvasElement.width,
-        canvasElement.height
+        this.mainCanvasElement.width,
+        this.mainCanvasElement.height
       );
     };
   }

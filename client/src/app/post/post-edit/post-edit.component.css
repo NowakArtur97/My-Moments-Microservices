@@ -57,12 +57,12 @@
 }
 
 .post_edit__image {
-  height: 100%;
-  width: 100%;
+  display: none;
 }
 
 .post_edit__canvas {
-  display: none;
+  height: 100%;
+  width: 100%;
 }
 
 .post_edit__editor_wrapper {
