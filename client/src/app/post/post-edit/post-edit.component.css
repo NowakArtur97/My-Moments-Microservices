@@ -136,6 +136,15 @@
   display: none;
 }
 
+.post_edit__filter {
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.post_edit__filter:hover {
+  transform: scale(1.1);
+}
+
 .post_edit__filter_image {
   width: 100%;
 }
