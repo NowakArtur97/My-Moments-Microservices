@@ -111,7 +111,6 @@
 
   display: flex;
   justify-content: center;
-  align-items: center;
 
   flex-grow: 1;
 
@@ -158,6 +157,15 @@
   font-size: 1.25em;
   text-transform: capitalize;
   text-align: center;
+}
+
+.post_edit__editor_sliders {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
 }
 
 @media (min-width: 640px) {

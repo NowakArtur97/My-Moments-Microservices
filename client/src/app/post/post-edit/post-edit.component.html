@@ -51,7 +51,21 @@
           <div class="post_edit__filter_name">{{ filter.name }}</div>
         </div>
       </div>
-      <div *ngIf="!isInFiltersTab" class="post_edit__editor_image"></div>
+      <div *ngIf="!isInFiltersTab" class="post_edit__editor_sliders">
+        <div class="post_edit__range_slider_wrapper">
+          <div class="post_edit__range_slider_name">Name</div>
+          <input
+            class="post_edit__range_slider_input"
+            type="range"
+            min="1"
+            max="100"
+          />
+          <div class="post_edit__range_slider_value_wrapper">
+            <div class="post_edit__range_slider_handle"></div>
+            <div class="post_edit__range_slider_value">57</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
