@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
-import filters from '../filters';
+import allFilters from '../filters';
 import Filter from '../models/filter.model';
 import ImageSnippet from '../models/image-snippet.model';
 
@@ -10,12 +10,15 @@ import ImageSnippet from '../models/image-snippet.model';
   styleUrls: ['./post-edit.component.css'],
 })
 export class PostEditComponent implements OnInit {
+  private readonly FILTERS_LOAD_INTERVAL_IN_MS = 30;
+
   files: ImageSnippet[] = [];
   currentFile!: ImageSnippet;
   isInFiltersTab = true;
-  filters: Filter[] = filters;
+  filters: Filter[] = [];
   @ViewChild('canvas', { static: false }) canvas!: ElementRef;
   @ViewChild('image', { static: false }) image!: ElementRef;
+  filtersInterval!: NodeJS.Timeout;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
@@ -29,10 +32,15 @@ export class PostEditComponent implements OnInit {
         this.loadData(inputFiles[index]);
       }
     }
+    this.loadFilters();
   }
 
   onChangeTab(isInFiltersTab: boolean): void {
     this.isInFiltersTab = isInFiltersTab;
+
+    if (isInFiltersTab) {
+      this.loadFilters();
+    }
   }
 
   private loadData(file: File): void {
@@ -70,5 +78,17 @@ export class PostEditComponent implements OnInit {
         canvasElement.height
       );
     };
+  }
+
+  private loadFilters(): void {
+    let index = 0;
+    this.filters = [];
+    this.filtersInterval = setInterval(() => {
+      if (index < allFilters.length) {
+        this.filters.push(allFilters[index++]);
+      } else {
+        clearInterval(this.filtersInterval);
+      }
+    }, this.FILTERS_LOAD_INTERVAL_IN_MS);
   }
 }
