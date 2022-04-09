@@ -10,7 +10,7 @@ import ImageSnippet from '../models/image-snippet.model';
   styleUrls: ['./post-edit.component.css'],
 })
 export class PostEditComponent implements OnInit {
-  private readonly FILTERS_LOAD_INTERVAL_IN_MS = 30;
+  private readonly FILTERS_LOAD_INTERVAL_IN_MS = 50;
 
   files: ImageSnippet[] = [];
   currentFile!: ImageSnippet;
