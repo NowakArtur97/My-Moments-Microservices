@@ -42,12 +42,12 @@
     </div>
     <div class="post_edit__editor_content">
       <div *ngIf="isInFiltersTab" class="post_edit__filters">
-        <div *ngFor="let filter of filters" class="post_edit__filter">
-          <img
-            [src]="currentFile.src"
-            [alt]="'Fitler' + filter.name"
-            class="post_edit__filter_image"
-          />
+        <div
+          *ngFor="let filter of filters"
+          (click)="onApplyFilter(filter)"
+          class="post_edit__filter"
+        >
+          <canvas #filterCanvas class="post_edit__filter_image"></canvas>
           <div class="post_edit__filter_name">{{ filter.name }}</div>
         </div>
       </div>
