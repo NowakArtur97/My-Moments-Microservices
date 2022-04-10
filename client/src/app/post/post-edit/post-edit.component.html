@@ -52,19 +52,34 @@
         </div>
       </div>
       <div *ngIf="!isInFiltersTab" class="post_edit__editor_sliders">
-        <div class="post_edit__range_slider_wrapper">
-          <div class="post_edit__range_slider_name">Name</div>
+        <div
+          *ngFor="let editorSlider of allEditorSliders"
+          class="post_edit__range_slider_wrapper"
+        >
+          <div class="post_edit__range_slider_name">
+            {{ editorSlider.name }}
+          </div>
           <div class="post_edit__range_slider_value_wrapper">
-            <div class="post_edit__range_slider_input_wrapper">
+            <div
+              #sliderWrapper
+              (click)="onChangeSliderValue(editorSlider, $event, sliderWrapper)"
+              class="post_edit__range_slider_input_wrapper"
+            >
               <input
                 class="post_edit__range_slider_input"
                 type="range"
-                min="1"
-                max="100"
+                [value]="editorSlider.currentValue"
+                [min]="editorSlider.minValue"
+                [max]="editorSlider.maxValue"
               />
-              <div class="post_edit__range_slider_handle"></div>
+              <div
+                [ngStyle]="{ left: editorSlider.currentValue + '%' }"
+                class="post_edit__range_slider_handle"
+              ></div>
             </div>
-            <div class="post_edit__range_slider_value">57</div>
+            <div class="post_edit__range_slider_value">
+              {{ editorSlider.currentValue }}
+            </div>
           </div>
         </div>
       </div>

@@ -192,6 +192,8 @@
 
 .post_edit__range_slider_name {
   padding-left: 2%;
+
+  text-transform: capitalize;
   font-size: 1.5em;
 }
 
@@ -242,13 +244,13 @@
 .post_edit__range_slider_handle {
   position: absolute;
   top: 50%;
-  left: 50%;
 
   height: 15px;
   width: 15px;
 
+  border: 2px solid hsl(0, 0%, 0%);
   border-radius: 50%;
-  background-color: hsl(0, 0%, 0%);
+  background-color: hsl(0, 0%, 100%);
 
   transform: translate(-50%, -50%);
 }

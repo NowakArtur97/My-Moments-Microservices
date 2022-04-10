@@ -1,4 +1,4 @@
-import Filter from './models/filter.model';
+import Filter from '../models/filter.model';
 
 class EmptyFilter implements Filter {
   name = 'oryginal';
@@ -16,6 +16,6 @@ class SaturateFilter implements Filter {
   }
 }
 
-const allFilters = [new EmptyFilter(), new SaturateFilter()];
+const allFilters: Filter[] = [new EmptyFilter(), new SaturateFilter()];
 
 export default allFilters;

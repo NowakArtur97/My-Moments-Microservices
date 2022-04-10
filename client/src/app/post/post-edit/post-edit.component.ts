@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
-import allFilters from '../filters';
+import allEditorSliders from '../data/editor.sliders.data';
+import allFilters from '../data/filters.data';
+import EditorSlider from '../models/editor-slider.model';
 import Filter from '../models/filter.model';
 import ImageSnippet from '../models/image-snippet.model';
 
@@ -20,6 +22,7 @@ export class PostEditComponent implements OnInit {
   files: ImageSnippet[] = [];
   currentFile!: ImageSnippet;
   filters: Filter[] = [];
+  allEditorSliders: EditorSlider[] = allEditorSliders;
   mainCanvasElement!: HTMLCanvasElement;
   mainCanvasContext!: CanvasRenderingContext2D;
   isInFiltersTab = false;
@@ -52,6 +55,18 @@ export class PostEditComponent implements OnInit {
 
   onApplyFilter(filter: Filter): void {
     filter.apply(this.mainCanvasContext);
+    this.drawImageOnMainCanvasContext();
+  }
+
+  onChangeSliderValue(
+    editorSlider: EditorSlider,
+    event: MouseEvent,
+    sliderWrapper: HTMLDivElement
+  ): void {
+    const value = Math.round(
+      (event.offsetX / sliderWrapper.getBoundingClientRect().width) * 100
+    );
+    editorSlider.apply(this.mainCanvasContext, value);
     this.drawImageOnMainCanvasContext();
   }
 
