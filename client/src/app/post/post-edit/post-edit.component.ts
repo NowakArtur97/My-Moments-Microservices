@@ -22,7 +22,7 @@ export class PostEditComponent implements OnInit {
   filters: Filter[] = [];
   mainCanvasElement!: HTMLCanvasElement;
   mainCanvasContext!: CanvasRenderingContext2D;
-  isInFiltersTab = true;
+  isInFiltersTab = false;
 
   filtersInterval!: any;
 
@@ -38,7 +38,9 @@ export class PostEditComponent implements OnInit {
         this.loadData(inputFiles[index]);
       }
     }
-    this.loadFilters();
+    if (this.isInFiltersTab) {
+      this.loadFilters();
+    }
   }
 
   onChangeTab(isInFiltersTab: boolean): void {
