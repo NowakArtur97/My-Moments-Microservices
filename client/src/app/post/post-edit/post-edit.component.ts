@@ -54,15 +54,17 @@ export class PostEditComponent implements OnInit {
   }
 
   onApplyFilter(filter: Filter): void {
+    this.clearContext();
     filter.apply(this.mainCanvasContext);
     this.drawImageOnMainCanvasContext();
   }
 
   onChangeSliderValue(editorSlider: EditorSlider, value: number): void {
+    this.clearContext();
     editorSlider.apply(value, this.currentFile.contextFilters);
-    this.drawImageOnMainCanvasContext();
     const filter = [...this.currentFile.contextFilters.values()].join(' ');
     this.mainCanvasContext.filter = filter;
+    this.drawImageOnMainCanvasContext();
   }
 
   private loadData(file: File): void {
@@ -133,5 +135,13 @@ export class PostEditComponent implements OnInit {
       0,
       canvasElement.width,
       canvasElement.height
+    );
+
+  private clearContext = (): void =>
+    this.mainCanvasContext.clearRect(
+      0,
+      0,
+      this.mainCanvasElement.width,
+      this.mainCanvasElement.height
     );
 }

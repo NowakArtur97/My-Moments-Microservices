@@ -8,7 +8,7 @@ export default class EditorSlider {
   ) {}
   public currentValue: number = this.defaultValue;
 
-  apply(value: number, currentFilters: Map<string, string>) {
+  apply(value: number, currentFilters: Map<string, string>): void {
     this.currentValue = value;
     currentFilters.set(
       this.name,

@@ -63,7 +63,7 @@
             <div class="post_edit__range_slider_input_wrapper">
               <input
                 #sliderInput
-                (click)="onChangeSliderValue(editorSlider, +sliderInput.value)"
+                (change)="onChangeSliderValue(editorSlider, +sliderInput.value)"
                 class="post_edit__range_slider_input"
                 type="range"
                 [value]="editorSlider.currentValue"
