@@ -1,24 +1,10 @@
 import EditorSlider from '../models/editor-slider.model';
 
-class BrithnessSlider extends EditorSlider {
-  constructor(
-    readonly name: string,
-    readonly minValue: number,
-    readonly maxValue: number,
-    readonly defaultValue: number,
-    public currentValue: number = defaultValue
-  ) {
-    super(name, minValue, maxValue, defaultValue);
-  }
-
-  apply(context: CanvasRenderingContext2D, value: number): void {
-    this.currentValue = value;
-    context.filter = `${this.name}(${value}%)`;
-  }
-}
-
 const allEditorSliders: EditorSlider[] = [
-  new BrithnessSlider('brightness', 0, 100, 50),
+  new EditorSlider('brightness', 0, 100, 50),
+  new EditorSlider('contrast', 0, 500, 100),
+  new EditorSlider('blur', 0, 500, 0, 'px'),
+  new EditorSlider('grayscale', 0, 100, 100),
 ];
 
 export default allEditorSliders;

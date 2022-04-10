@@ -60,22 +60,16 @@
             {{ editorSlider.name }}
           </div>
           <div class="post_edit__range_slider_value_wrapper">
-            <div
-              #sliderWrapper
-              (click)="onChangeSliderValue(editorSlider, $event, sliderWrapper)"
-              class="post_edit__range_slider_input_wrapper"
-            >
+            <div class="post_edit__range_slider_input_wrapper">
               <input
+                #sliderInput
+                (click)="onChangeSliderValue(editorSlider, +sliderInput.value)"
                 class="post_edit__range_slider_input"
                 type="range"
                 [value]="editorSlider.currentValue"
                 [min]="editorSlider.minValue"
                 [max]="editorSlider.maxValue"
               />
-              <div
-                [ngStyle]="{ left: editorSlider.currentValue + '%' }"
-                class="post_edit__range_slider_handle"
-              ></div>
             </div>
             <div class="post_edit__range_slider_value">
               {{ editorSlider.currentValue }}

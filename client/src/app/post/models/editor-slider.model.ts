@@ -1,11 +1,18 @@
-export default abstract class EditorSlider {
+export default class EditorSlider {
   constructor(
     readonly name: string,
     readonly minValue: number,
     readonly maxValue: number,
     readonly defaultValue: number,
-    public currentValue: number = defaultValue
+    readonly unit: string = '%'
   ) {}
+  public currentValue: number = this.defaultValue;
 
-  abstract apply(context: CanvasRenderingContext2D, value: number): void;
+  apply(value: number, currentFilters: Map<string, string>) {
+    this.currentValue = value;
+    currentFilters.set(
+      this.name,
+      `${this.name}(${this.currentValue}${this.unit})`
+    );
+  }
 }

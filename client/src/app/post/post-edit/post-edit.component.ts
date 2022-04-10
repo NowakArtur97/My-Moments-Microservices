@@ -58,16 +58,11 @@ export class PostEditComponent implements OnInit {
     this.drawImageOnMainCanvasContext();
   }
 
-  onChangeSliderValue(
-    editorSlider: EditorSlider,
-    event: MouseEvent,
-    sliderWrapper: HTMLDivElement
-  ): void {
-    const value = Math.round(
-      (event.offsetX / sliderWrapper.getBoundingClientRect().width) * 100
-    );
-    editorSlider.apply(this.mainCanvasContext, value);
+  onChangeSliderValue(editorSlider: EditorSlider, value: number): void {
+    editorSlider.apply(value, this.currentFile.contextFilters);
     this.drawImageOnMainCanvasContext();
+    const filter = [...this.currentFile.contextFilters.values()].join(' ');
+    this.mainCanvasContext.filter = filter;
   }
 
   private loadData(file: File): void {
@@ -76,6 +71,7 @@ export class PostEditComponent implements OnInit {
       const imageSnippet: ImageSnippet = {
         src: event.target.result,
         file,
+        contextFilters: new Map(),
       };
       this.files.push(imageSnippet);
       if (this.files.length === 1) {
