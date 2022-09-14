@@ -55,9 +55,7 @@ export class BackgroundService {
         row < tilesSize.height + this.NUMBER_OF_BACKUP_IMAGES_FOR_ANIMATION;
         row++
       ) {
-        const image = this.toUrl(
-          imagesPaths[Math.floor(Math.random() * imagesPaths.length)]
-        );
+        const image = this.toUrl(this.getRandomImage(imagesPaths));
         nestedArray.push(image);
       }
       images.push(nestedArray);
@@ -88,4 +86,7 @@ export class BackgroundService {
       return this.IMAGE_SIZES.small;
     }
   }
+
+  private getRandomImage = (imagesPaths: string[]): string =>
+    imagesPaths[Math.floor(Math.random() * imagesPaths.length)];
 }

@@ -46,7 +46,34 @@
   color: hsl(0, 0%, 7%);
 }
 
+.post_edit__upload_button_wrapper {
+  position: absolute;
+  top: 2%;
+  right: 6%;
+}
+
+.post_edit__upload_button {
+  padding: 10% 15%;
+  border: 1em hsl(0, 0%, 7%, 10%);
+  border-radius: 2%;
+  background-color: hsl(0, 0%, 7%, 40%);
+
+  font-size: 1.75em;
+  color: hsl(0, 0%, 100%);
+
+  transition: background-color 0.3s, color 0.3s;
+
+  cursor: pointer;
+}
+
+.post_edit__upload_button:hover {
+  color: hsl(0, 0%, 100%);
+  background-color: hsl(0, 0%, 7%);
+}
+
 .post_edit__image_wrapper {
+  position: relative;
+
   flex-basis: 60%;
   width: 100%;
 
@@ -269,6 +296,15 @@
     font-size: 2.25em;
   }
 
+  .post_edit__upload_button_wrapper {
+    top: 2%;
+    right: 7%;
+  }
+
+  .post_edit__upload_button {
+    font-size: 2em;
+  }
+
   .post_edit__image_wrapper {
     justify-content: start;
     align-items: start;
@@ -280,8 +316,7 @@
     flex-basis: 40%;
   }
 
-  .post_edit__editor_tab--inactive,
-  .post_edit__range_slider_name {
+  .post_edit__editor_tab--inactive {
     font-size: 1.75em;
   }
 
@@ -328,8 +363,16 @@
     font-size: 2.5em;
   }
 
-  .post_edit__editor_tab--inactive,
-  .post_edit__range_slider_name {
+  .post_edit__upload_button_wrapper {
+    top: 2%;
+    right: 6%;
+  }
+
+  .post_edit__upload_button {
+    font-size: 2.25em;
+  }
+
+  .post_edit__editor_tab--inactive {
     font-size: 2em;
   }
 
@@ -386,6 +429,16 @@
 
   .post_edit__editor_wrapper {
     flex-basis: 30%;
+  }
+}
+@media (min-width: 1366px) {
+  .post_edit__upload_button_wrapper {
+    top: 1%;
+    right: 4%;
+  }
+
+  .post_edit__upload_button {
+    font-size: 2.5em;
   }
 }
 
