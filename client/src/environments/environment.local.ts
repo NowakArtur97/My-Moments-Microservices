@@ -1,3 +1,6 @@
+const baseUrl = 'http://192.168.99.100:';
+
 export const environment = {
-  userServiceUrl: 'http://192.168.99.100:8081/api/v1',
+  userServiceUrl: `${baseUrl}8081/api/v1`,
+  postServiceUrl: `${baseUrl}8082/api/v1/posts`,
 };
