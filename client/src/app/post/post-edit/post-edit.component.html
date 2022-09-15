@@ -5,7 +5,7 @@
   <div *ngIf="files.length === 0" class="post_edit__image_button_wrapper">
     <input
       #imageInput
-      (change)="onUploadImage(imageInput)"
+      (change)="onAddImages(imageInput)"
       multiple
       type="file"
       class="post_edit__image_input"
@@ -23,7 +23,9 @@
     <img #image src="#" alt="Current image" class="post_edit__image" />
     <canvas #canvas class="post_edit__canvas"></canvas>
     <div class="post_edit__upload_button_wrapper">
-      <button class="post_edit__upload_button">Upload</button>
+      <button (click)="onCreatePost()" class="post_edit__upload_button">
+        Upload
+      </button>
     </div>
   </div>
   <div *ngIf="files.length > 0" class="post_edit__editor_wrapper">

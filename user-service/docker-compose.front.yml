@@ -30,7 +30,7 @@ services:
       - my-moments
     build:
       context: ../
-      dockerfile: configuration-service/Dockerfile-dev
+      dockerfile: configuration-service/Dockerfile
     ports:
       - 8888:8888
     volumes:

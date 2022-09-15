@@ -22,6 +22,7 @@ services:
     depends_on:
       - configuration-service
       - mongo-db-post-service
+      - rabbitmq
     container_name: post-service
 
   configuration-service:
@@ -30,7 +31,7 @@ services:
       - my-moments
     build:
       context: ../
-      dockerfile: configuration-service/Dockerfile-dev
+      dockerfile: configuration-service/Dockerfile
     ports:
       - 8888:8888
     volumes:
@@ -46,3 +47,15 @@ services:
     volumes:
       - ./data/db:/data/db
     container_name: mongo-db-post-service
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    networks:
+      - my-moments
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: my-moments-user
+      RABBITMQ_DEFAULT_PASS: my-moments-password
+    ports:
+      - 5672:5672
+      - 15672:15672

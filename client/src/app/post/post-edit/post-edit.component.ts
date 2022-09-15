@@ -5,6 +5,7 @@ import allFilters from '../data/filters.data';
 import EditorSlider from '../models/editor-slider.model';
 import Filter from '../models/filter.model';
 import ImageSnippet from '../models/image-snippet.model';
+import { PostService } from '../services/post.service';
 
 @Component({
   selector: 'app-post-edit',
@@ -29,11 +30,14 @@ export class PostEditComponent implements OnInit {
 
   filtersInterval!: any;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private postServce: PostService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {}
 
-  onUploadImage(imageInput: HTMLInputElement): void {
+  onAddImages(imageInput: HTMLInputElement): void {
     const inputFiles = imageInput.files;
     if (inputFiles) {
       const numberOfFiles = inputFiles.length;
@@ -65,6 +69,10 @@ export class PostEditComponent implements OnInit {
     const filter = [...this.currentFile.contextFilters.values()].join(' ');
     this.mainCanvasContext.filter = filter;
     this.drawImageOnMainCanvasContext();
+  }
+
+  onCreatePost() {
+    this.postServce.createPost(this.files);
   }
 
   private loadData(file: File): void {

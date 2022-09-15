@@ -12,26 +12,24 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
 
 @Configuration
+@EnableSwagger2
 @EnableConfigurationProperties(value = SwaggerConfigurationProperties.class)
 class SwaggerConfiguration {
 
     @Bean
     Docket docket(SwaggerConfigurationProperties swaggerConfigurationProperties) {
 
-        return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
+        return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                .paths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors()))
-                .build()
+                .paths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors())).build()
                 .apiInfo(getApiDetails(swaggerConfigurationProperties))
-                .tags(
-                        new Tag(PostTag.RESOURCE, PostTag.DESCRIPTION)
-                )
+                .tags(new Tag(PostTag.RESOURCE, PostTag.DESCRIPTION))
                 .securityContexts(List.of(getSecurityContext(swaggerConfigurationProperties)))
                 .securitySchemes(List.of(getApiKey(swaggerConfigurationProperties)));
     }
@@ -45,8 +43,7 @@ class SwaggerConfiguration {
                 .termsOfServiceUrl(swaggerConfigurationProperties.getTermsOfServiceUrl())
                 .license(swaggerConfigurationProperties.getLicense())
                 .licenseUrl(swaggerConfigurationProperties.getLicenseUrl())
-                .contact(getContact(swaggerConfigurationProperties))
-                .build();
+                .contact(getContact(swaggerConfigurationProperties)).build();
     }
 
     private Contact getContact(SwaggerConfigurationProperties swaggerConfigurationProperties) {
@@ -62,10 +59,8 @@ class SwaggerConfiguration {
 
     private SecurityContext getSecurityContext(SwaggerConfigurationProperties swaggerConfigurationProperties) {
 
-        return SecurityContext.builder()
-                .securityReferences(getDefaultAuth())
-                .forPaths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors()))
-                .build();
+        return SecurityContext.builder().securityReferences(getDefaultAuth())
+                .forPaths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors())).build();
     }
 
     private List<SecurityReference> getDefaultAuth() {
