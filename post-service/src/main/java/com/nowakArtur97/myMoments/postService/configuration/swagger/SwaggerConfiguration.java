@@ -24,10 +24,12 @@ class SwaggerConfiguration {
     @Bean
     Docket docket(SwaggerConfigurationProperties swaggerConfigurationProperties) {
 
-        return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false)
+        return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                .paths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors())).build()
+                .paths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors()))
+                .build()
                 .apiInfo(getApiDetails(swaggerConfigurationProperties))
                 .tags(new Tag(PostTag.RESOURCE, PostTag.DESCRIPTION))
                 .securityContexts(List.of(getSecurityContext(swaggerConfigurationProperties)))
