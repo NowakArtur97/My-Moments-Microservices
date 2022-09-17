@@ -16,6 +16,10 @@ ext {
 	set('springCloudVersion', "2020.0.3")
 }
 
+springBoot {
+	mainClass = 'com.nowakArtur97.myMoments.configurationService.ConfigurationServiceApplication'
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.cloud:spring-cloud-config-server'

@@ -4,8 +4,9 @@ services:
   configuration-service:
     restart: on-failure
     build:
-      context: ../
-      dockerfile: configuration-service/Dockerfile
+      context: ../configuration-service
+      dockerfile: Dockerfile
+    image: configuration-service:latest
     ports:
       - 8888:8888
     volumes:

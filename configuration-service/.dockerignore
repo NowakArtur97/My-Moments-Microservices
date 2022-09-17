@@ -1,8 +1,0 @@
-*.iml
-.idea/
-src
-target/
-!target/*.jar
-build/*
-!build/docker
-gradle
