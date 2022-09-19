@@ -13,6 +13,7 @@ services:
     restart: on-failure
     build:
       context: .
+    image: post-service:latest
     networks:
       - my-moments
     ports:

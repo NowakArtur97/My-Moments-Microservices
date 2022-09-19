@@ -1,5 +1,12 @@
 spring:
   #
+  # Multipart
+  #
+  servlet:
+    multipart:
+      max-request-size: 15MB
+      max-file-size: 15MB
+  #
   # Mongo DB
   #
   data:
