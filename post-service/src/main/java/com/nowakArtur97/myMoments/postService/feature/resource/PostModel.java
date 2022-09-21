@@ -1,32 +1,32 @@
 package com.nowakArtur97.myMoments.postService.feature.resource;
 
 import com.nowakArtur97.myMoments.postService.feature.document.Post;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.bson.types.Binary;
 
 import java.util.List;
 import java.util.Objects;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@ApiModel(description = "Details about the Post")
+@Schema(description = "Details about the Post")
 public class PostModel implements Post {
 
-    @ApiModelProperty(notes = "The unique id of the Post")
+    @Schema(accessMode = READ_ONLY, description = "The unique id of the Post")
     protected String id;
 
-    @ApiModelProperty(notes = "The post's caption")
+    @Schema(accessMode = READ_ONLY, description = "The post's caption")
     protected String caption;
 
-    @ApiModelProperty(notes = "The post's author")
+    @Schema(accessMode = READ_ONLY, description = "The post's author")
     protected String author;
 
-    @ApiModelProperty(notes = "The post's photos")
+    @Schema(accessMode = READ_ONLY, description = "The post's photos")
     protected List<byte[]> photos;
 
     @Override

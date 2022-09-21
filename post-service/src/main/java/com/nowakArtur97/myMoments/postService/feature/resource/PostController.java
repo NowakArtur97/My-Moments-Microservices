@@ -1,10 +1,14 @@
 package com.nowakArtur97.myMoments.postService.feature.resource;
 
-import com.nowakArtur97.myMoments.postService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.postService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.postService.feature.document.PostService;
 import com.nowakArtur97.myMoments.postService.jwt.JwtUtil;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -20,10 +24,10 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
-@Api(tags = {PostTag.RESOURCE})
+@Tag(name = PostTag.RESOURCE, description = PostTag.DESCRIPTION)
 @ApiResponses(value = {
-        @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
-        @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
+        @ApiResponse(responseCode = "401", description = "Permission to the resource is prohibited"),
+        @ApiResponse(responseCode = "403", description = "Access to the resource is prohibited")})
 class PostController {
 
     private final PostService postService;
@@ -35,13 +39,14 @@ class PostController {
     private final ModelMapper modelMapper;
 
     @GetMapping(path = "/{id}")
-    @ApiOperation(value = "Get a post", notes = "Provide an id")
+    @Operation(summary = "Get a post", description = "Provide an id",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully found post", response = PostModelWithComments.class),
-            @ApiResponse(code = 400, message = "Invalid Post's id supplied", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "Successfully found post"),
+            @ApiResponse(responseCode = "400", description = "Invalid Post's id supplied")})
     Mono<ResponseEntity<PostModelWithComments>> getPostWithComments(
-            @ApiParam(value = "Id of the Post being looked up", name = "id", type = "string",
-                    required = true, example = "id") @PathVariable("id") String id
+            @Parameter(description = "Id of the Post being looked up", name = "id", required = true, example = "id")
+            @PathVariable("id") String id
     ) {
 
         return postService.getCommentsByPostId(id)
@@ -56,12 +61,12 @@ class PostController {
     }
 
     @GetMapping(path = "/me")
-    @ApiOperation(value = "Find authenticated User's Posts")
+    @Operation(summary = "Find authenticated User's Posts", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully found posts", response = UsersPostsModel.class),
-            @ApiResponse(code = 404, message = "Could not find User with provided token", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "Successfully found posts"),
+            @ApiResponse(responseCode = "404", description = "Could not find User with provided token")})
     Mono<ResponseEntity<UsersPostsModel>> getAuthenticatedUsersPosts(
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMapMany(postService::findPostsByAuthor)
@@ -72,12 +77,13 @@ class PostController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Find User's Posts by Username", notes = "Provide a name to look up specific Posts")
+    @Operation(summary = "Find User's Posts by Username", description = "Provide a name to look up specific Posts",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 200, message = "User's posts found", response = UsersPostsModel.class),
-            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "User's posts found"),
+            @ApiResponse(responseCode = "400", description = "Invalid User's name supplied")})
     Mono<ResponseEntity<UsersPostsModel>> getUsersPosts(
-            @ApiParam(value = "Username of the Posts being looked up", name = "username", type = "integer", required = true,
+            @Parameter(description = "Username of the Posts being looked up", name = "username", required = true,
                     example = "user") @RequestParam("username") String username) {
 
         return postService.findPostsByAuthor(username)
@@ -88,18 +94,18 @@ class PostController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @ApiOperation("Create a post")
+    @Operation(summary = "Create a post", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Successfully created post", response = PostModel.class),
-            @ApiResponse(code = 400, message = "Incorrectly entered data", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "201", description = "Successfully created post"),
+            @ApiResponse(responseCode = "400", description = "Incorrectly entered data")})
     Mono<ResponseEntity<PostModel>> cretePost(
-            @ApiParam(value = "The post's photos", name = "photos", required = true)
+            @Parameter(description = "The post's photos", name = "photos", required = true)
             @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
             // required = false - Not required to bypass the exception with a missing request part
             // and return a validation failed message
-            @ApiParam(value = "The post's data", name = "post")
+            @Parameter(description = "The post's data", name = "post")
             @RequestPart(value = "post", required = false) String post,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
@@ -112,22 +118,22 @@ class PostController {
     }
 
     @PutMapping(path = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @ApiOperation(value = "Update a post", notes = "Provide an id")
+    @Operation(summary = "Update a post", description = "Provide an id",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully updated post", response = PostModel.class),
-            @ApiResponse(code = 400, message = "Invalid Post's id supplied or incorrectly entered data"),
-            @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "Successfully updated post"),
+            @ApiResponse(responseCode = "400", description = "Invalid Post's id supplied or incorrectly entered data"),
+            @ApiResponse(responseCode = "404", description = "Could not find Post with provided id")})
     Mono<ResponseEntity<PostModel>> updatePost(
-            @ApiParam(value = "Id of the Post being updated", name = "id", type = "string",
-                    required = true, example = "id")
+            @Parameter(description = "Id of the Post being updated", name = "id", required = true, example = "id")
             @PathVariable("id") String id,
-            @ApiParam(value = "The post's photos", name = "photos", required = true)
+            @Parameter(description = "The post's photos", name = "photos", required = true)
             @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
             // required = false - Not required to bypass the exception with a missing request part
             // and return a validation failed message
-            @ApiParam(value = "The post's data", name = "post")
+            @Parameter(description = "The post's data", name = "post")
             @RequestPart(value = "post", required = false) String post,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
@@ -139,16 +145,17 @@ class PostController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // Added to remove the default 200 status added by Swagger
-    @ApiOperation(value = "Delete a post", notes = "Provide an id")
+    @Operation(summary = "Delete a post", description = "Provide an id",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successfully deleted a post"),
-            @ApiResponse(code = 400, message = "Invalid Post's id supplied"),
-            @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "204", description = "Successfully deleted a post"),
+            @ApiResponse(responseCode = "400", description = "Invalid Post's id supplied"),
+            @ApiResponse(responseCode = "404", description = "Could not find Post with provided id")})
     Mono<ResponseEntity<Void>> deletePost(
-            @ApiParam(value = "Id of the Post being deleted", name = "id", type = "string",
+            @Parameter(description = "Id of the Post being deleted", name = "id",
                     required = true, example = "id")
             @PathVariable("id") String id,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMap((username) -> postService.deletePost(id, username))

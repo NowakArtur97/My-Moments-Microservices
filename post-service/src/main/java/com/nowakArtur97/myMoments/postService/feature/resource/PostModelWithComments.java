@@ -1,7 +1,6 @@
 package com.nowakArtur97.myMoments.postService.feature.resource;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,14 +8,16 @@ import lombok.ToString;
 
 import java.util.List;
 
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-@ApiModel(description = "Details about the Post")
+@Schema(description = "Details about the Post")
 public class PostModelWithComments extends PostModel {
 
-    @ApiModelProperty(notes = "The post's comments")
+    @Schema(accessMode = READ_ONLY, description = "The post's comments")
     private List<CommentModel> comments;
 
     public PostModelWithComments(String id, String caption, String author, List<byte[]> photos, List<CommentModel> comments) {
