@@ -25,6 +25,7 @@ class PostObjectMapper {
         return photos.map(Part::content)
                 .flatMap(DataBufferUtil::mergeDataBuffers)
                 .map(bytes -> new Binary(BsonBinarySubType.BINARY, bytes))
+                .filter(image -> image.length() > 0)
                 .collectList()
                 .map(images -> getPostDTO(postAsString, images))
                 .switchIfEmpty(Mono.just(getPostDTO(postAsString, Collections.emptyList())));

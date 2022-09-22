@@ -20,3 +20,13 @@ services:
     volumes:
       - ./data/db:/data/db
     container_name: mongo-db-post-service
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: my-moments-user
+      RABBITMQ_DEFAULT_PASS: my-moments-password
+    ports:
+      - 5672:5672
+      - 15672:15672
