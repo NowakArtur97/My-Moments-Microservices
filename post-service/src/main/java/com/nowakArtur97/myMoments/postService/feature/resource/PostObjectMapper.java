@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.codec.multipart.Part;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -20,7 +19,7 @@ class PostObjectMapper {
 
     private final ObjectMapper objectMapper;
 
-    public Mono<PostDTO> getPostDTOFromString(String postAsString, Flux<FilePart> photos) {
+    public Mono<PostDTO> getPostDTOFromString(String postAsString, Flux<Part> photos) {
 
         return photos.map(Part::content)
                 .flatMap(DataBufferUtil::mergeDataBuffers)

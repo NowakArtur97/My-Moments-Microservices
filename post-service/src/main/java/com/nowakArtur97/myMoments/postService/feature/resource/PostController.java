@@ -14,7 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.http.codec.multipart.Part;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -93,14 +93,15 @@ class PostController {
                 .map(ResponseEntity::ok);
     }
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "Create a post", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Successfully created post"),
             @ApiResponse(responseCode = "400", description = "Incorrectly entered data")})
     Mono<ResponseEntity<PostModel>> cretePost(
             @Parameter(description = "The post's photos", name = "photos", required = true)
-            @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
+            @RequestPart(value = "photos", required = false) Flux<Part> photos,
             // required = false - Not required to bypass the exception with a missing request part
             // and return a validation failed message
             @Parameter(description = "The post's data", name = "post")
@@ -128,7 +129,7 @@ class PostController {
             @Parameter(description = "Id of the Post being updated", name = "id", required = true, example = "id")
             @PathVariable("id") String id,
             @Parameter(description = "The post's photos", name = "photos", required = true)
-            @RequestPart(value = "photos", required = false) Flux<FilePart> photos,
+            @RequestPart(value = "photos", required = false) Flux<Part> photos,
             // required = false - Not required to bypass the exception with a missing request part
             // and return a validation failed message
             @Parameter(description = "The post's data", name = "post")
