@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { APP_ROUTES } from 'src/app/common/const.data';
 import ErrorResponse from 'src/app/common/models/error-response.model';
+import URLS from 'src/app/urls';
 import { environment } from 'src/environments/environment.local';
 
 import AuthenticationRequest from '../models/authentication-request.model';
@@ -22,7 +23,7 @@ export class AuthService {
     multipartData.append('user', JSON.stringify(userData));
     this.httpClient
       .post<AuthenticationResponse>(
-        `${environment.userServiceUrl}/registration/register`,
+        `${environment.userServiceUrl}${URLS.user.registration}`,
         multipartData
       )
       .subscribe(
@@ -36,7 +37,7 @@ export class AuthService {
   loginUser(authenticationRequest: AuthenticationRequest): void {
     this.httpClient
       .post<AuthenticationResponse>(
-        `${environment.userServiceUrl}/authentication`,
+        `${environment.userServiceUrl}${URLS.user.authentication}`,
         authenticationRequest
       )
       .subscribe(

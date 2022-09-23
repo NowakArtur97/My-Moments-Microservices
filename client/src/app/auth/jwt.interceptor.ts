@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { exhaustMap, map, take } from 'rxjs/operators';
 
+import URLS from '../urls';
 import { AuthService } from './services/auth.service';
 
 @Injectable()
@@ -18,9 +19,8 @@ export class JwtInterceptor implements HttpInterceptor {
       map((authenticatedUser) => authenticatedUser?.token),
       exhaustMap((token) => {
         const isNotSecured =
-          request.url.includes('authentication') ||
-          request.url.includes('registration');
-        console.log(token);
+          request.url.includes(`${URLS.user.authentication}`) ||
+          request.url.includes(`${URLS.user.registration}`);
         console.log(isNotSecured);
         return isNotSecured
           ? next.handle(request)
