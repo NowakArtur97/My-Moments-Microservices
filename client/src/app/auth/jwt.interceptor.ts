@@ -21,7 +21,6 @@ export class JwtInterceptor implements HttpInterceptor {
         const isNotSecured =
           request.url.includes(`${URLS.user.authentication}`) ||
           request.url.includes(`${URLS.user.registration}`);
-        console.log(isNotSecured);
         return isNotSecured
           ? next.handle(request)
           : next.handle(

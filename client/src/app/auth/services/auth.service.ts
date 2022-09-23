@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { APP_ROUTES } from 'src/app/common/const.data';
 import ErrorResponse from 'src/app/common/models/error-response.model';
+import HttpService from 'src/app/common/services/http.service';
 import URLS from 'src/app/urls';
 import { environment } from 'src/environments/environment.local';
 
@@ -12,15 +13,18 @@ import AuthenticationResponse from '../models/authentication-response.model';
 import UserRegistrationDTO from '../models/user-registration-dto.model';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class AuthService extends HttpService {
   authError = new BehaviorSubject<ErrorResponse | null>(null);
   authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);
 
-  constructor(private httpClient: HttpClient, private router: Router) {}
+  constructor(protected httpClient: HttpClient, private router: Router) {
+    super(httpClient);
+  }
 
   registerUser(userData: UserRegistrationDTO): void {
-    const multipartData = new FormData();
-    multipartData.append('user', JSON.stringify(userData));
+    const multipartData = this.createFormdata([
+      { key: 'user', value: userData },
+    ]);
     this.httpClient
       .post<AuthenticationResponse>(
         `${environment.userServiceUrl}${URLS.user.registration}`,
@@ -51,7 +55,6 @@ export class AuthService {
   private handleSuccessfullAuthentication(
     authenticationResponse: AuthenticationResponse
   ): void {
-    console.log(authenticationResponse);
     this.authenticatedUser.next(authenticationResponse);
     this.authError.next(null);
     this.router.navigate([`/${APP_ROUTES.posts}`]);
@@ -60,22 +63,10 @@ export class AuthService {
   private handleAuthenticationErrors(
     httpErrorResponse: HttpErrorResponse
   ): void {
-    console.log(httpErrorResponse);
     this.authError.next(
       this.isErrorResponse(httpErrorResponse)
         ? (httpErrorResponse.error as ErrorResponse)
-        : this.getDefaultErrorResponse()
+        : this.defaultErrorResponse
     );
-  }
-
-  private isErrorResponse = (httpErrorResponse: HttpErrorResponse): boolean =>
-    (httpErrorResponse.error as ErrorResponse).errors !== undefined;
-
-  private getDefaultErrorResponse(): ErrorResponse {
-    return {
-      status: 500,
-      timestamp: new Date(),
-      errors: ['Something went wrong.', 'Please try again in a moment.'],
-    };
   }
 }

@@ -71,7 +71,7 @@ export class PostEditComponent implements OnInit {
     this.drawImageOnMainCanvasContext();
   }
 
-  onCreatePost() {
+  onCreatePost(): void {
     this.postServce.createPost(this.files);
   }
 

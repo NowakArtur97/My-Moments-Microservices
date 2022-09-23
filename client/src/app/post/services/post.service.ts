@@ -1,20 +1,23 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import ErrorResponse from 'src/app/common/models/error-response.model';
+import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
 import ImageSnippet from '../models/image-snippet.model';
-import PostResponse from '../models/post-response-model';
+import PostResponse from '../models/post-response.model';
 
 @Injectable({ providedIn: 'root' })
-export class PostService {
-  constructor(private httpClient: HttpClient) {}
+export class PostService extends HttpService {
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
-  createPost(files: ImageSnippet[]) {
-    const multipartData = new FormData();
-    multipartData.append('photos', JSON.stringify(files));
-    // TODO: PostService: add caption
-    // multipartData.append('post', '{"caption": "aaaaa"}');
+  createPost(files: ImageSnippet[]): void {
+    const multipartData = this.createFormdata([
+      { key: 'photos', value: files },
+      // TODO: PostService: add caption
+      //  { key: 'post', value: { caption: 'aaaaa' } },
+    ]);
     this.httpClient
       .post<PostResponse>(`${environment.postServiceUrl}`, multipartData)
       .subscribe(
@@ -35,7 +38,4 @@ export class PostService {
       console.log(httpErrorResponse);
     }
   }
-
-  private isErrorResponse = (httpErrorResponse: HttpErrorResponse): boolean =>
-    (httpErrorResponse.error as ErrorResponse)?.errors !== undefined;
 }
