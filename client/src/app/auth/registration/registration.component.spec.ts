@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppCommonModule } from 'src/app/common/common.module';
 
 import { PasswordRulesDirective } from '../directives/password-rules.directive';
-import UserRegistrationDTO from '../models/user-registration-dto.model';
+import UserRegistrationDTO from '../models/user-registration.dto';
 import { RegistrationComponent } from './registration.component';
 
 describe('RegistrationComponent', () => {

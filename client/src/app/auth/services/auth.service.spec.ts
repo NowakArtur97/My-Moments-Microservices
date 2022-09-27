@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment.local';
 
 import AuthenticationRequest from '../models/authentication-request.model';
 import AuthenticationResponse from '../models/authentication-response.model';
-import UserRegistrationDTO from '../models/user-registration-dto.model';
+import UserRegistrationDTO from '../models/user-registration.dto';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
@@ -67,7 +67,7 @@ describe('AuthService', () => {
       expect(req.request.method).toBe('POST');
       req.flush(authResponse);
 
-      expect(navigateSpy).toHaveBeenCalledWith([`/${APP_ROUTES.posts}`]);
+      expect(navigateSpy).toHaveBeenCalledWith([`/${APP_ROUTES.post.posts}`]);
     });
 
     it('with incorrect data should emit auth errors', () => {
@@ -129,7 +129,7 @@ describe('AuthService', () => {
       expect(req.request.method).toBe('POST');
       req.flush(authResponse);
 
-      expect(navigateSpy).toHaveBeenCalledWith([`/${APP_ROUTES.posts}`]);
+      expect(navigateSpy).toHaveBeenCalledWith([`/${APP_ROUTES.post.posts}`]);
     });
 
     it('with incorrect data should emit auth errors', () => {

@@ -1,14 +1,21 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
 import ImageSnippet from '../models/image-snippet.model';
-import PostResponse from '../models/post-response.model';
+import Post from '../models/post.model';
+import examplePosts from './example-posts';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
-  constructor(protected httpClient: HttpClient) {
+  // myPosts = new BehaviorSubject<Post[]>([]);
+  // TODO: DELETE
+  myPosts = new BehaviorSubject<Post[]>(examplePosts);
+
+  constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient);
   }
 
@@ -19,15 +26,16 @@ export class PostService extends HttpService {
       //  { key: 'post', value: { caption: 'aaaaa' } },
     ]);
     this.httpClient
-      .post<PostResponse>(`${environment.postServiceUrl}`, multipartData)
+      .post<Post>(`${environment.postServiceUrl}`, multipartData)
       .subscribe(
-        (res: PostResponse) => {
-          console.log(res);
-          return null;
-        },
+        (newPost: Post) => this.handleSuccessfullPostCreation(newPost),
         (httpErrorResponse: HttpErrorResponse) =>
           this.handleErrors(httpErrorResponse)
       );
+  }
+
+  private handleSuccessfullPostCreation(newPost: Post): void {
+    this.myPosts.next([...this.myPosts.getValue(), newPost]);
   }
 
   private handleErrors(httpErrorResponse: HttpErrorResponse): void {
