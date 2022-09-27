@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { APP_ROUTES } from 'src/app/common/const.data';
 import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
@@ -35,8 +36,23 @@ export class PostService extends HttpService {
   }
 
   private handleSuccessfullPostCreation(newPost: Post): void {
-    this.myPosts.next([...this.myPosts.getValue(), newPost]);
+    const allPosts: Post[] = this.mapBinaryToJpgs([
+      ...this.myPosts.getValue(),
+      newPost,
+    ]);
+    this.myPosts.next(allPosts);
+    this.router.navigate([`/${APP_ROUTES.post.posts}`]);
+    console.log(allPosts);
   }
+
+  // TODO: PostService: make private
+  mapBinaryToJpgs = (posts: Post[]): Post[] =>
+    posts.map((post: Post) => {
+      return {
+        ...post,
+        photos: post.photos.map((photo) => `data:image/jpg;base64,${photo}`),
+      };
+    });
 
   private handleErrors(httpErrorResponse: HttpErrorResponse): void {
     if (this.isErrorResponse(httpErrorResponse)) {

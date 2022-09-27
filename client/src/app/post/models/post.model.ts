@@ -1,6 +1,6 @@
 export default interface Post {
-  id: string;
-  caption: string;
-  author: string;
-  photos: string[];
+  readonly id: string;
+  readonly caption: string;
+  readonly author: string;
+  readonly photos: string[];
 }
