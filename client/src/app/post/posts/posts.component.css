@@ -7,7 +7,7 @@
   max-height: 100vh;
   max-width: 100%;
 
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 .posts {
@@ -28,8 +28,8 @@
   margin: 0 10px 0 0;
 }
 
-.post__image {
-  background-position: center;
-  height: 100%;
-  /* width: 100%; */
+@media (min-width: 1024px) {
+  .posts-wrapper {
+    overflow: hidden;
+  }
 }

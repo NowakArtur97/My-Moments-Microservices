@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import Post from '../models/post.model';
 import { PostService } from '../services/post.service';
@@ -9,7 +9,14 @@ import { PostService } from '../services/post.service';
   styleUrls: ['./posts.component.css'],
 })
 export class PostsComponent implements OnInit {
+  @ViewChild('postsContainer') postsContainer:
+    | ElementRef<HTMLDivElement>
+    | undefined;
+
   posts: Post[] = [];
+  private isScrolling = false;
+  private startXPosition = 0;
+  private scrollLeftPosition = 0;
 
   constructor(private postService: PostService) {}
 
@@ -23,6 +30,28 @@ export class PostsComponent implements OnInit {
         }));
       } // TODO: PostsComponent: Remove
     );
+  }
+
+  startScroll(e: MouseEvent): void {
+    this.isScrolling = true;
+    const { offsetLeft, scrollLeft } = this.postsContainer!!.nativeElement;
+    this.startXPosition = e.pageX - offsetLeft;
+    this.scrollLeftPosition = scrollLeft;
+  }
+
+  stopScroll(): void {
+    this.isScrolling = false;
+  }
+
+  dragAndScroll(e: MouseEvent): void {
+    e.preventDefault();
+    if (!this.isScrolling) {
+      return;
+    }
+    const postsContainer = this.postsContainer!!.nativeElement;
+    const xPosition = e.pageX - postsContainer.offsetLeft;
+    const walk = xPosition - this.startXPosition;
+    postsContainer.scrollLeft = this.scrollLeftPosition - walk;
   }
 
   // TODO: PostsComponent: Remove

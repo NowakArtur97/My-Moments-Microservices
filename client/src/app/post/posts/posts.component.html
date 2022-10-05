@@ -1,4 +1,11 @@
-<div class="posts-wrapper">
+<div
+  #postsContainer
+  (mousemove)="dragAndScroll($event)"
+  (mousedown)="startScroll($event)"
+  (mouseup)="stopScroll()"
+  (mouseleave)="stopScroll()"
+  class="posts-wrapper"
+>
   <div class="posts">
     <div *ngFor="let post of posts" class="post">
       <img src="{{ post.photos[0] }}" class="post__image" alt="user post" />
