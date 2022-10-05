@@ -1,3 +1,7 @@
-<div *ngFor="let post of posts">
-  <img src="{{ post.photos[0] }}" alt="user post" />
+<div class="posts-wrapper">
+  <div class="posts">
+    <div *ngFor="let post of posts" class="post">
+      <img src="{{ post.photos[0] }}" class="post__image" alt="user post" />
+    </div>
+  </div>
 </div>

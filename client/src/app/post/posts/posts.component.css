@@ -1,0 +1,35 @@
+.posts-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100vh;
+  max-height: 100vh;
+  max-width: 100%;
+
+  overflow: hidden;
+}
+
+.posts {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  height: 100vh;
+
+  margin: 0 10px;
+}
+
+.post {
+  display: flex;
+
+  height: 70vh;
+
+  margin: 0 10px 0 0;
+}
+
+.post__image {
+  background-position: center;
+  height: 100%;
+  /* width: 100%; */
+}
