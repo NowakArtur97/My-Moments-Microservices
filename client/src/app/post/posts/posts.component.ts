@@ -1,5 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
+import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
 import Post from '../models/post.model';
 import { PostService } from '../services/post.service';
 
@@ -8,17 +15,17 @@ import { PostService } from '../services/post.service';
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.css'],
 })
-export class PostsComponent implements OnInit {
+export class PostsComponent implements OnInit, AfterViewInit {
   @ViewChild('postsContainer') postsContainer:
     | ElementRef<HTMLDivElement>
     | undefined;
 
   posts: Post[] = [];
-  private isScrolling = false;
-  private startXPosition = 0;
-  private scrollLeftPosition = 0;
 
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    private clickAndDragToScrollService: ClickAndDragToScrollService
+  ) {}
 
   ngOnInit(): void {
     this.postService.myPosts.subscribe(
@@ -32,27 +39,17 @@ export class PostsComponent implements OnInit {
     );
   }
 
-  startScroll(e: MouseEvent): void {
-    this.isScrolling = true;
-    const { offsetLeft, scrollLeft } = this.postsContainer!!.nativeElement;
-    this.startXPosition = e.pageX - offsetLeft;
-    this.scrollLeftPosition = scrollLeft;
+  ngAfterViewInit(): void {
+    this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
   }
 
-  stopScroll(): void {
-    this.isScrolling = false;
-  }
+  startScroll = (event: MouseEvent): void =>
+    this.clickAndDragToScrollService.startScroll(event);
 
-  dragAndScroll(e: MouseEvent): void {
-    e.preventDefault();
-    if (!this.isScrolling) {
-      return;
-    }
-    const postsContainer = this.postsContainer!!.nativeElement;
-    const xPosition = e.pageX - postsContainer.offsetLeft;
-    const walk = xPosition - this.startXPosition;
-    postsContainer.scrollLeft = this.scrollLeftPosition - walk;
-  }
+  stopScroll = (): void => this.clickAndDragToScrollService.stopScroll();
+
+  dragAndScroll = (event: MouseEvent): void =>
+    this.clickAndDragToScrollService.dragAndScroll(event);
 
   // TODO: PostsComponent: Remove
   private shuffleArray(array: any[]): any[] {
