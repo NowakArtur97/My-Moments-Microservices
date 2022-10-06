@@ -8,7 +8,19 @@
 >
   <div class="posts">
     <div *ngFor="let post of posts" class="post">
+      <div class="post__author">
+        <!-- TODO: PostComponent: User image -->
+        <img
+          src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg"
+          class="post__author_image"
+          alt="author image"
+        />
+        <p class="post__author_username">{{ post.author }}</p>
+      </div>
       <img src="{{ post.photos[0] }}" class="post__image" alt="user post" />
+      <div class="post__desciption">
+        <p class="post__caption">{{ post.caption }}</p>
+      </div>
     </div>
   </div>
 </div>
