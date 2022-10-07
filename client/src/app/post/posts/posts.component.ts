@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
 import Post from '../models/post.model';
@@ -16,9 +10,7 @@ import { PostService } from '../services/post.service';
   styleUrls: ['./posts.component.css'],
 })
 export class PostsComponent implements OnInit, AfterViewInit {
-  @ViewChild('postsContainer') postsContainer:
-    | ElementRef<HTMLDivElement>
-    | undefined;
+  @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
 
   posts: Post[] = [];
 
@@ -30,8 +22,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.postService.myPosts.subscribe(
       (posts) => {
-        this.posts = this.postService.mapBinaryToJpgs(posts);
-        this.posts = this.posts.map((post) => ({
+        this.posts = this.postService.mapBinaryToJpgs(posts).map((post) => ({
           ...post,
           photos: this.shuffleArray(post.photos),
         }));
