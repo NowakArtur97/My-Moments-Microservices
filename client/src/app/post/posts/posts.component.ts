@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
-import Post from '../models/post.model';
+import PostElement from '../models/post-element.model';
 import { PostService } from '../services/post.service';
 
 @Component({
@@ -11,8 +11,9 @@ import { PostService } from '../services/post.service';
 })
 export class PostsComponent implements OnInit, AfterViewInit {
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
+  @ViewChildren('postsElements') postsElements!: QueryList<HTMLDivElement>;
 
-  posts: Post[] = [];
+  posts: PostElement[] = [];
 
   constructor(
     private postService: PostService,
@@ -20,14 +21,16 @@ export class PostsComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.postService.myPosts.subscribe(
-      (posts) => {
-        this.posts = this.postService.mapBinaryToJpgs(posts).map((post) => ({
+    this.postService.myPosts.subscribe((posts) => {
+      this.posts = this.postService
+        .mapBinaryToJpgs(posts) // TODO: PostsComponent: Remove
+        .map((post) => ({
           ...post,
           photos: this.shuffleArray(post.photos),
+          isActive: false,
+          offsetLeft: 0,
         }));
-      } // TODO: PostsComponent: Remove
-    );
+    });
   }
 
   ngAfterViewInit(): void {
@@ -39,8 +42,20 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
   stopScroll = (): void => this.clickAndDragToScrollService.stopScroll();
 
-  dragAndScroll = (event: MouseEvent): void =>
+  dragAndScroll(event: MouseEvent): void {
     this.clickAndDragToScrollService.dragAndScroll(event);
+    if (!this.clickAndDragToScrollService.isScrolling) {
+      return;
+    }
+    const goal = this.postsContainer.nativeElement.scrollLeft;
+    console.log(goal);
+    this.posts = this.posts.map((post, index) => {
+      const offsetLeft =
+        window.scrollX +
+        (this.postsElements.get(index) as HTMLDivElement).offsetLeft;
+      return { ...post, isActive: false, offsetLeft };
+    });
+  }
 
   // TODO: PostsComponent: Remove
   private shuffleArray(array: any[]): any[] {

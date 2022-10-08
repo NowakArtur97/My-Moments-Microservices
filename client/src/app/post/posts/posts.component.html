@@ -7,7 +7,12 @@
   class="posts-wrapper"
 >
   <div class="posts">
-    <div *ngFor="let post of posts" class="post">
+    <div
+      #postsElements
+      [ngClass]="{ 'post--active': post.isActive }"
+      *ngFor="let post of posts"
+      class="post"
+    >
       <div class="post__author">
         <!-- TODO: PostComponent: User image -->
         <img

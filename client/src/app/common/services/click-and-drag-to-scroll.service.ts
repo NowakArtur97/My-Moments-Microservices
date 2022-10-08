@@ -5,7 +5,7 @@ export class ClickAndDragToScrollService {
   scrolledElement: ElementRef<HTMLDivElement> | undefined;
 
   private WALK_SPEED = 1.5;
-  private isScrolling = false;
+  isScrolling = false;
   private startXPosition = 0;
   private scrollLeftPosition = 0;
 
