@@ -1,6 +1,8 @@
 .posts-wrapper {
   height: 100vh;
 
+  margin: 0 2vw;
+
   overflow-y: hidden;
 }
 
@@ -12,7 +14,7 @@
 
   height: 100vh;
 
-  /* margin: 0 20vw; */
+  margin: 0 20vw;
 }
 
 .post {
@@ -28,6 +30,10 @@
   color: hsl(0, 0%, 7%);
 
   transition: transform 0.5s;
+}
+
+.post:last-child {
+  padding-right: 20vw;
 }
 
 .post__author,
