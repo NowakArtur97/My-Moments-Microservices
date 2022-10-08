@@ -1,21 +1,18 @@
 .posts-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-
   height: 100vh;
-  max-height: 100vh;
-  width: 100vw;
 
-  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .posts {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 20vw;
 
   height: 100vh;
+
+  /* margin: 0 20vw; */
 }
 
 .post {
@@ -31,11 +28,6 @@
   color: hsl(0, 0%, 7%);
 
   transition: transform 0.5s;
-}
-
-.post:hover {
-  transform: scale(1.2);
-  z-index: 1;
 }
 
 .post__author,
