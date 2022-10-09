@@ -14,7 +14,7 @@
 
   height: 100vh;
 
-  margin: 0 30vw;
+  margin: 0 0 0 30vw;
 }
 
 .post {
@@ -30,11 +30,6 @@
   color: hsl(0, 0%, 7%);
 
   transition: transform 0.5s;
-}
-
-/* TODO: PostsComponent: Only if there is more than 1 child  */
-.post:last-child {
-  padding-right: 30vw;
 }
 
 .post__author,

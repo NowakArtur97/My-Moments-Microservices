@@ -41,6 +41,9 @@ export class PostsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
     this.setActivePost(0);
+    if (this.postElements.length > 1) {
+      this.fixPaddingOfLastElement();
+    }
   }
 
   startScroll = (event: MouseEvent): void =>
@@ -87,6 +90,13 @@ export class PostsComponent implements OnInit, AfterViewInit {
       element.nativeElement,
       'transform',
       `scale(${scale})`
+    );
+
+  private fixPaddingOfLastElement = (): void =>
+    this.renderer.setStyle(
+      this.postElements.last.nativeElement,
+      'padding-right',
+      '22vw'
     );
 
   // TODO: PostsComponent: Remove
