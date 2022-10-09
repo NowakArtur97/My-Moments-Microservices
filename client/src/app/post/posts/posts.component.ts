@@ -12,7 +12,7 @@ import { PostService } from '../services/post.service';
 export class PostsComponent implements OnInit, AfterViewInit {
   @ViewChild('centerMarker') centerMarker!: ElementRef<HTMLDivElement>;
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
-  @ViewChildren('postsElements') postsElements!: QueryList<ElementRef>;
+  @ViewChildren('postsElements') postElements!: QueryList<ElementRef>;
 
   private readonly POST_TRANSFORM_SCALE = {
     active: 1.2,
@@ -40,7 +40,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
-    this.setActivePost();
+    this.setActivePost(0);
   }
 
   startScroll = (event: MouseEvent): void =>
@@ -59,8 +59,11 @@ export class PostsComponent implements OnInit, AfterViewInit {
     this.setActivePost(center);
   }
 
-  private setActivePost(center: number = 0) {
-    const activeElement = this.postsElements
+  setActivePost(
+    center: number = this.centerMarker.nativeElement.getBoundingClientRect().x +
+      this.postsContainer.nativeElement.scrollLeft
+  ): void {
+    const activeElement = this.postElements
       .map((element) => element as ElementRef)
       .reduce((previousElement, currentElement) => {
         const currentOffsetLeft = currentElement?.nativeElement.offsetLeft;
@@ -70,22 +73,21 @@ export class PostsComponent implements OnInit, AfterViewInit {
           ? currentElement
           : previousElement;
       });
-    this.postsElements
+    this.postElements
       .filter((element) => element != activeElement)
       .map((element) => {
-        this.renderer.setStyle(
-          element.nativeElement,
-          'transform',
-          `scale(${this.POST_TRANSFORM_SCALE.inactive})`
-        );
+        this.setTransformScale(element, this.POST_TRANSFORM_SCALE.inactive);
         return element as ElementRef;
       });
-    this.renderer.setStyle(
-      activeElement.nativeElement,
-      'transform',
-      `scale(${this.POST_TRANSFORM_SCALE.active})`
-    );
+    this.setTransformScale(activeElement, this.POST_TRANSFORM_SCALE.active);
   }
+
+  private setTransformScale = (element: ElementRef<any>, scale: number): void =>
+    this.renderer.setStyle(
+      element.nativeElement,
+      'transform',
+      `scale(${scale})`
+    );
 
   // TODO: PostsComponent: Remove
   private shuffleArray(array: any[]): any[] {

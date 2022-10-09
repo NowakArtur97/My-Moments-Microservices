@@ -1,5 +1,6 @@
 <div
   #postsContainer
+  (touchmove)="setActivePost()"
   (mousemove)="dragAndScroll($event)"
   (mousedown)="startScroll($event)"
   (mouseup)="stopScroll()"
