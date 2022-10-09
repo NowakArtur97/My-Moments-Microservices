@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
-import PostElement from '../models/post-element.model';
+import Post from '../models/post.model';
 import { PostService } from '../services/post.service';
 
 @Component({
@@ -14,11 +14,17 @@ export class PostsComponent implements OnInit, AfterViewInit {
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
   @ViewChildren('postsElements') postsElements!: QueryList<ElementRef>;
 
-  posts: PostElement[] = [];
+  private readonly POST_TRANSFORM_SCALE = {
+    active: 1.2,
+    inactive: 0.6,
+  };
+
+  posts: Post[] = [];
 
   constructor(
     private postService: PostService,
-    private clickAndDragToScrollService: ClickAndDragToScrollService
+    private clickAndDragToScrollService: ClickAndDragToScrollService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -28,8 +34,6 @@ export class PostsComponent implements OnInit, AfterViewInit {
         .map((post) => ({
           ...post,
           photos: this.shuffleArray(post.photos),
-          isActive: false,
-          offsetLeft: 0,
         }));
     });
   }
@@ -56,23 +60,31 @@ export class PostsComponent implements OnInit, AfterViewInit {
   }
 
   private setActivePost(center: number = 0) {
-    this.posts = this.posts.map((post, index) => {
-      const elementOffsetLeft = this.postsElements.get(index)?.nativeElement
-        .offsetLeft;
-      const offsetLeft = window.scrollX + elementOffsetLeft;
-      return { ...post, isActive: false, offsetLeft };
-    });
-    const activeElement = this.posts.reduce(
-      (previousElement, currentElement) => {
-        const currentOffsetLeft = currentElement.offsetLeft;
-        const previousOffsetLeft = previousElement.offsetLeft;
+    const activeElement = this.postsElements
+      .map((element) => element as ElementRef)
+      .reduce((previousElement, currentElement) => {
+        const currentOffsetLeft = currentElement?.nativeElement.offsetLeft;
+        const previousOffsetLeft = previousElement?.nativeElement.offsetLeft;
         return Math.abs(currentOffsetLeft - center) <
           Math.abs(previousOffsetLeft - center)
           ? currentElement
           : previousElement;
-      }
+      });
+    this.postsElements
+      .filter((element) => element != activeElement)
+      .map((element) => {
+        this.renderer.setStyle(
+          element.nativeElement,
+          'transform',
+          `scale(${this.POST_TRANSFORM_SCALE.inactive})`
+        );
+        return element as ElementRef;
+      });
+    this.renderer.setStyle(
+      activeElement.nativeElement,
+      'transform',
+      `scale(${this.POST_TRANSFORM_SCALE.active})`
     );
-    activeElement.isActive = true;
   }
 
   // TODO: PostsComponent: Remove

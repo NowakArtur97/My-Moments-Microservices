@@ -29,18 +29,12 @@
   font-weight: 600;
   color: hsl(0, 0%, 7%);
 
-  transform: scale(0.6);
-
   transition: transform 0.5s;
 }
 
 /* TODO: PostsComponent: Only if there is more than 1 child  */
 .post:last-child {
   padding-right: 30vw;
-}
-
-.post--active {
-  transform: scale(1.2);
 }
 
 .post__author,
