@@ -14,7 +14,7 @@
 
   height: 100vh;
 
-  margin: 0 20vw;
+  margin: 0 30vw;
 }
 
 .post {
@@ -29,11 +29,18 @@
   font-weight: 600;
   color: hsl(0, 0%, 7%);
 
+  transform: scale(0.6);
+
   transition: transform 0.5s;
 }
 
+/* TODO: PostsComponent: Only if there is more than 1 child  */
 .post:last-child {
-  padding-right: 20vw;
+  padding-right: 30vw;
+}
+
+.post--active {
+  transform: scale(1.2);
 }
 
 .post__author,
@@ -66,6 +73,17 @@
 .post__image {
   height: 87%;
   flex-basis: 87%;
+}
+
+.post__center_marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  height: 10px;
+  width: 10px;
+
+  transform: translate(-50%);
 }
 
 @media (min-width: 1024px) {

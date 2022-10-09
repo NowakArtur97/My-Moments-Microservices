@@ -10,8 +10,9 @@ import { PostService } from '../services/post.service';
   styleUrls: ['./posts.component.css'],
 })
 export class PostsComponent implements OnInit, AfterViewInit {
+  @ViewChild('centerMarker') centerMarker!: ElementRef<HTMLDivElement>;
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
-  @ViewChildren('postsElements') postsElements!: QueryList<HTMLDivElement>;
+  @ViewChildren('postsElements') postsElements!: QueryList<ElementRef>;
 
   posts: PostElement[] = [];
 
@@ -35,6 +36,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
+    this.setActivePost();
   }
 
   startScroll = (event: MouseEvent): void =>
@@ -47,14 +49,30 @@ export class PostsComponent implements OnInit, AfterViewInit {
     if (!this.clickAndDragToScrollService.isScrolling) {
       return;
     }
-    const goal = this.postsContainer.nativeElement.scrollLeft;
-    console.log(goal);
+    const center =
+      this.centerMarker.nativeElement.getBoundingClientRect().x +
+      this.postsContainer.nativeElement.scrollLeft;
+    this.setActivePost(center);
+  }
+
+  private setActivePost(center: number = 0) {
     this.posts = this.posts.map((post, index) => {
-      const offsetLeft =
-        window.scrollX +
-        (this.postsElements.get(index) as HTMLDivElement).offsetLeft;
+      const elementOffsetLeft = this.postsElements.get(index)?.nativeElement
+        .offsetLeft;
+      const offsetLeft = window.scrollX + elementOffsetLeft;
       return { ...post, isActive: false, offsetLeft };
     });
+    const activeElement = this.posts.reduce(
+      (previousElement, currentElement) => {
+        const currentOffsetLeft = currentElement.offsetLeft;
+        const previousOffsetLeft = previousElement.offsetLeft;
+        return Math.abs(currentOffsetLeft - center) <
+          Math.abs(previousOffsetLeft - center)
+          ? currentElement
+          : previousElement;
+      }
+    );
+    activeElement.isActive = true;
   }
 
   // TODO: PostsComponent: Remove
