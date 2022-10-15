@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2.4'
 
 services:
   configuration-service:
@@ -8,18 +8,24 @@ services:
       dockerfile: Dockerfile
     image: configuration-service:latest
     ports:
-      - 8888:8888
+      - "8888:8888"
     volumes:
       - /configuration-service/dir:/app
     container_name: configuration-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   mongo-db-post-service:
     image: mongo:3.6
     ports:
-      - 27019:27017
+      - "27019:27017"
     volumes:
       - ./data/db:/data/db
     container_name: mongo-db-post-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -28,5 +34,8 @@ services:
       RABBITMQ_DEFAULT_USER: my-moments-user
       RABBITMQ_DEFAULT_PASS: my-moments-password
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
+    cpus: 0.5
+    mem_limit: 128M
+    mem_reservation: 32M
