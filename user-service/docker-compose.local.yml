@@ -12,8 +12,8 @@ services:
   discovery-service:
     restart: on-failure
     build:
-      context: ../
-      dockerfile: discovery-service/Dockerfile-dev
+      context: ../discovery-service
+      dockerfile: Dockerfile
     networks:
       - my-moments
     ports:
