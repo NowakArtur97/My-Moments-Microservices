@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2.4'
 
 networks:
   my-moments:
@@ -17,10 +17,13 @@ services:
     networks:
       - my-moments
     ports:
-      - 8761:8761
+      - "8761:8761"
     volumes:
       - /discovery-service/dir:/app
     container_name: discovery-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   configuration-service:
     restart: on-failure
@@ -31,16 +34,19 @@ services:
     networks:
       - my-moments
     ports:
-      - 8888:8888
+      - "8888:8888"
     volumes:
       - /configuration-service/dir:/app
     container_name: configuration-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   vault-server:
     image: vault:1.8.1
     restart: on-failure
     ports:
-      - 8200:8200
+      - "8200:8200"
     networks:
       my-moments:
         ipv4_address: 172.21.0.10
@@ -48,10 +54,13 @@ services:
           - vault-server
     environment:
       VAULT_ADDR: "http://0.0.0.0:8200"
-      VAULT_DEV_ROOT_TOKEN_ID: "vault-token"
+      VAULT_DEV_ROOT_TOKEN_ID: "token"
     cap_add:
       - IPC_LOCK
     container_name: vault-server
+    cpus: 0.5
+    mem_limit: 128M
+    mem_reservation: 32M
 
   vault-client:
     build:
@@ -66,6 +75,9 @@ services:
     environment:
       VAULT_ADDR: "http://vault-server:8200"
     container_name: vault-client
+    cpus: 0.5
+    mem_limit: 128M
+    mem_reservation: 32M
 
   neo4j:
     restart: always
@@ -84,9 +96,13 @@ services:
       - NEO4J_dbms.memory.heap.initial_size=512MB
       - NEO4J_dbms_memory_heap_max__size=512MB
     ports:
-      - 7474:7474
-      - 7687:7687
+      - "7474:7474"
+      - "7687:7687"
     container_name: neo4j
+    # TODO: Check resources usage
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -97,5 +113,8 @@ services:
       RABBITMQ_DEFAULT_USER: my-moments-user
       RABBITMQ_DEFAULT_PASS: my-moments-password
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
+    cpus: 0.5
+    mem_limit: 128M
+    mem_reservation: 32M

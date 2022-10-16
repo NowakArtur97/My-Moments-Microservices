@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2.4'
 
 networks:
   my-moments:
@@ -16,10 +16,13 @@ services:
     networks:
       - my-moments
     ports:
-      - 8888:8888
+      - "8888:8888"
     volumes:
       - /configuration-service/dir:/app
     container_name: configuration-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   neo4j:
     restart: always
@@ -38,6 +41,10 @@ services:
       - NEO4J_dbms.memory.heap.initial_size=512MB
       - NEO4J_dbms_memory_heap_max__size=512MB
     ports:
-      - 7474:7474
-      - 7687:7687
+      - "7474:7474"
+      - "7687:7687"
     container_name: neo4j
+    # TODO: Check resources usage
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
