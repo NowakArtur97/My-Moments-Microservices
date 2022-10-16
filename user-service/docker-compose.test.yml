@@ -1,10 +1,13 @@
-version: '3.7'
+version: '2.4'
 
 services:
   mongo-db-user-service:
     image: mongo:3.6
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       - ./data/db:/data/db
     container_name: mongo-db-user-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
