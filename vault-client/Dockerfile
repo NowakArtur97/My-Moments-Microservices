@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 
   vault && \
   setcap cap_ipc_lock= /usr/bin/vault
 
-ADD file /vault/file
-ADD entrypoint/vault-init.sh ./
+COPY file /vault/file
+COPY entrypoint/vault-init.sh ./
 
 CMD ./vault-init.sh

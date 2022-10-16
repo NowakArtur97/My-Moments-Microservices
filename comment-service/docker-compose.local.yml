@@ -64,9 +64,9 @@ services:
 
   vault-client:
     build:
-      context: ../
-      dockerfile: vault-client/Dockerfile-dev
-    restart: on-failure
+      context: ../vault-client
+      dockerfile: Dockerfile
+    restart: "no"
     networks:
       my-moments:
         ipv4_address: 172.21.0.20
