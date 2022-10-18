@@ -85,13 +85,13 @@ export class PostsComponent implements OnInit, AfterViewInit {
     this.setTransformScale(activeElement, this.POST_TRANSFORM_SCALE.active);
   }
 
-  onChangeCurrentImage(direction: number, postIndex: number): void {
+  onChangeCurrentPhoto(direction: number, postIndex: number): void {
     const post = this.posts[postIndex];
-    const currentImageIndex = post.currentImageIndex;
-    if (direction == 1 && currentImageIndex < post.photos.length - 1) {
-      post.currentImageIndex = currentImageIndex + 1;
-    } else if (direction == -1 && currentImageIndex > 0) {
-      post.currentImageIndex = currentImageIndex - 1;
+    const currentPhotoIndex = post.currentPhotoIndex;
+    if (direction == 1 && currentPhotoIndex < post.photos.length - 1) {
+      post.currentPhotoIndex = currentPhotoIndex + 1;
+    } else if (direction == -1 && currentPhotoIndex > 0) {
+      post.currentPhotoIndex = currentPhotoIndex - 1;
     }
   }
 

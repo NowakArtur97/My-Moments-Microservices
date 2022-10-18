@@ -10,32 +10,34 @@
   <div class="posts">
     <div #postsElements *ngFor="let post of posts; let i = index" class="post">
       <div class="post__author">
-        <!-- TODO: PostComponent: User image -->
+        <!-- TODO: PostComponent: User photo -->
         <img
           src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg"
-          class="post__author_image"
+          class="post__author_photo"
           alt="author image"
         />
         <p class="post__author_username">{{ post.author }}</p>
       </div>
       <img
-        src="{{ post.photos[post.currentImageIndex] }}"
-        class="post__image"
+        src="{{ post.photos[post.currentPhotoIndex] }}"
+        class="post__photo"
         alt="user post"
       />
       <div class="post__desciption">
         <p class="post__caption">{{ post.caption }}</p>
       </div>
-      <div class="post__image_change_buttons">
+      <div class="post__photo_change_buttons">
         <div
-          (click)="onChangeCurrentImage(-1, i)"
-          class="post__image_change_button post__image_change_button--left"
+          *ngIf="post.currentPhotoIndex > 0"
+          (click)="onChangeCurrentPhoto(-1, i)"
+          class="post__photo_change_button post__photo_change_button--left"
         >
           <
         </div>
         <div
-          (click)="onChangeCurrentImage(1, i)"
-          class="post__image_change_button post__image_change_button--right"
+          *ngIf="post.currentPhotoIndex < post.photos.length - 1"
+          (click)="onChangeCurrentPhoto(1, i)"
+          class="post__photo_change_button post__photo_change_button--right"
         >
           >
         </div>
