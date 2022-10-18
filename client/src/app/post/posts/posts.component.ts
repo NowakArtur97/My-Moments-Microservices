@@ -46,12 +46,12 @@ export class PostsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  startScroll = (event: MouseEvent): void =>
+  onStartScroll = (event: MouseEvent): void =>
     this.clickAndDragToScrollService.startScroll(event);
 
-  stopScroll = (): void => this.clickAndDragToScrollService.stopScroll();
+  onStopScroll = (): void => this.clickAndDragToScrollService.stopScroll();
 
-  dragAndScroll(event: MouseEvent): void {
+  onDragAndScroll(event: MouseEvent): void {
     this.clickAndDragToScrollService.dragAndScroll(event);
     if (!this.clickAndDragToScrollService.isScrolling) {
       return;
@@ -83,6 +83,16 @@ export class PostsComponent implements OnInit, AfterViewInit {
         return element as ElementRef;
       });
     this.setTransformScale(activeElement, this.POST_TRANSFORM_SCALE.active);
+  }
+
+  onChangeCurrentImage(direction: number, postIndex: number): void {
+    const post = this.posts[postIndex];
+    const currentImageIndex = post.currentImageIndex;
+    if (direction == 1 && currentImageIndex < post.photos.length - 1) {
+      post.currentImageIndex = currentImageIndex + 1;
+    } else if (direction == -1 && currentImageIndex > 0) {
+      post.currentImageIndex = currentImageIndex - 1;
+    }
   }
 
   private setTransformScale = (element: ElementRef<any>, scale: number): void =>

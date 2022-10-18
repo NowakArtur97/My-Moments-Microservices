@@ -3,4 +3,5 @@ export default interface Post {
   readonly caption: string;
   readonly author: string;
   readonly photos: string[];
+  currentImageIndex: number;
 }

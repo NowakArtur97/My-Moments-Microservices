@@ -1,14 +1,14 @@
 <div
   #postsContainer
   (touchmove)="setActivePost()"
-  (mousemove)="dragAndScroll($event)"
-  (mousedown)="startScroll($event)"
-  (mouseup)="stopScroll()"
-  (mouseleave)="stopScroll()"
+  (mousemove)="onDragAndScroll($event)"
+  (mousedown)="onStartScroll($event)"
+  (mouseup)="onStopScroll()"
+  (mouseleave)="onStopScroll()"
   class="posts-wrapper"
 >
   <div class="posts">
-    <div #postsElements *ngFor="let post of posts" class="post">
+    <div #postsElements *ngFor="let post of posts; let i = index" class="post">
       <div class="post__author">
         <!-- TODO: PostComponent: User image -->
         <img
@@ -18,15 +18,25 @@
         />
         <p class="post__author_username">{{ post.author }}</p>
       </div>
-      <img src="{{ post.photos[0] }}" class="post__image" alt="user post" />
+      <img
+        src="{{ post.photos[post.currentImageIndex] }}"
+        class="post__image"
+        alt="user post"
+      />
       <div class="post__desciption">
         <p class="post__caption">{{ post.caption }}</p>
       </div>
       <div class="post__image_change_buttons">
-        <div class="post__image_change_button post__image_change_button--left">
+        <div
+          (click)="onChangeCurrentImage(-1, i)"
+          class="post__image_change_button post__image_change_button--left"
+        >
           <
         </div>
-        <div class="post__image_change_button post__image_change_button--right">
+        <div
+          (click)="onChangeCurrentImage(1, i)"
+          class="post__image_change_button post__image_change_button--right"
+        >
           >
         </div>
       </div>
