@@ -102,12 +102,16 @@ export class PostsComponent implements OnInit, AfterViewInit {
       `scale(${scale})`
     );
 
-  private fixPaddingOfLastElement = (): void =>
-    this.renderer.setStyle(
-      this.postElements.last.nativeElement,
-      'padding-right',
-      '22vw'
-    );
+  private fixPaddingOfLastElement(): void {
+    const lastPost: HTMLDivElement = this.postElements.last.nativeElement;
+    this.renderer.setStyle(lastPost, 'padding-right', '22vw');
+    const changeButtonsWrapperChildren =
+      lastPost.children[lastPost.children.length - 1].children;
+    const leftChangePhotoButton = changeButtonsWrapperChildren[0];
+    this.renderer.setStyle(leftChangePhotoButton, 'left', 'calc(2% + 11vw)');
+    const rightChangePhotoButton = changeButtonsWrapperChildren[1];
+    this.renderer.setStyle(rightChangePhotoButton, 'right', 'calc(2% + 11vw)');
+  }
 
   // TODO: PostsComponent: Remove
   private shuffleArray(array: any[]): any[] {

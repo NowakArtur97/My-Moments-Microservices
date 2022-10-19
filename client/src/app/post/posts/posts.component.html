@@ -28,14 +28,19 @@
       </div>
       <div class="post__photo_change_buttons">
         <div
-          *ngIf="post.currentPhotoIndex > 0"
+          [ngStyle]="{
+            display: post.currentPhotoIndex > 0 ? 'flex' : 'none'
+          }"
           (click)="onChangeCurrentPhoto(-1, i)"
           class="post__photo_change_button post__photo_change_button--left"
         >
           <
         </div>
         <div
-          *ngIf="post.currentPhotoIndex < post.photos.length - 1"
+          [ngStyle]="{
+            display:
+              post.currentPhotoIndex < post.photos.length - 1 ? 'flex' : 'none'
+          }"
           (click)="onChangeCurrentPhoto(1, i)"
           class="post__photo_change_button post__photo_change_button--right"
         >
