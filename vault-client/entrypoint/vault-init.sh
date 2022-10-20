@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VAULT_RETRIES=5
+VAULT_RETRIES=30
 echo "Vault is starting..."
 until vault status > /dev/null 2>&1 || [ "$VAULT_RETRIES" -eq 0 ]; do
 	echo "Waiting for vault to start...: $((VAULT_RETRIES--))"
@@ -8,7 +8,7 @@ until vault status > /dev/null 2>&1 || [ "$VAULT_RETRIES" -eq 0 ]; do
 done
 
 echo "Authenticating to vault..."
-vault login token=vault-token
+vault login token=VAULT_TOKEN
 
 echo "Initializing vault..."
 vault secrets enable -version=2 -path=/secret/application kv

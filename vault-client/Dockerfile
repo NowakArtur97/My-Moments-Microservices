@@ -8,5 +8,7 @@ RUN apt-get update && apt-get install -y software-properties-common curl gnupg2 
 
 COPY file /vault/file
 COPY entrypoint/vault-init.sh ./
+COPY entrypoint/token-swap.sh ./
+COPY entrypoint/commands-wrapper.sh ./
 
-CMD ./vault-init.sh
+CMD ./commands-wrapper.sh
