@@ -8,41 +8,41 @@ import { environment } from 'src/environments/environment.local';
 
 import ImageSnippet from '../models/image-snippet.model';
 import Post from '../models/post.model';
-import examplePosts from './example-posts';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
-  // myPosts = new BehaviorSubject<Post[]>([]);
+  myPosts = new BehaviorSubject<Post[]>([]);
   // TODO: DELETE
-  myPosts = new BehaviorSubject<Post[]>(examplePosts);
+  // myPosts = new BehaviorSubject<Post[]>(examplePosts);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient);
   }
 
-  createPost(files: ImageSnippet[]): void {
-    const multipartData = this.createFormdata([
-      { key: 'photos', value: files },
+  createPost(imageSnippets: ImageSnippet[]): void {
+    const files = imageSnippets.map((file) => file.file);
+    const multipartData = this.createFormDataFromFiles([
+      { key: 'photos', files },
       // TODO: PostService: add caption
       //  { key: 'post', value: { caption: 'aaaaa' } },
     ]);
     this.httpClient
       .post<Post>(`${environment.postServiceUrl}`, multipartData)
       .subscribe(
-        (newPost: Post) => this.handleSuccessfullPostCreation(newPost),
+        (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
         (httpErrorResponse: HttpErrorResponse) =>
           this.handleErrors(httpErrorResponse)
       );
   }
 
-  private handleSuccessfullPostCreation(newPost: Post): void {
-    const allPosts: Post[] = this.mapBinaryToJpgs([
-      ...this.myPosts.getValue(),
-      newPost,
-    ]);
-    this.myPosts.next(allPosts);
+  private handleSuccessfullPostsResponse(newPosts: Post[]): void {
+    const mappedBinaryToJpgsPosts: Post[] = this.mapBinaryToJpgs(newPosts).map(
+      (post) => {
+        return { ...post, currentPhotoIndex: 0 };
+      }
+    );
+    this.myPosts.next([...this.myPosts.getValue(), ...mappedBinaryToJpgsPosts]);
     this.router.navigate([`/${APP_ROUTES.post.posts}`]);
-    console.log(allPosts);
   }
 
   // TODO: PostService: make private
@@ -57,7 +57,7 @@ export class PostService extends HttpService {
   private handleErrors(httpErrorResponse: HttpErrorResponse): void {
     if (this.isErrorResponse(httpErrorResponse)) {
       console.log(true);
-      console.log(httpErrorResponse);
+      console.log(httpErrorResponse as HttpErrorResponse);
     } else {
       console.log(httpErrorResponse);
     }

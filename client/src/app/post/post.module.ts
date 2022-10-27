@@ -1,4 +1,3 @@
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -9,7 +8,7 @@ import { PostsComponent } from './posts/posts.component';
 
 @NgModule({
   declarations: [PostWrapperComponent, PostEditComponent, PostsComponent],
-  imports: [FormsModule, HttpClientModule, AppCommonModule],
+  imports: [FormsModule, AppCommonModule],
   exports: [PostWrapperComponent],
 })
 export class PostModule {}

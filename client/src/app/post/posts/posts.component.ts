@@ -28,14 +28,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.postService.myPosts.subscribe((posts) => {
-      this.posts = this.postService
-        .mapBinaryToJpgs(posts) // TODO: PostsComponent: Remove
-        .map((post) => ({
-          ...post,
-          photos: this.shuffleArray(post.photos),
-        }));
-    });
+    this.postService.myPosts.subscribe((posts) => (this.posts = posts));
   }
 
   ngAfterViewInit(): void {
@@ -66,6 +59,9 @@ export class PostsComponent implements OnInit, AfterViewInit {
     center: number = this.centerMarker.nativeElement.getBoundingClientRect().x +
       this.postsContainer.nativeElement.scrollLeft
   ): void {
+    if (this.posts.length === 0) {
+      return;
+    }
     const activeElement = this.postElements
       .map((element) => element as ElementRef)
       .reduce((previousElement, currentElement) => {

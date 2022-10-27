@@ -1,4 +1,3 @@
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -15,7 +14,7 @@ import { RegistrationComponent } from './registration/registration.component';
     AuthenticationComponent,
     AuthWrapperComponent,
   ],
-  imports: [FormsModule, HttpClientModule, AppCommonModule],
+  imports: [FormsModule, AppCommonModule],
   exports: [AuthWrapperComponent],
 })
 export class AuthModule {}

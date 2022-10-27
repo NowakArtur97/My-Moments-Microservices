@@ -11,7 +11,7 @@ export default abstract class HttpService {
     errors: ['Something went wrong.', 'Please try again in a moment.'],
   };
 
-  protected createFormdata(
+  protected createFormData(
     dataToAppend: { key: string; value: any }[]
   ): FormData {
     const multipartData = new FormData();
@@ -21,6 +21,16 @@ export default abstract class HttpService {
     return multipartData;
   }
 
+  protected createFormDataFromFiles(
+    dataToAppend: { key: string; files: File[] }[]
+  ): FormData {
+    const multipartData = new FormData();
+    dataToAppend.forEach(({ key, files }) =>
+      files.forEach((file) => multipartData.append(key, file, file.name))
+    );
+    return multipartData;
+  }
+
   protected isErrorResponse = (httpErrorResponse: HttpErrorResponse): boolean =>
-    (httpErrorResponse.error as ErrorResponse).errors !== undefined;
+    (httpErrorResponse.error as ErrorResponse)?.errors !== undefined;
 }
