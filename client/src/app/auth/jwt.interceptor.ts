@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { exhaustMap, map, take } from 'rxjs/operators';
@@ -18,19 +18,18 @@ export class JwtInterceptor implements HttpInterceptor {
       take(1),
       map((authenticatedUser) => authenticatedUser?.token),
       exhaustMap((token) => {
+        const { url } = request;
         const isNotSecured =
-          request.url.includes(`${BACKEND_URLS.user.authentication}`) ||
-          request.url.includes(`${BACKEND_URLS.user.registration}`);
-        return isNotSecured
-          ? next.handle(request)
-          : next.handle(
-              request.clone({
-                headers: new HttpHeaders({
-                  ...request.headers,
-                  Authorization: `Bearer ${token}`,
-                }),
-              })
-            );
+          url.includes(`${BACKEND_URLS.user.authentication}`) ||
+          url.includes(`${BACKEND_URLS.user.registration}`);
+        if (isNotSecured) {
+          return next.handle(request);
+        } else {
+          const clonedRequest = request.clone({
+            headers: request.headers.append('Authorization', `Bearer ${token}`),
+          });
+          return next.handle(clonedRequest);
+        }
       })
     );
   }
