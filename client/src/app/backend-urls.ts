@@ -3,6 +3,9 @@ const BACKEND_URLS = {
     authentication: '/authentication',
     registration: '/registration/register',
   },
+  common: {
+    myResource: '/me',
+  },
 };
 
 export default BACKEND_URLS;

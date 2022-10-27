@@ -2,12 +2,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import BACKEND_URLS from 'src/app/backend-urls';
 import { APP_ROUTES } from 'src/app/common/const.data';
 import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
 import ImageSnippet from '../models/image-snippet.model';
 import Post from '../models/post.model';
+import PostsResponse from '../models/posts-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
@@ -30,6 +32,19 @@ export class PostService extends HttpService {
       .post<Post>(`${environment.postServiceUrl}`, multipartData)
       .subscribe(
         (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
+        (httpErrorResponse: HttpErrorResponse) =>
+          this.handleErrors(httpErrorResponse)
+      );
+  }
+
+  getMyPosts(): void {
+    this.httpClient
+      .get<PostsResponse>(
+        `${environment.postServiceUrl}${BACKEND_URLS.common.myResource}`
+      )
+      .subscribe(
+        (postsResponse: PostsResponse) =>
+          this.handleSuccessfullPostsResponse(postsResponse.posts),
         (httpErrorResponse: HttpErrorResponse) =>
           this.handleErrors(httpErrorResponse)
       );
