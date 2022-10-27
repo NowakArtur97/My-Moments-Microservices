@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  Renderer2,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
 import Post from '../models/post.model';
@@ -9,7 +19,7 @@ import { PostService } from '../services/post.service';
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.css'],
 })
-export class PostsComponent implements OnInit, AfterViewInit {
+export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('centerMarker') centerMarker!: ElementRef<HTMLDivElement>;
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
   @ViewChildren('postsElements') postElements!: QueryList<ElementRef>;
@@ -18,6 +28,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
     active: 1.2,
     inactive: 0.6,
   };
+  private areLastPostStylesFixed = false;
 
   posts: Post[] = [];
 
@@ -34,7 +45,12 @@ export class PostsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
     this.setActivePost(0);
-    if (this.postElements.length > 1) {
+  }
+
+  ngAfterViewChecked(): void {
+    if (!this.areLastPostStylesFixed && this.postElements.length > 1) {
+      this.areLastPostStylesFixed = true;
+      this.setActivePost(0);
       this.fixPaddingOfLastElement();
     }
   }
