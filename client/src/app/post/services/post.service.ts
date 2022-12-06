@@ -10,12 +10,13 @@ import { environment } from 'src/environments/environment.local';
 import ImageSnippet from '../models/image-snippet.model';
 import Post from '../models/post.model';
 import PostsResponse from '../models/posts-response.model';
+import EXAMPLE_POSTS from './example-posts';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
-  myPosts = new BehaviorSubject<Post[]>([]);
+  // myPosts = new BehaviorSubject<Post[]>([]);
   // TODO: DELETE
-  // myPosts = new BehaviorSubject<Post[]>(examplePosts);
+  myPosts = new BehaviorSubject<Post[]>(EXAMPLE_POSTS);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient);

@@ -38,9 +38,19 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     private renderer: Renderer2
   ) {}
 
+  // TODO: PostsComponent: Remove
   ngOnInit(): void {
-    this.postService.myPosts.subscribe((posts) => (this.posts = posts));
+    this.postService.myPosts.subscribe((posts) => {
+      this.posts = this.postService.mapBinaryToJpgs(posts).map((post) => ({
+        ...post,
+        photos: this.shuffleArray(post.photos),
+      }));
+    });
   }
+
+  // ngOnInit(): void {
+  //   this.postService.myPosts.subscribe((posts) => (this.posts = posts));
+  // }
 
   ngAfterViewInit(): void {
     this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
@@ -55,6 +65,10 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
   }
 
+  onShowComments(): void {
+    const activeElement = this.choseActivePost();
+  }
+
   onStartScroll = (event: MouseEvent): void =>
     this.clickAndDragToScrollService.startScroll(event);
 
@@ -65,29 +79,14 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     if (!this.clickAndDragToScrollService.isScrolling) {
       return;
     }
-    const center =
-      this.centerMarker.nativeElement.getBoundingClientRect().x +
-      this.postsContainer.nativeElement.scrollLeft;
-    this.setActivePost(center);
+    this.setActivePost();
   }
 
-  setActivePost(
-    center: number = this.centerMarker.nativeElement.getBoundingClientRect().x +
-      this.postsContainer.nativeElement.scrollLeft
-  ): void {
+  setActivePost(center: number = this.calculateCenterPositionOfPosts()): void {
     if (this.posts.length === 0) {
       return;
     }
-    const activeElement = this.postElements
-      .map((element) => element as ElementRef)
-      .reduce((previousElement, currentElement) => {
-        const currentOffsetLeft = currentElement?.nativeElement.offsetLeft;
-        const previousOffsetLeft = previousElement?.nativeElement.offsetLeft;
-        return Math.abs(currentOffsetLeft - center) <
-          Math.abs(previousOffsetLeft - center)
-          ? currentElement
-          : previousElement;
-      });
+    const activeElement = this.choseActivePost(center);
     this.postElements
       .filter((element) => element != activeElement)
       .map((element) => {
@@ -107,12 +106,30 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
   }
 
+  private choseActivePost = (
+    center: number = this.calculateCenterPositionOfPosts()
+  ): ElementRef =>
+    this.postElements
+      .map((element) => element as ElementRef)
+      .reduce((previousElement, currentElement) => {
+        const currentOffsetLeft = currentElement?.nativeElement.offsetLeft;
+        const previousOffsetLeft = previousElement?.nativeElement.offsetLeft;
+        return Math.abs(currentOffsetLeft - center) <
+          Math.abs(previousOffsetLeft - center)
+          ? currentElement
+          : previousElement;
+      });
+
   private setTransformScale = (element: ElementRef<any>, scale: number): void =>
     this.renderer.setStyle(
       element.nativeElement,
       'transform',
       `scale(${scale})`
     );
+
+  private calculateCenterPositionOfPosts = (): number =>
+    this.centerMarker.nativeElement.getBoundingClientRect().x +
+    this.postsContainer.nativeElement.scrollLeft;
 
   private fixPaddingOfLastElement(): void {
     const lastPost: HTMLDivElement = this.postElements.last.nativeElement;
