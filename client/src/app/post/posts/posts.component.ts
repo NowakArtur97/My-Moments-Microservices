@@ -5,13 +5,12 @@ import {
   ElementRef,
   OnInit,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
-import Post from '../models/post.model';
+import PostElement from '../models/post-element.model';
 import { PostService } from '../services/post.service';
 
 @Component({
@@ -24,32 +23,38 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
   @ViewChildren('postsElements') postElements!: QueryList<ElementRef>;
 
-  private readonly POST_TRANSFORM_SCALE = {
-    active: 1.2,
-    inactive: 0.6,
-  };
-  private areLastPostStylesFixed = false;
-
-  posts: Post[] = [];
+  posts: PostElement[] = [];
+  previousActiveElement!: PostElement;
 
   constructor(
     private postService: PostService,
-    private clickAndDragToScrollService: ClickAndDragToScrollService,
-    private renderer: Renderer2
+    private clickAndDragToScrollService: ClickAndDragToScrollService
   ) {}
 
   // TODO: PostsComponent: Remove
   ngOnInit(): void {
     this.postService.myPosts.subscribe((posts) => {
-      this.posts = this.postService.mapBinaryToJpgs(posts).map((post) => ({
-        ...post,
-        photos: this.shuffleArray(post.photos),
-      }));
+      const postsWithMappedImages = this.postService
+        .mapBinaryToJpgs(posts)
+        .map((post) => ({
+          ...post,
+          photos: this.shuffleArray(post.photos),
+        }));
+      this.posts = this.postService.mapPostsToElements(postsWithMappedImages);
+      this.posts[this.posts.length - 1].isCurrentlyLastElement = true;
     });
   }
 
   // ngOnInit(): void {
-  //   this.postService.myPosts.subscribe((posts) => (this.posts = posts));
+  //   this.postService.myPosts.subscribe((posts) => {
+  //     this.posts = posts.map((post) => ({
+  //       ...post,
+  //       currentPhotoIndex: 0,
+  //       isActive: false,
+  //       isCurrentlyLastElement: false,
+  //     }));
+  //     this.posts[this.posts.length - 1].isCurrentlyLastElement = true;
+  //   });
   // }
 
   ngAfterViewInit(): void {
@@ -57,16 +62,11 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.setActivePost(0);
   }
 
+  // TODO: PostsComponent: Remove?
   ngAfterViewChecked(): void {
-    if (!this.areLastPostStylesFixed && this.postElements.length > 1) {
-      this.areLastPostStylesFixed = true;
-      this.setActivePost(0);
-      this.fixPaddingOfLastElement();
-    }
-  }
-
-  onShowComments(): void {
-    const activeElement = this.choseActivePost();
+    // if (this.postElements.length > 1) {
+    //   this.previousActiveElement = this.posts[this.postElements.length - 1];
+    // }
   }
 
   onStartScroll = (event: MouseEvent): void =>
@@ -87,29 +87,17 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
       return;
     }
     const activeElement = this.choseActivePost(center);
-    this.postElements
-      .filter((element) => element != activeElement)
-      .map((element) => {
-        this.setTransformScale(element, this.POST_TRANSFORM_SCALE.inactive);
-        return element as ElementRef;
-      });
-    this.setTransformScale(activeElement, this.POST_TRANSFORM_SCALE.active);
-  }
-
-  onChangeCurrentPhoto(direction: number, postIndex: number): void {
-    const post = this.posts[postIndex];
-    const currentPhotoIndex = post.currentPhotoIndex;
-    if (direction == 1 && currentPhotoIndex < post.photos.length - 1) {
-      post.currentPhotoIndex = currentPhotoIndex + 1;
-    } else if (direction == -1 && currentPhotoIndex > 0) {
-      post.currentPhotoIndex = currentPhotoIndex - 1;
+    if (this.previousActiveElement !== activeElement) {
+      this.posts.forEach((post) => (post.isActive = false));
+      this.previousActiveElement = activeElement;
+      activeElement.isActive = true;
     }
   }
 
-  private choseActivePost = (
+  private choseActivePost(
     center: number = this.calculateCenterPositionOfPosts()
-  ): ElementRef =>
-    this.postElements
+  ): PostElement {
+    const postElement = this.postElements
       .map((element) => element as ElementRef)
       .reduce((previousElement, currentElement) => {
         const currentOffsetLeft = currentElement?.nativeElement.offsetLeft;
@@ -119,34 +107,24 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
           ? currentElement
           : previousElement;
       });
-
-  private setTransformScale = (element: ElementRef<any>, scale: number): void =>
-    this.renderer.setStyle(
-      element.nativeElement,
-      'transform',
-      `scale(${scale})`
-    );
+    let activeElementIndex = 0;
+    this.postElements.forEach((element, index) => {
+      if (element === postElement) {
+        activeElementIndex = index;
+      }
+    });
+    return this.posts[activeElementIndex];
+  }
 
   private calculateCenterPositionOfPosts = (): number =>
     this.centerMarker.nativeElement.getBoundingClientRect().x +
     this.postsContainer.nativeElement.scrollLeft;
 
-  private fixPaddingOfLastElement(): void {
-    const lastPost: HTMLDivElement = this.postElements.last.nativeElement;
-    this.renderer.setStyle(lastPost, 'padding-right', '22vw');
-    const changeButtonsWrapperChildren =
-      lastPost.children[lastPost.children.length - 1].children;
-    const leftChangePhotoButton = changeButtonsWrapperChildren[0];
-    this.renderer.setStyle(leftChangePhotoButton, 'left', 'calc(2% + 11vw)');
-    const rightChangePhotoButton = changeButtonsWrapperChildren[1];
-    this.renderer.setStyle(rightChangePhotoButton, 'right', 'calc(2% + 11vw)');
-  }
-
   // TODO: PostsComponent: Remove
   private shuffleArray(array: any[]): any[] {
-    for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
       array[i] = array[j];
       array[j] = temp;
     }

@@ -8,6 +8,7 @@ import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
 import ImageSnippet from '../models/image-snippet.model';
+import PostElement from '../models/post-element.model';
 import Post from '../models/post.model';
 import PostsResponse from '../models/posts-response.model';
 import EXAMPLE_POSTS from './example-posts';
@@ -50,6 +51,14 @@ export class PostService extends HttpService {
           this.handleErrors(httpErrorResponse)
       );
   }
+
+  mapPostsToElements = (posts: Post[]): PostElement[] =>
+    posts.map((post) => ({
+      ...post,
+      currentPhotoIndex: 0,
+      isActive: false,
+      isCurrentlyLastElement: false,
+    }));
 
   private handleSuccessfullPostsResponse(newPosts: Post[]): void {
     const mappedBinaryToJpgsPosts: Post[] = this.mapBinaryToJpgs(newPosts).map(

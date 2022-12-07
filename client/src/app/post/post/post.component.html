@@ -1,0 +1,39 @@
+<div #postElement class="post">
+  <div class="post__author">
+    <!-- TODO: PostComponent: User photo -->
+    <img
+      (click)="onShowComments()"
+      src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg"
+      class="post__author_photo"
+      alt="author image"
+    />
+    <p class="post__author_username">{{ post.author }}</p>
+  </div>
+  <img
+    src="{{ post.photos[post.currentPhotoIndex] }}"
+    class="post__photo"
+    alt="user post"
+  />
+  <div class="post__desciption">
+    <p class="post__caption">{{ post.caption }}</p>
+  </div>
+  <div class="post__photo_change_buttons">
+    <div
+      [ngStyle]="{ display: post.currentPhotoIndex > 0 ? 'flex' : 'none' }"
+      (click)="onChangeCurrentPhoto(-1)"
+      class="post__photo_change_button post__photo_change_button--left"
+    >
+      <
+    </div>
+    <div
+      [ngStyle]="{
+        display:
+          post.currentPhotoIndex < post.photos.length - 1 ? 'flex' : 'none'
+      }"
+      (click)="onChangeCurrentPhoto(1)"
+      class="post__photo_change_button post__photo_change_button--right"
+    >
+      >
+    </div>
+  </div>
+</div>
