@@ -30,8 +30,15 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   onShowComments(): void {
-    this.setTransformScale(this.POST_TRANSFORM_SCALE.inactive);
-    console.log('A');
+    if (this.post.state === PostState.INACTIVE) {
+      return;
+    }
+    if (this.post.state === PostState.ACTIVE) {
+      this.post.state = PostState.COMMENTS_SHOWEN;
+    } else {
+      this.post.state = PostState.ACTIVE;
+    }
+    this.setupStyles();
   }
 
   onChangeCurrentPhoto(direction: number): void {
@@ -44,6 +51,9 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }
   }
 
+  shouldShowComments = (): boolean =>
+    this.post.state === PostState.COMMENTS_SHOWEN;
+
   private setupStyles(): void {
     if (this.postElement === undefined) {
       return;
@@ -53,7 +63,10 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }
     if (this.post.state === PostState.ACTIVE) {
       this.setTransformScale(this.POST_TRANSFORM_SCALE.active);
-    } else if (this.post.state === PostState.INACTIVE) {
+    } else if (
+      this.post.state === PostState.INACTIVE ||
+      this.post.state === PostState.COMMENTS_SHOWEN
+    ) {
       this.setTransformScale(this.POST_TRANSFORM_SCALE.inactive);
     }
   }
