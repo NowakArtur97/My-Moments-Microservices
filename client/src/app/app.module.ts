@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { JwtInterceptor } from './auth/jwt.interceptor';
+import { CommentsModule } from './comments/comments.module';
 import { AppCommonModule } from './common/common.module';
 import { PostModule } from './post/post.module';
 
@@ -17,6 +18,7 @@ import { PostModule } from './post/post.module';
     AppCommonModule,
     AuthModule,
     PostModule,
+    CommentsModule,
   ],
   providers: [
     {
