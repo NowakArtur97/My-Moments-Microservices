@@ -9,7 +9,7 @@
 .posts {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  /* align-items: center; */
   gap: 20vw;
 
   height: 100vh;

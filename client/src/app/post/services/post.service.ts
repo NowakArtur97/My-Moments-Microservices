@@ -16,7 +16,7 @@ import EXAMPLE_POSTS from './example-posts';
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
   // myPosts = new BehaviorSubject<Post[]>([]);
-  // TODO: DELETE
+  // TODO: PostService: DELETE
   myPosts = new BehaviorSubject<Post[]>(EXAMPLE_POSTS);
 
   constructor(protected httpClient: HttpClient, private router: Router) {

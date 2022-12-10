@@ -10,6 +10,7 @@
     <p class="post__author_username">{{ post.author }}</p>
   </div>
   <img
+    (click)="onShowComments()"
     src="{{ post.photos[post.currentPhotoIndex] }}"
     class="post__photo"
     alt="user post"

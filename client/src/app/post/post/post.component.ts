@@ -29,7 +29,8 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   onShowComments(): void {
-    // const activeElement = this.choseActivePost();
+    this.setTransformScale(this.POST_TRANSFORM_SCALE.inactive);
+    console.log('A');
   }
 
   onChangeCurrentPhoto(direction: number): void {
