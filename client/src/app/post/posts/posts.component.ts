@@ -11,6 +11,7 @@ import {
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
 import PostElement from '../models/post-element.model';
+import PostState from '../models/post-state.enum';
 import { PostService } from '../services/post.service';
 
 @Component({
@@ -88,9 +89,9 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
     const activeElement = this.choseActivePost(center);
     if (this.previousActiveElement !== activeElement) {
-      this.posts.forEach((post) => (post.isActive = false));
+      this.posts.forEach((post) => (post.state = PostState.INACTIVE));
       this.previousActiveElement = activeElement;
-      activeElement.isActive = true;
+      activeElement.state = PostState.ACTIVE;
     }
   }
 

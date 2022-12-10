@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment.local';
 
 import ImageSnippet from '../models/image-snippet.model';
 import PostElement from '../models/post-element.model';
+import PostState from '../models/post-state.enum';
 import Post from '../models/post.model';
 import PostsResponse from '../models/posts-response.model';
 import EXAMPLE_POSTS from './example-posts';
@@ -56,7 +57,7 @@ export class PostService extends HttpService {
     posts.map((post) => ({
       ...post,
       currentPhotoIndex: 0,
-      isActive: false,
+      state: PostState.INACTIVE,
       isCurrentlyLastElement: false,
     }));
 

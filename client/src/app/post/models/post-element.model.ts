@@ -1,7 +1,8 @@
+import PostState from './post-state.enum';
 import Post from './post.model';
 
 export default interface PostElement extends Post {
   currentPhotoIndex: number;
-  isActive: boolean;
+  state: PostState;
   isCurrentlyLastElement: boolean;
 }

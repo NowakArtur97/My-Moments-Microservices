@@ -1,6 +1,7 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
 
 import PostElement from '../models/post-element.model';
+import PostState from '../models/post-state.enum';
 
 @Component({
   selector: 'app-post',
@@ -50,9 +51,9 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.post.isCurrentlyLastElement) {
       this.fixPaddingOfLastElement();
     }
-    if (this.post.isActive) {
+    if (this.post.state === PostState.ACTIVE) {
       this.setTransformScale(this.POST_TRANSFORM_SCALE.active);
-    } else {
+    } else if (this.post.state === PostState.INACTIVE) {
       this.setTransformScale(this.POST_TRANSFORM_SCALE.inactive);
     }
   }
