@@ -37,5 +37,5 @@
       >
     </div>
   </div>
-  <app-comments *ngIf="shouldShowComments()"></app-comments>
+  <app-comments [id]="post.id" *ngIf="shouldShowComments()"></app-comments>
 </div>
