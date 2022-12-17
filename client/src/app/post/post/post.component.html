@@ -1,4 +1,4 @@
-<div #postElement class="post">
+<div *ngIf="!shouldShowComments()" #postElement class="post">
   <div class="post__author">
     <!-- TODO: PostComponent: User photo -->
     <img
@@ -37,5 +37,9 @@
       >
     </div>
   </div>
-  <app-comments [id]="post.id" *ngIf="shouldShowComments()"></app-comments>
 </div>
+<app-comments
+  *ngIf="shouldShowComments()"
+  [id]="post.id"
+  (click)="onShowComments()"
+></app-comments>

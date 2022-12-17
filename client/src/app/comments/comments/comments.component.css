@@ -1,0 +1,13 @@
+.comments {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+
+  width: 60vh;
+  height: 40vh;
+
+  background-color: hsl(0, 0%, 100%);
+
+  overflow-y: scroll;
+}
