@@ -1,0 +1,109 @@
+version: "2.4"
+
+networks:
+  my-moments:
+    driver: bridge
+    name: my-moments
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+services:
+  comment-service:
+    restart: on-failure
+    build:
+        context: .
+    networks:
+      - my-moments
+    ports:
+      - 8083:8083
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    volumes:
+      - /comment-service/dir:/app
+    depends_on:
+      # - post-service
+      - mongo-db-comment-service
+      - rabbitmq
+    container_name: comment-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  # post-service:
+  #   restart: on-failure
+   # build:
+    #  context: ../post-service
+     # dockerfile: Dockerfile
+  #   image: post-service:latest
+  #   networks:
+  #     - my-moments
+  #   ports:
+  #     - "8082:8082"
+  #   volumes:
+  #     - /post-service/dir:/app
+  #   depends_on:
+  #     - configuration-service
+  #     - mongo-db-post-service
+  #   container_name: post-service
+  #   cpus: 0.5
+  #   mem_limit: 256M
+  #   mem_reservation: 64M
+
+  configuration-service:
+    restart: on-failure
+    networks:
+      - my-moments
+    build:
+      context: ../configuration-service
+      dockerfile: Dockerfile
+    image: configuration-service:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - /configuration-service/dir:/app
+    container_name: configuration-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  mongo-db-comment-service:
+    image: mongo:3.6
+    networks:
+      - my-moments
+    ports:
+      - "27021:27017"
+    volumes:
+      - ./data/db:/data/db
+    container_name: mongo-db-comment-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  # mongo-db-post-service:
+  #   image: mongo:3.6
+  #   networks:
+  #     - my-moments
+  #   ports:
+  #     - "27019:27017"
+  #   volumes:
+  #     - ./data/db:/data/db
+  #   container_name: mongo-db-post-service
+  #   cpus: 0.5
+  #   mem_limit: 256M
+  #   mem_reservation: 64M
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    networks:
+      - my-moments
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: my-moments-user
+      RABBITMQ_DEFAULT_PASS: my-moments-password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    cpus: 0.5
+    mem_limit: 128M
+    mem_reservation: 32M
