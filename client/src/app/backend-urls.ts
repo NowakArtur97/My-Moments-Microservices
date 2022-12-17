@@ -6,6 +6,9 @@ const BACKEND_URLS = {
   common: {
     myResource: '/me',
   },
+  comments: {
+    postComments: (postId: string): string => `/${postId}/comments`,
+  },
 };
 
 export default BACKEND_URLS;

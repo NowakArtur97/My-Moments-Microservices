@@ -1,4 +1,5 @@
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { CommentService } from 'src/app/comments/services/comments.service';
 
 import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
@@ -17,7 +18,10 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     inactive: 0.6,
   };
 
-  constructor(private renderer: Renderer2) {}
+  constructor(
+    private commentService: CommentService,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {}
 
@@ -34,6 +38,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
       return;
     }
     if (this.post.state === PostState.ACTIVE) {
+      this.commentService.getComments(this.post.id);
       this.post.state = PostState.COMMENTS_SHOWEN;
     } else {
       this.post.state = PostState.ACTIVE;
