@@ -1,4 +1,10 @@
 <div *ngIf="!shouldShowComments()" #postElement class="post">
+  <img
+    (click)="onShowComments()"
+    src="{{ post.photos[post.currentPhotoIndex] }}"
+    class="post__photo"
+    alt="user post"
+  />
   <div class="post__author">
     <!-- TODO: PostComponent: User photo -->
     <img
@@ -9,12 +15,6 @@
     />
     <p class="post__author_username">{{ post.author }}</p>
   </div>
-  <img
-    (click)="onShowComments()"
-    src="{{ post.photos[post.currentPhotoIndex] }}"
-    class="post__photo"
-    alt="user post"
-  />
   <div class="post__desciption">
     <p class="post__caption">{{ post.caption }}</p>
   </div>

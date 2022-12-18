@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment.local';
 
 import Comment from '../models/comment.model';
 import CommentsResponse from '../models/comments-response.model';
+import EXAMPLE_COMMENTS from './example-comments';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService extends HttpService {
@@ -30,6 +31,8 @@ export class CommentService extends HttpService {
           this.comments.next(commentsResponse.comments),
         (httpErrorResponse: HttpErrorResponse) => {
           console.log(httpErrorResponse);
+          // TODO: CommentService: DELETE
+          this.comments.next(EXAMPLE_COMMENTS);
           this.comments.next([]);
         }
       );

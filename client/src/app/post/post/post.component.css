@@ -9,6 +9,9 @@
   font-size: 1.5em;
   font-weight: 600;
   color: hsl(0, 0%, 7%);
+  background-color: hsl(0, 0%, 100%);
+
+  padding: 10px;
 
   transition: transform 0.5s;
 }
@@ -17,21 +20,23 @@
 .post__desciption {
   display: flex;
   align-items: center;
+  justify-content: center;
 
   width: 100%;
-
-  background-color: hsl(0, 0%, 100%);
 }
 
 .post__author {
   flex-basis: 8%;
 }
 
-.post__author_photo {
-  height: 32px;
-  width: 32px;
+.post__author_username {
+  margin-left: 6px;
+}
 
-  margin-left: 10px;
+.post__author_photo {
+  height: 24px;
+  width: 24px;
+
   border-radius: 50%;
 }
 
@@ -41,8 +46,10 @@
 }
 
 .post__photo {
-  height: 87%;
   flex-basis: 87%;
+
+  height: 87%;
+  min-width: 35vw;
 }
 
 .post__photo_change_buttons {
@@ -81,16 +88,21 @@
 }
 
 .post__photo_change_button--left {
-  left: 2%;
+  left: 4%;
 }
 
 .post__photo_change_button--right {
-  right: 2%;
+  right: 4%;
 }
 
 @media (min-width: 1024px) {
   .post__author {
     flex-basis: 7%;
+  }
+
+  .post__author_photo {
+    height: 32px;
+    width: 32px;
   }
 
   .post__photo {
