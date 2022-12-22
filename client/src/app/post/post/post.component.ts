@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { CommentService } from 'src/app/comments/services/comments.service';
 
@@ -8,6 +9,24 @@ import PostState from '../models/post-state.enum';
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css'],
+  animations: [
+    trigger('rotate', [
+      state(
+        'post',
+        style({
+          transform: 'rotateY(0deg) scale(1.2)',
+        })
+      ),
+      state(
+        'comments',
+        style({
+          transform: 'rotateY(180deg) scale(1.2)',
+        })
+      ),
+      transition('post => comments', animate('2s')),
+      transition('comments => post', animate('2s')),
+    ]),
+  ],
 })
 export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() post!: PostElement;
@@ -43,7 +62,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     } else {
       this.post.state = PostState.ACTIVE;
     }
-    this.setupStyles();
+    // this.setupStyles();
   }
 
   onChangeCurrentPhoto(direction: number): void {
@@ -66,12 +85,12 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.post.isCurrentlyLastElement) {
       this.fixPaddingOfLastElement();
     }
-    if (this.post.state === PostState.ACTIVE) {
-      this.setTransformScale(this.POST_TRANSFORM_SCALE.active);
-    } else if (
-      this.post.state === PostState.INACTIVE ||
+    if (
+      this.post.state === PostState.ACTIVE ||
       this.post.state === PostState.COMMENTS_SHOWEN
     ) {
+      this.setTransformScale(this.POST_TRANSFORM_SCALE.active);
+    } else if (this.post.state === PostState.INACTIVE) {
       this.setTransformScale(this.POST_TRANSFORM_SCALE.inactive);
     }
   }
