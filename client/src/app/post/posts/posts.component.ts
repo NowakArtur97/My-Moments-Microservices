@@ -42,9 +42,9 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
           photos: this.shuffleArray(post.photos),
         }));
       this.posts = this.postService.mapPostsToElements(postsWithMappedImages);
-      // if (this.posts.length > 1) {
-      this.posts[this.posts.length - 1].isCurrentlyLastElement = true;
-      // }
+      if (this.posts.length > 1) {
+        this.posts[this.posts.length - 1].isCurrentlyLastElement = true;
+      }
     });
   }
 

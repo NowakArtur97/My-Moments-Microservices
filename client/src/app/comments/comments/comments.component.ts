@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 
 import Comment from '../models/comment.model';
 import { CommentService } from '../services/comments.service';
@@ -25,10 +18,10 @@ export class CommentsComponent implements OnInit, OnChanges {
 
   constructor(private commentService: CommentService) {}
 
-  // TODO: subscribe/unsubscribe onDestroy?
+  // TODO: CommentsComponent: subscribe/unsubscribe onDestroy?
   ngOnInit(): void {
     this.commentService.comments.subscribe((comments) => {
-      console.log(comments);
+      // TODO: CommentsComponent: remove
       this.comments = EXAMPLE_COMMENTS;
     });
   }

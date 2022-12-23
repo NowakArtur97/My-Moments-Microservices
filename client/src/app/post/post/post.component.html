@@ -5,7 +5,7 @@
   }"
   class="post"
 >
-  <div #postData *ngIf="!shouldShowComments()" class="post__data">
+  <div #postData *ngIf="!areCommentsVisible" class="post__data">
     <img
       (click)="onShowComments()"
       src="{{ post.photos[post.currentPhotoIndex] }}"
@@ -25,7 +25,7 @@
     <div class="post__desciption">
       <p class="post__caption">{{ post.caption }}</p>
     </div>
-    <div *ngIf="!shouldShowComments()" class="post__photo_change_buttons">
+    <div *ngIf="!areCommentsVisible" class="post__photo_change_buttons">
       <div
         [ngStyle]="{ display: post.currentPhotoIndex > 0 ? 'flex' : 'none' }"
         (click)="onChangeCurrentPhoto(-1)"
@@ -46,7 +46,7 @@
     </div>
   </div>
   <app-comments
-    *ngIf="shouldShowComments()"
+    *ngIf="areCommentsVisible"
     [id]="post.id"
     [startHeight]="startHeight"
     [startWidth]="startWidth"

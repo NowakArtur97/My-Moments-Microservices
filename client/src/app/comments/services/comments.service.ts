@@ -30,7 +30,7 @@ export class CommentService extends HttpService {
         (commentsResponse: CommentsResponse) =>
           this.comments.next(commentsResponse.comments),
         (httpErrorResponse: HttpErrorResponse) => {
-          console.log(httpErrorResponse);
+          // console.log(httpErrorResponse);
           // TODO: CommentService: DELETE
           this.comments.next(EXAMPLE_COMMENTS);
           // this.comments.next([]);

@@ -1,20 +1,5 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { CommentService } from 'src/app/comments/services/comments.service';
 
 import PostElement from '../models/post-element.model';
@@ -37,7 +22,7 @@ import PostState from '../models/post-state.enum';
         'comments',
         style({
           transform: 'rotateY(180deg)',
-          // transform: 'rotateY(180deg) scale(1.2)',
+          // transform: 'rotateY(180deg) scal e(1.2)',
         })
       ),
       transition('post => comments', animate('2s')),
@@ -50,6 +35,8 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   @ViewChild('postElement') postElement!: ElementRef<HTMLDivElement>;
   @ViewChild('postData') postData!: ElementRef<HTMLDivElement>;
 
+  areCommentsVisible = false;
+
   startHeight!: number;
   startWidth!: number;
 
@@ -57,6 +44,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     active: 1.2,
     inactive: 0.6,
   };
+  rotationTimeout!: NodeJS.Timeout;
 
   constructor(
     private commentService: CommentService,
@@ -67,16 +55,6 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.setupStyles();
-
-    if (
-      this.postElement.nativeElement === undefined ||
-      this.startHeight !== undefined
-    ) {
-      return;
-    }
-
-    // console.log(this.startHeight);
-    // console.log(this.startWidth);
   }
 
   ngOnChanges(): void {
@@ -87,14 +65,21 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.post.state === PostState.INACTIVE) {
       return;
     }
+    clearTimeout(this.rotationTimeout);
     if (this.post.state === PostState.ACTIVE) {
       const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
       this.startHeight = boundingClientRect.height;
       this.startWidth = boundingClientRect.width;
       this.commentService.getComments(this.post.id);
       this.post.state = PostState.COMMENTS_SHOWEN;
+      this.rotationTimeout = setTimeout(() => {
+        this.areCommentsVisible = true;
+      }, 1000);
     } else {
       this.post.state = PostState.ACTIVE;
+      this.rotationTimeout = setTimeout(() => {
+        this.areCommentsVisible = false;
+      }, 1000);
     }
     // this.setupStyles();
   }
@@ -129,6 +114,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }
   }
 
+  // TODO: PostComponent: Fix transformations
   private setTransformScale = (scale: number): void =>
     this.renderer.setStyle(
       this.postElement.nativeElement,
