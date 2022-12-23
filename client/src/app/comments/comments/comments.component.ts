@@ -1,7 +1,15 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
 import Comment from '../models/comment.model';
 import { CommentService } from '../services/comments.service';
+import EXAMPLE_COMMENTS from '../services/example-comments';
 
 @Component({
   selector: 'app-comments',
@@ -10,6 +18,9 @@ import { CommentService } from '../services/comments.service';
 })
 export class CommentsComponent implements OnInit, OnChanges {
   @Input() id!: string;
+  @Input() startHeight!: number;
+  @Input() startWidth!: number;
+  @ViewChild('commentsElement') commentsElement!: ElementRef<HTMLDivElement>;
   comments: Comment[] = [];
 
   constructor(private commentService: CommentService) {}
@@ -18,7 +29,7 @@ export class CommentsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.commentService.comments.subscribe((comments) => {
       console.log(comments);
-      this.comments = comments;
+      this.comments = EXAMPLE_COMMENTS;
     });
   }
 
@@ -27,5 +38,12 @@ export class CommentsComponent implements OnInit, OnChanges {
       return;
     }
     this.commentService.getComments(this.id);
+  }
+
+  getStyles(): { height: string; width: string } {
+    return {
+      height: `${this.startHeight}px`,
+      width: `${this.startWidth}px`,
+    };
   }
 }

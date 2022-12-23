@@ -1,5 +1,20 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { CommentService } from 'src/app/comments/services/comments.service';
 
 import PostElement from '../models/post-element.model';
@@ -14,13 +29,15 @@ import PostState from '../models/post-state.enum';
       state(
         'post',
         style({
-          transform: 'rotateY(0deg) scale(1.2)',
+          transform: 'rotateY(0deg)',
+          // transform: 'rotateY(0deg) scale(1.2)',
         })
       ),
       state(
         'comments',
         style({
-          transform: 'rotateY(180deg) scale(1.2)',
+          transform: 'rotateY(180deg)',
+          // transform: 'rotateY(180deg) scale(1.2)',
         })
       ),
       transition('post => comments', animate('2s')),
@@ -31,6 +48,10 @@ import PostState from '../models/post-state.enum';
 export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() post!: PostElement;
   @ViewChild('postElement') postElement!: ElementRef<HTMLDivElement>;
+  @ViewChild('postData') postData!: ElementRef<HTMLDivElement>;
+
+  startHeight!: number;
+  startWidth!: number;
 
   private readonly POST_TRANSFORM_SCALE = {
     active: 1.2,
@@ -46,6 +67,16 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.setupStyles();
+
+    if (
+      this.postElement.nativeElement === undefined ||
+      this.startHeight !== undefined
+    ) {
+      return;
+    }
+
+    // console.log(this.startHeight);
+    // console.log(this.startWidth);
   }
 
   ngOnChanges(): void {
@@ -57,6 +88,9 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
       return;
     }
     if (this.post.state === PostState.ACTIVE) {
+      const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
+      this.startHeight = boundingClientRect.height;
+      this.startWidth = boundingClientRect.width;
       this.commentService.getComments(this.post.id);
       this.post.state = PostState.COMMENTS_SHOWEN;
     } else {
@@ -98,12 +132,12 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   private setTransformScale = (scale: number): void =>
     this.renderer.setStyle(
       this.postElement.nativeElement,
-      'transform',
+      'transformXXX',
       `scale(${scale})`
     );
 
   private fixPaddingOfLastElement(): void {
-    const lastPost: HTMLDivElement = this.postElement.nativeElement;
+    const lastPost: HTMLDivElement = this.postData.nativeElement;
     this.renderer.setStyle(lastPost, 'padding-right', '22vw');
     const changeButtonsWrapperChildren =
       lastPost.children[lastPost.children.length - 1].children;

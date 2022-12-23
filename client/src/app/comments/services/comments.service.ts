@@ -33,7 +33,7 @@ export class CommentService extends HttpService {
           console.log(httpErrorResponse);
           // TODO: CommentService: DELETE
           this.comments.next(EXAMPLE_COMMENTS);
-          this.comments.next([]);
+          // this.comments.next([]);
         }
       );
   }
