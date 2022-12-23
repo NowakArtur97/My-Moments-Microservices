@@ -18,10 +18,10 @@ export class CommentsComponent implements OnInit, OnChanges {
 
   constructor(private commentService: CommentService) {}
 
-  // TODO: CommentsComponent: subscribe/unsubscribe onDestroy?
+  // TODO: subscribe/unsubscribe onDestroy?
   ngOnInit(): void {
     this.commentService.comments.subscribe((comments) => {
-      // TODO: CommentsComponent: remove
+      // TODO: DELETE
       this.comments = EXAMPLE_COMMENTS;
     });
   }

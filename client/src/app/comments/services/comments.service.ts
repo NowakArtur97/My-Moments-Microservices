@@ -12,7 +12,7 @@ import EXAMPLE_COMMENTS from './example-comments';
 @Injectable({ providedIn: 'root' })
 export class CommentService extends HttpService {
   comments = new BehaviorSubject<Comment[]>([]);
-  // TODO: CommentService: DELETE
+  // TODO: DELETE
   // comments = new BehaviorSubject<Comment[]>(EXAMPLE_COMMENTS);
 
   constructor(protected httpClient: HttpClient) {
@@ -31,7 +31,7 @@ export class CommentService extends HttpService {
           this.comments.next(commentsResponse.comments),
         (httpErrorResponse: HttpErrorResponse) => {
           // console.log(httpErrorResponse);
-          // TODO: CommentService: DELETE
+          // TODO: DELETE
           this.comments.next(EXAMPLE_COMMENTS);
           // this.comments.next([]);
         }

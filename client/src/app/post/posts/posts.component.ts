@@ -32,7 +32,7 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     private clickAndDragToScrollService: ClickAndDragToScrollService
   ) {}
 
-  // TODO: PostsComponent: Remove
+  // TODO: DELETE
   ngOnInit(): void {
     this.postService.myPosts.subscribe((posts) => {
       const postsWithMappedImages = this.postService
@@ -65,7 +65,7 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.setActivePost(0);
   }
 
-  // TODO: PostsComponent: Remove?
+  // TODO: DELETE?
   ngAfterViewChecked(): void {
     // if (this.postElements.length > 1) {
     //   this.previousActiveElement = this.posts[this.postElements.length - 1];
@@ -91,7 +91,13 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
     const activeElement = this.choseActivePost(center);
     if (this.previousActiveElement !== activeElement) {
-      this.posts.forEach((post) => (post.state = PostState.INACTIVE));
+      this.posts.forEach((post) => {
+        post.state = PostState.INACTIVE;
+        post.stoppedBeingActive = false;
+      });
+      if (this.previousActiveElement !== undefined) {
+        this.previousActiveElement.stoppedBeingActive = true;
+      }
       this.previousActiveElement = activeElement;
       activeElement.state = PostState.ACTIVE;
     }
@@ -123,7 +129,7 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.centerMarker.nativeElement.getBoundingClientRect().x +
     this.postsContainer.nativeElement.scrollLeft;
 
-  // TODO: PostsComponent: Remove
+  // TODO: DELETE
   private shuffleArray(array: any[]): any[] {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));

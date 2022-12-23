@@ -17,7 +17,7 @@ import EXAMPLE_POSTS from './example-posts';
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
   // myPosts = new BehaviorSubject<Post[]>([]);
-  // TODO: PostService: DELETE
+  // TODO: DELETE
   myPosts = new BehaviorSubject<Post[]>(EXAMPLE_POSTS);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
@@ -28,7 +28,7 @@ export class PostService extends HttpService {
     const files = imageSnippets.map((file) => file.file);
     const multipartData = this.createFormDataFromFiles([
       { key: 'photos', files },
-      // TODO: PostService: add caption
+      // TODO: add caption
       //  { key: 'post', value: { caption: 'aaaaa' } },
     ]);
     this.httpClient
@@ -58,6 +58,7 @@ export class PostService extends HttpService {
       ...post,
       currentPhotoIndex: 0,
       state: PostState.INACTIVE,
+      stoppedBeingActive: false,
       isCurrentlyLastElement: false,
     }));
 
@@ -71,7 +72,7 @@ export class PostService extends HttpService {
     this.router.navigate([`/${APP_ROUTES.post.posts}`]);
   }
 
-  // TODO: PostService: make private
+  // TODO: make private
   mapBinaryToJpgs = (posts: Post[]): Post[] =>
     posts.map((post: Post) => {
       return {

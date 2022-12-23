@@ -44,7 +44,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     active: 1.2,
     inactive: 0.6,
   };
-  rotationTimeout!: NodeJS.Timeout;
+  private rotationTimeout!: NodeJS.Timeout;
 
   constructor(
     private commentService: CommentService,
@@ -55,6 +55,13 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.setupStyles();
+    if (this.post.stoppedBeingActive) {
+      this.post.stoppedBeingActive = false;
+      clearTimeout(this.rotationTimeout);
+      this.rotationTimeout = setTimeout(() => {
+        this.areCommentsVisible = false;
+      }, 1000);
+    }
   }
 
   ngOnChanges(): void {
@@ -114,7 +121,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }
   }
 
-  // TODO: PostComponent: Fix transformations
+  // TODO: Fix transformations
   private setTransformScale = (scale: number): void =>
     this.renderer.setStyle(
       this.postElement.nativeElement,
@@ -123,6 +130,10 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     );
 
   private fixPaddingOfLastElement(): void {
+    if (this.postData === undefined) {
+      return;
+    }
+    // TODO: Fix issue with width (padding)
     const lastPost: HTMLDivElement = this.postData.nativeElement;
     this.renderer.setStyle(lastPost, 'padding-right', '22vw');
     const changeButtonsWrapperChildren =
