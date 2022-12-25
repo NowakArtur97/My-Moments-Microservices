@@ -10,23 +10,29 @@ import PostState from '../models/post-state.enum';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css'],
   animations: [
-    trigger('rotate', [
+    trigger('state', [
       state(
-        'post',
+        'inactive',
         style({
-          transform: 'rotateY(0deg)',
-          // transform: 'rotateY(0deg) scale(1.2)',
+          transform: 'rotateY(0deg) scale(0.6)',
+        })
+      ),
+      state(
+        'active',
+        style({
+          transform: 'rotateY(0deg) scale(1.2)',
         })
       ),
       state(
         'comments',
         style({
-          transform: 'rotateY(180deg)',
-          // transform: 'rotateY(180deg) scal e(1.2)',
+          transform: 'rotateY(180deg) scale(1.2)',
         })
       ),
-      transition('post => comments', animate('2s')),
-      transition('comments => post', animate('2s')),
+      transition('inactive => active', animate('0.5s')),
+      transition('active => inactive', animate('0.5s')),
+      transition('active => comments', animate('1.5s')),
+      transition('comments => active', animate('1.5s')),
     ]),
   ],
 })
@@ -40,10 +46,6 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   startHeight!: number;
   startWidth!: number;
 
-  private readonly POST_TRANSFORM_SCALE = {
-    active: 1.2,
-    inactive: 0.6,
-  };
   private rotationTimeout!: NodeJS.Timeout;
 
   constructor(
@@ -60,7 +62,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
       clearTimeout(this.rotationTimeout);
       this.rotationTimeout = setTimeout(() => {
         this.areCommentsVisible = false;
-      }, 1000);
+      }, 750);
     }
   }
 
@@ -77,18 +79,17 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
       const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
       this.startHeight = boundingClientRect.height;
       this.startWidth = boundingClientRect.width;
-      this.commentService.getComments(this.post.id);
       this.post.state = PostState.COMMENTS_SHOWEN;
+      this.commentService.getComments(this.post.id);
       this.rotationTimeout = setTimeout(() => {
         this.areCommentsVisible = true;
-      }, 1000);
+      }, 750);
     } else {
       this.post.state = PostState.ACTIVE;
       this.rotationTimeout = setTimeout(() => {
         this.areCommentsVisible = false;
-      }, 1000);
+      }, 750);
     }
-    // this.setupStyles();
   }
 
   onChangeCurrentPhoto(direction: number): void {
@@ -101,6 +102,19 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }
   }
 
+  getStateForAnimation(): string {
+    switch (this.post.state) {
+      case PostState.ACTIVE:
+        return 'active';
+      case PostState.INACTIVE:
+        return 'inactive';
+      case PostState.COMMENTS_SHOWEN:
+        return 'comments';
+    }
+  }
+
+  isActive = (): boolean => this.post.state === PostState.ACTIVE;
+
   shouldShowComments = (): boolean =>
     this.post.state === PostState.COMMENTS_SHOWEN;
 
@@ -111,23 +125,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.post.isCurrentlyLastElement) {
       this.fixPaddingOfLastElement();
     }
-    if (
-      this.post.state === PostState.ACTIVE ||
-      this.post.state === PostState.COMMENTS_SHOWEN
-    ) {
-      this.setTransformScale(this.POST_TRANSFORM_SCALE.active);
-    } else if (this.post.state === PostState.INACTIVE) {
-      this.setTransformScale(this.POST_TRANSFORM_SCALE.inactive);
-    }
   }
-
-  // TODO: Fix transformations
-  private setTransformScale = (scale: number): void =>
-    this.renderer.setStyle(
-      this.postElement.nativeElement,
-      'transformXXX',
-      `scale(${scale})`
-    );
 
   private fixPaddingOfLastElement(): void {
     if (this.postData === undefined) {

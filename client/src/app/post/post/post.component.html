@@ -1,7 +1,7 @@
 <div
   #postElement
-  [@rotate]="{
-    value: shouldShowComments() ? 'comments' : 'post'
+  [@state]="{
+    value: getStateForAnimation()
   }"
   class="post"
 >
