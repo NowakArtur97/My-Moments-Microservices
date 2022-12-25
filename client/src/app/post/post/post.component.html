@@ -25,7 +25,10 @@
     <div class="post__desciption">
       <p class="post__caption">{{ post.caption }}</p>
     </div>
-    <div *ngIf="!areCommentsVisible" class="post__photo_change_buttons">
+    <div
+      *ngIf="areChangeCurrentPhotoButtonsVisible()"
+      class="post__photo_change_buttons"
+    >
       <div
         [ngStyle]="{ display: post.currentPhotoIndex > 0 ? 'flex' : 'none' }"
         (click)="onChangeCurrentPhoto(-1)"

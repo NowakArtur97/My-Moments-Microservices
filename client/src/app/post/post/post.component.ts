@@ -20,13 +20,13 @@ import PostState from '../models/post-state.enum';
       state(
         'active',
         style({
-          transform: 'rotateY(0deg) scale(1.2)',
+          transform: 'rotateY(0deg) scale(1)',
         })
       ),
       state(
         'comments',
         style({
-          transform: 'rotateY(180deg) scale(1.2)',
+          transform: 'rotateY(180deg) scale(1)',
         })
       ),
       transition('inactive => active', animate('0.5s')),
@@ -42,10 +42,12 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   @ViewChild('postData') postData!: ElementRef<HTMLDivElement>;
 
   areCommentsVisible = false;
+  isRotating = false;
 
   startHeight!: number;
   startWidth!: number;
 
+  private stateTimeout!: NodeJS.Timeout;
   private rotationTimeout!: NodeJS.Timeout;
 
   constructor(
@@ -71,19 +73,24 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   onShowComments(): void {
-    if (this.post.state === PostState.INACTIVE) {
+    if (this.post.state === PostState.INACTIVE || this.isRotating) {
       return;
     }
-    clearTimeout(this.rotationTimeout);
+    clearTimeout(this.stateTimeout);
     if (this.post.state === PostState.ACTIVE) {
+      clearTimeout(this.rotationTimeout);
       const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
       this.startHeight = boundingClientRect.height;
       this.startWidth = boundingClientRect.width;
       this.post.state = PostState.COMMENTS_SHOWEN;
+      this.isRotating = true;
       this.commentService.getComments(this.post.id);
-      this.rotationTimeout = setTimeout(() => {
+      this.stateTimeout = setTimeout(() => {
         this.areCommentsVisible = true;
       }, 750);
+      this.rotationTimeout = setTimeout(() => {
+        this.isRotating = false;
+      }, 1500);
     } else {
       this.post.state = PostState.ACTIVE;
       this.rotationTimeout = setTimeout(() => {
@@ -118,6 +125,10 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   shouldShowComments = (): boolean =>
     this.post.state === PostState.COMMENTS_SHOWEN;
 
+  areChangeCurrentPhotoButtonsVisible(): boolean {
+    return this.post.state === PostState.ACTIVE;
+  }
+
   private setupStyles(): void {
     if (this.postElement === undefined) {
       return;
@@ -136,9 +147,20 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     this.renderer.setStyle(lastPost, 'padding-right', '22vw');
     const changeButtonsWrapperChildren =
       lastPost.children[lastPost.children.length - 1].children;
+    if (changeButtonsWrapperChildren.length === 0) {
+      return;
+    }
     const leftChangePhotoButton = changeButtonsWrapperChildren[0];
-    this.renderer.setStyle(leftChangePhotoButton, 'left', 'calc(2% + 11vw)');
+    if (leftChangePhotoButton) {
+      this.renderer.setStyle(leftChangePhotoButton, 'left', 'calc(2% + 11vw)');
+    }
     const rightChangePhotoButton = changeButtonsWrapperChildren[1];
-    this.renderer.setStyle(rightChangePhotoButton, 'right', 'calc(2% + 11vw)');
+    if (rightChangePhotoButton) {
+      this.renderer.setStyle(
+        rightChangePhotoButton,
+        'right',
+        'calc(2% + 11vw)'
+      );
+    }
   }
 }

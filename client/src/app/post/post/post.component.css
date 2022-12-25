@@ -1,11 +1,9 @@
 .post {
-  height: 70vh;
+  height: 84vh;
 
   font-size: 1.5em;
   font-weight: 600;
   color: hsl(0, 0%, 7%);
-
-  /* padding: 10px; */
 
   transform-origin: center;
 }
