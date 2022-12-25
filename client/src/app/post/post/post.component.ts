@@ -33,6 +33,7 @@ import PostState from '../models/post-state.enum';
       transition('active => inactive', animate('0.5s')),
       transition('active => comments', animate('1.5s')),
       transition('comments => active', animate('1.5s')),
+      transition('comments => inactive', animate('1.5s')),
     ]),
   ],
 })
@@ -62,9 +63,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.post.stoppedBeingActive) {
       this.post.stoppedBeingActive = false;
       clearTimeout(this.rotationTimeout);
-      this.rotationTimeout = setTimeout(() => {
-        this.areCommentsVisible = false;
-      }, 750);
+      this.changeCommentsVisibilityOnTimeout(false);
     }
   }
 
@@ -85,17 +84,13 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
       this.post.state = PostState.COMMENTS_SHOWEN;
       this.isRotating = true;
       this.commentService.getComments(this.post.id);
-      this.stateTimeout = setTimeout(() => {
-        this.areCommentsVisible = true;
-      }, 750);
+      this.changeCommentsVisibilityOnTimeout(true);
       this.rotationTimeout = setTimeout(() => {
         this.isRotating = false;
       }, 1500);
     } else {
       this.post.state = PostState.ACTIVE;
-      this.rotationTimeout = setTimeout(() => {
-        this.areCommentsVisible = false;
-      }, 750);
+      this.changeCommentsVisibilityOnTimeout(false);
     }
   }
 
@@ -162,5 +157,13 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
         'calc(2% + 11vw)'
       );
     }
+  }
+
+  private changeCommentsVisibilityOnTimeout(
+    areCommentsVisibleAfterTimeout: boolean
+  ): void {
+    this.stateTimeout = setTimeout(() => {
+      this.areCommentsVisible = areCommentsVisibleAfterTimeout;
+    }, 750);
   }
 }
