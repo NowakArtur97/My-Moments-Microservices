@@ -47,6 +47,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
 
   startHeight!: number;
   startWidth!: number;
+  showCommentsAnimationStartTime!: number;
 
   private stateTimeout!: NodeJS.Timeout;
   private rotationTimeout!: NodeJS.Timeout;
@@ -76,18 +77,16 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
       return;
     }
     clearTimeout(this.stateTimeout);
+    clearTimeout(this.rotationTimeout);
+    this.isRotating = true;
     if (this.post.state === PostState.ACTIVE) {
-      clearTimeout(this.rotationTimeout);
       const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
       this.startHeight = boundingClientRect.height;
       this.startWidth = boundingClientRect.width;
       this.post.state = PostState.COMMENTS_SHOWEN;
-      this.isRotating = true;
+      this.showCommentsAnimationStartTime = new Date().getTime();
       this.commentService.getComments(this.post.id);
       this.changeCommentsVisibilityOnTimeout(true);
-      this.rotationTimeout = setTimeout(() => {
-        this.isRotating = false;
-      }, 1500);
     } else {
       this.post.state = PostState.ACTIVE;
       this.changeCommentsVisibilityOnTimeout(false);
@@ -162,8 +161,36 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   private changeCommentsVisibilityOnTimeout(
     areCommentsVisibleAfterTimeout: boolean
   ): void {
+    let timeout;
+    const timeDifference =
+      new Date().getTime() - this.showCommentsAnimationStartTime;
+    const isInFirstHalfOfRotation =
+      !areCommentsVisibleAfterTimeout && timeDifference < 750;
+    const isInSecondHalfOfRotation =
+      !areCommentsVisibleAfterTimeout &&
+      timeDifference > 750 &&
+      timeDifference < 1500;
+    if (isInFirstHalfOfRotation) {
+      clearTimeout(this.stateTimeout);
+      timeout = timeDifference - 750;
+      this.rotationTimeout = setTimeout(() => {
+        this.isRotating = false;
+      }, timeout);
+      this.areCommentsVisible = areCommentsVisibleAfterTimeout;
+      return;
+    } else if (isInSecondHalfOfRotation) {
+      timeout = timeDifference - 750;
+      this.rotationTimeout = setTimeout(() => {
+        this.isRotating = false;
+      }, timeout);
+    } else {
+      timeout = 750;
+      this.rotationTimeout = setTimeout(() => {
+        this.isRotating = false;
+      }, 1500);
+    }
     this.stateTimeout = setTimeout(() => {
       this.areCommentsVisible = areCommentsVisibleAfterTimeout;
-    }, 750);
+    }, timeout);
   }
 }
