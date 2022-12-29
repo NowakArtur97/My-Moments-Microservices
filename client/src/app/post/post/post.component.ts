@@ -42,6 +42,10 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   @ViewChild('postElement') postElement!: ElementRef<HTMLDivElement>;
   @ViewChild('postData') postData!: ElementRef<HTMLDivElement>;
 
+  private readonly RIGHT_PADDING_FIX = 22;
+  private readonly FULL_ANIMATION_TIME = 1500;
+  private readonly HALF_ANIMATION_TIME = this.FULL_ANIMATION_TIME / 2;
+
   areCommentsVisible = false;
   isRotating = false;
 
@@ -81,8 +85,15 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     this.isRotating = true;
     if (this.post.state === PostState.ACTIVE) {
       const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
+      if (this.post.isCurrentlyLastElement) {
+        this.removePaddingFix();
+        this.startWidth =
+          boundingClientRect.width -
+          window.innerWidth * +`0.${this.RIGHT_PADDING_FIX}`;
+      } else {
+        this.startWidth = boundingClientRect.width;
+      }
       this.startHeight = boundingClientRect.height;
-      this.startWidth = boundingClientRect.width;
       this.post.state = PostState.COMMENTS_SHOWEN;
       this.showCommentsAnimationStartTime = new Date().getTime();
       this.commentService.getComments(this.post.id);
@@ -120,14 +131,14 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     this.post.state === PostState.COMMENTS_SHOWEN;
 
   areChangeCurrentPhotoButtonsVisible(): boolean {
-    return this.post.state === PostState.ACTIVE;
+    return this.post.state === PostState.ACTIVE && !this.isRotating;
   }
 
   private setupStyles(): void {
     if (this.postElement === undefined) {
       return;
     }
-    if (this.post.isCurrentlyLastElement) {
+    if (this.post.isCurrentlyLastElement && !this.isRotating) {
       this.fixPaddingOfLastElement();
     }
   }
@@ -136,9 +147,8 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.postData === undefined) {
       return;
     }
-    // TODO: Fix issue with width (padding)
     const lastPost: HTMLDivElement = this.postData.nativeElement;
-    this.renderer.setStyle(lastPost, 'padding-right', '22vw');
+    this.setPaddingOfLastElement(`${this.RIGHT_PADDING_FIX}vw`);
     const changeButtonsWrapperChildren =
       lastPost.children[lastPost.children.length - 1].children;
     if (changeButtonsWrapperChildren.length === 0) {
@@ -158,6 +168,13 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }
   }
 
+  private removePaddingFix = (): void => this.setPaddingOfLastElement('0');
+
+  private setPaddingOfLastElement(paddingRight: string): void {
+    const lastPost: HTMLDivElement = this.postData.nativeElement;
+    this.renderer.setStyle(lastPost, 'padding-right', paddingRight);
+  }
+
   private changeCommentsVisibilityOnTimeout(
     areCommentsVisibleAfterTimeout: boolean
   ): void {
@@ -165,29 +182,30 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     const timeDifference =
       new Date().getTime() - this.showCommentsAnimationStartTime;
     const isInFirstHalfOfRotation =
-      !areCommentsVisibleAfterTimeout && timeDifference < 750;
+      !areCommentsVisibleAfterTimeout &&
+      timeDifference < this.HALF_ANIMATION_TIME;
     const isInSecondHalfOfRotation =
       !areCommentsVisibleAfterTimeout &&
-      timeDifference > 750 &&
-      timeDifference < 1500;
+      timeDifference > this.HALF_ANIMATION_TIME &&
+      timeDifference < this.FULL_ANIMATION_TIME;
     if (isInFirstHalfOfRotation) {
       clearTimeout(this.stateTimeout);
-      timeout = timeDifference - 750;
+      timeout = timeDifference - this.HALF_ANIMATION_TIME;
       this.rotationTimeout = setTimeout(() => {
         this.isRotating = false;
       }, timeout);
       this.areCommentsVisible = areCommentsVisibleAfterTimeout;
       return;
     } else if (isInSecondHalfOfRotation) {
-      timeout = timeDifference - 750;
+      timeout = timeDifference - this.HALF_ANIMATION_TIME;
       this.rotationTimeout = setTimeout(() => {
         this.isRotating = false;
       }, timeout);
     } else {
-      timeout = 750;
+      timeout = this.HALF_ANIMATION_TIME;
       this.rotationTimeout = setTimeout(() => {
         this.isRotating = false;
-      }, 1500);
+      }, this.FULL_ANIMATION_TIME);
     }
     this.stateTimeout = setTimeout(() => {
       this.areCommentsVisible = areCommentsVisibleAfterTimeout;
