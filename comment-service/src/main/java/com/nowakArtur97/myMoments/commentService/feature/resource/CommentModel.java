@@ -1,32 +1,33 @@
 package com.nowakArtur97.myMoments.commentService.feature.resource;
 
 import com.nowakArtur97.myMoments.commentService.feature.document.Comment;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDateTime;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@ApiModel(description = "Details about the Comment")
+@Schema(description = "Details about the Comment")
 public class CommentModel implements Comment {
 
-    @ApiModelProperty(notes = "The unique id of the Comment")
+   @Schema(accessMode = READ_ONLY, description = "The unique id of the Comment")
     private String id;
 
-    @ApiModelProperty(notes = "The comment's content")
+   @Schema(accessMode = READ_ONLY, description = "The comment's content")
     private String content;
 
-    @ApiModelProperty(notes = "The comment's author")
+   @Schema(accessMode = READ_ONLY, description = "The comment's author")
     private String author;
 
-    @ApiModelProperty(notes = "The comment's creation date")
+   @Schema(accessMode = READ_ONLY, description = "The comment's creation date")
     private LocalDateTime createDate;
 
-    @ApiModelProperty(notes = "The comment's modification date")
+   @Schema(accessMode = READ_ONLY, description = "The comment's modification date")
     private LocalDateTime modifyDate;
 }

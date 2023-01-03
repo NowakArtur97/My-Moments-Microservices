@@ -1,12 +1,13 @@
 package com.nowakArtur97.myMoments.commentService.feature.resource;
 
 import com.nowakArtur97.myMoments.commentService.feature.document.Comment;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
 @Getter
 @Setter
@@ -14,12 +15,12 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@ApiModel(description = "Model responsible for Comment's validation")
+@Schema(description = "Model responsible for Comment's validation")
 public class CommentDTO implements Comment {
 
     @NotBlank(message = "{comment.content.notBlank}")
     @Size(max = 200, message = "{comment.content.size}")
-    @ApiModelProperty(notes = "The comment's content")
+    @Schema(accessMode = READ_ONLY, description = "The comment's content")
     private String content;
 }
 

@@ -1,9 +1,13 @@
 package com.nowakArtur97.myMoments.commentService.feature.resource;
 
-import com.nowakArtur97.myMoments.commentService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.commentService.feature.document.CommentService;
 import com.nowakArtur97.myMoments.commentService.jwt.JwtUtil;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -18,10 +22,10 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/v1/posts/{postId}/")
 @RequiredArgsConstructor
-@Api(tags = {CommentTag.RESOURCE})
+@Tag(name = CommentTag.RESOURCE, description = CommentTag.DESCRIPTION)
 @ApiResponses(value = {
-        @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
-        @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
+        @ApiResponse(responseCode = "401", description = "Permission to the resource is prohibited"),
+        @ApiResponse(responseCode = "403", description = "Access to the resource is prohibited")})
 class CommentController {
 
     private final CommentService commentService;
@@ -31,12 +35,13 @@ class CommentController {
     private final ModelMapper modelMapper;
 
     @GetMapping(path = "/comments")
-    @ApiOperation(value = "Find Post's Comments by Post Id", notes = "Provide a Post's id to look up specific Comments")
+    @Operation(summary = "Find Post's Comments by Post Id", description = "Provide a Post's id to look up specific Comments",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Post's comments found", response = PostsCommentsModel.class),
-            @ApiResponse(code = 400, message = "Invalid Post's id supplied", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "Post's comments found"),
+            @ApiResponse(responseCode = "400", description = "Invalid Post's id supplied")})
     Mono<ResponseEntity<PostsCommentsModel>> getPostsComments(
-            @ApiParam(value = "Id of the Post's Comments being looked up", name = "postId", type = "string",
+            @Parameter(description = "Id of the Post's Comments being looked up", name = "postId",
                     required = true, example = "id")
             @PathVariable("postId") String postId) {
 
@@ -48,16 +53,17 @@ class CommentController {
     }
 
     @PostMapping(path = "/comments")
-    @ApiOperation(value = "Add a comment to the post", notes = "Provide a Post's id")
+    @Operation(summary = "Add a comment to the post", description = "Provide a Post's id",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 201, message = "Successfully added comment", response = CommentModel.class),
-            @ApiResponse(code = 400, message = "Incorrectly entered data", response = ErrorResponse.class),
-            @ApiResponse(code = 404, message = "Could not find Post with provided id", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "201", description = "Successfully added comment"),
+            @ApiResponse(responseCode = "400", description = "Incorrectly entered data"),
+            @ApiResponse(responseCode = "404", description = "Could not find Post with provided id")})
     Mono<ResponseEntity<CommentModel>> addCommentToPost(
-            @ApiParam(value = "Id of the Post being commented", name = "postId", type = "string", required = true, example = "id")
+            @Parameter(description = "Id of the Post being commented", name = "postId", required = true, example = "id")
             @PathVariable("postId") String postId,
-            @ApiParam(value = "Comment content", name = "comment", required = true) @RequestBody @Valid CommentDTO commentDTO,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+            @Parameter(description = "Comment content", name = "comment", required = true) @RequestBody @Valid CommentDTO commentDTO,
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMap(username -> commentService.addComment(postId, username, commentDTO))
@@ -68,18 +74,19 @@ class CommentController {
     }
 
     @PutMapping(path = "/comments/{id}")
-    @ApiOperation(value = "Update a comment in the post", notes = "Provide a Post's and Comment's ids")
+    @Operation(summary = "Update a comment in the post", description = "Provide a Post's and Comment's ids",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully updated comment", response = CommentModel.class),
-            @ApiResponse(code = 400, message = "Invalid Post's or Comment's id supplied or incorrectly entered data"),
-            @ApiResponse(code = 404, message = "Could not find Post or Comment with provided ids", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "Successfully updated comment"),
+            @ApiResponse(responseCode = "400", description = "Invalid Post's or Comment's id supplied or incorrectly entered data"),
+            @ApiResponse(responseCode = "404", description = "Could not find Post or Comment with provided ids")})
     Mono<ResponseEntity<CommentModel>> updateCommentInPost(
-            @ApiParam(value = "Id of the Post Comment's being updated", name = "postId", type = "string", required = true, example = "id")
+            @Parameter(description = "Id of the Post Comment's being updated", name = "postId", required = true, example = "id")
             @PathVariable("postId") String postId,
-            @ApiParam(value = "Id of the Comment being updated", name = "id", type = "string", required = true, example = "id")
+            @Parameter(description = "Id of the Comment being updated", name = "id", required = true, example = "id")
             @PathVariable("id") String id,
-            @ApiParam(value = "Updated comment content", name = "comment", required = true) @RequestBody @Valid CommentDTO commentDTO,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader
+            @Parameter(description = "Updated comment content", name = "comment", required = true) @RequestBody @Valid CommentDTO commentDTO,
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
@@ -90,17 +97,18 @@ class CommentController {
 
     @DeleteMapping(path = "/comments/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // Added to remove the default 200 status added by Swagger
-    @ApiOperation(value = "Delete a comment", notes = "Provide a Post's and Comment's ids")
+    @Operation(summary = "Delete a comment", description = "Provide a Post's and Comment's ids",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successfully deleted a comment"),
-            @ApiResponse(code = 400, message = "Invalid Post's or Comment's id supplied"),
-            @ApiResponse(code = 404, message = "Could not find Post or Comment with provided ids", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "204", description = "Successfully deleted a comment"),
+            @ApiResponse(responseCode = "400", description = "Invalid Post's or Comment's id supplied"),
+            @ApiResponse(responseCode = "404", description = "Could not find Post or Comment with provided ids")})
     Mono<ResponseEntity<Void>> deleteCommentInPost(
-            @ApiParam(value = "Id of the Post Comment's being deleted", name = "postId", type = "string", required = true, example = "id")
+            @Parameter(description = "Id of the Post Comment's being deleted", name = "postId", required = true, example = "id")
             @PathVariable("postId") String postId,
-            @ApiParam(value = "Id of the Comment being deleted", name = "id", type = "string", required = true, example = "id")
+            @Parameter(description = "Id of the Comment being deleted", name = "id", required = true, example = "id")
             @PathVariable("id") String id,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMap((username) -> commentService.deleteComment(id, postId, username))
