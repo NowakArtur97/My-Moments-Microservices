@@ -13,4 +13,8 @@ export class CommentComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  getFormatedDate = (): string =>
+    // DD/MM/YYYY
+    this.comment.createDate.toLocaleDateString('pt-PT');
 }
