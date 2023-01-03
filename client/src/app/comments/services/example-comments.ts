@@ -11,7 +11,8 @@ function randomDate(): Date {
 const EXAMPLE_COMMENTS: Comment[] = [
   {
     id: '115b9b41-d03f-4642-9317-bf2b68155be6',
-    content: 'Great!!!',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et ligula non metus condimentum consectetur. Nullam sodales aliquet purus at tempor. Sed malesuada dolor sed libero sodales blandit. Donec id odio sed elit consequat finibus. Mauris mollis feugiat nibh nec vestibulum. Sed nisi nisi, commodo vitae erat at, viverra dapibus dui. Nulla facilisi. Morbi bibendum fringilla pretium. Cras at iaculis ligula, in fringilla justo. Curabitur feugiat justo nec lorem mattis efficitur. Vivamus suscipit nisl quam, eu varius nisl pellentesque vitae.',
     author: 'user1',
     createDate: randomDate(),
     modifyDate: randomDate(),
@@ -47,6 +48,34 @@ const EXAMPLE_COMMENTS: Comment[] = [
   {
     id: 'd10b2846-b951-46c8-8bfe-c0ca16918912',
     content: 'Great!!!',
+    author: 'user1',
+    createDate: randomDate(),
+    modifyDate: randomDate(),
+  },
+  {
+    id: 'd10b2846-b951-46a8-8bfe-c0ca16918912',
+    content: 'Great!!! Great!!! Great!!!',
+    author: 'user1',
+    createDate: randomDate(),
+    modifyDate: randomDate(),
+  },
+  {
+    id: 'd10b2846-b951-46a8-8bfe-c0ca16918912',
+    content: 'Great!!! Great!!! Great!!!',
+    author: 'user1',
+    createDate: randomDate(),
+    modifyDate: randomDate(),
+  },
+  {
+    id: 'd10b2846-b951-46a8-8bfe-c0ca16918912',
+    content: 'Great!!! Great!!! Great!!!',
+    author: 'user1',
+    createDate: randomDate(),
+    modifyDate: randomDate(),
+  },
+  {
+    id: 'd10b2846-b951-46a8-8bfe-c0ca16918912',
+    content: 'Great!!! Great!!! Great!!!',
     author: 'user1',
     createDate: randomDate(),
     modifyDate: randomDate(),

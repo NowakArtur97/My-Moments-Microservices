@@ -33,9 +33,15 @@ export class CommentsComponent implements OnInit, OnChanges {
     this.commentService.getComments(this.id);
   }
 
-  getStyles(): { height: string; width: string } {
+  getSize(): { height: string; width: string } {
     return {
       height: `${this.startHeight}px`,
+      width: `${this.startWidth}px`,
+    };
+  }
+
+  getCommentWidth(): { width: string } {
+    return {
       width: `${this.startWidth}px`,
     };
   }
