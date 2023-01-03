@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { CommentService } from 'src/app/comments/services/comments.service';
+import { CommentService } from 'src/app/comment/services/comments.service';
 
 import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
