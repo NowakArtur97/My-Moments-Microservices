@@ -168,6 +168,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }
   }
 
+  // TODO: Fix padding of last element after rotation
   private removePaddingFix = (): void => this.setPaddingOfLastElement('0');
 
   private setPaddingOfLastElement(paddingRight: string): void {

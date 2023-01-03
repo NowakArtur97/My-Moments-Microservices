@@ -2,13 +2,18 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+
+  height: 14vh;
 }
+
 .comment__author_photo_wrapper {
   flex-basis: 20%;
 }
+
 .comment__data {
   flex-basis: 80%;
 }
+
 .comment__author_photo {
   height: 32px;
   width: 32px;

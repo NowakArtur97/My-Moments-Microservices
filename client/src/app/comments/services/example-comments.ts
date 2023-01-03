@@ -51,6 +51,13 @@ const EXAMPLE_COMMENTS: Comment[] = [
     createDate: randomDate(),
     modifyDate: randomDate(),
   },
+  {
+    id: 'd10b2846-b951-46a8-8bfe-c0ca16918912',
+    content: 'Great!!! Great!!! Great!!!',
+    author: 'user1',
+    createDate: randomDate(),
+    modifyDate: randomDate(),
+  },
 ];
 
 export default EXAMPLE_COMMENTS;
