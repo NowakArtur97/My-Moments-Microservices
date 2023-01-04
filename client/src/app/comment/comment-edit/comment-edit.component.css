@@ -11,3 +11,57 @@
   font-size: inherit;
   text-align: center;
 }
+
+.comment__add_form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+
+  padding: 1% 0;
+}
+
+.comment__add_button_text {
+  font-size: 0.75em;
+}
+
+.comment__add_button {
+  flex-basis: 30%;
+
+  padding: 1% 2%;
+  border: 1em hsl(0, 0%, 7%);
+  background-color: hsl(0, 0%, 7%);
+
+  font-size: 0.6em;
+  color: hsl(0, 0%, 100%);
+
+  transition: background-color 0.3s, color 0.3s;
+
+  cursor: pointer;
+}
+
+.comment__add_button:hover {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 7%);
+}
+
+@media (min-height: 480px) {
+  .comment__add_button_text {
+    font-size: 0.9em;
+  }
+
+  .comment__add_button {
+    font-size: 0.75em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .comment__add_button_text {
+    font-size: 1.15em;
+  }
+
+  .comment__add_button {
+    font-size: 1em;
+  }
+}
