@@ -12,13 +12,12 @@ import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
 import Post from '../models/post.model';
 import PostsResponse from '../models/posts-response.model';
-import EXAMPLE_POSTS from './example-posts';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
-  // myPosts = new BehaviorSubject<Post[]>([]);
+  myPosts = new BehaviorSubject<Post[]>([]);
   // TODO: DELETE
-  myPosts = new BehaviorSubject<Post[]>(EXAMPLE_POSTS);
+  // myPosts = new BehaviorSubject<Post[]>(EXAMPLE_POSTS);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient);

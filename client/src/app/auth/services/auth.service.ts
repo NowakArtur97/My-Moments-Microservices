@@ -17,7 +17,7 @@ export class AuthService extends HttpService {
   authError = new BehaviorSubject<ErrorResponse | null>(null);
   authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>({
     token:
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjcyODkxMzIzLCJpYXQiOjE2NzI4MTkzMjN9.gJDTpV35gxQuzhLgX59TgW229AfgKeA_A54Ohrn6Bfk',
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjcyOTI3MzEyLCJpYXQiOjE2NzI4NTUzMTJ9.SnCMgZuLPMQ9duUvGtCgjaTKvdUQ_Up3Rad7UC_IuNU',
     expirationTimeInMilliseconds: 72000000,
   });
   // authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);

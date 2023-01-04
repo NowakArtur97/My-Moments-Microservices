@@ -1,13 +1,4 @@
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
 import PostElement from '../models/post-element.model';
@@ -19,7 +10,7 @@ import { PostService } from '../services/post.service';
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.css'],
 })
-export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class PostsComponent implements OnInit, AfterViewChecked {
   @ViewChild('centerMarker') centerMarker!: ElementRef<HTMLDivElement>;
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
   @ViewChildren('postsElements') postElements!: QueryList<ElementRef>;
@@ -33,43 +24,35 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
   ) {}
 
   // TODO: DELETE
+  // ngOnInit(): void {
+  //   this.postService.myPosts.subscribe((posts) => {
+  //     const postsWithMappedImages = this.postService
+  //       .mapBinaryToJpgs(posts)
+  //       .map((post) => ({
+  //         ...post,
+  //         photos: this.shuffleArray(post.photos),
+  //       }));
+  //     this.posts = this.postService.mapPostsToElements(postsWithMappedImages);
+  //     if (this.posts.length > 1) {
+  //       this.posts[this.posts.length - 1].isCurrentlyLastElement = true;
+  //     }
+  //   });
+  // }
+
   ngOnInit(): void {
     this.postService.myPosts.subscribe((posts) => {
-      const postsWithMappedImages = this.postService
-        .mapBinaryToJpgs(posts)
-        .map((post) => ({
-          ...post,
-          photos: this.shuffleArray(post.photos),
-        }));
-      this.posts = this.postService.mapPostsToElements(postsWithMappedImages);
+      this.posts = this.postService.mapPostsToElements(posts);
       if (this.posts.length > 1) {
         this.posts[this.posts.length - 1].isCurrentlyLastElement = true;
       }
     });
   }
 
-  // ngOnInit(): void {
-  //   this.postService.myPosts.subscribe((posts) => {
-  //     this.posts = posts.map((post) => ({
-  //       ...post,
-  //       currentPhotoIndex: 0,
-  //       isActive: false,
-  //       isCurrentlyLastElement: false,
-  //     }));
-  //     this.posts[this.posts.length - 1].isCurrentlyLastElement = true;
-  //   });
-  // }
-
-  ngAfterViewInit(): void {
-    this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
-    this.setActivePost(0);
-  }
-
-  // TODO: DELETE?
   ngAfterViewChecked(): void {
-    // if (this.postElements.length > 1) {
-    //   this.previousActiveElement = this.posts[this.postElements.length - 1];
-    // }
+    this.clickAndDragToScrollService.scrolledElement = this.postsContainer;
+    if (this.postElements.length > 0) {
+      this.setActivePost();
+    }
   }
 
   onStartScroll = (event: MouseEvent): void =>
@@ -85,11 +68,11 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.setActivePost();
   }
 
-  setActivePost(center: number = this.calculateCenterPositionOfPosts()): void {
-    if (this.posts.length === 0) {
+  setActivePost(): void {
+    if (this.postElements.length === 0) {
       return;
     }
-    const activeElement = this.choseActivePost(center);
+    const activeElement = this.choseActivePost();
     if (this.previousActiveElement !== activeElement) {
       this.posts.forEach((post) => {
         post.state = PostState.INACTIVE;
@@ -103,9 +86,8 @@ export class PostsComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
   }
 
-  private choseActivePost(
-    center: number = this.calculateCenterPositionOfPosts()
-  ): PostElement {
+  private choseActivePost(): PostElement {
+    const center = this.calculateCenterPositionOfPosts();
     const postElement = this.postElements
       .map((element) => element as ElementRef)
       .reduce((previousElement, currentElement) => {

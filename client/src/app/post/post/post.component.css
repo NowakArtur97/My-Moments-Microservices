@@ -6,6 +6,8 @@
   color: hsl(0, 0%, 7%);
 
   transform-origin: center;
+
+  cursor: pointer;
 }
 
 .post__data {
