@@ -6,11 +6,11 @@
       alt="comment author image"
     />
   </div>
-  <div class="comment__data">
-    <form class="comment__add_form">
+  <form appOnClickStopPropagation class="comment__data">
+    <div class="comment__add_button_wrapper">
       <p class="comment__add_button_text">New Comment</p>
       <button type="submit" class="comment__add_button">Submit</button>
-    </form>
+    </div>
     <div class="comment__content">
       <input
         class="comment__content_input"
@@ -22,5 +22,5 @@
         placeholder="Your message"
       />
     </div>
-  </div>
+  </form>
 </div>
