@@ -10,7 +10,7 @@ import EXAMPLE_COMMENTS from '../services/example-comments';
   styleUrls: ['./comments.component.css'],
 })
 export class CommentsComponent implements OnInit, OnChanges {
-  @Input() id!: string;
+  @Input() postId!: string;
   @Input() startHeight!: number;
   @Input() startWidth!: number;
   @ViewChild('commentsElement') commentsElement!: ElementRef<HTMLDivElement>;
@@ -27,10 +27,10 @@ export class CommentsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.id === undefined) {
+    if (this.postId === undefined) {
       return;
     }
-    this.commentService.getComments(this.id);
+    this.commentService.getComments(this.postId);
   }
 
   getSize(): { height: string; width: string } {

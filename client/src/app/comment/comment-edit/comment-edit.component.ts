@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+
+import CommentDTO from '../models/comment.dto';
+import { CommentService } from '../services/comments.service';
 
 @Component({
   selector: 'app-comment-edit',
@@ -9,7 +13,18 @@ import { Component, OnInit } from '@angular/core';
   ],
 })
 export class CommentEditComponent implements OnInit {
-  constructor() {}
+  @Input() postId!: string;
+  @ViewChild('commentForm') commentForm!: NgForm;
+
+  commentDTO: CommentDTO = {
+    content: '',
+  };
+
+  constructor(private commentService: CommentService) {}
 
   ngOnInit(): void {}
+
+  onAddComment(): void {
+    this.commentService.addComment(this.postId, this.commentDTO);
+  }
 }

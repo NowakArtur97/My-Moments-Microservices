@@ -31,6 +31,15 @@ export default abstract class HttpService {
     return multipartData;
   }
 
+  protected logErrors(httpErrorResponse: HttpErrorResponse): void {
+    if (this.isErrorResponse(httpErrorResponse)) {
+      console.log(true);
+      console.log(httpErrorResponse as HttpErrorResponse);
+    } else {
+      console.log(httpErrorResponse);
+    }
+  }
+
   protected isErrorResponse = (httpErrorResponse: HttpErrorResponse): boolean =>
     (httpErrorResponse.error as ErrorResponse)?.errors !== undefined;
 }

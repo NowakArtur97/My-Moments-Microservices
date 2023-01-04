@@ -50,7 +50,7 @@
   </div>
   <app-comments
     *ngIf="areCommentsVisible"
-    [id]="post.id"
+    [postId]="post.id"
     [startHeight]="startHeight"
     [startWidth]="startWidth"
     (click)="onShowComments()"

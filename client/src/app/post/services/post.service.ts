@@ -36,7 +36,7 @@ export class PostService extends HttpService {
       .subscribe(
         (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
         (httpErrorResponse: HttpErrorResponse) =>
-          this.handleErrors(httpErrorResponse)
+          this.logErrors(httpErrorResponse)
       );
   }
 
@@ -49,7 +49,7 @@ export class PostService extends HttpService {
         (postsResponse: PostsResponse) =>
           this.handleSuccessfullPostsResponse(postsResponse.posts),
         (httpErrorResponse: HttpErrorResponse) =>
-          this.handleErrors(httpErrorResponse)
+          this.logErrors(httpErrorResponse)
       );
   }
 
@@ -80,13 +80,4 @@ export class PostService extends HttpService {
         photos: post.photos.map((photo) => `data:image/jpg;base64,${photo}`),
       };
     });
-
-  private handleErrors(httpErrorResponse: HttpErrorResponse): void {
-    if (this.isErrorResponse(httpErrorResponse)) {
-      console.log(true);
-      console.log(httpErrorResponse as HttpErrorResponse);
-    } else {
-      console.log(httpErrorResponse);
-    }
-  }
 }

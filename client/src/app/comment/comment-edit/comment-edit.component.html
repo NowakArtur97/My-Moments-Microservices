@@ -6,16 +6,27 @@
       alt="comment author image"
     />
   </div>
-  <form appOnClickStopPropagation class="comment__data">
+  <form
+    appOnClickStopPropagation
+    #commentForm="ngForm"
+    (ngSubmit)="onAddComment()"
+    class="comment__data"
+  >
     <div class="comment__add_button_wrapper">
       <p class="comment__add_button_text">New Comment</p>
-      <button type="submit" class="comment__add_button">Submit</button>
+      <button
+        *ngIf="commentForm.valid"
+        type="submit"
+        class="comment__add_button"
+      >
+        Submit
+      </button>
     </div>
     <div class="comment__content">
       <input
         class="comment__content_input"
+        [(ngModel)]="commentDTO.content"
         required
-        appNoWhiteSpaces
         type="text"
         name="comment_content"
         id="comment_content"

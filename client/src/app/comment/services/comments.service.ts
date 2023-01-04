@@ -5,6 +5,7 @@ import BACKEND_URLS from 'src/app/backend-urls';
 import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
+import CommentDTO from '../models/comment.dto';
 import Comment from '../models/comment.model';
 import CommentsResponse from '../models/comments-response.model';
 import EXAMPLE_COMMENTS from './example-comments';
@@ -30,11 +31,29 @@ export class CommentService extends HttpService {
         (commentsResponse: CommentsResponse) =>
           this.comments.next(commentsResponse.comments),
         (httpErrorResponse: HttpErrorResponse) => {
-          // console.log(httpErrorResponse);
           // TODO: DELETE
           this.comments.next(EXAMPLE_COMMENTS);
+          this.logErrors(httpErrorResponse);
           // this.comments.next([]);
         }
+      );
+  }
+
+  addComment(postId: string, commentDTO: CommentDTO): void {
+    this.httpClient
+      .post<Comment>(
+        `${environment.commentsServiceUrl}${BACKEND_URLS.comments.postComments(
+          postId
+        )}`,
+        commentDTO
+      )
+      .subscribe(
+        (newComment: Comment) => {
+          console.log(newComment);
+          this.comments.next([...this.comments.getValue(), newComment]);
+        },
+        (httpErrorResponse: HttpErrorResponse) =>
+          this.logErrors(httpErrorResponse)
       );
   }
 }
