@@ -74,7 +74,7 @@ services:
     ports:
       - "27021:27017"
     volumes:
-      - ./data/db:/data/db
+      - ./comment-data/db:/comment-data/db
     container_name: mongo-db-comment-service
     cpus: 0.5
     mem_limit: 256M
@@ -87,7 +87,7 @@ services:
     ports:
       - "27019:27017"
     volumes:
-      - ./data/db:/data/db
+      - ./post-data/db:/post-data/db
     container_name: mongo-db-post-service
     cpus: 0.5
     mem_limit: 256M
