@@ -12,7 +12,7 @@ services:
   comment-service:
     restart: on-failure
     build:
-        context: .
+      context: .
     networks:
       - my-moments
     ports:
@@ -22,7 +22,7 @@ services:
     volumes:
       - /comment-service/dir:/app
     depends_on:
-      # - post-service
+      - post-service
       - mongo-db-comment-service
       - rabbitmq
     container_name: comment-service
@@ -30,25 +30,25 @@ services:
     mem_limit: 256M
     mem_reservation: 64M
 
-  # post-service:
-  #   restart: on-failure
-   # build:
-    #  context: ../post-service
-     # dockerfile: Dockerfile
-  #   image: post-service:latest
-  #   networks:
-  #     - my-moments
-  #   ports:
-  #     - "8082:8082"
-  #   volumes:
-  #     - /post-service/dir:/app
-  #   depends_on:
-  #     - configuration-service
-  #     - mongo-db-post-service
-  #   container_name: post-service
-  #   cpus: 0.5
-  #   mem_limit: 256M
-  #   mem_reservation: 64M
+  post-service:
+    restart: on-failure
+    build:
+      context: ../post-service
+      dockerfile: Dockerfile
+    image: post-service:latest
+    networks:
+      - my-moments
+    ports:
+      - "8082:8082"
+    volumes:
+      - /post-service/dir:/app
+    depends_on:
+      - configuration-service
+      - mongo-db-post-service
+    container_name: post-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   configuration-service:
     restart: on-failure
@@ -80,18 +80,18 @@ services:
     mem_limit: 256M
     mem_reservation: 64M
 
-  # mongo-db-post-service:
-  #   image: mongo:3.6
-  #   networks:
-  #     - my-moments
-  #   ports:
-  #     - "27019:27017"
-  #   volumes:
-  #     - ./data/db:/data/db
-  #   container_name: mongo-db-post-service
-  #   cpus: 0.5
-  #   mem_limit: 256M
-  #   mem_reservation: 64M
+  mongo-db-post-service:
+    image: mongo:3.6
+    networks:
+      - my-moments
+    ports:
+      - "27019:27017"
+    volumes:
+      - ./data/db:/data/db
+    container_name: mongo-db-post-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
