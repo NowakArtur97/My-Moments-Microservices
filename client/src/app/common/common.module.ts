@@ -8,6 +8,7 @@ import { BackgroundTilesComponent } from './background/background-tiles/backgrou
 import { BackgroundComponent } from './background/background.component';
 import { MustMatchDirective } from './directives/must-match.directive';
 import { NoWhiteSpacesDirective } from './directives/no-white-spaces.directive';
+import { NotBlankDirective } from './directives/not-blank.directive';
 import { NotIncludeDirective } from './directives/not-include.directive';
 import { OnClickStopPropagation } from './directives/on-click-stop-propagation.directive';
 
@@ -15,6 +16,7 @@ const validationDirectives = [
   NotIncludeDirective,
   MustMatchDirective,
   NoWhiteSpacesDirective,
+  NotBlankDirective,
 ];
 
 @NgModule({

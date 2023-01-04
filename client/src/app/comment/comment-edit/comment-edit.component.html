@@ -24,9 +24,9 @@
     </div>
     <div class="comment__content">
       <input
-        class="comment__content_input"
         [(ngModel)]="commentDTO.content"
-        required
+        appNotBlank
+        class="comment__content_input"
         type="text"
         name="comment_content"
         id="comment_content"
