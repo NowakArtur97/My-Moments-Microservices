@@ -6,7 +6,7 @@ import com.nowakArtur97.myMoments.commentService.feature.resource.CommentDTO;
 import com.nowakArtur97.myMoments.commentService.feature.resource.CommentModel;
 import com.nowakArtur97.myMoments.commentService.testUtil.enums.ObjectType;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 public class CommentTestBuilder {
@@ -19,9 +19,9 @@ public class CommentTestBuilder {
 
     private String relatedPostId;
 
-    private LocalDateTime createDate = LocalDateTime.now();
+    private Date createDate = new Date();
 
-    private LocalDateTime modifyDate = LocalDateTime.now();
+    private Date modifyDate = new Date();
 
     public CommentTestBuilder withId(String id) {
 
@@ -95,8 +95,8 @@ public class CommentTestBuilder {
 
         relatedPostId = null;
 
-        createDate = LocalDateTime.now();
+        createDate = new Date();
 
-        modifyDate = LocalDateTime.now();
+        modifyDate = new Date();
     }
 }

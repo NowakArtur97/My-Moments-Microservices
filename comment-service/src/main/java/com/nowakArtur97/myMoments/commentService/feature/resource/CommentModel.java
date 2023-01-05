@@ -4,7 +4,7 @@ import com.nowakArtur97.myMoments.commentService.feature.document.Comment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
@@ -16,18 +16,18 @@ import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 @Schema(description = "Details about the Comment")
 public class CommentModel implements Comment {
 
-   @Schema(accessMode = READ_ONLY, description = "The unique id of the Comment")
+    @Schema(accessMode = READ_ONLY, description = "The unique id of the Comment")
     private String id;
 
-   @Schema(accessMode = READ_ONLY, description = "The comment's content")
+    @Schema(accessMode = READ_ONLY, description = "The comment's content")
     private String content;
 
-   @Schema(accessMode = READ_ONLY, description = "The comment's author")
+    @Schema(accessMode = READ_ONLY, description = "The comment's author")
     private String author;
 
-   @Schema(accessMode = READ_ONLY, description = "The comment's creation date")
-    private LocalDateTime createDate;
+    @Schema(accessMode = READ_ONLY, description = "The comment's creation date")
+    private Date createDate;
 
-   @Schema(accessMode = READ_ONLY, description = "The comment's modification date")
-    private LocalDateTime modifyDate;
+    @Schema(accessMode = READ_ONLY, description = "The comment's modification date")
+    private Date modifyDate;
 }
