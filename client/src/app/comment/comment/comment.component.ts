@@ -16,5 +16,5 @@ export class CommentComponent implements OnInit {
 
   getFormatedDate = (): string =>
     // DD/MM/YYYY
-    this.comment.createDate.toLocaleDateString('pt-PT');
+    new Date(this.comment.createDate).toLocaleDateString('pt-PT');
 }
