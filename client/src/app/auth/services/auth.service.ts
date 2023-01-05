@@ -15,9 +15,10 @@ import UserRegistrationDTO from '../models/user-registration.dto';
 @Injectable({ providedIn: 'root' })
 export class AuthService extends HttpService {
   authError = new BehaviorSubject<ErrorResponse | null>(null);
+  // TODO: DELETE
   authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>({
     token:
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjcyOTI3MzEyLCJpYXQiOjE2NzI4NTUzMTJ9.SnCMgZuLPMQ9duUvGtCgjaTKvdUQ_Up3Rad7UC_IuNU',
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjcyOTc4NjU1LCJpYXQiOjE2NzI5MDY2NTV9.8RmSEtKtpIyXEs6mvnb9913PMyNQfIr7in60RItUEIY',
     expirationTimeInMilliseconds: 72000000,
   });
   // authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);

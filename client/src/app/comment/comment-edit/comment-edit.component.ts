@@ -26,5 +26,6 @@ export class CommentEditComponent implements OnInit {
 
   onAddComment(): void {
     this.commentService.addComment(this.postId, this.commentDTO);
+    this.commentForm.resetForm();
   }
 }

@@ -1,15 +1,14 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import Comment from '../models/comment.model';
 import { CommentService } from '../services/comments.service';
-import EXAMPLE_COMMENTS from '../services/example-comments';
 
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css'],
 })
-export class CommentsComponent implements OnInit, OnChanges {
+export class CommentsComponent implements OnInit {
   @Input() postId!: string;
   @Input() startHeight!: number;
   @Input() startWidth!: number;
@@ -21,16 +20,10 @@ export class CommentsComponent implements OnInit, OnChanges {
   // TODO: subscribe/unsubscribe onDestroy?
   ngOnInit(): void {
     this.commentService.comments.subscribe((comments) => {
+      this.comments = comments;
       // TODO: DELETE
-      this.comments = EXAMPLE_COMMENTS;
+      // this.comments = EXAMPLE_COMMENTS;
     });
-  }
-
-  ngOnChanges(): void {
-    if (this.postId === undefined) {
-      return;
-    }
-    this.commentService.getComments(this.postId);
   }
 
   getSize(): { height: string; width: string } {
