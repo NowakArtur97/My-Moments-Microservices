@@ -16,9 +16,10 @@ export class CommentEditComponent implements OnInit {
   @Input() postId!: string;
   @ViewChild('commentForm') commentForm!: NgForm;
 
-  commentDTO: CommentDTO = {
+  private readonly DEFAULT_COMMENT_VALUE = {
     content: '',
   };
+  commentDTO: CommentDTO = { ...this.DEFAULT_COMMENT_VALUE };
 
   constructor(private commentService: CommentService) {}
 
@@ -27,5 +28,6 @@ export class CommentEditComponent implements OnInit {
   onAddComment(): void {
     this.commentService.addComment(this.postId, this.commentDTO);
     this.commentForm.resetForm();
+    this.commentDTO = { ...this.DEFAULT_COMMENT_VALUE };
   }
 }
