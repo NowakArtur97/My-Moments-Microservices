@@ -12,12 +12,21 @@ import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
 import Post from '../models/post.model';
 import PostsResponse from '../models/posts-response.model';
+import EXAMPLE_POSTS from './example-posts';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
-  myPosts = new BehaviorSubject<Post[]>([]);
+  // myPosts = new BehaviorSubject<Post[]>([]);
   // TODO: DELETE
-  // myPosts = new BehaviorSubject<Post[]>(EXAMPLE_POSTS);
+  myPosts = new BehaviorSubject<Post[]>(
+    this.mapBinaryToJpgs(
+      [...EXAMPLE_POSTS].map((post) => {
+        return { ...post, photos: this.shuffleArray([...post.photos]) };
+      })
+    ).map((post) => {
+      return { ...post, currentPhotoIndex: 0 };
+    })
+  );
 
   constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient);
@@ -47,8 +56,14 @@ export class PostService extends HttpService {
       .subscribe(
         (postsResponse: PostsResponse) =>
           this.handleSuccessfullPostsResponse(postsResponse.posts),
-        (httpErrorResponse: HttpErrorResponse) =>
-          this.logErrors(httpErrorResponse)
+        (httpErrorResponse: HttpErrorResponse) => {
+          this.logErrors(httpErrorResponse);
+          // TODO: DELETE
+          // const mockPosts: Post[] = [...EXAMPLE_POSTS].map((post) => {
+          // return { ...post, photos: this.shuffleArray([...post.photos]) };
+          // });
+          // this.handleSuccessfullPostsResponse(mockPosts);
+        }
       );
   }
 
@@ -71,12 +86,24 @@ export class PostService extends HttpService {
     this.router.navigate([`/${APP_ROUTES.post.posts}`]);
   }
 
-  // TODO: make private
-  mapBinaryToJpgs = (posts: Post[]): Post[] =>
-    posts.map((post: Post) => {
+  // TODO: make private and revert changes
+  mapBinaryToJpgs(posts: Post[]): Post[] {
+    return posts.map((post: Post) => {
       return {
         ...post,
         photos: post.photos.map((photo) => `data:image/jpg;base64,${photo}`),
       };
     });
+  }
+
+  // TODO: DELETE
+  private shuffleArray(array: any[]): any[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    return array;
+  }
 }

@@ -110,15 +110,4 @@ export class PostsComponent implements OnInit, AfterViewChecked {
   private calculateCenterPositionOfPosts = (): number =>
     this.centerMarker.nativeElement.getBoundingClientRect().x +
     this.postsContainer.nativeElement.scrollLeft;
-
-  // TODO: DELETE
-  private shuffleArray(array: any[]): any[] {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-    return array;
-  }
 }

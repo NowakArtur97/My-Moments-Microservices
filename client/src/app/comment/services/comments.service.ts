@@ -8,14 +8,13 @@ import { environment } from 'src/environments/environment.local';
 import CommentDTO from '../models/comment.dto';
 import Comment from '../models/comment.model';
 import CommentsResponse from '../models/comments-response.model';
+import EXAMPLE_COMMENTS from './example-comments';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService extends HttpService {
-  comments = new BehaviorSubject<Comment[]>([]);
+  // comments = new BehaviorSubject<Comment[]>([]);
   // TODO: DELETE
-  // comments = new BehaviorSubject<Comment[]>(EXAMPLE_COMMENTS);
-  // TODO: DELETE
-  // comments = new BehaviorSubject<Comment[]>(EXAMPLE_COMMENTS);
+  comments = new BehaviorSubject<Comment[]>(EXAMPLE_COMMENTS);
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -33,9 +32,9 @@ export class CommentService extends HttpService {
           this.comments.next(commentsResponse.comments),
         (httpErrorResponse: HttpErrorResponse) => {
           // TODO: DELETE
-          // this.comments.next(EXAMPLE_COMMENTS);
+          this.comments.next(EXAMPLE_COMMENTS);
           this.logErrors(httpErrorResponse);
-          this.comments.next([]);
+          // this.comments.next([]);
         }
       );
   }
