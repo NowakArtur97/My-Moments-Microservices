@@ -1,13 +1,16 @@
-.post {
+.post__wrapper {
   height: 84vh;
 
   font-size: 1.5em;
   font-weight: 600;
   color: hsl(0, 0%, 7%);
 
-  transform-origin: center;
-
   cursor: pointer;
+}
+
+.post {
+  height: 84vh;
+  transform-origin: center;
 }
 
 .post__data {

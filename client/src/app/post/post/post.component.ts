@@ -40,9 +40,8 @@ import PostState from '../models/post-state.enum';
 export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() post!: PostElement;
   @ViewChild('postElement') postElement!: ElementRef<HTMLDivElement>;
-  @ViewChild('postData') postData!: ElementRef<HTMLDivElement>;
 
-  private readonly RIGHT_PADDING_FIX = 22;
+  private readonly RIGHT_PADDING_FIX = 27;
   private readonly FULL_ANIMATION_TIME = 1500;
   private readonly HALF_ANIMATION_TIME = this.FULL_ANIMATION_TIME / 2;
 
@@ -86,7 +85,6 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.post.state === PostState.ACTIVE) {
       const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
       if (this.post.isCurrentlyLastElement) {
-        this.removePaddingFix();
         this.startWidth =
           boundingClientRect.width -
           window.innerWidth * +`0.${this.RIGHT_PADDING_FIX}`;
@@ -135,45 +133,21 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   private setupStyles(): void {
-    if (this.postElement === undefined) {
-      return;
-    }
     if (this.post.isCurrentlyLastElement && !this.isRotating) {
       this.fixPaddingOfLastElement();
     }
   }
 
   private fixPaddingOfLastElement(): void {
-    if (this.postData === undefined) {
+    if (this.postElement === undefined) {
       return;
     }
-    const lastPost: HTMLDivElement = this.postData.nativeElement;
-    this.setPaddingOfLastElement(`${this.RIGHT_PADDING_FIX}vw`);
-    const changeButtonsWrapperChildren =
-      lastPost.children[lastPost.children.length - 1].children;
-    if (changeButtonsWrapperChildren.length === 0) {
-      return;
-    }
-    const leftChangePhotoButton = changeButtonsWrapperChildren[0];
-    if (leftChangePhotoButton) {
-      this.renderer.setStyle(leftChangePhotoButton, 'left', 'calc(2% + 11vw)');
-    }
-    const rightChangePhotoButton = changeButtonsWrapperChildren[1];
-    if (rightChangePhotoButton) {
-      this.renderer.setStyle(
-        rightChangePhotoButton,
-        'right',
-        'calc(2% + 11vw)'
-      );
-    }
-  }
-
-  // TODO: Fix padding of last element after rotation
-  private removePaddingFix = (): void => this.setPaddingOfLastElement('0');
-
-  private setPaddingOfLastElement(paddingRight: string): void {
-    const lastPost: HTMLDivElement = this.postData.nativeElement;
-    this.renderer.setStyle(lastPost, 'padding-right', paddingRight);
+    const lastPost: HTMLDivElement = this.postElement.nativeElement;
+    this.renderer.setStyle(
+      lastPost,
+      'padding-right',
+      `${this.RIGHT_PADDING_FIX}vw`
+    );
   }
 
   private changeCommentsVisibilityOnTimeout(
