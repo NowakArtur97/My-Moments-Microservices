@@ -22,6 +22,24 @@
   <div *ngIf="files.length > 0" class="post_edit__image_wrapper">
     <img #image src="#" alt="Current image" class="post_edit__image" />
     <canvas #canvas class="post_edit__canvas"></canvas>
+    <div *ngIf="files.length > 0" class="post_edit__photo_change_buttons">
+      <div
+        [ngStyle]="{ display: currentPhotoIndex > 0 ? 'flex' : 'none' }"
+        (click)="onChangeCurrentPhoto(-1)"
+        class="post_edit__photo_change_button post_edit__photo_change_button--left"
+      >
+        <
+      </div>
+      <div
+        [ngStyle]="{
+          display: currentPhotoIndex < files.length - 1 ? 'flex' : 'none'
+        }"
+        (click)="onChangeCurrentPhoto(1)"
+        class="post_edit__photo_change_button post_edit__photo_change_button--right"
+      >
+        >
+      </div>
+    </div>
     <div class="post_edit__upload_button_wrapper">
       <button (click)="onCreatePost()" class="post_edit__upload_button">
         Upload
