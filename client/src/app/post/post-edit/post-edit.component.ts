@@ -20,8 +20,8 @@ export class PostEditComponent implements OnInit {
   @ViewChildren('filterCanvas', { read: ElementRef })
   filtersCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
 
+  currentPhotoIndex = 0;
   files: ImageSnippet[] = [];
-  currentFile!: ImageSnippet;
   filters: Filter[] = [];
   allEditorSliders: EditorSlider[] = allEditorSliders;
   mainCanvasElement!: HTMLCanvasElement;
@@ -65,14 +65,20 @@ export class PostEditComponent implements OnInit {
 
   onChangeSliderValue(editorSlider: EditorSlider, value: number): void {
     this.clearContext();
-    editorSlider.apply(value, this.currentFile.contextFilters);
-    const filter = [...this.currentFile.contextFilters.values()].join(' ');
+    const currentFile = this.files[this.currentPhotoIndex];
+    editorSlider.apply(value, currentFile.contextFilters);
+    const filter = [...currentFile.contextFilters.values()].join(' ');
     this.mainCanvasContext.filter = filter;
     this.drawImageOnMainCanvasContext();
   }
 
   onCreatePost(): void {
     this.postServce.createPost(this.files);
+  }
+
+  onChangeCurrentPhoto(value: number): void {
+    this.currentPhotoIndex += value;
+    this.loadImageToCanvas();
   }
 
   private loadData(file: File): void {
@@ -92,15 +98,16 @@ export class PostEditComponent implements OnInit {
   }
 
   private loadFirstImage(): void {
-    this.currentFile = this.files[0];
+    this.currentPhotoIndex = 0;
     this.changeDetectorRef.detectChanges();
     this.loadImageToCanvas();
   }
 
   private loadImageToCanvas(): void {
     this.changeDetectorRef.detectChanges();
-    (this.mainImage
-      .nativeElement as HTMLImageElement).src = this.currentFile.src;
+    (this.mainImage.nativeElement as HTMLImageElement).src = this.files[
+      this.currentPhotoIndex
+    ].src;
     this.mainCanvasElement = this.mainImageCanvas.nativeElement;
     this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
