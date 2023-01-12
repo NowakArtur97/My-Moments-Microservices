@@ -58,9 +58,9 @@ export class PostEditComponent implements OnInit {
   }
 
   onApplyFilter(filter: Filter): void {
-    // this.clearContext();
-    // filter.apply(this.mainCanvasContext);
-    // this.drawImageOnMainCanvasContext();
+    const currentFile = this.files[this.currentPhotoIndex];
+    filter.apply(currentFile);
+    this.loadImage();
   }
 
   onChangeSliderValue(editorSlider: EditorFilter, value: number): void {
@@ -79,6 +79,9 @@ export class PostEditComponent implements OnInit {
 
   onChangeCurrentPhoto(value: number): void {
     this.currentPhotoIndex += value;
+    if (this.isInFiltersTab) {
+      this.loadFilters();
+    }
     this.loadImage();
   }
 
@@ -137,7 +140,7 @@ export class PostEditComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
         const filterCanvas = this.filtersCanvases.get(index)!;
         const filterContext = filterCanvas.nativeElement.getContext('2d')!;
-        filterContext.filter = filter.value;
+        filter.applyToContext(filterContext);
         this.drawImageOnCanvasContext(
           filterContext,
           filterCanvas.nativeElement
