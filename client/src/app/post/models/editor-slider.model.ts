@@ -1,4 +1,4 @@
-export default class EditorSlider {
+export default class EditorFilter {
   constructor(
     readonly name: string,
     readonly minValue: number,
@@ -7,12 +7,4 @@ export default class EditorSlider {
     readonly unit: string = '%'
   ) {}
   public currentValue: number = this.defaultValue;
-
-  apply(value: number, currentFilters: Map<string, string>): void {
-    this.currentValue = value;
-    currentFilters.set(
-      this.name,
-      `${this.name}(${this.currentValue}${this.unit})`
-    );
-  }
 }

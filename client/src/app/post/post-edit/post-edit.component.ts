@@ -1,9 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import allEditorSliders from '../data/editor.sliders.data';
-import allFilters from '../data/filters.data';
-import EditorSlider from '../models/editor-slider.model';
-import Filter from '../models/filter.model';
+import EditorFilter from '../models/editor-slider.model';
 import ImageSnippet from '../models/image-snippet.model';
 import { PostService } from '../services/post.service';
 
@@ -22,8 +20,8 @@ export class PostEditComponent implements OnInit {
 
   currentPhotoIndex = 0;
   files: ImageSnippet[] = [];
-  filters: Filter[] = [];
-  allEditorSliders: EditorSlider[] = allEditorSliders;
+  filters: EditorFilter[] = [];
+  editorSliders: EditorFilter[] = [];
   mainCanvasElement!: HTMLCanvasElement;
   mainCanvasContext!: CanvasRenderingContext2D;
   isInFiltersTab = false;
@@ -57,19 +55,20 @@ export class PostEditComponent implements OnInit {
     }
   }
 
-  onApplyFilter(filter: Filter): void {
-    this.clearContext();
-    filter.apply(this.mainCanvasContext);
-    this.drawImageOnMainCanvasContext();
+  onApplyFilter(filter: EditorFilter): void {
+    // this.clearContext();
+    // filter.apply(this.mainCanvasContext);
+    // this.drawImageOnMainCanvasContext();
   }
 
-  onChangeSliderValue(editorSlider: EditorSlider, value: number): void {
-    this.clearContext();
+  onChangeSliderValue(editorSlider: EditorFilter, value: number): void {
     const currentFile = this.files[this.currentPhotoIndex];
-    editorSlider.apply(value, currentFile.contextFilters);
-    const filter = [...currentFile.contextFilters.values()].join(' ');
-    this.mainCanvasContext.filter = filter;
-    this.drawImageOnMainCanvasContext();
+    const filters = currentFile.editorSliders;
+    const changedFilter = filters.find(
+      (filter) => filter.name === editorSlider.name
+    )!!;
+    changedFilter.currentValue = value;
+    this.loadImage();
   }
 
   onCreatePost(): void {
@@ -78,27 +77,31 @@ export class PostEditComponent implements OnInit {
 
   onChangeCurrentPhoto(value: number): void {
     this.currentPhotoIndex += value;
-    this.loadImageToCanvas();
+    this.loadImage();
   }
 
   private loadData(file: File): void {
     const fileReader = new FileReader();
     fileReader.onloadend = (event: any) => {
+      const sliders = allEditorSliders.map((slider) => {
+        return { ...slider } as EditorFilter;
+      });
       const imageSnippet: ImageSnippet = {
         src: event.target.result,
         file,
-        contextFilters: new Map(),
+        editorSliders: sliders,
       };
       this.files.push(imageSnippet);
       if (this.files.length === 1) {
-        this.loadFirstImage();
+        this.currentPhotoIndex = 0;
+        this.loadImage();
       }
     };
     fileReader.readAsDataURL(file);
   }
 
-  private loadFirstImage(): void {
-    this.currentPhotoIndex = 0;
+  private loadImage(): void {
+    this.editorSliders = this.files[this.currentPhotoIndex].editorSliders;
     this.changeDetectorRef.detectChanges();
     this.loadImageToCanvas();
   }
@@ -110,6 +113,12 @@ export class PostEditComponent implements OnInit {
     ].src;
     this.mainCanvasElement = this.mainImageCanvas.nativeElement;
     this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
+    const currentFile = this.files[this.currentPhotoIndex];
+    const canvasFilters = currentFile.editorSliders
+      .map((filter) => `${filter.name}(${filter.currentValue}${filter.unit})`)
+      .join(' ');
+    this.clearContext();
+    this.mainCanvasContext.filter = canvasFilters;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
       this.drawImageOnMainCanvasContext();
     };
@@ -119,13 +128,13 @@ export class PostEditComponent implements OnInit {
     let index = 0;
     this.filters = [];
     this.filtersInterval = setInterval(() => {
+      const allFilters = this.files[this.currentPhotoIndex].editorSliders;
       if (index < allFilters.length) {
         const filter = allFilters[index];
         this.filters.push(filter);
         this.changeDetectorRef.detectChanges();
         const filterCanvas = this.filtersCanvases.get(index)!;
         const context = filterCanvas.nativeElement.getContext('2d')!;
-        filter.apply(context);
         this.drawImageOnCanvasContext(context, filterCanvas.nativeElement);
         index++;
       } else {
