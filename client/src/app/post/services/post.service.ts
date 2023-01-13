@@ -7,9 +7,9 @@ import { APP_ROUTES } from 'src/app/common/const.data';
 import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
-import ImageSnippet from '../models/image-snippet.model';
 import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
+import PostDTO from '../models/post.dto';
 import Post from '../models/post.model';
 import PostsResponse from '../models/posts-response.model';
 import EXAMPLE_POSTS from './example-posts';
@@ -32,12 +32,10 @@ export class PostService extends HttpService {
     super(httpClient);
   }
 
-  createPost(imageSnippets: ImageSnippet[]): void {
-    const files = imageSnippets.map((file) => file.file);
-    const multipartData = this.createFormDataFromFiles([
-      { key: 'photos', files },
-      // TODO: add caption
-      //  { key: 'post', value: { caption: 'aaaaa' } },
+  createPost(postDTO: PostDTO): void {
+    const multipartData = this.createFormData([
+      { key: 'photos', value: postDTO.files },
+      { key: 'post', value: { caption: postDTO.caption } },
     ]);
     this.httpClient
       .post<Post>(`${environment.postServiceUrl}`, multipartData)

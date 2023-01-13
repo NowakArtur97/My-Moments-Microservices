@@ -47,6 +47,19 @@
     </div>
   </div>
   <div *ngIf="files.length > 0" class="post_edit__editor_wrapper">
+    <div class="post_edit__caption_wrapper">
+      <input
+        #captionInput
+        (click)="onFirtsCaptionClick()"
+        [(ngModel)]="postDTO.caption"
+        required
+        type="text"
+        name="post_caption"
+        id="post_caption"
+        class="post_edit__caption_input"
+        placeholder="Description"
+      />
+    </div>
     <div class="post_edit__editor_tabs">
       <div
         (click)="onChangeTab(true)"

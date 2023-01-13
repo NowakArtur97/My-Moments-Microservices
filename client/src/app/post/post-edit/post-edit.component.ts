@@ -5,6 +5,7 @@ import ALL_EDITOR_SLIDERS from '../data/editor.sliders.data';
 import EditorFilter from '../models/editor-slider.model';
 import Filter from '../models/filter.model';
 import ImageSnippet from '../models/image-snippet.model';
+import PostDTO from '../models/post.dto';
 import { PostService } from '../services/post.service';
 
 @Component({
@@ -17,9 +18,11 @@ export class PostEditComponent implements OnInit {
 
   @ViewChild('image', { static: false }) mainImage!: ElementRef;
   @ViewChild('canvas', { static: false }) mainImageCanvas!: ElementRef;
+  @ViewChild('captionInput', { static: false }) captionInput!: HTMLInputElement;
   @ViewChildren('filterCanvas', { read: ElementRef })
   filtersCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
 
+  postDTO: PostDTO = { caption: 'Description', files: [] };
   currentPhotoIndex = 0;
   files: ImageSnippet[] = [];
   filters: Filter[] = [];
@@ -29,6 +32,7 @@ export class PostEditComponent implements OnInit {
   isInFiltersTab = false;
 
   filtersInterval!: any;
+  isFirstClick: boolean = true;
 
   constructor(
     private postServce: PostService,
@@ -74,7 +78,8 @@ export class PostEditComponent implements OnInit {
   }
 
   onCreatePost(): void {
-    this.postServce.createPost(this.files);
+    this.postDTO.files = this.files.map((file) => file.file);
+    this.postServce.createPost(this.postDTO);
   }
 
   onChangeCurrentPhoto(value: number): void {
@@ -83,6 +88,13 @@ export class PostEditComponent implements OnInit {
       this.loadFilters();
     }
     this.loadImage();
+  }
+
+  onFirtsCaptionClick(): void {
+    if (this.isFirstClick) {
+      this.isFirstClick = false;
+      this.postDTO.caption = '';
+    }
   }
 
   private loadData(file: File): void {

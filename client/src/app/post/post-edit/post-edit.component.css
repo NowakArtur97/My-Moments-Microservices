@@ -7,7 +7,7 @@
   width: 100vw;
   height: 100vh;
 
-  background-color: hsl(0, 0%, 9%, 0.6);
+  background-color: hsl(0, 0%, 9%, 60%);
 
   color: hsl(0, 0%, 100%);
 }
@@ -149,6 +149,26 @@
   opacity: 0.9;
 }
 
+.post_edit__caption_input {
+  width: 100%;
+  padding: 2% 1%;
+  border: 1em hsl(0, 0%, 7%);
+  border-radius: 2%;
+
+  background-color: hsl(0, 0%, 7%, 40%);
+
+  font-size: 1.5em;
+  text-align: center;
+  color: hsl(0, 0%, 100%);
+
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.post_edit__caption_input:focus {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 7%);
+}
+
 .post_edit__editor_tabs {
   display: flex;
 
@@ -176,8 +196,8 @@
 .post_edit__editor_tab--inactive {
   font-size: 1.5em;
 
-  color: hsla(0, 0%, 100%, 0.3);
-  border-bottom: 0.2em solid hsla(0, 0%, 100%, 0.3);
+  color: hsla(0, 0%, 100%, 30%);
+  border-bottom: 0.2em solid hsla(0, 0%, 100%, 30%);
 }
 
 .post_edit__editor_content {
@@ -395,6 +415,11 @@
   .post_edit__editor_wrapper {
     flex-basis: 35%;
   }
+
+  .post_edit__caption_input {
+    border-radius: 2%;
+    font-size: 1.75em;
+  }
 }
 
 @media (min-width: 820px) {
@@ -410,6 +435,11 @@
 
   .post_edit__upload_button {
     font-size: 2.25em;
+  }
+
+  .post_edit__caption_input {
+    border-radius: 2%;
+    font-size: 2em;
   }
 
   .post_edit__editor_tab--inactive {
