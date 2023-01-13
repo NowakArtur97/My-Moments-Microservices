@@ -7,7 +7,7 @@
   width: 100vw;
   height: 100vh;
 
-  background-color: hsl(0, 0%, 9%);
+  background-color: hsl(0, 0%, 9%, 0.6);
 
   color: hsl(0, 0%, 100%);
 }
@@ -327,7 +327,7 @@
   transform: translate(-50%, -50%);
 }
 
-@media (min-width: 640px) {
+@media (min-width: 568px) {
   .post_edit__wrapper {
     flex-direction: row;
     align-items: start;
@@ -373,6 +373,20 @@
   }
 }
 
+@media (max-width: 375px) and (max-height: 812px) {
+  .post_edit__image_button_wrapper {
+    height: 25%;
+    width: 65%;
+  }
+}
+
+@media (max-width: 812px) and (max-height: 375px) {
+  .post_edit__image_button_wrapper {
+    height: 40%;
+    width: 50%;
+  }
+}
+
 @media (min-width: 640px) and (orientation: landscape) {
   .post_edit__image_wrapper {
     flex-basis: 65%;
@@ -380,27 +394,6 @@
 
   .post_edit__editor_wrapper {
     flex-basis: 35%;
-  }
-}
-
-@media (min-width: 640px) and (orientation: portrait) {
-  .post_edit__wrapper {
-    max-height: 40vh;
-    max-width: 95vw;
-  }
-}
-
-@media (min-width: 768px) and (orientation: landscape) {
-  .post_edit__wrapper {
-    max-height: 70vh;
-    max-width: 90vw;
-  }
-}
-
-@media (min-width: 768px) and (orientation: portrait) {
-  .post_edit__wrapper {
-    max-height: 40vh;
-    max-width: 95vw;
   }
 }
 
@@ -430,11 +423,6 @@
 }
 
 @media (min-width: 844px) {
-  .post_edit__wrapper {
-    max-height: 90vh;
-    max-width: 90vw;
-  }
-
   .post_edit__image_wrapper {
     flex-basis: 70%;
   }
@@ -445,22 +433,17 @@
 }
 
 @media (min-width: 1024px) and (min-height: 768px) {
-  .post_edit__wrapper {
-    max-height: 75vh;
-    max-width: 80vw;
-  }
-
   .post_edit__image_button_wrapper {
     height: 16%;
-    width: 30%;
+    width: 25%;
   }
 
   .post_edit__image_wrapper {
-    flex-basis: 70%;
+    flex-basis: 80%;
   }
 
   .post_edit__editor_wrapper {
-    flex-basis: 30%;
+    flex-basis: 20%;
   }
 
   .post_edit__photo_change_button {
@@ -469,20 +452,6 @@
   }
 }
 
-@media (min-width: 1024px) and (min-height: 1366px) {
-  .post_edit__wrapper {
-    max-height: 55vh;
-    max-width: 95vw;
-  }
-
-  .post_edit__image_wrapper {
-    flex-basis: 70%;
-  }
-
-  .post_edit__editor_wrapper {
-    flex-basis: 30%;
-  }
-}
 @media (min-width: 1366px) {
   .post_edit__upload_button_wrapper {
     top: 1%;
@@ -491,12 +460,5 @@
 
   .post_edit__upload_button {
     font-size: 2.5em;
-  }
-}
-
-@media (min-width: 1366px) and (min-height: 1024px) {
-  .post_edit__wrapper {
-    max-height: 65vh;
-    max-width: 75vw;
   }
 }
