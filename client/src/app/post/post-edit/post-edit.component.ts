@@ -78,7 +78,10 @@ export class PostEditComponent implements OnInit {
   }
 
   onCreatePost(): void {
-    this.postDTO.files = this.files.map((file) => file.file);
+    if (this.isFirstClick) {
+      this.postDTO.caption = '';
+    }
+    this.postDTO.files = this.files.map((file) => file.blob);
     this.postServce.createPost(this.postDTO);
   }
 
@@ -107,6 +110,7 @@ export class PostEditComponent implements OnInit {
         src: event.target.result,
         file,
         editorSliders: sliders,
+        blob: file,
       };
       this.files.push(imageSnippet);
       if (this.files.length === 1) {
@@ -138,6 +142,7 @@ export class PostEditComponent implements OnInit {
     this.mainCanvasContext.filter = canvasFilters;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
       this.drawImageOnMainCanvasContext();
+      this.updateCurrentFileBlob();
     };
   }
 
@@ -162,6 +167,17 @@ export class PostEditComponent implements OnInit {
         clearInterval(this.filtersInterval);
       }
     }, this.FILTERS_LOAD_INTERVAL_IN_MS);
+  }
+
+  private updateCurrentFileBlob(): void {
+    const currentFile = this.files[this.currentPhotoIndex];
+    this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
+    const { file } = currentFile;
+    this.mainCanvasElement.toBlob(
+      (blob) =>
+        (currentFile.blob = new File([blob!!], file.name, { type: file.type })),
+      file.type
+    );
   }
 
   private drawImageOnMainCanvasContext = (): void =>

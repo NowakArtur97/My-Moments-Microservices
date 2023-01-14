@@ -22,12 +22,16 @@ export default abstract class HttpService {
   }
 
   protected createFormDataFromFiles(
-    dataToAppend: { key: string; files: File[] }[]
+    filesToAppend: { key: string; files: File[] }[],
+    dataToAppend: { key: string; value: any }[] = []
   ): FormData {
     const multipartData = new FormData();
-    dataToAppend.forEach(({ key, files }) =>
+    filesToAppend.forEach(({ key, files }) =>
       files.forEach((file) => multipartData.append(key, file, file.name))
     );
+    dataToAppend.forEach(({ key, value }) => {
+      multipartData.append(key, JSON.stringify(value));
+    });
     return multipartData;
   }
 
