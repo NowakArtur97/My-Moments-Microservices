@@ -128,11 +128,12 @@ export class PostEditComponent implements OnInit {
   }
 
   private loadImageToCanvas(): void {
-    this.changeDetectorRef.detectChanges();
     (this.mainImage.nativeElement as HTMLImageElement).src = this.files[
       this.currentPhotoIndex
     ].src;
     this.mainCanvasElement = this.mainImageCanvas.nativeElement;
+    this.mainImageCanvas.nativeElement.width = this.mainImage.nativeElement.width;
+    this.mainImageCanvas.nativeElement.height = this.mainImage.nativeElement.height;
     this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
     const currentFile = this.files[this.currentPhotoIndex];
     const canvasFilters = currentFile.editorSliders
@@ -141,10 +142,9 @@ export class PostEditComponent implements OnInit {
     this.clearContext();
     this.mainCanvasContext.filter = canvasFilters;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
-      this.mainCanvasElement.width = this.mainImage.nativeElement.width;
-      this.mainCanvasElement.height = this.mainImage.nativeElement.height;
       this.drawImageOnMainCanvasContext();
       this.updateCurrentFileBlob();
+      this.changeDetectorRef.detectChanges();
     };
   }
 
