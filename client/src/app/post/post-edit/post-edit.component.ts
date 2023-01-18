@@ -141,6 +141,8 @@ export class PostEditComponent implements OnInit {
     this.clearContext();
     this.mainCanvasContext.filter = canvasFilters;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
+      this.mainCanvasElement.width = this.mainImage.nativeElement.width;
+      this.mainCanvasElement.height = this.mainImage.nativeElement.height;
       this.drawImageOnMainCanvasContext();
       this.updateCurrentFileBlob();
     };
@@ -173,10 +175,10 @@ export class PostEditComponent implements OnInit {
     const currentFile = this.files[this.currentPhotoIndex];
     this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
     const { file } = currentFile;
+    const { type, name } = file;
     this.mainCanvasElement.toBlob(
-      (blob) =>
-        (currentFile.blob = new File([blob!!], file.name, { type: file.type })),
-      file.type
+      (blob) => (currentFile.blob = new File([blob!!], name, { type })),
+      type
     );
   }
 
