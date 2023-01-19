@@ -10,7 +10,7 @@ import { MustMatchDirective } from './directives/must-match.directive';
 import { NoWhiteSpacesDirective } from './directives/no-white-spaces.directive';
 import { NotBlankDirective } from './directives/not-blank.directive';
 import { NotIncludeDirective } from './directives/not-include.directive';
-import { OnClickStopPropagation } from './directives/on-click-stop-propagation.directive';
+import { OnClickStopPropagationDirective } from './directives/on-click-stop-propagation.directive';
 
 const validationDirectives = [
   NotIncludeDirective,
@@ -22,7 +22,7 @@ const validationDirectives = [
 @NgModule({
   declarations: [
     validationDirectives,
-    OnClickStopPropagation,
+    OnClickStopPropagationDirective,
     BackgroundComponent,
     BackgroundTilesComponent,
   ],
@@ -34,7 +34,7 @@ const validationDirectives = [
   ],
   exports: [
     validationDirectives,
-    OnClickStopPropagation,
+    OnClickStopPropagationDirective,
     CommonModule,
     HttpClientModule,
     BackgroundComponent,

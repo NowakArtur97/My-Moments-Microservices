@@ -18,7 +18,7 @@ export class AuthService extends HttpService {
   // TODO: DELETE
   authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>({
     token:
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjczNzUzMDU2LCJpYXQiOjE2NzM2ODEwNTZ9.jz-fYBAlVyL7gKDGDOs8aYYnjFioEWbAPuSPWtg_E2Q',
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjc0MTEzMjc5LCJpYXQiOjE2NzQwNDEyNzl9.vzLRaWJ1dvvTDw7TXYh_ydlHpB4tiOsFDYdFfWd2Axo',
     expirationTimeInMilliseconds: 72000000,
   });
   // authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);

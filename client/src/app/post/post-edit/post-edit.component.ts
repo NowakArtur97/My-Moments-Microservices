@@ -32,7 +32,8 @@ export class PostEditComponent implements OnInit {
   isInFiltersTab = false;
 
   filtersInterval!: any;
-  isFirstClick: boolean = true;
+  isFirstClick = true;
+  shouldSetCanvasSize = true;
 
   constructor(
     private postServce: PostService,
@@ -87,6 +88,7 @@ export class PostEditComponent implements OnInit {
 
   onChangeCurrentPhoto(value: number): void {
     this.currentPhotoIndex += value;
+    this.shouldSetCanvasSize = true;
     if (this.isInFiltersTab) {
       this.loadFilters();
     }
@@ -132,8 +134,6 @@ export class PostEditComponent implements OnInit {
       this.currentPhotoIndex
     ].src;
     this.mainCanvasElement = this.mainImageCanvas.nativeElement;
-    this.mainImageCanvas.nativeElement.width = this.mainImage.nativeElement.width;
-    this.mainImageCanvas.nativeElement.height = this.mainImage.nativeElement.height;
     this.mainCanvasContext = this.mainCanvasElement.getContext('2d')!;
     const currentFile = this.files[this.currentPhotoIndex];
     const canvasFilters = currentFile.editorSliders
@@ -142,9 +142,16 @@ export class PostEditComponent implements OnInit {
     this.clearContext();
     this.mainCanvasContext.filter = canvasFilters;
     (this.mainImage.nativeElement as HTMLImageElement).onload = () => {
-      this.drawImageOnMainCanvasContext();
-      this.updateCurrentFileBlob();
-      this.changeDetectorRef.detectChanges();
+      if (this.shouldSetCanvasSize) {
+        this.mainImageCanvas.nativeElement.width = this.mainImage.nativeElement.width;
+        this.mainImageCanvas.nativeElement.height = this.mainImage.nativeElement.height;
+        this.shouldSetCanvasSize = false;
+        this.loadImageToCanvas(); // without this it will not draw on canvas after changing photo
+      } else {
+        this.drawImageOnMainCanvasContext();
+        this.updateCurrentFileBlob();
+        this.changeDetectorRef.detectChanges();
+      }
     };
   }
 
