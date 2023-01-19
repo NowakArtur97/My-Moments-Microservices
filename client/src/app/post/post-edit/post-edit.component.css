@@ -334,20 +334,6 @@
   font-size: 1.25em;
 }
 
-.post_edit__range_slider_handle {
-  position: absolute;
-  top: 50%;
-
-  height: 15px;
-  width: 15px;
-
-  border: 2px solid hsl(0, 0%, 0%);
-  border-radius: 50%;
-  background-color: hsl(0, 0%, 100%);
-
-  transform: translate(-50%, -50%);
-}
-
 @media (min-width: 568px) {
   .post_edit__wrapper {
     flex-direction: row;

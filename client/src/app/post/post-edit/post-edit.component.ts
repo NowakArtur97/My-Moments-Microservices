@@ -68,11 +68,11 @@ export class PostEditComponent implements OnInit {
     this.loadImage();
   }
 
-  onChangeSliderValue(editorSlider: EditorFilter, value: number): void {
+  onChangeSliderValue({ name }: EditorFilter, value: number): void {
     const currentFile = this.files[this.currentPhotoIndex];
-    const filters = currentFile.editorSliders;
-    const changedFilter = filters.find(
-      (filter) => filter.name === editorSlider.name
+    const { editorSliders } = currentFile;
+    const changedFilter = editorSliders.find(
+      (filter) => filter.name === name
     )!!;
     changedFilter.currentValue = value;
     this.loadImage();
