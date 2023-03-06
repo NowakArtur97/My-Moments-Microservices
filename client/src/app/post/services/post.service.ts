@@ -12,20 +12,21 @@ import PostState from '../models/post-state.enum';
 import PostDTO from '../models/post.dto';
 import Post from '../models/post.model';
 import PostsResponse from '../models/posts-response.model';
+import EXAMPLE_POSTS from './example-posts';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends HttpService {
-  myPosts = new BehaviorSubject<Post[]>([]);
+  // myPosts = new BehaviorSubject<Post[]>([]);
   // TODO: DELETE
-  // myPosts = new BehaviorSubject<Post[]>(
-  //   this.mapBinaryToJpgs(
-  //     [...EXAMPLE_POSTS].map((post) => {
-  //       return { ...post, photos: this.shuffleArray([...post.photos]) };
-  //     })
-  //   ).map((post) => {
-  //     return { ...post, currentPhotoIndex: 0 };
-  //   })
-  // );
+  myPosts = new BehaviorSubject<Post[]>(
+    this.mapBinaryToJpgs(
+      [...EXAMPLE_POSTS].map((post) => {
+        return { ...post, photos: this.shuffleArray([...post.photos]) };
+      })
+    ).map((post) => {
+      return { ...post, currentPhotoIndex: 0 };
+    })
+  );
 
   constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient);
@@ -57,10 +58,10 @@ export class PostService extends HttpService {
         (httpErrorResponse: HttpErrorResponse) => {
           this.logErrors(httpErrorResponse);
           // TODO: DELETE
-          // const mockPosts: Post[] = [...EXAMPLE_POSTS].map((post) => {
-          // return { ...post, photos: this.shuffleArray([...post.photos]) };
-          // });
-          // this.handleSuccessfullPostsResponse(mockPosts);
+          const mockPosts: Post[] = [...EXAMPLE_POSTS].map((post) => {
+            return { ...post, photos: this.shuffleArray([...post.photos]) };
+          });
+          this.handleSuccessfullPostsResponse(mockPosts);
         }
       );
   }

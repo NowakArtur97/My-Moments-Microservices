@@ -7,7 +7,15 @@
     />
   </div>
   <div class="comment__data">
-    <div class="comment__author">{{ comment.author }}</div>
+    <div class="comment__header">
+      <div class="comment__author">{{ comment.author }}</div>
+      <div class="comment__button_wrapper">
+        <button type="button" class="comment__button">Edit</button>
+      </div>
+      <div class="comment__button_wrapper">
+        <button type="button" class="comment__button">Delete</button>
+      </div>
+    </div>
     <div class="comment__content">{{ comment.content }}</div>
     <div class="comment__create_date">{{ getFormatedDate() }}</div>
   </div>
