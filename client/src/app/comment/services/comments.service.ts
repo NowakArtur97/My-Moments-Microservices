@@ -54,4 +54,25 @@ export class CommentService extends HttpService {
           this.logErrors(httpErrorResponse)
       );
   }
+
+  deleteComment(postId: string, commentId: string): void {
+    this.httpClient
+      .delete(
+        `${environment.commentsServiceUrl}${BACKEND_URLS.comments.postComment(
+          postId,
+          commentId
+        )}`
+      )
+      .subscribe(
+        () =>
+          this.comments.next([
+            ...this.comments
+              .getValue()
+              .filter((comment) => comment.id !== commentId),
+          ]),
+        (httpErrorResponse: HttpErrorResponse) => {
+          this.logErrors(httpErrorResponse);
+        }
+      );
+  }
 }

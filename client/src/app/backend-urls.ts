@@ -8,6 +8,8 @@ const BACKEND_URLS = {
   },
   comments: {
     postComments: (postId: string): string => `/${postId}/comments`,
+    postComment: (postId: string, commentId: string): string =>
+      `/${postId}/comments/${commentId}`,
   },
 };
 

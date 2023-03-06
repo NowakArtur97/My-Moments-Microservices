@@ -4,6 +4,6 @@
     [ngStyle]="getCommentWidth()"
   ></app-comment-edit>
   <div [ngStyle]="getCommentWidth()" *ngFor="let comment of comments">
-    <app-comment [comment]="comment"></app-comment>
+    <app-comment [postId]="postId" [comment]="comment"></app-comment>
   </div>
 </div>
