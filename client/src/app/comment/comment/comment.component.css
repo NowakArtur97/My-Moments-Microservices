@@ -69,12 +69,10 @@
   border-bottom-left-radius: 15%;
   border-bottom-right-radius: 15%;
 
-  background: hsl(0, 0%, 0%);
-
   transform: translateY(-50%);
 }
 
-.comment__bin::before {
+/* .comment__bin::before {
   content: "";
 
   position: absolute;
@@ -84,7 +82,7 @@
   width: 100%;
 
   background: hsl(0, 0%, 0%);
-}
+} */
 
 @media (min-height: 480px) {
   .comment__header {

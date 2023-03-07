@@ -1,4 +1,4 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
 import Comment from '../models/comment.model';
@@ -22,8 +22,88 @@ import { CommentService } from '../services/comments.service';
           color: 'hsl(0, 0%, 0%)',
         })
       ),
-      transition('enter <=> leave', [animate('0.5s')]),
+      transition('enter <=> leave', [animate('1s')]),
     ]),
+    trigger('onHoverDelete2', [
+      state(
+        'enter',
+        style({
+          // display: 'block',
+          background: 'hsl(0, 0%, 0%)',
+          transform: 'scale(1.5) rotate(60deg) translateY(-70%)',
+        })
+      ),
+      state(
+        'leave',
+        style({
+          // display: 'none',
+          background: 'hsl(0, 0%, 100%)',
+          transform: 'translateY(-50%)',
+        })
+      ),
+      transition('enter => leave', [
+        animate(
+          '1s',
+          keyframes([
+            style({
+              background: 'hsl(0, 0%, 0%)',
+              transform: 'scale(1.5) rotate(60deg) translateY(-70%)',
+              offset: 0,
+            }),
+            style({
+              background: 'hsl(0, 0%, 0%)',
+              transform: 'translateY(-50%)',
+              offset: 0.2,
+            }),
+            style({
+              background: 'hsl(0, 0%, 100%)',
+              transform: 'translateY(-50%)',
+              offset: 1,
+            }),
+          ])
+        ),
+      ]),
+      transition('leave => enter', [
+        animate(
+          '1s',
+          keyframes([
+            style({
+              background: 'hsl(0, 0%, 100%)',
+              transform: 'translateY(-50%)',
+              offset: 0,
+            }),
+            style({
+              background: 'hsl(0, 0%, 0%)',
+              transform: 'translateY(-50%)',
+              offset: 0.2,
+            }),
+            style({
+              background: 'hsl(0, 0%, 0%)',
+              transform: 'scale(1.5) rotate(60deg) translateY(-70%)',
+              offset: 1,
+            }),
+          ])
+        ),
+      ]),
+    ]),
+    // trigger('onHoverDelete3', [
+    //   query(
+    //     '.comment__bin::before',
+    //     state(
+    //       'enter',
+    //       style({
+    //         transform: 'rotate(-90deg) translateX(50%) translateY(-5%)',
+    //       })
+    //     ),
+    //     state(
+    //       'leave',
+    //       style({
+    //         transform: 'translateY(0%)',
+    //       })
+    //     )
+    //   ),
+    //   transition('enter <=> leave', [animate('1s 1s')]),
+    // ]),
   ],
 })
 export class CommentComponent implements OnInit {
