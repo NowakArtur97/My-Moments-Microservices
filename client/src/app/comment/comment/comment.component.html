@@ -17,6 +17,8 @@
       <div class="comment__button_wrapper">
         <button
           appOnClickStopPropagation
+          (mouseenter)="onHoverDeleteButton(true)"
+          (mouseleave)="onHoverDeleteButton(false)"
           (click)="onDeleteComment()"
           type="button"
           class="comment__button"
@@ -25,7 +27,9 @@
         </button>
       </div>
     </div>
-    <div class="comment__content">{{ comment.content }}</div>
+    <div [@onHoverDelete]="deleteState" class="comment__content">
+      {{ comment.content }}
+    </div>
     <div class="comment__create_date">{{ getFormatedDate() }}</div>
   </div>
 </div>

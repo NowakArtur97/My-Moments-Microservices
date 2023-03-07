@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
 import Comment from '../models/comment.model';
@@ -7,10 +8,32 @@ import { CommentService } from '../services/comments.service';
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css'],
+  animations: [
+    trigger('onHoverDelete', [
+      state(
+        'enter',
+        style({
+          color: 'hsl(0, 0%, 100%)',
+        })
+      ),
+      state(
+        'leave',
+        style({
+          color: 'hsl(0, 0%, 0%)',
+        })
+      ),
+      transition('enter <=> leave', [animate('0.5s')]),
+    ]),
+  ],
 })
 export class CommentComponent implements OnInit {
   @Input() postId!: string;
   @Input() comment!: Comment;
+  private readonly DELETE_STATE = {
+    ENTER: 'enter',
+    LEAVE: 'leave',
+  };
+  deleteState: string = this.DELETE_STATE.LEAVE;
 
   constructor(private commentService: CommentService) {}
 
@@ -22,5 +45,11 @@ export class CommentComponent implements OnInit {
 
   onDeleteComment(): void {
     this.commentService.deleteComment(this.postId, this.comment.id);
+  }
+
+  onHoverDeleteButton(isHovered: boolean): void {
+    this.deleteState = isHovered
+      ? this.DELETE_STATE.ENTER
+      : this.DELETE_STATE.LEAVE;
   }
 }
