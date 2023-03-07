@@ -48,11 +48,42 @@
 }
 
 .comment__content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
   margin: auto;
 
   font-size: 0.6em;
 
   overflow-y: auto;
+}
+
+.comment__bin {
+  position: absolute;
+  left: 30%;
+  top: 50%;
+
+  width: 10%;
+  height: 60%;
+  border-bottom-left-radius: 15%;
+  border-bottom-right-radius: 15%;
+
+  background: hsl(0, 0%, 0%);
+
+  transform: translateY(-50%);
+}
+
+.comment__bin::before {
+  content: "";
+
+  position: absolute;
+  top: -12%;
+
+  height: 10%;
+  width: 100%;
+
+  background: hsl(0, 0%, 0%);
 }
 
 @media (min-height: 480px) {
