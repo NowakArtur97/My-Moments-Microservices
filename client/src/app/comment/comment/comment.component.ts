@@ -9,77 +9,68 @@ import { CommentService } from '../services/comments.service';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css'],
   animations: [
-    trigger('onHoverDelete', [
-      state(
-        'enter',
-        style({
-          color: 'hsl(0, 0%, 100%)',
-        })
-      ),
+    trigger('hide', [
       state(
         'leave',
         style({
           color: 'hsl(0, 0%, 0%)',
         })
       ),
-      transition('enter <=> leave', [animate('1s')]),
-    ]),
-    trigger('onHoverDelete2', [
       state(
         'enter',
         style({
-          // display: 'block',
-          background: 'hsl(0, 0%, 0%)',
-          transform: 'scale(1.5) rotate(60deg) translateY(-70%)',
+          color: 'hsl(0, 0%, 100%)',
         })
       ),
+      transition('leave => enter', [animate('0.5s')]),
+      transition('enter => leave', [animate('0.5s 0.5s')]),
+    ]),
+    trigger('bin', [
       state(
         'leave',
         style({
-          // display: 'none',
-          background: 'hsl(0, 0%, 100%)',
-          transform: 'translateY(-50%)',
+          transform: 'translate(0%, -50%) scale(0)',
         })
       ),
-      transition('enter => leave', [
+      state(
+        'enter',
+        style({
+          transform: 'rotate(60deg) translate(-30%, -70%) scale(1.5)',
+        })
+      ),
+      transition('leave => enter', [
         animate(
-          '1s',
+          '0.5s',
           keyframes([
             style({
-              background: 'hsl(0, 0%, 0%)',
-              transform: 'scale(1.5) rotate(60deg) translateY(-70%)',
+              transform: 'translate(0%, -50%) scale(0)',
               offset: 0,
             }),
             style({
-              background: 'hsl(0, 0%, 0%)',
-              transform: 'translateY(-50%)',
+              transform: 'translate(0%, -50%) scale(1.5)',
               offset: 0.2,
             }),
             style({
-              background: 'hsl(0, 0%, 100%)',
-              transform: 'translateY(-50%)',
+              transform: 'rotate(60deg) translate(-30%, -70%) scale(1.5)',
               offset: 1,
             }),
           ])
         ),
       ]),
-      transition('leave => enter', [
+      transition('enter => leave', [
         animate(
-          '1s',
+          '0.5s',
           keyframes([
             style({
-              background: 'hsl(0, 0%, 100%)',
-              transform: 'translateY(-50%)',
+              transform: 'rotate(60deg) translate(-30%, -70%) scale(1.5)',
               offset: 0,
             }),
             style({
-              background: 'hsl(0, 0%, 0%)',
-              transform: 'translateY(-50%)',
-              offset: 0.2,
+              transform: 'rotate(0deg) translate(0%, -50%) scale(1.5)',
+              offset: 0.8,
             }),
             style({
-              background: 'hsl(0, 0%, 0%)',
-              transform: 'scale(1.5) rotate(60deg) translateY(-70%)',
+              transform: 'translate(0%, -50%) scale(0)',
               offset: 1,
             }),
           ])
@@ -102,7 +93,7 @@ import { CommentService } from '../services/comments.service';
     //       })
     //     )
     //   ),
-    //   transition('enter <=> leave', [animate('1s 1s')]),
+    //   transition('enter <=> leave', [animate('0.5s 0.5s')]),
     // ]),
   ],
 })

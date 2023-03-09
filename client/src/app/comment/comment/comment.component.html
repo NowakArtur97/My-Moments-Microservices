@@ -27,9 +27,11 @@
         </button>
       </div>
     </div>
-    <div class="comment__content">
-      <div [@onHoverDelete2]="deleteState" class="comment__bin"></div>
-      <!-- {{ comment.content }} -->
+    <div class="comment__content_wrapper">
+      <div [@bin]="deleteState" class="comment__bin"></div>
+      <div [@hide]="deleteState" class="comment__content">
+        {{ comment.content }}
+      </div>
     </div>
     <div class="comment__create_date">{{ getFormatedDate() }}</div>
   </div>
