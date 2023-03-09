@@ -79,7 +79,7 @@
   background: hsl(0, 0%, 0%);
 }
 
-/* .comment__bin::before {
+.comment__bin::before {
   content: "";
 
   position: absolute;
@@ -89,7 +89,22 @@
   width: 100%;
 
   background: hsl(0, 0%, 0%);
-} */
+}
+
+.comment__bin::after {
+  content: "";
+
+  position: absolute;
+  top: -20%;
+  left: 50%;
+
+  height: 10%;
+  width: 40%;
+
+  background: hsl(0, 0%, 0%);
+
+  transform: translateX(-50%);
+}
 
 @media (min-height: 480px) {
   .comment__header {
