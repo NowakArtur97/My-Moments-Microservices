@@ -70,9 +70,14 @@
 
 .comment__bin_wrapper {
   position: absolute;
+  top: 50%;
+  left: 50%;
 
   width: 100%;
+  max-width: 400px;
   height: 100%;
+
+  transform: translate(-50%, -50%);
 }
 
 .comment__bin {
@@ -80,7 +85,7 @@
   left: 30%;
   top: 50%;
 
-  width: 10%;
+  width: 100%;
   max-width: 35px;
   height: 60%;
   border-bottom-left-radius: 15%;
@@ -108,7 +113,7 @@
 
   100% {
     background: hsl(0, 0%, 0%);
-    transform: rotate(60deg) translate(-75%, 35%) scale(1);
+    transform: rotate(60deg) translate(-50%, 35%) scale(1);
   }
 }
 
@@ -119,7 +124,7 @@
 @keyframes bin_leave {
   0% {
     background: hsl(0, 0%, 0%);
-    transform: rotate(60deg) translate(-75%, 35%) scale(1);
+    transform: rotate(60deg) translate(-50%, 35%) scale(1);
   }
 
   20% {
