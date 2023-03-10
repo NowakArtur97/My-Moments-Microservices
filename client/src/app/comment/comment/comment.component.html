@@ -28,13 +28,24 @@
       </div>
     </div>
     <div class="comment__content_wrapper">
-      <div
-        [ngClass]="{
-          'comment__bin--enter': deleteState === 'enter',
-          'comment__bin--leave': deleteState === 'leave'
-        }"
-        class="comment__bin"
-      ></div>
+      <div class="comment__bin_wrapper">
+        <div
+          [ngClass]="{
+            'comment__bin--enter': deleteState === 'enter',
+            'comment__bin--leave': deleteState === 'leave'
+          }"
+          class="comment__bin"
+        ></div>
+        <div
+          [ngClass]="{
+            'comment__bin_text--enter': deleteState === 'enter',
+            'comment__bin_text--leave': deleteState === 'leave'
+          }"
+          class="comment__bin_text"
+        >
+          Delete
+        </div>
+      </div>
       <div [@hideText]="deleteState" class="comment__content">
         {{ comment.content }}
       </div>
