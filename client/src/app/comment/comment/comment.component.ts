@@ -34,7 +34,7 @@ export class CommentComponent implements OnInit {
     ENTER: 'enter',
     LEAVE: 'leave',
   };
-  deleteState: string = this.DELETE_STATE.LEAVE;
+  deleteState: string = '';
 
   constructor(private commentService: CommentService) {}
 

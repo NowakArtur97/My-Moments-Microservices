@@ -72,11 +72,14 @@
   top: 50%;
 
   width: 10%;
+  max-width: 35px;
   height: 60%;
   border-bottom-left-radius: 15%;
   border-bottom-right-radius: 15%;
 
-  background: hsl(0, 0%, 0%);
+  background: hsl(0, 0%, 100%);
+
+  transform: scale(0);
 }
 
 .comment__bin--enter {
@@ -85,14 +88,17 @@
 
 @keyframes bin_enter {
   0% {
+    background: hsl(0, 0%, 100%);
     transform: translate(0%, -50%) scale(0);
   }
 
   20% {
+    background: hsl(0, 0%, 0%);
     transform: translate(0%, -50%) scale(1);
   }
 
   100% {
+    background: hsl(0, 0%, 0%);
     transform: rotate(60deg) translate(-30%, -70%) scale(1);
   }
 }
@@ -103,14 +109,17 @@
 
 @keyframes bin_leave {
   0% {
+    background: hsl(0, 0%, 0%);
     transform: rotate(60deg) translate(-30%, -70%) scale(1);
   }
 
   20% {
+    background: hsl(0, 0%, 0%);
     transform: translate(0%, -50%) scale(1);
   }
 
   100% {
+    background: hsl(0, 0%, 100%);
     transform: translate(0%, -50%) scale(0);
   }
 }
