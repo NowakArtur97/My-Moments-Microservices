@@ -54,6 +54,8 @@
 }
 
 .comment__content {
+  margin: auto;
+
   font-size: 0.6em;
 
   overflow-y: hidden;
@@ -96,17 +98,17 @@
 @keyframes bin_enter {
   0% {
     background: hsl(0, 0%, 100%);
-    transform: translate(0%, -50%) scale(0);
+    transform: translate(-50%, -50%) scale(0);
   }
 
   20% {
     background: hsl(0, 0%, 0%);
-    transform: translate(0%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
 
   100% {
     background: hsl(0, 0%, 0%);
-    transform: rotate(60deg) translate(-30%, -70%) scale(1);
+    transform: rotate(60deg) translate(-75%, 35%) scale(1);
   }
 }
 
@@ -117,17 +119,17 @@
 @keyframes bin_leave {
   0% {
     background: hsl(0, 0%, 0%);
-    transform: rotate(60deg) translate(-30%, -70%) scale(1);
+    transform: rotate(60deg) translate(-75%, 35%) scale(1);
   }
 
   20% {
     background: hsl(0, 0%, 0%);
-    transform: translate(0%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
 
   100% {
     background: hsl(0, 0%, 100%);
-    transform: translate(0%, -50%) scale(0);
+    transform: translate(-50%, -50%) scale(0);
   }
 }
 
@@ -205,7 +207,7 @@
   font-size: 1.25em;
   color: hsl(0, 0%, 100%);
 
-  transform: translate(-50%, -50%) scale(0);
+  transform: scale(0);
 }
 
 .comment__bin_text--enter {
@@ -215,12 +217,12 @@
 @keyframes bin_text_enter {
   0% {
     color: hsl(0, 0%, 100%);
-    transform: translate(-50%, -50%) scale(0);
+    transform: translate(-45%, -50%) scale(0);
   }
 
   20% {
     color: hsl(0, 0%, 0%);
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-45%, -50%) scale(1);
   }
 
   100% {
@@ -241,12 +243,12 @@
 
   20% {
     color: hsl(0, 0%, 0%);
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-45%, -50%) scale(1);
   }
 
   100% {
     color: hsl(0, 0%, 100%);
-    transform: translate(-50%, -50%) scale(0);
+    transform: translate(-45%, -50%) scale(0);
   }
 }
 
