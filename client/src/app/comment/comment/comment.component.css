@@ -113,7 +113,7 @@
 
   100% {
     background: hsl(0, 0%, 0%);
-    transform: rotate(60deg) translate(-50%, 35%) scale(1);
+    transform: rotate(60deg) translate(-50%, 25%) scale(1);
   }
 }
 
@@ -124,7 +124,7 @@
 @keyframes bin_leave {
   0% {
     background: hsl(0, 0%, 0%);
-    transform: rotate(60deg) translate(-50%, 35%) scale(1);
+    transform: rotate(60deg) translate(-50%, 25%) scale(1);
   }
 
   20% {
