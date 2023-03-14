@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import Comment from '../models/comment.model';
 import { CommentService } from '../services/comments.service';
@@ -15,6 +15,8 @@ export class CommentComponent implements OnInit {
     ENTER: 'enter',
     LEAVE: 'leave',
   };
+  @ViewChild('commentContentWrapper')
+  commentContentWrapper!: ElementRef<HTMLDivElement>;
   deleteState: string = '';
 
   constructor(private commentService: CommentService) {}
@@ -30,6 +32,9 @@ export class CommentComponent implements OnInit {
   }
 
   onHoverDeleteButton(isHovered: boolean): void {
+    if (isHovered) {
+      this.commentContentWrapper.nativeElement.scrollTop = 0;
+    }
     this.deleteState = isHovered
       ? this.DELETE_STATE.ENTER
       : this.DELETE_STATE.LEAVE;
