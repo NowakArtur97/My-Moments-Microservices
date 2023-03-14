@@ -27,11 +27,7 @@
         </button>
       </div>
     </div>
-    <div
-      #commentContentWrapper
-      [ngStyle]="{ 'overflow-y': deleteState === 'enter' ? 'hidden' : 'auto' }"
-      class="comment__content_wrapper"
-    >
+    <div class="comment__content_wrapper">
       <div class="comment__bin_wrapper">
         <div
           [ngClass]="{
@@ -50,7 +46,13 @@
           Delete
         </div>
       </div>
-      <div [@hideText]="deleteState" class="comment__content">
+      <div
+        [ngClass]="{
+          'comment__content--enter': deleteState === 'enter',
+          'comment__content--leave': deleteState === 'leave'
+        }"
+        class="comment__content"
+      >
         {{ comment.content }}
       </div>
     </div>

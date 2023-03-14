@@ -61,6 +61,32 @@
   overflow-y: hidden;
 }
 
+.comment__content--enter {
+  animation: show_content 0.5s both;
+}
+
+.comment__content--leave {
+  animation: hide_content 0.5s 0.5s both;
+}
+
+@keyframes show_content {
+  0% {
+    color: hsl(0, 0%, 0%);
+  }
+  100% {
+    color: hsl(0, 0%, 100%);
+  }
+}
+
+@keyframes hide_content {
+  0% {
+    color: hsl(0, 0%, 100%);
+  }
+  100% {
+    color: hsl(0, 0%, 0%);
+  }
+}
+
 .comment__create_date {
   margin-left: auto;
 
@@ -78,6 +104,8 @@
   height: 100%;
 
   transform: translate(-50%, -50%);
+
+  overflow-y: hidden;
 }
 
 .comment__bin {
@@ -100,6 +128,10 @@
   animation: bin_enter 0.5s 0.5s both;
 }
 
+.comment__bin--leave {
+  animation: bin_leave 0.5s both;
+}
+
 @keyframes bin_enter {
   0% {
     background: hsl(0, 0%, 100%);
@@ -115,10 +147,6 @@
     background: hsl(0, 0%, 0%);
     transform: rotate(60deg) translate(-50%, 25%) scale(1);
   }
-}
-
-.comment__bin--leave {
-  animation: bin_leave 0.5s both;
 }
 
 @keyframes bin_leave {
@@ -219,6 +247,10 @@
   animation: bin_text_enter 0.5s 0.5s both;
 }
 
+.comment__bin_text--leave {
+  animation: bin_text_leave 0.5s both;
+}
+
 @keyframes bin_text_enter {
   0% {
     color: hsl(0, 0%, 100%);
@@ -234,10 +266,6 @@
     color: hsl(0, 0%, 0%);
     transform: translate(-50%, -50%) scale(1);
   }
-}
-
-.comment__bin_text--leave {
-  animation: bin_text_leave 0.5s both;
 }
 
 @keyframes bin_text_leave {

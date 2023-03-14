@@ -1,5 +1,4 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import Comment from '../models/comment.model';
 import { CommentService } from '../services/comments.service';
@@ -8,31 +7,10 @@ import { CommentService } from '../services/comments.service';
   selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css'],
-  animations: [
-    trigger('hideText', [
-      state(
-        'leave',
-        style({
-          'overflow-y': 'hidden',
-          color: 'hsl(0, 0%, 0%)',
-        })
-      ),
-      state(
-        'enter',
-        style({
-          color: 'hsl(0, 0%, 100%)',
-        })
-      ),
-      transition('leave => enter', [animate('0.5s')]),
-      transition('enter => leave', [animate('0.5s 0.5s')]),
-    ]),
-  ],
 })
 export class CommentComponent implements OnInit {
   @Input() postId!: string;
   @Input() comment!: Comment;
-  @ViewChild('commentContentWrapper')
-  commentContentWrapper!: ElementRef<HTMLDivElement>;
   private readonly DELETE_STATE = {
     ENTER: 'enter',
     LEAVE: 'leave',
@@ -52,9 +30,6 @@ export class CommentComponent implements OnInit {
   }
 
   onHoverDeleteButton(isHovered: boolean): void {
-    if (isHovered) {
-      this.commentContentWrapper.nativeElement.scrollTop = 0;
-    }
     this.deleteState = isHovered
       ? this.DELETE_STATE.ENTER
       : this.DELETE_STATE.LEAVE;
