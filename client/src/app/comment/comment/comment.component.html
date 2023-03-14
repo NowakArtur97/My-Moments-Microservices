@@ -1,4 +1,8 @@
-<div class="comment">
+<div
+  [@deleteComment]="deleteState"
+  (@deleteComment.done)="onCommentDeleteAnimationFinished()"
+  class="comment"
+>
   <div class="comment__author_photo_wrapper">
     <img
       src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg"

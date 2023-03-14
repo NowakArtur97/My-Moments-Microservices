@@ -56,9 +56,6 @@ export class CommentService extends HttpService {
   }
 
   deleteComment(postId: string, commentId: string): void {
-    this.comments.next([
-      ...this.comments.getValue().filter((comment) => comment.id !== commentId),
-    ]);
     this.httpClient
       .delete(
         `${environment.commentsServiceUrl}${BACKEND_URLS.comments.postComment(
@@ -72,5 +69,11 @@ export class CommentService extends HttpService {
           this.logErrors(httpErrorResponse);
         }
       );
+  }
+
+  hideComment(commentId: string): void {
+    this.comments.next([
+      ...this.comments.getValue().filter((comment) => comment.id !== commentId),
+    ]);
   }
 }
