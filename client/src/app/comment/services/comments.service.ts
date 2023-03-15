@@ -15,6 +15,13 @@ export class CommentService extends HttpService {
   // comments = new BehaviorSubject<Comment[]>([]);
   // TODO: DELETE
   comments = new BehaviorSubject<Comment[]>(EXAMPLE_COMMENTS);
+  editComment = new BehaviorSubject<Comment>({
+    id: '',
+    author: '',
+    content: '',
+    createDate: new Date(),
+    modifyDate: new Date(),
+  });
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -69,6 +76,10 @@ export class CommentService extends HttpService {
           this.logErrors(httpErrorResponse);
         }
       );
+  }
+
+  startEditingComment(commentToEdit: Comment): void {
+    this.editComment.next(commentToEdit);
   }
 
   hideComment(commentId: string): void {

@@ -23,7 +23,11 @@ export class CommentEditComponent implements OnInit {
 
   constructor(private commentService: CommentService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.commentService.editComment.subscribe(({ content }) => {
+      this.commentDTO.content = content;
+    });
+  }
 
   onAddComment(): void {
     this.commentService.addComment(this.postId, this.commentDTO);

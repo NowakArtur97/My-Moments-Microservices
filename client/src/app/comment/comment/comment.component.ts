@@ -29,6 +29,7 @@ import { CommentService } from '../services/comments.service';
 export class CommentComponent implements OnInit {
   @Input() postId!: string;
   @Input() comment!: Comment;
+
   private readonly DELETE_STATE = {
     ENTER: 'enter',
     LEAVE: 'leave',
@@ -42,9 +43,14 @@ export class CommentComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getFormatedDate = (): string =>
-    // DD/MM/YYYY
-    new Date(this.comment.createDate).toLocaleDateString('pt-PT');
+  onEditComment(): void {}
+
+  onHoverEditButton(isHovered: boolean): void {
+    if (!isHovered) {
+      return;
+    }
+    this.commentService.startEditingComment(this.comment);
+  }
 
   onDeleteComment(): void {
     this.deleteState = this.DELETE_STATE.DELETE;
@@ -68,4 +74,8 @@ export class CommentComponent implements OnInit {
       this.commentService.hideComment(this.comment.id);
     }
   }
+
+  getFormatedDate = (): string =>
+    // DD/MM/YYYY
+    new Date(this.comment.createDate).toLocaleDateString('pt-PT');
 }
