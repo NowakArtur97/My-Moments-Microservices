@@ -48,7 +48,7 @@ export class CommentComponent implements OnInit {
 
   onDeleteComment(): void {
     this.deleteState = this.DELETE_STATE.DELETE;
-    // this.commentService.deleteComment(this.postId, this.comment.id);
+    this.commentService.deleteComment(this.postId, this.comment.id);
   }
 
   onHoverDeleteButton(isHovered: boolean): void {

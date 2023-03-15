@@ -33,20 +33,27 @@
     </div>
     <div
       #commentContentWrapper
-      [ngStyle]="{ 'overflow-y': deleteState === 'enter' ? 'hidden' : 'auto' }"
+      [ngStyle]="{
+        'overflow-y':
+          deleteState === 'enter' || deleteState === 'delete'
+            ? 'hidden'
+            : 'auto'
+      }"
       class="comment__content_wrapper"
     >
       <div class="comment__bin_wrapper">
         <div
           [ngClass]="{
-            'comment__bin--enter': deleteState === 'enter',
+            'comment__bin--enter':
+              deleteState === 'enter' || deleteState === 'delete',
             'comment__bin--leave': deleteState === 'leave'
           }"
           class="comment__bin"
         ></div>
         <div
           [ngClass]="{
-            'comment__bin_text--enter': deleteState === 'enter',
+            'comment__bin_text--enter':
+              deleteState === 'enter' || deleteState === 'delete',
             'comment__bin_text--leave': deleteState === 'leave'
           }"
           class="comment__bin_text"
@@ -57,7 +64,8 @@
       <div
         [ngClass]="{
           'comment__content--enter': deleteState === 'enter',
-          'comment__content--leave': deleteState === 'leave'
+          'comment__content--leave':
+            deleteState === 'leave' || deleteState === 'delete'
         }"
         class="comment__content"
       >
