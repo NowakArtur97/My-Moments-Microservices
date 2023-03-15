@@ -14,14 +14,15 @@ import EXAMPLE_COMMENTS from './example-comments';
 export class CommentService extends HttpService {
   // comments = new BehaviorSubject<Comment[]>([]);
   // TODO: DELETE
-  comments = new BehaviorSubject<Comment[]>(EXAMPLE_COMMENTS);
-  editComment = new BehaviorSubject<Comment>({
+  private DEFAULT_COMMENT = {
     id: '',
     author: '',
     content: '',
     createDate: new Date(),
     modifyDate: new Date(),
-  });
+  };
+  comments = new BehaviorSubject<Comment[]>(EXAMPLE_COMMENTS);
+  editComment = new BehaviorSubject<Comment>(this.DEFAULT_COMMENT);
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -80,6 +81,10 @@ export class CommentService extends HttpService {
 
   startEditingComment(commentToEdit: Comment): void {
     this.editComment.next(commentToEdit);
+  }
+
+  stopEditingComment(): void {
+    this.editComment.next(this.DEFAULT_COMMENT);
   }
 
   hideComment(commentId: string): void {

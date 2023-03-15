@@ -38,18 +38,28 @@ export class CommentComponent implements OnInit {
   @ViewChild('commentContentWrapper')
   commentContentWrapper!: ElementRef<HTMLDivElement>;
   deleteState: string = '';
+  private wasEditingStarted: boolean = false;
 
   constructor(private commentService: CommentService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.commentService.editComment.subscribe(({ id }) => {
+      if (this.wasEditingStarted && this.comment.id !== id) {
+        this.wasEditingStarted = false;
+      }
+    });
+  }
 
-  onEditComment(): void {}
+  onStartEditingComment(): void {
+    this.wasEditingStarted = true;
+  }
 
   onHoverEditButton(isHovered: boolean): void {
-    if (!isHovered) {
-      return;
+    if (isHovered) {
+      this.commentService.startEditingComment(this.comment);
+    } else if (!this.wasEditingStarted) {
+      this.commentService.stopEditingComment();
     }
-    this.commentService.startEditingComment(this.comment);
   }
 
   onDeleteComment(): void {
