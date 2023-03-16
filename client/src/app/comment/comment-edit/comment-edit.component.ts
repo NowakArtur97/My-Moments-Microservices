@@ -15,6 +15,7 @@ import { CommentService } from '../services/comments.service';
 export class CommentEditComponent implements OnInit {
   @Input() postId!: string;
   @ViewChild('commentForm') commentForm!: NgForm;
+  isEditingComment = false;
 
   private readonly DEFAULT_COMMENT_VALUE = {
     content: '',
@@ -25,6 +26,7 @@ export class CommentEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.commentService.editComment.subscribe(({ content }) => {
+      this.isEditingComment = content !== '';
       this.commentDTO.content = content;
     });
   }

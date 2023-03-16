@@ -13,7 +13,9 @@
     class="comment__data"
   >
     <div class="comment__add_button_wrapper">
-      <p class="comment__add_button_text">New Comment</p>
+      <p class="comment__add_button_text">
+        {{ isEditingComment ? "Edit" : "New" }} Comment
+      </p>
       <button
         *ngIf="commentForm.valid"
         type="submit"

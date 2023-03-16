@@ -64,6 +64,9 @@ export class CommentComponent implements OnInit {
 
   onDeleteComment(): void {
     this.deleteState = this.DELETE_STATE.DELETE;
+    if (this.wasEditingStarted) {
+      this.commentService.stopEditingComment();
+    }
     this.commentService.deleteComment(this.postId, this.comment.id);
   }
 
