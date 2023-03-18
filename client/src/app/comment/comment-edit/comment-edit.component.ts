@@ -29,12 +29,10 @@ export class CommentEditComponent implements OnInit {
   ngOnInit(): void {
     this.commentService.editComment.subscribe(({ content }) => {
       this.isEditingComment = content !== '';
-      if (this.isEditingComment) {
-        this.content = content;
-        this.commentDTO.content = '';
-        this.letterIndex = 0;
-        this.animateTextContent();
-      }
+      this.content = content;
+      this.commentDTO.content = '';
+      this.letterIndex = 0;
+      this.animateTextContent();
     });
   }
 
