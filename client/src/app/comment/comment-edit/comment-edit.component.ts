@@ -15,19 +15,26 @@ import { CommentService } from '../services/comments.service';
 export class CommentEditComponent implements OnInit {
   @Input() postId!: string;
   @ViewChild('commentForm') commentForm!: NgForm;
-  isEditingComment = false;
-
   private readonly DEFAULT_COMMENT_VALUE = {
     content: '',
   };
+  private readonly CONTENT_ANIMATION_SPEED = 100;
   commentDTO: CommentDTO = { ...this.DEFAULT_COMMENT_VALUE };
+  isEditingComment = false;
+  letterIndex = 0;
+  content = '';
 
   constructor(private commentService: CommentService) {}
 
   ngOnInit(): void {
     this.commentService.editComment.subscribe(({ content }) => {
       this.isEditingComment = content !== '';
-      this.commentDTO.content = content;
+      if (this.isEditingComment) {
+        this.content = content;
+        this.commentDTO.content = '';
+        this.letterIndex = 0;
+        this.animateTextContent();
+      }
     });
   }
 
@@ -35,5 +42,11 @@ export class CommentEditComponent implements OnInit {
     this.commentService.addComment(this.postId, this.commentDTO);
     this.commentForm.resetForm();
     this.commentDTO = { ...this.DEFAULT_COMMENT_VALUE };
+  }
+
+  private animateTextContent(): void {
+    this.commentDTO.content += this.content.charAt(this.letterIndex);
+    this.letterIndex++;
+    setTimeout(() => this.animateTextContent(), this.CONTENT_ANIMATION_SPEED);
   }
 }
