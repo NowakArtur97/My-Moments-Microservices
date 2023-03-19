@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import CommentDTO from '../models/comment.dto';
+import Comment from '../models/comment.model';
 import { CommentService } from '../services/comments.service';
 
 @Component({
@@ -19,21 +20,28 @@ export class CommentEditComponent implements OnInit {
     content: '',
   };
   private readonly CONTENT_TEXT_ANIMATION_SPEED = 80;
+  private editedComment!: Comment;
   commentDTO: CommentDTO = { ...this.DEFAULT_COMMENT_VALUE };
   isEditingComment = false;
   letterIndex = 0;
   content = '';
-  private textContentAppearTimeout: Array<NodeJS.Timeout> = [];
-  private textContentDisappearTimeout: Array<NodeJS.Timeout> = [];
+  private textContentAppearTimeouts: Array<NodeJS.Timeout> = [];
+  private textContentDisappearTimeouts: Array<NodeJS.Timeout> = [];
 
   constructor(private commentService: CommentService) {}
 
   ngOnInit(): void {
-    this.commentService.editComment.subscribe(({ content }) => {
+    this.commentService.editComment.subscribe((comment) => {
+      const { content } = comment;
       this.content = content;
       if (content !== '') {
+        if (comment.id === this.editedComment?.id) {
+          return;
+        }
+        this.editedComment = comment;
         this.startEditingComment();
       } else {
+        this.editedComment = comment;
         this.stopEditingComment();
       }
     });
@@ -47,10 +55,7 @@ export class CommentEditComponent implements OnInit {
 
   private startEditingComment() {
     this.isEditingComment = true;
-    this.textContentDisappearTimeout.forEach((timeout) =>
-      clearTimeout(timeout)
-    );
-    this.textContentAppearTimeout = [];
+    this.clearTimeouts(this.textContentDisappearTimeouts);
     this.commentDTO.content = '';
     this.letterIndex = 0;
     this.animateTextContentAppearance();
@@ -58,29 +63,41 @@ export class CommentEditComponent implements OnInit {
 
   private stopEditingComment() {
     this.isEditingComment = false;
-    this.textContentAppearTimeout.forEach((timeout) => clearTimeout(timeout));
-    this.textContentAppearTimeout = [];
+    this.clearTimeouts(this.textContentAppearTimeouts);
     this.animateTextContentDisappearance();
+  }
+
+  private clearTimeouts(timeouts: Array<NodeJS.Timeout>) {
+    timeouts.forEach((timeout) => clearTimeout(timeout));
+    timeouts = [];
   }
 
   private animateTextContentAppearance(): void {
     this.commentDTO.content += this.content.charAt(this.letterIndex);
     this.letterIndex++;
-    this.textContentAppearTimeout.push(
-      setTimeout(
-        () => this.animateTextContentAppearance(),
-        this.CONTENT_TEXT_ANIMATION_SPEED
-      )
-    );
+    if (this.commentDTO.content.length === 0) {
+      this.clearTimeouts(this.textContentAppearTimeouts);
+    } else {
+      this.textContentAppearTimeouts.push(
+        setTimeout(
+          () => this.animateTextContentAppearance(),
+          this.CONTENT_TEXT_ANIMATION_SPEED
+        )
+      );
+    }
   }
 
   private animateTextContentDisappearance(): void {
     this.commentDTO.content = this.commentDTO.content.slice(0, -1);
-    this.textContentDisappearTimeout.push(
-      setTimeout(
-        () => this.animateTextContentDisappearance(),
-        this.CONTENT_TEXT_ANIMATION_SPEED
-      )
-    );
+    if (this.commentDTO.content.length === 0) {
+      this.clearTimeouts(this.textContentDisappearTimeouts);
+    } else {
+      this.textContentDisappearTimeouts.push(
+        setTimeout(
+          () => this.animateTextContentDisappearance(),
+          this.CONTENT_TEXT_ANIMATION_SPEED
+        )
+      );
+    }
   }
 }

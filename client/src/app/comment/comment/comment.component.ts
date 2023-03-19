@@ -42,7 +42,13 @@ export class CommentComponent implements OnInit {
 
   constructor(private commentService: CommentService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.commentService.editComment.subscribe(({ id }) => {
+      if (this.comment.id !== id) {
+        this.wasEditingStarted = false;
+      }
+    });
+  }
 
   onStartEditingComment(): void {
     this.wasEditingStarted = true;
@@ -53,6 +59,7 @@ export class CommentComponent implements OnInit {
       if (isHovered) {
         this.commentService.startEditingComment(this.comment);
       } else {
+        this.wasEditingStarted = false;
         this.commentService.stopEditingComment();
       }
     }
