@@ -42,25 +42,26 @@ export class CommentComponent implements OnInit {
 
   constructor(private commentService: CommentService) {}
 
-  ngOnInit(): void {
-    this.commentService.editComment.subscribe(
-      ({ id }) => (this.wasEditingStarted = this.comment.id === id)
-    );
-  }
+  ngOnInit(): void {}
 
   onStartEditingComment(): void {
-    this.commentService.startEditingComment(this.comment);
+    this.wasEditingStarted = true;
   }
 
   onHoverEditButton(isHovered: boolean): void {
-    if (!isHovered && !this.wasEditingStarted) {
-      this.commentService.stopEditingComment();
+    if (!this.wasEditingStarted) {
+      if (isHovered) {
+        this.commentService.startEditingComment(this.comment);
+      } else {
+        this.commentService.stopEditingComment();
+      }
     }
   }
 
   onDeleteComment(): void {
     this.deleteState = this.DELETE_STATE.DELETE;
     if (this.wasEditingStarted) {
+      this.wasEditingStarted = false;
       this.commentService.stopEditingComment();
     }
     this.commentService.deleteComment(this.postId, this.comment.id);
@@ -72,6 +73,10 @@ export class CommentComponent implements OnInit {
     }
     if (isHovered) {
       this.commentContentWrapper.nativeElement.scrollTop = 0;
+    }
+    if (this.wasEditingStarted) {
+      this.wasEditingStarted = false;
+      this.commentService.stopEditingComment();
     }
     this.deleteState = isHovered
       ? this.DELETE_STATE.ENTER
