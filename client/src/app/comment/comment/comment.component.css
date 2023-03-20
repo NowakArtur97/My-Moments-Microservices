@@ -4,6 +4,7 @@
   align-items: flex-start;
 
   height: 12vh;
+  min-height: 60px;
 }
 
 .comment__author_photo_wrapper,
@@ -34,10 +35,50 @@
 .comment__header {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 
   width: 100%;
 
+  /* font-size: 0.75em; */
+}
+
+.comment__author {
+  flex: 20%;
   font-size: 0.75em;
+}
+
+.comment__buttons_wrapper {
+  flex: 80%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.comment__button_wrapper {
+  height: 100%;
+  margin-right: 10%;
+}
+
+.comment__button {
+  height: 100%;
+  padding: 5px 20%;
+  border: 1em hsl(0, 0%, 7%);
+  background-color: hsl(0, 0%, 7%);
+
+  font-size: 0.65em;
+  color: hsl(0, 0%, 100%);
+
+  transition: background-color 0.3s, color 0.3s;
+
+  cursor: pointer;
+}
+
+.comment__button:hover {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 7%);
 }
 
 .comment__content_wrapper {
@@ -47,7 +88,6 @@
   position: relative;
   width: 100%;
   height: 100%;
-
   margin: auto;
 
   overflow-y: auto;
@@ -56,7 +96,7 @@
 .comment__content {
   margin: auto;
 
-  font-size: 0.6em;
+  font-size: 0.75em;
 
   overflow-y: hidden;
 }
@@ -278,8 +318,16 @@
     font-size: 0.9em;
   }
 
+  .comment__author {
+    font-size: 0.9em;
+  }
+
+  .comment__button {
+    font-size: 0.85em;
+  }
+
   .comment__content {
-    font-size: 0.75em;
+    font-size: 0.9em;
   }
 
   .comment__create_date {
@@ -294,6 +342,18 @@
 @media (min-width: 1024px) {
   .comment__header {
     font-size: 1.15em;
+  }
+
+  .comment__author {
+    font-size: 1em;
+  }
+
+  .comment__button_wrapper {
+    margin-right: 5%;
+  }
+
+  .comment__button {
+    font-size: 0.95em;
   }
 
   .comment__content {

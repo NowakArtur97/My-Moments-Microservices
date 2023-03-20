@@ -13,29 +13,31 @@
   <div class="comment__data">
     <div class="comment__header">
       <div class="comment__author">{{ comment.author }}</div>
-      <div class="comment__button_wrapper">
-        <button
-          appOnClickStopPropagation
-          (mouseenter)="onHoverEditButton(true)"
-          (mouseleave)="onHoverEditButton(false)"
-          (click)="onStartEditingComment()"
-          type="button"
-          class="comment__button"
-        >
-          Edit
-        </button>
-      </div>
-      <div class="comment__button_wrapper">
-        <button
-          appOnClickStopPropagation
-          (mouseenter)="onHoverDeleteButton(true)"
-          (mouseleave)="onHoverDeleteButton(false)"
-          (click)="onDeleteComment()"
-          type="button"
-          class="comment__button"
-        >
-          Delete
-        </button>
+      <div class="comment__buttons_wrapper">
+        <div class="comment__button_wrapper">
+          <button
+            appOnClickStopPropagation
+            (mouseenter)="onHoverEditButton(true)"
+            (mouseleave)="onHoverEditButton(false)"
+            (click)="onStartEditingComment()"
+            type="button"
+            class="comment__button"
+          >
+            Edit
+          </button>
+        </div>
+        <div class="comment__button_wrapper">
+          <button
+            appOnClickStopPropagation
+            (mouseenter)="onHoverDeleteButton(true)"
+            (mouseleave)="onHoverDeleteButton(false)"
+            (click)="onDeleteComment()"
+            type="button"
+            class="comment__button"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
     <div
