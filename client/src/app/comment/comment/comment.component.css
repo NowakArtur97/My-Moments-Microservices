@@ -10,7 +10,6 @@
 .comment__author_photo_wrapper,
 .comment__data {
   display: flex;
-  justify-content: space-around;
 
   height: 100%;
 }
@@ -39,8 +38,6 @@
   justify-content: space-between;
 
   width: 100%;
-
-  /* font-size: 0.75em; */
 }
 
 .comment__author {
@@ -97,6 +94,7 @@
   margin: auto;
 
   font-size: 0.75em;
+  text-align: center;
 
   overflow-y: hidden;
 }
@@ -313,7 +311,7 @@
   }
 }
 
-@media (min-height: 480px) {
+@media (min-height: 640px) {
   .comment__header {
     font-size: 0.9em;
   }
