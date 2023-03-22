@@ -1,5 +1,20 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { CommentService } from 'src/app/comment/services/comments.service';
 
 import PostElement from '../models/post-element.model';
@@ -67,6 +82,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (this.post.stoppedBeingActive) {
       this.post.stoppedBeingActive = false;
       clearTimeout(this.rotationTimeout);
+      this.commentService.stopEditingComment();
       this.changeCommentsVisibilityOnTimeout(false);
     }
   }
@@ -84,20 +100,14 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     this.isRotating = true;
     if (this.post.state === PostState.ACTIVE) {
       const boundingClientRect = this.postElement.nativeElement.getBoundingClientRect();
-      if (this.post.isCurrentlyLastElement) {
-        this.startWidth =
-          boundingClientRect.width -
-          window.innerWidth * +`0.${this.RIGHT_PADDING_FIX}`;
-      } else {
-        this.startWidth = boundingClientRect.width;
-      }
-      this.startHeight = boundingClientRect.height;
+      this.setSizes(boundingClientRect);
       this.post.state = PostState.COMMENTS_SHOWEN;
       this.showCommentsAnimationStartTime = new Date().getTime();
       this.commentService.getComments(this.post.id);
       this.changeCommentsVisibilityOnTimeout(true);
     } else {
       this.post.state = PostState.ACTIVE;
+      this.commentService.stopEditingComment();
       this.changeCommentsVisibilityOnTimeout(false);
     }
   }
@@ -185,5 +195,16 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     this.stateTimeout = setTimeout(() => {
       this.areCommentsVisible = areCommentsVisibleAfterTimeout;
     }, timeout);
+  }
+
+  private setSizes(boundingClientRect: DOMRect) {
+    if (this.post.isCurrentlyLastElement) {
+      this.startWidth =
+        boundingClientRect.width -
+        window.innerWidth * +`0.${this.RIGHT_PADDING_FIX}`;
+    } else {
+      this.startWidth = boundingClientRect.width;
+    }
+    this.startHeight = boundingClientRect.height;
   }
 }
