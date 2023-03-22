@@ -48,7 +48,7 @@
   border: 1em hsl(0, 0%, 7%);
   background-color: hsl(0, 0%, 7%);
 
-  font-size: 0.75em;
+  font-size: 0.9em;
   color: hsl(0, 0%, 100%);
 
   transition: background-color 0.3s, color 0.3s;
@@ -147,7 +147,7 @@
 
 @media (min-height: 720px) {
   .post__button {
-    font-size: 1.6em;
+    font-size: 1.4em;
   }
 
   .post__author_username {
@@ -166,7 +166,7 @@
 
 @media (min-width: 1024px) {
   .post__button {
-    font-size: 2em;
+    font-size: 1.75em;
   }
 
   .post__author {

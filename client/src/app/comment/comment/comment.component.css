@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: flex-start;
 
-  height: 12vh;
+  height: 15vh;
   min-height: 60px;
 }
 
@@ -42,7 +42,6 @@
 
 .comment__author {
   flex: 20%;
-  font-size: 0.75em;
 }
 
 .comment__buttons_wrapper {
@@ -56,7 +55,7 @@
 
 .comment__button_wrapper {
   height: 100%;
-  margin-right: 10%;
+  margin-right: 8%;
 }
 
 .comment__button {
@@ -65,7 +64,7 @@
   border: 1em hsl(0, 0%, 7%);
   background-color: hsl(0, 0%, 7%);
 
-  font-size: 0.65em;
+  font-size: 0.75em;
   color: hsl(0, 0%, 100%);
 
   transition: background-color 0.3s, color 0.3s;
@@ -93,7 +92,7 @@
 .comment__content {
   margin: auto;
 
-  font-size: 0.65em;
+  font-size: 0.9em;
   text-align: center;
 
   overflow-y: hidden;
@@ -128,7 +127,7 @@
 .comment__create_date {
   margin-left: auto;
 
-  font-size: 0.45em;
+  font-size: 0.75em;
   color: hsl(0, 0%, 50%);
 }
 
@@ -267,7 +266,7 @@
   top: 50%;
   left: 50%;
 
-  font-size: 1.25em;
+  font-size: 2em;
   color: hsl(0, 0%, 100%);
 
   transform: scale(0);
@@ -312,57 +311,49 @@
 }
 
 @media (min-height: 720px) {
-  .comment__header {
-    font-size: 0.9em;
-  }
-
   .comment__author {
-    font-size: 0.9em;
+    font-size: 1.6em;
   }
 
   .comment__button {
-    font-size: 0.85em;
+    font-size: 1.4em;
   }
 
   .comment__content {
-    font-size: 0.8em;
+    font-size: 1.4em;
   }
 
   .comment__create_date {
-    font-size: 0.6em;
+    font-size: 1.4em;
   }
 
   .comment__bin_text {
-    font-size: 1.5em;
+    font-size: 2.5em;
   }
 }
 
 @media (min-width: 1024px) {
-  .comment__header {
-    font-size: 1.15em;
-  }
-
   .comment__author {
-    font-size: 1em;
+    font-size: 2em;
   }
 
   .comment__button_wrapper {
-    margin-right: 5%;
+    margin-right: 7%;
   }
 
   .comment__button {
-    font-size: 0.95em;
+    font-size: 1.75em;
   }
 
   .comment__content {
-    font-size: 0.95em;
+    font-size: 1.75em;
   }
 
   .comment__create_date {
-    font-size: 0.85em;
+    font-size: 1.75em;
   }
 
   .comment__bin_text {
-    font-size: 1.75em;
+    font-size: 3em;
   }
 }

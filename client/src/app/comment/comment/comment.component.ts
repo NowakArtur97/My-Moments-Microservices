@@ -1,4 +1,10 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import Comment from '../models/comment.model';
@@ -13,7 +19,7 @@ import { CommentService } from '../services/comments.service';
       state(
         'enter',
         style({
-          height: '12vh',
+          height: '15vh',
         })
       ),
       state(
