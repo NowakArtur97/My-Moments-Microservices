@@ -23,7 +23,7 @@
 }
 
 .comment__data {
-  flex-basis: 75%;
+  flex-basis: 65%;
 
   flex-direction: column;
   align-items: flex-start;
