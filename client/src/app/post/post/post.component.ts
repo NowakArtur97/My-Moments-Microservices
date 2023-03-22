@@ -19,6 +19,7 @@ import { CommentService } from 'src/app/comment/services/comments.service';
 
 import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
+import { PostService } from '../services/post.service';
 
 @Component({
   selector: 'app-post',
@@ -71,6 +72,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   private rotationTimeout!: NodeJS.Timeout;
 
   constructor(
+    private postService: PostService,
     private commentService: CommentService,
     private renderer: Renderer2
   ) {}
@@ -90,6 +92,10 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   ngOnChanges(): void {
     this.setupStyles();
   }
+
+  onEditPost(): void {}
+
+  onDeletePost(): void {}
 
   onShowComments(): void {
     if (this.post.state === PostState.INACTIVE || this.isRotating) {

@@ -6,6 +6,26 @@
     class="post"
   >
     <div *ngIf="!areCommentsVisible" class="post__data">
+      <div class="post__buttons_wrapper">
+        <div class="post__button_wrapper">
+          <button
+            appOnClickStopPropagation
+            (click)="onEditPost()"
+            class="post__button"
+          >
+            Edit
+          </button>
+        </div>
+        <div class="post__button_wrapper">
+          <button
+            appOnClickStopPropagation
+            (click)="onDeletePost()"
+            class="post__button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
       <img
         (click)="onShowComments()"
         src="{{ post.photos[post.currentPhotoIndex] }}"

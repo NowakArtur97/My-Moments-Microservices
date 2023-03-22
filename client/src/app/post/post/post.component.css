@@ -1,7 +1,6 @@
 .post__wrapper {
   height: 84vh;
 
-  font-size: 1.5em;
   font-weight: 600;
   color: hsl(0, 0%, 7%);
 
@@ -14,12 +13,52 @@
 }
 
 .post__data {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
   height: 100%;
+}
+
+.post__buttons_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 5%;
+}
+
+.post__button_wrapper {
+  height: 100%;
+  width: 25%;
+}
+
+.post__button {
+  height: 100%;
+  width: 100%;
+
+  border: 1em hsl(0, 0%, 7%);
+  background-color: hsl(0, 0%, 7%);
+
+  font-size: 0.75em;
+  color: hsl(0, 0%, 100%);
+
+  transition: background-color 0.3s, color 0.3s;
+
+  cursor: pointer;
+}
+
+.post__button:hover {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 7%);
 }
 
 .post__author,
@@ -51,6 +90,10 @@
 .post__desciption {
   flex-basis: 5%;
   justify-content: center;
+}
+
+.post__caption {
+  font-size: 0.9em;
 }
 
 .post__photo {
@@ -102,14 +145,40 @@
   right: 4%;
 }
 
-@media (min-width: 1024px) {
-  .post__author {
-    flex-basis: 7%;
+@media (min-height: 720px) {
+  .post__button {
+    font-size: 1.6em;
+  }
+
+  .post__author_username {
+    font-size: 1.6em;
   }
 
   .post__author_photo {
     height: 32px;
     width: 32px;
+  }
+
+  .post__caption {
+    font-size: 1.4em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .post__button {
+    font-size: 2em;
+  }
+
+  .post__author {
+    flex-basis: 7%;
+  }
+
+  .post__author_username {
+    font-size: 2em;
+  }
+
+  .post__caption {
+    font-size: 1.75em;
   }
 
   .post__photo {
