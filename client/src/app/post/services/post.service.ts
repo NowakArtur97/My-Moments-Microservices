@@ -69,9 +69,8 @@ export class PostService extends HttpService {
   deletePost(postId: string) {
     this.httpClient.delete(`${environment.postServiceUrl}/${postId}`).subscribe(
       () => {},
-      (httpErrorResponse: HttpErrorResponse) => {
-        this.logErrors(httpErrorResponse);
-      }
+      (httpErrorResponse: HttpErrorResponse) =>
+        this.logErrors(httpErrorResponse)
     );
   }
 

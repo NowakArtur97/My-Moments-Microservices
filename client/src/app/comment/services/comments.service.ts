@@ -73,9 +73,8 @@ export class CommentService extends HttpService {
       )
       .subscribe(
         () => {},
-        (httpErrorResponse: HttpErrorResponse) => {
-          this.logErrors(httpErrorResponse);
-        }
+        (httpErrorResponse: HttpErrorResponse) =>
+          this.logErrors(httpErrorResponse)
       );
   }
 

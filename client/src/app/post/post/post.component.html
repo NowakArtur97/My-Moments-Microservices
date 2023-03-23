@@ -1,8 +1,10 @@
 <div #postElement class="post__wrapper">
   <div
-    [@state]="{
+    [@postState]="{
       value: getStateForAnimation()
     }"
+    [@deletePost]="deleteState"
+    (@deletePost.done)="onPostDeleteAnimationFinished()"
     class="post"
   >
     <div *ngIf="!areCommentsVisible" class="post__data">

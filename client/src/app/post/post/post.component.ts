@@ -1,5 +1,20 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { CommentService } from 'src/app/comment/services/comments.service';
 
 import PostElement from '../models/post-element.model';
@@ -11,7 +26,7 @@ import { PostService } from '../services/post.service';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css'],
   animations: [
-    trigger('state', [
+    trigger('postState', [
       state(
         'inactive',
         style({
@@ -36,6 +51,21 @@ import { PostService } from '../services/post.service';
       transition('comments => active', animate('1.5s')),
       transition('comments => inactive', animate('1.5s')),
     ]),
+    trigger('deletePost', [
+      state(
+        'enter',
+        style({
+          transform: 'scale(1)',
+        })
+      ),
+      state(
+        'delete',
+        style({
+          transform: 'scale(0)',
+        })
+      ),
+      transition('enter => delete', [animate('0.5s')]),
+    ]),
   ],
 })
 export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
@@ -46,6 +76,11 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   private readonly FULL_ANIMATION_TIME = 1500;
   private readonly HALF_ANIMATION_TIME = this.FULL_ANIMATION_TIME / 2;
 
+  private readonly DELETE_STATE = {
+    ENTER: 'enter',
+    DELETE: 'delete',
+  };
+  deleteState = this.DELETE_STATE.ENTER;
   areCommentsVisible = false;
   isRotating = false;
 
@@ -81,7 +116,14 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   onEditPost(): void {}
 
   onDeletePost(): void {
+    this.deleteState = this.DELETE_STATE.DELETE;
     this.postService.deletePost(this.post.id);
+  }
+
+  onPostDeleteAnimationFinished(): void {
+    if (this.deleteState === this.DELETE_STATE.DELETE) {
+      this.postService.hidePost(this.post.id);
+    }
   }
 
   onShowComments(): void {
