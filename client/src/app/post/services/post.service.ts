@@ -66,6 +66,21 @@ export class PostService extends HttpService {
       );
   }
 
+  deletePost(postId: string) {
+    this.httpClient.delete(`${environment.postServiceUrl}/${postId}`).subscribe(
+      () => {},
+      (httpErrorResponse: HttpErrorResponse) => {
+        this.logErrors(httpErrorResponse);
+      }
+    );
+  }
+
+  hidePost(postId: string): void {
+    this.myPosts.next([
+      ...this.myPosts.getValue().filter((post) => post.id !== postId),
+    ]);
+  }
+
   mapPostsToElements = (posts: Post[]): PostElement[] =>
     posts.map((post) => ({
       ...post,

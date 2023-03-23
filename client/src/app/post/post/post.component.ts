@@ -1,20 +1,5 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { CommentService } from 'src/app/comment/services/comments.service';
 
 import PostElement from '../models/post-element.model';
@@ -95,7 +80,9 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
 
   onEditPost(): void {}
 
-  onDeletePost(): void {}
+  onDeletePost(): void {
+    this.postService.deletePost(this.post.id);
+  }
 
   onShowComments(): void {
     if (this.post.state === PostState.INACTIVE || this.isRotating) {
