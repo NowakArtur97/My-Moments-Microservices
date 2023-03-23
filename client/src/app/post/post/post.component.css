@@ -47,6 +47,7 @@
 
   border: 1em hsl(0, 0%, 7%);
   background-color: hsl(0, 0%, 7%);
+  opacity: 0.75;
 
   font-size: 0.9em;
   color: hsl(0, 0%, 100%);
@@ -117,13 +118,15 @@
   justify-content: center;
   align-items: center;
 
-  height: 24px;
-  width: 24px;
+  height: 16px;
+  width: 16px;
 
   border-radius: 50%;
   background-color: hsl(0, 0%, 100%);
 
   opacity: 0.75;
+
+  font-size: 0.9em;
 
   transition: all 0.5s;
 
@@ -138,11 +141,11 @@
 }
 
 .post__photo_change_button--left {
-  left: 4%;
+  left: 2%;
 }
 
 .post__photo_change_button--right {
-  right: 4%;
+  right: 2%;
 }
 
 @media (min-height: 720px) {
@@ -160,6 +163,13 @@
   }
 
   .post__caption {
+    font-size: 1.4em;
+  }
+
+  .post__photo_change_button {
+    height: 32px;
+    width: 32px;
+
     font-size: 1.4em;
   }
 }
@@ -187,7 +197,6 @@
   }
 
   .post__photo_change_button {
-    height: 32px;
-    width: 32px;
+    font-size: 1.75em;
   }
 }
