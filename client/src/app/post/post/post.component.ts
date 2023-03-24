@@ -1,21 +1,8 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommentService } from 'src/app/comment/services/comments.service';
+import { APP_ROUTES } from 'src/app/common/const.data';
 
 import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
@@ -94,7 +81,8 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   constructor(
     private postService: PostService,
     private commentService: CommentService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -113,7 +101,10 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     this.setupStyles();
   }
 
-  onEditPost(): void {}
+  onEditPost(): void {
+    this.postService.startEditingPost(this.post);
+    this.router.navigate([`/${APP_ROUTES.post.editor}`]);
+  }
 
   onDeletePost(): void {
     this.deleteState = this.DELETE_STATE.DELETE;

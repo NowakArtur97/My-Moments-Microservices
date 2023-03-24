@@ -27,6 +27,7 @@ export class PostService extends HttpService {
       return { ...post, currentPhotoIndex: 0 };
     })
   );
+  editedPost = new BehaviorSubject<Post | null>(null);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient);
@@ -63,6 +64,23 @@ export class PostService extends HttpService {
           });
           this.handleSuccessfullPostsResponse(mockPosts);
         }
+      );
+  }
+
+  startEditingPost = (post: Post): void => this.editedPost.next(post);
+
+  editPost(postId: string, postDTO: PostDTO): void {
+    const { files, caption } = postDTO;
+    const multipartData = this.createFormDataFromFiles(
+      [{ key: 'photos', files }],
+      [{ key: 'post', value: { caption } }]
+    );
+    this.httpClient
+      .put<Post>(`${environment.postServiceUrl}/${postId}`, multipartData)
+      .subscribe(
+        (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
+        (httpErrorResponse: HttpErrorResponse) =>
+          this.logErrors(httpErrorResponse)
       );
   }
 

@@ -4,6 +4,6 @@ export const APP_ROUTES = {
   auth: 'auth',
   post: {
     posts: 'posts',
-    new: 'new',
+    editor: 'editor',
   },
 };

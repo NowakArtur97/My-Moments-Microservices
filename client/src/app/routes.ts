@@ -16,7 +16,7 @@ const routes: Routes = [
     resolve: { posts: MyPostsResolver },
   },
   {
-    path: APP_ROUTES.post.new,
+    path: APP_ROUTES.post.editor,
     component: PostWrapperComponent,
     // canActivate: [AuthGuard],
   },
