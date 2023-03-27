@@ -6,6 +6,7 @@ import EditorFilter from '../models/editor-slider.model';
 import Filter from '../models/filter.model';
 import ImageSnippet from '../models/image-snippet.model';
 import PostDTO from '../models/post.dto';
+import Post from '../models/post.model';
 import { PostService } from '../services/post.service';
 
 @Component({
@@ -23,6 +24,7 @@ export class PostEditComponent implements OnInit {
   filtersCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
 
   postDTO: PostDTO = { caption: 'Description', files: [] };
+  editedPost: Post | null = null;
   currentPhotoIndex = 0;
   files: ImageSnippet[] = [];
   filters: Filter[] = [];
@@ -36,11 +38,16 @@ export class PostEditComponent implements OnInit {
   shouldSetCanvasSize = true;
 
   constructor(
-    private postServce: PostService,
+    private postService: PostService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.postService.editedPost.subscribe((editedPost) => {
+      this.editedPost = editedPost;
+      this.loadPostToEditor();
+    });
+  }
 
   onAddImages(imageInput: HTMLInputElement): void {
     const inputFiles = imageInput.files;
@@ -83,7 +90,11 @@ export class PostEditComponent implements OnInit {
       this.postDTO.caption = '';
     }
     this.postDTO.files = this.files.map((file) => file.blob);
-    this.postServce.createPost(this.postDTO);
+    if (this.editedPost === null) {
+      this.postService.createPost(this.postDTO);
+    } else {
+      this.postService.editPost(this.editedPost.id, this.postDTO);
+    }
   }
 
   onChangeCurrentPhoto(value: number): void {
@@ -99,6 +110,18 @@ export class PostEditComponent implements OnInit {
     if (this.isFirstClick) {
       this.isFirstClick = false;
       this.postDTO.caption = '';
+    }
+  }
+
+  private loadPostToEditor() {
+    if (this.editedPost !== null) {
+      const { caption, photos } = this.editedPost;
+      this.postDTO.caption = caption;
+      photos.forEach((file, index) => {
+        fetch(file)
+          .then((res) => res.blob())
+          .then((blob) => this.loadData(new File([blob], `image_${index}`)));
+      });
     }
   }
 

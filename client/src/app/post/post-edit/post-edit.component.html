@@ -2,7 +2,10 @@
   [ngStyle]="{ 'align-items': files.length === 0 ? 'center' : 'start' }"
   class="post_edit__wrapper"
 >
-  <div *ngIf="files.length === 0" class="post_edit__image_button_wrapper">
+  <div
+    *ngIf="files.length === 0 && editedPost === null"
+    class="post_edit__image_button_wrapper"
+  >
     <input
       #imageInput
       (change)="onAddImages(imageInput)"
