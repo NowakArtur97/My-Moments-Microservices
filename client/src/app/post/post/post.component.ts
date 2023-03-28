@@ -38,17 +38,32 @@ import { PostService } from '../services/post.service';
       transition('comments => active', animate('1.5s')),
       transition('comments => inactive', animate('1.5s')),
     ]),
+    trigger('editPost', [
+      state(
+        'enter',
+        style({
+          transform: 'translateY(0) scale(1)',
+        })
+      ),
+      state(
+        'edit',
+        style({
+          transform: 'translateY(-200%) scale(1)',
+        })
+      ),
+      transition('enter => edit', [animate('0.5s')]),
+    ]),
     trigger('deletePost', [
       state(
         'enter',
         style({
-          transform: 'scale(1)',
+          transform: 'translateY(0) scale(1)',
         })
       ),
       state(
         'delete',
         style({
-          transform: 'scale(0)',
+          transform: 'translateY(200%) scale(1)',
         })
       ),
       transition('enter => delete', [animate('0.5s')]),
@@ -63,10 +78,15 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   private readonly FULL_ANIMATION_TIME = 1500;
   private readonly HALF_ANIMATION_TIME = this.FULL_ANIMATION_TIME / 2;
 
+  private readonly EDIT_STATE = {
+    ENTER: 'enter',
+    EDIT: 'edit',
+  };
   private readonly DELETE_STATE = {
     ENTER: 'enter',
     DELETE: 'delete',
   };
+  editState = this.DELETE_STATE.ENTER;
   deleteState = this.DELETE_STATE.ENTER;
   areCommentsVisible = false;
   isRotating = false;
@@ -102,11 +122,23 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   onEditPost(): void {
+    if (this.deleteState === this.DELETE_STATE.DELETE) {
+      return;
+    }
+    this.editState = this.EDIT_STATE.EDIT;
     this.postService.startEditingPost(this.post);
-    this.router.navigate([`/${APP_ROUTES.post.editor}`]);
+  }
+
+  onPostEditAnimationFinished(): void {
+    if (this.editState === this.EDIT_STATE.EDIT) {
+      this.router.navigate([`/${APP_ROUTES.post.editor}`]);
+    }
   }
 
   onDeletePost(): void {
+    if (this.editState === this.EDIT_STATE.EDIT) {
+      return;
+    }
     this.deleteState = this.DELETE_STATE.DELETE;
     this.postService.deletePost(this.post.id);
   }
@@ -149,6 +181,12 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   getStateForAnimation(): string {
+    if (
+      this.editState === this.EDIT_STATE.EDIT ||
+      this.deleteState === this.DELETE_STATE.DELETE
+    ) {
+      return 'default';
+    }
     switch (this.post.state) {
       case PostState.ACTIVE:
         return 'active';
@@ -164,7 +202,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   shouldShowComments = (): boolean =>
     this.post.state === PostState.COMMENTS_SHOWEN;
 
-  areChangeCurrentPhotoButtonsVisible(): boolean {
+  areFrontElementsVisible(): boolean {
     return this.post.state === PostState.ACTIVE && !this.isRotating;
   }
 

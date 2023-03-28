@@ -3,12 +3,14 @@
     [@postState]="{
       value: getStateForAnimation()
     }"
+    [@editPost]="editState"
+    (@editPost.done)="onPostEditAnimationFinished()"
     [@deletePost]="deleteState"
     (@deletePost.done)="onPostDeleteAnimationFinished()"
     class="post"
   >
     <div *ngIf="!areCommentsVisible" class="post__data">
-      <div class="post__buttons_wrapper">
+      <div *ngIf="areFrontElementsVisible()" class="post__buttons_wrapper">
         <div class="post__button_wrapper">
           <button
             appOnClickStopPropagation
@@ -47,10 +49,7 @@
       <div class="post__desciption">
         <p class="post__caption">{{ post.caption }}</p>
       </div>
-      <div
-        *ngIf="areChangeCurrentPhotoButtonsVisible()"
-        class="post__photo_change_buttons"
-      >
+      <div *ngIf="areFrontElementsVisible()" class="post__photo_change_buttons">
         <div
           [ngStyle]="{ display: post.currentPhotoIndex > 0 ? 'flex' : 'none' }"
           (click)="onChangeCurrentPhoto(-1)"
