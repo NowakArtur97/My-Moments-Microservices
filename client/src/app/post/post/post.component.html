@@ -3,10 +3,7 @@
     [@postState]="{
       value: getStateForAnimation()
     }"
-    [@editPost]="editState"
-    (@editPost.done)="onPostEditAnimationFinished()"
-    [@deletePost]="deleteState"
-    (@deletePost.done)="onPostDeleteAnimationFinished()"
+    (@postState.done)="onAnimationFinished()"
     class="post"
   >
     <div *ngIf="!areCommentsVisible" class="post__data">
