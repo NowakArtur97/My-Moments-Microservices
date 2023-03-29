@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import ALL_EDITOR_FILTERS from '../data/editor.filters.data';
@@ -13,9 +14,27 @@ import { PostService } from '../services/post.service';
   selector: 'app-post-edit',
   templateUrl: './post-edit.component.html',
   styleUrls: ['./post-edit.component.css'],
+  animations: [
+    trigger('editorState', [
+      state(
+        'new',
+        style({
+          transform: 'translateY(0%)',
+        })
+      ),
+      state(
+        'edit',
+        style({
+          transform: 'translateY(200%)',
+        })
+      ),
+      transition('edit => new', animate('0.5s')),
+    ]),
+  ],
 })
 export class PostEditComponent implements OnInit {
   private readonly FILTERS_LOAD_INTERVAL_IN_MS = 50;
+  private readonly EDITOR_STATES = { NEW: 'new', EDIT: 'edit' };
 
   @ViewChild('image', { static: false }) mainImage!: ElementRef;
   @ViewChild('canvas', { static: false }) mainImageCanvas!: ElementRef;
@@ -36,6 +55,8 @@ export class PostEditComponent implements OnInit {
   filtersInterval!: any;
   isFirstClick = true;
   shouldSetCanvasSize = true;
+
+  editorState = this.EDITOR_STATES.NEW;
 
   constructor(
     private postService: PostService,
@@ -115,12 +136,16 @@ export class PostEditComponent implements OnInit {
 
   private loadPostToEditor() {
     if (this.editedPost !== null) {
+      this.editorState = this.EDITOR_STATES.EDIT;
       const { caption, photos } = this.editedPost;
       this.postDTO.caption = caption;
       photos.forEach((file, index) => {
         fetch(file)
           .then((res) => res.blob())
-          .then((blob) => this.loadData(new File([blob], `image_${index}`)));
+          .then((blob) => {
+            this.loadData(new File([blob], `image_${index}`));
+            this.editorState = this.EDITOR_STATES.NEW;
+          });
       });
     }
   }

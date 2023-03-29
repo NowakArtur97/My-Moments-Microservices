@@ -22,7 +22,11 @@
       Upload images
     </button>
   </div>
-  <div *ngIf="files.length > 0" class="post_edit__image_wrapper">
+  <div
+    [@editorState]="editorState"
+    *ngIf="files.length > 0 || editedPost !== null"
+    class="post_edit__image_wrapper"
+  >
     <img #image src="#" alt="Current image" class="post_edit__image" />
     <canvas #canvas class="post_edit__canvas"></canvas>
     <div *ngIf="files.length > 0" class="post_edit__photo_change_buttons">
