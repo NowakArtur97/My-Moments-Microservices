@@ -72,9 +72,10 @@
 }
 
 .post_edit__image_wrapper {
-  position: relative;
-
   flex-basis: 60%;
+
+  position: relative;
+  height: 60%;
   width: 100%;
 
   display: flex;
@@ -84,6 +85,8 @@
 }
 
 .post_edit__image {
+  height: 100%;
+  width: 100%;
   display: none;
   object-fit: scale-down;
 }
@@ -95,10 +98,10 @@
 
 .post_edit__photo_change_buttons {
   position: absolute;
-  offset: 0;
-
-  height: 100%;
-  width: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .post_edit__photo_change_button {
@@ -145,6 +148,7 @@
   flex-direction: column;
 
   height: 100%;
+  flex-basis: 40%;
   width: 100%;
 
   opacity: 0.9;
@@ -360,6 +364,7 @@
   }
 
   .post_edit__image_wrapper {
+    flex-basis: 60%;
     height: 100%;
   }
 
