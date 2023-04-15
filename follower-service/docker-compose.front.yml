@@ -3,18 +3,38 @@ version: '2.4'
 networks:
   my-moments:
     driver: bridge
-    external: false
     name: my-moments
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
 
 services:
+  follower-service:
+    restart: on-failure
+    build:
+      context: .
+    networks:
+      - my-moments
+    ports:
+      - "8084:8084"
+    volumes:
+      - /follower-service/dir:/app
+    depends_on:
+      - configuration-service
+      - neo4j
+    container_name: follower-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
   configuration-service:
     restart: on-failure
+    networks:
+      - my-moments
     build:
       context: ../configuration-service
       dockerfile: Dockerfile
     image: configuration-service:latest
-    networks:
-      - my-moments
     ports:
       - "8888:8888"
     volumes:
