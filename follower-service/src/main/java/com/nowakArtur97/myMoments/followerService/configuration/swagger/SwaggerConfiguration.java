@@ -1,82 +1,67 @@
 package com.nowakArtur97.myMoments.followerService.configuration.swagger;
 
-import com.nowakArtur97.myMoments.followerService.feature.resource.FollowerTag;
-import com.nowakArtur97.myMoments.followerService.feature.resource.FollowingTag;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
-
-import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties(value = SwaggerConfigurationProperties.class)
+@OpenAPIDefinition(info = @Info(title = "Follower API", version = "v1"))
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 class SwaggerConfiguration {
 
     @Bean
-    Docket docket(SwaggerConfigurationProperties swaggerConfigurationProperties) {
+    GroupedOpenApi groupedOpenApi(SwaggerConfigurationProperties swaggerConfigurationProperties) {
 
-        return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
-                .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                .paths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors()))
-                .build()
-                .apiInfo(getApiDetails(swaggerConfigurationProperties))
-                .tags(
-                        new Tag(FollowerTag.RESOURCE, FollowerTag.DESCRIPTION),
-                        new Tag(FollowingTag.RESOURCE, FollowingTag.DESCRIPTION)
-                ).securityContexts(List.of(getSecurityContext(swaggerConfigurationProperties)))
-                .securitySchemes(List.of(getApiKey(swaggerConfigurationProperties)));
+        return GroupedOpenApi
+                .builder()
+                .group("user")
+                .pathsToMatch(swaggerConfigurationProperties.getPathSelectors())
+                .build();
     }
 
-    private ApiInfo getApiDetails(SwaggerConfigurationProperties swaggerConfigurationProperties) {
+    @Bean
+    OpenAPI getApiDetails(SwaggerConfigurationProperties swaggerConfigurationProperties) {
 
-        return new ApiInfoBuilder()
-                .version(swaggerConfigurationProperties.getVersion())
-                .title(swaggerConfigurationProperties.getTitle())
-                .description(swaggerConfigurationProperties.getDescription())
-                .termsOfServiceUrl(swaggerConfigurationProperties.getTermsOfServiceUrl())
-                .license(swaggerConfigurationProperties.getLicense())
-                .licenseUrl(swaggerConfigurationProperties.getLicenseUrl())
-                .contact(getContact(swaggerConfigurationProperties))
-                .build();
+        return new OpenAPI()
+                .components(new Components())
+                .info(new io.swagger.v3.oas.models.info.Info()
+                        .version(swaggerConfigurationProperties.getVersion())
+                        .title(swaggerConfigurationProperties.getTitle())
+                        .description(swaggerConfigurationProperties.getDescription())
+                        .termsOfService(swaggerConfigurationProperties.getTermsOfServiceUrl())
+                        .license(getLicense(swaggerConfigurationProperties))
+                        .contact(getContact(swaggerConfigurationProperties))
+                );
+    }
+
+    private License getLicense(SwaggerConfigurationProperties swaggerConfigurationProperties) {
+        License license = new License();
+        license.setName(swaggerConfigurationProperties.getLicense());
+        license.setUrl(swaggerConfigurationProperties.getLicenseUrl());
+        return license;
     }
 
     private Contact getContact(SwaggerConfigurationProperties swaggerConfigurationProperties) {
 
-        return new Contact(swaggerConfigurationProperties.getContactName(),
-                swaggerConfigurationProperties.getContactUrl(), swaggerConfigurationProperties.getContactEmail());
-    }
-
-    private ApiKey getApiKey(SwaggerConfigurationProperties swaggerConfigurationProperties) {
-
-        return new ApiKey("JWT", swaggerConfigurationProperties.getAuthorizationHeader(), "header");
-    }
-
-    private SecurityContext getSecurityContext(SwaggerConfigurationProperties swaggerConfigurationProperties) {
-
-        return SecurityContext.builder()
-                .securityReferences(getDefaultAuth())
-                .forPaths(PathSelectors.ant(swaggerConfigurationProperties.getPathSelectors()))
-                .build();
-    }
-
-    private List<SecurityReference> getDefaultAuth() {
-
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-
-        authorizationScopes[0] = authorizationScope;
-
-        return List.of(new SecurityReference("JWT", authorizationScopes));
+        Contact contact = new Contact();
+        contact.setName(swaggerConfigurationProperties.getContactName());
+        contact.setUrl(swaggerConfigurationProperties.getContactUrl());
+        contact.setEmail(swaggerConfigurationProperties.getContactEmail());
+        return contact;
     }
 }

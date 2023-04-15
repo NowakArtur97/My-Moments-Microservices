@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(value = SwaggerConfigurationProperties.class)
-@OpenAPIDefinition(info = @Info(title = "Post API", version = "v1"))
+@OpenAPIDefinition(info = @Info(title = "Comment API", version = "v1"))
 @SecurityScheme(
         name = "bearerAuth",
         type = SecuritySchemeType.HTTP,

@@ -1,9 +1,12 @@
 package com.nowakArtur97.myMoments.followerService.feature.resource;
 
-import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
 import com.nowakArtur97.myMoments.followerService.jwt.JwtUtil;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,8 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/followers")
 @Validated
 @RequiredArgsConstructor
-@Api(tags = {FollowerTag.RESOURCE})
-@ApiResponses(value = {
-        @ApiResponse(code = 401, message = "Permission to the resource is prohibited"),
-        @ApiResponse(code = 403, message = "Access to the resource is prohibited")})
+@Tag(name = FollowerTag.RESOURCE, description = FollowerTag.DESCRIPTION)
+@ApiResponses(value = {@ApiResponse(responseCode = "401", description = "Permission to the resource is prohibited"), @ApiResponse(responseCode = "403", description = "Access to the resource is prohibited")})
 class FollowerController {
 
     private final FollowerService followerService;
@@ -28,30 +29,27 @@ class FollowerController {
     private final JwtUtil jwtUtil;
 
     @GetMapping(path = "/{username}")
-    @ApiOperation(value = "Find User's Followers by Username", notes = "Provide a name to look up specific Followers")
+    @Operation(summary = "Find User's Followers by Username", description = "Provide a name to look up specific Followers")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully found followers", response = UsersAcquaintancesModel.class),
-            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "Successfully found followers"),
+            @ApiResponse(responseCode = "400", description = "Invalid User's name supplied")})
     Mono<ResponseEntity<UsersAcquaintancesModel>> getFollowers(
-            @ApiParam(value = "Username of the Followers being looked up", name = "username", type = "string",
-                    required = true, example = "username")
-            @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String username
-    ) {
+            @Parameter(description = "Username of the Followers being looked up", name = "username", required = true, example = "username")
+            @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String username) {
 
         return followerService.findFollowers(username)
                 .map(ResponseEntity::ok);
     }
 
     @PostMapping("/{username}")
-    @ApiOperation("Follow user")
+    @Operation(summary = "Follow user")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Successfully followed User"),
-            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "200", description = "Successfully followed User"),
+            @ApiResponse(responseCode = "400", description = "Invalid User's name supplied")})
     Mono<ResponseEntity<Void>> followUser(
-            @ApiParam(value = "Username of the User being followed", name = "username", type = "string",
-                    required = true, example = "username")
+            @Parameter(description = "Username of the User being followed", name = "username", required = true, example = "username")
             @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String usernameToFollow,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMap((username) -> followerService.followUser(username, usernameToFollow))
@@ -59,16 +57,15 @@ class FollowerController {
     }
 
     @DeleteMapping("/{username}")
-    @ApiOperation("Unfollow user")
+    @Operation(summary = "Unfollow user")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successfully unfollowed User"),
-            @ApiResponse(code = 400, message = "Invalid User's name supplied", response = ErrorResponse.class),
-            @ApiResponse(code = 404, message = "Could not find User with provided username", response = ErrorResponse.class)})
+            @ApiResponse(responseCode = "204", description = "Successfully unfollowed User"),
+            @ApiResponse(responseCode = "400", description = "Invalid User's name supplied"),
+            @ApiResponse(responseCode = "404", description = "Could not find User with provided username")})
     Mono<ResponseEntity<Void>> unfollowUser(
-            @ApiParam(value = "Username of the User being unfollowed", name = "username", type = "string",
-                    required = true, example = "username")
+            @Parameter(description = "Username of the User being unfollowed", name = "username", required = true, example = "username")
             @PathVariable("username") @Valid @NotBlankParam(message = "{follower.username.blank}") String usernameToFollow,
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
 
         return Mono.just(jwtUtil.extractUsernameFromHeader(authorizationHeader))
                 .flatMap((username) -> followerService.unfollowUser(username, usernameToFollow))

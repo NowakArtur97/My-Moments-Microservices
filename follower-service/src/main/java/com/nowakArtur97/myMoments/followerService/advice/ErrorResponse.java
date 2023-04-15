@@ -1,7 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.advice;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,18 +8,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+
 @AllArgsConstructor
 @Getter
-@ApiModel(description = "Details about the Error")
+@Schema(description = "Details about the Error")
 public class ErrorResponse {
 
-    @ApiModelProperty(notes = "Error's time")
+    @Schema(accessMode = READ_ONLY, description = "Error's time")
     private final LocalDateTime timestamp;
 
-    @ApiModelProperty(notes = "Error's status")
+    @Schema(accessMode = READ_ONLY, description = "Error's status")
     private final int status;
 
-    @ApiModelProperty(notes = "Details about the cause of the error")
+    @Schema(accessMode = READ_ONLY, description = "Details about the cause of the error")
     private final List<String> errors;
 
     @Override

@@ -89,21 +89,21 @@ public class FollowerService {
 
     public Mono<UsersAcquaintancesModel> findFollowers(String username) {
 
-        return mapFluxToUsersAcquaintancesModel(userService.findFollowers(username), username);
+        return mapFluxToUsersAcquaintancesModel(userService.findFollowers(username));
     }
 
     public Mono<UsersAcquaintancesModel> findFollowed(String username) {
 
-        return mapFluxToUsersAcquaintancesModel(userService.findFollowed(username), username);
+        return mapFluxToUsersAcquaintancesModel(userService.findFollowed(username));
     }
 
 
     public Mono<UsersAcquaintancesModel> recommendUsers(String username, Integer minDegree, Integer maxDegree) {
 
-        return mapFluxToUsersAcquaintancesModel(userService.recommendUsers(username, minDegree, maxDegree), username);
+        return mapFluxToUsersAcquaintancesModel(userService.recommendUsers(username, minDegree, maxDegree));
     }
 
-    private Mono<UsersAcquaintancesModel> mapFluxToUsersAcquaintancesModel(Flux<UserNode> users, String username) {
+    private Mono<UsersAcquaintancesModel> mapFluxToUsersAcquaintancesModel(Flux<UserNode> users) {
 
         return users
                 .map(follower -> new UserModel(follower.getUsername()))
