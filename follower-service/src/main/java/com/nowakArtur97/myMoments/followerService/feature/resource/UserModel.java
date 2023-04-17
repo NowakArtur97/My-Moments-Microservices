@@ -15,4 +15,14 @@ public class UserModel implements User {
 
     @Schema(accessMode = READ_ONLY, description = "The user's name")
     private String username;
+
+    @Schema(accessMode = READ_ONLY, description = "The user's following count")
+    private int numberOfFollowing;
+
+    @Schema(accessMode = READ_ONLY, description = "The user's followers count")
+    private int numberOfFollowers;
+
+    public UserModel(String username) {
+        this.username = username;
+    }
 }

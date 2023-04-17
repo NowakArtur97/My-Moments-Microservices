@@ -3,7 +3,9 @@ package com.nowakArtur97.myMoments.followerService.feature.node;
 final class Queries {
 
     private static final String USER_MATCH = "MATCH (u:User {username: $username})-[:";
-    private static final String USERS_RETURN = "]->(f:User) RETURN f";
+    private static final String USERS_RETURN = "]->(f:User) RETURN f.username as username, " +
+            "SIZE( (f)-[:IS_FOLLOWING]->() ) as following, " +
+            "SIZE( (f)-[:IS_FOLLOWED]->() ) as followers";
 
     public static final String FIND_FOLLOWERS = USER_MATCH + Relationships.FOLLOWED_RELATIONSHIP + USERS_RETURN;
 

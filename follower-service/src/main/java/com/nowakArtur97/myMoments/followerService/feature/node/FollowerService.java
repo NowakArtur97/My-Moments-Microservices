@@ -89,12 +89,16 @@ public class FollowerService {
 
     public Mono<UsersAcquaintancesModel> findFollowers(String username) {
 
-        return mapFluxToUsersAcquaintancesModel(userService.findFollowers(username));
+        return userService.findFollowers(username)
+                .collect(Collectors.toList())
+                .map(UsersAcquaintancesModel::new);
     }
 
     public Mono<UsersAcquaintancesModel> findFollowed(String username) {
 
-        return mapFluxToUsersAcquaintancesModel(userService.findFollowed(username));
+        return userService.findFollowed(username)
+                .collect(Collectors.toList())
+                .map(UsersAcquaintancesModel::new);
     }
 
 

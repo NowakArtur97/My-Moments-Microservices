@@ -53,7 +53,7 @@ public class UserTestBuilder {
 
             case MODEL:
 
-                user = new UserModel(username);
+                user = new UserModel(username, following.size(), followers.size());
 
                 break;
 

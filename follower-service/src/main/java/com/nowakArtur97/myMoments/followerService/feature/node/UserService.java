@@ -1,5 +1,6 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
+import com.nowakArtur97.myMoments.followerService.feature.resource.UserModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
@@ -14,13 +15,16 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.Iterator;
 
-import static com.nowakArtur97.myMoments.followerService.feature.node.Queries.RECOMMEND;
+import static com.nowakArtur97.myMoments.followerService.feature.node.Queries.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 class UserService {
 
+    private final static String USERNAME_VARIABLE = "username";
+    private final static String FOLLOWING_VARIABLE_NAME = "following";
+    private final static String FOLLOWERS_VARIABLE_NAME = "followers";
     private final static String MIN_DEGREE_VARIABLE = "$minDegree";
     private final static String MAX_DEGREE_VARIABLE = "$maxDegree";
 
@@ -34,18 +38,18 @@ class UserService {
         return userRepository.findByUsername(username);
     }
 
-    Flux<UserNode> findFollowers(String username) {
+    Flux<UserModel> findFollowers(String username) {
 
         log.info("Looking up Followers of a User: {}", username);
 
-        return userRepository.findFollowers(username);
+        return extractUsersFromRecord(username, FIND_FOLLOWERS);
     }
 
-    Flux<UserNode> findFollowed(String username) {
+    Flux<UserModel> findFollowed(String username) {
 
         log.info("Looking up Followed of a User: {}", username);
 
-        return userRepository.findFollowed(username);
+        return extractUsersFromRecord(username, FIND_FOLLOWED);
     }
 
     Flux<UserNode> recommendUsers(String username, Integer minDegree, Integer maxDegree) {
@@ -55,9 +59,8 @@ class UserService {
         String query = RECOMMEND.replace(MIN_DEGREE_VARIABLE, String.valueOf(minDegree));
         query = query.replace(MAX_DEGREE_VARIABLE, String.valueOf(maxDegree));
 
-        return reactiveClient
-                .query(query)
-                .bind(username).to("username")
+        return reactiveClient.query(query)
+                .bind(username).to(USERNAME_VARIABLE)
                 .fetchAs(UserNode.class)
                 .mappedBy(this::extractUserFromRecord)
                 .all();
@@ -103,7 +106,7 @@ class UserService {
         int usernameIndex;
         int index = 0;
         while (keysIterator.hasNext()) {
-            if ("username".equals(keysIterator.next())) {
+            if (USERNAME_VARIABLE.equals(keysIterator.next())) {
                 break;
             }
             index++;
@@ -118,5 +121,20 @@ class UserService {
             index++;
         }
         return new UserNode(username, Collections.emptySet(), Collections.emptySet());
+    }
+
+    private Flux<UserModel> extractUsersFromRecord(String username, String query) {
+        return reactiveClient.query(query)
+                .bind(username).to(USERNAME_VARIABLE)
+                .fetchAs(UserModel.class)
+                .mappedBy((ts, record) -> mapToUserModel(record))
+                .all();
+    }
+
+    private UserModel mapToUserModel(Record record) {
+        return new UserModel(
+                record.get(USERNAME_VARIABLE).asString(),
+                record.get(FOLLOWING_VARIABLE_NAME).asInt(),
+                record.get(FOLLOWERS_VARIABLE_NAME).asInt());
     }
 }
