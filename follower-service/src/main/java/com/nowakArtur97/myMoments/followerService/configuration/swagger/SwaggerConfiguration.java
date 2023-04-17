@@ -8,10 +8,13 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties(value = SwaggerConfigurationProperties.class)
@@ -36,9 +39,18 @@ class SwaggerConfiguration {
 
     @Bean
     OpenAPI getApiDetails(SwaggerConfigurationProperties swaggerConfigurationProperties) {
-
+        final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
-                .components(new Components())
+                .components(
+                        new Components()
+                                .addSecuritySchemes(securitySchemeName,
+                                        new io.swagger.v3.oas.models.security.SecurityScheme()
+                                                .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
+                                                .scheme("bearer")
+                                                .bearerFormat("JWT")
+                                )
+                )
+                .security(List.of(new SecurityRequirement().addList(securitySchemeName)))
                 .info(new io.swagger.v3.oas.models.info.Info()
                         .version(swaggerConfigurationProperties.getVersion())
                         .title(swaggerConfigurationProperties.getTitle())
