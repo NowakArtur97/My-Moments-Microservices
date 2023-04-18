@@ -4,16 +4,10 @@ import com.nowakArtur97.myMoments.followerService.feature.resource.UserModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
-import org.neo4j.driver.Value;
-import org.neo4j.driver.types.Node;
-import org.neo4j.driver.types.TypeSystem;
 import org.springframework.data.neo4j.core.ReactiveNeo4jClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
-import java.util.Iterator;
 
 import static com.nowakArtur97.myMoments.followerService.feature.node.Queries.*;
 
@@ -42,28 +36,24 @@ class UserService {
 
         log.info("Looking up Followers of a User: {}", username);
 
-        return extractUsersFromRecord(username, FIND_FOLLOWERS);
+        return extractUserFromRecord(username, FIND_FOLLOWERS);
     }
 
     Flux<UserModel> findFollowed(String username) {
 
         log.info("Looking up Followed of a User: {}", username);
 
-        return extractUsersFromRecord(username, FIND_FOLLOWED);
+        return extractUserFromRecord(username, FIND_FOLLOWED);
     }
 
-    Flux<UserNode> recommendUsers(String username, Integer minDegree, Integer maxDegree) {
+    Flux<UserModel> recommendUsers(String username, Integer minDegree, Integer maxDegree) {
 
         log.info("Looking up Users to recommend for User: {} with degree from: {} to: {}", username, minDegree, maxDegree);
 
-        String query = RECOMMEND.replace(MIN_DEGREE_VARIABLE, String.valueOf(minDegree));
-        query = query.replace(MAX_DEGREE_VARIABLE, String.valueOf(maxDegree));
+        String query = RECOMMEND.replace(MIN_DEGREE_VARIABLE, String.valueOf(minDegree))
+                .replace(MAX_DEGREE_VARIABLE, String.valueOf(maxDegree));
 
-        return reactiveClient.query(query)
-                .bind(username).to(USERNAME_VARIABLE)
-                .fetchAs(UserNode.class)
-                .mappedBy(this::extractUserFromRecord)
-                .all();
+        return extractUserFromRecord(username, query);
     }
 
     Mono<UserNode> saveUser(UserNode userNode) {
@@ -99,31 +89,7 @@ class UserService {
         return unfollowVoid;
     }
 
-    private UserNode extractUserFromRecord(TypeSystem ts, Record record) {
-        int nodeIndexInRecord = 0;
-        Node userNode = record.values().get(nodeIndexInRecord).asNode();
-        Iterator<String> keysIterator = userNode.keys().iterator();
-        int usernameIndex;
-        int index = 0;
-        while (keysIterator.hasNext()) {
-            if (USERNAME_VARIABLE.equals(keysIterator.next())) {
-                break;
-            }
-            index++;
-        }
-        usernameIndex = index;
-        index = 0;
-        String username = null;
-        for (Value value : userNode.values()) {
-            if (usernameIndex == index) {
-                username = value.asString();
-            }
-            index++;
-        }
-        return new UserNode(username, Collections.emptySet(), Collections.emptySet());
-    }
-
-    private Flux<UserModel> extractUsersFromRecord(String username, String query) {
+    private Flux<UserModel> extractUserFromRecord(String username, String query) {
         return reactiveClient.query(query)
                 .bind(username).to(USERNAME_VARIABLE)
                 .fetchAs(UserModel.class)

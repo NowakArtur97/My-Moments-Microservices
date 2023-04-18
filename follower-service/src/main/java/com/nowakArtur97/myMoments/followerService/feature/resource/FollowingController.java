@@ -57,7 +57,7 @@ class FollowingController {
                     required = true, example = "1")
             @RequestParam(name = "minDegree", required = false) Optional<Integer> minDegree,
             @Parameter(description = "Max degree of the recommended Users being looked up", name = "maxDegree",
-                    required = true, example = "1")
+                    required = true, example = "2")
             @RequestParam(name = "maxDegree", required = false) Optional<Integer> maxDegree
     ) {
 

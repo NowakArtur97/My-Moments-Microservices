@@ -27,6 +27,8 @@ final class Queries {
             "-[:IS_FOLLOWING* $minDegree .. $maxDegree]->(f:User) " +
             "WHERE NOT (u)-[:IS_FOLLOWING]->(f) " +
             "AND u <> f " +
-            "RETURN f, COUNT(*) " +
-            "ORDER BY COUNT(*) DESC, f";
+            "RETURN f.username as username, COUNT(*), " +
+            "SIZE( (f)-[:IS_FOLLOWING]->() ) as following, " +
+            "SIZE( (f)-[:IS_FOLLOWED]->() ) as followers " +
+            "ORDER BY COUNT(*) DESC, username";
 }

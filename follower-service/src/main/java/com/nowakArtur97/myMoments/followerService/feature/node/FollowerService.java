@@ -2,12 +2,10 @@ package com.nowakArtur97.myMoments.followerService.feature.node;
 
 import com.nowakArtur97.myMoments.followerService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
-import com.nowakArtur97.myMoments.followerService.feature.resource.UserModel;
 import com.nowakArtur97.myMoments.followerService.feature.resource.UsersAcquaintancesModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
@@ -104,13 +102,7 @@ public class FollowerService {
 
     public Mono<UsersAcquaintancesModel> recommendUsers(String username, Integer minDegree, Integer maxDegree) {
 
-        return mapFluxToUsersAcquaintancesModel(userService.recommendUsers(username, minDegree, maxDegree));
-    }
-
-    private Mono<UsersAcquaintancesModel> mapFluxToUsersAcquaintancesModel(Flux<UserNode> users) {
-
-        return users
-                .map(follower -> new UserModel(follower.getUsername()))
+        return userService.recommendUsers(username, minDegree, maxDegree)
                 .collect(Collectors.toList())
                 .map(UsersAcquaintancesModel::new);
     }
