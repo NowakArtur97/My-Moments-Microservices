@@ -1,6 +1,7 @@
 package com.nowakArtur97.myMoments.followerService.feature.node;
 
 import com.nowakArtur97.myMoments.followerService.feature.UserTestBuilder;
+import com.nowakArtur97.myMoments.followerService.feature.resource.UserModel;
 import com.nowakArtur97.myMoments.followerService.feature.resource.UsersAcquaintancesModel;
 import com.nowakArtur97.myMoments.followerService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.followerService.testUtil.generator.NameWithSpacesGenerator;
@@ -68,9 +69,12 @@ class FollowerServiceTest {
             String followerName = "follower";
             String followerName2 = "follower2";
 
-            UserNode follower = (UserNode) userTestBuilder.withUsername(followerName).build(ObjectType.NODE);
-            UserNode follower2 = (UserNode) userTestBuilder.withUsername(followerName2).build(ObjectType.NODE);
-            List<UserNode> followers = List.of(follower, follower2);
+            UserModel follower = (UserModel) userTestBuilder.withUsername(followerName).build(ObjectType.MODEL);
+            UserNode userNodeExpected = (UserNode) userTestBuilder.withUsername(followerName).build(ObjectType.NODE);
+            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(userNodeExpected);
+            UserModel follower2 = (UserModel) userTestBuilder.withUsername(followerName2)
+                    .withFollowing(Set.of(followingRelationshipExpected)).build(ObjectType.MODEL);
+            List<UserModel> followers = List.of(follower, follower2);
 
             when(userService.findFollowers(username)).thenReturn(Flux.fromIterable(followers));
 
@@ -79,6 +83,12 @@ class FollowerServiceTest {
             StepVerifier.create(acquaintancesActualMono)
                     .thenConsumeWhile(
                             acquaintancesActual -> {
+                                UserModel actualUser = acquaintancesActual.getUsers().stream()
+                                        .filter(user -> user.getUsername().equals(followerName))
+                                        .findFirst().get();
+                                UserModel actualUser2 = acquaintancesActual.getUsers().stream()
+                                        .filter(user -> user.getUsername().equals(followerName2))
+                                        .findFirst().get();
                                 assertAll(
                                         () -> assertEquals(followers.size(), acquaintancesActual.getUsers().size(),
                                                 () -> "should return followers: " + followers.size()
@@ -87,10 +97,23 @@ class FollowerServiceTest {
                                                         .anyMatch(user -> user.getUsername().equals(followerName)),
                                                 () -> "should return follower with name: " + followerName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertEquals(follower.getNumberOfFollowers(), actualUser.getNumberOfFollowers(),
+                                                () -> "should return follower with same number of followers: " + follower.getNumberOfFollowers()
+                                                        + ", but was: " + actualUser.getNumberOfFollowers()),
+                                        () -> assertEquals(follower.getNumberOfFollowing(), actualUser.getNumberOfFollowing(),
+                                                () -> "should return follower with same number of following: " + follower.getNumberOfFollowing()
+                                                        + ", but was: " + actualUser.getNumberOfFollowing()),
+
                                         () -> assertTrue(acquaintancesActual.getUsers().stream()
                                                         .anyMatch(user -> user.getUsername().equals(followerName2)),
                                                 () -> "should return follower with name: " + followerName2
                                                         + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertEquals(follower2.getNumberOfFollowers(), actualUser2.getNumberOfFollowers(),
+                                                () -> "should return follower with same number of followers: " + follower2.getNumberOfFollowers()
+                                                        + ", but was: " + actualUser2.getNumberOfFollowers()),
+                                        () -> assertEquals(follower2.getNumberOfFollowing(), actualUser2.getNumberOfFollowing(),
+                                                () -> "should return follower with same number of following: " + follower2.getNumberOfFollowing()
+                                                        + ", but was: " + actualUser2.getNumberOfFollowing()),
                                         () -> verify(userService, times(1)).findFollowers(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
@@ -127,9 +150,12 @@ class FollowerServiceTest {
             String followedName = "followed";
             String followedName2 = "followed2";
 
-            UserNode followed = (UserNode) userTestBuilder.withUsername(followedName).build(ObjectType.NODE);
-            UserNode followed2 = (UserNode) userTestBuilder.withUsername(followedName2).build(ObjectType.NODE);
-            List<UserNode> following = List.of(followed, followed2);
+            UserModel followed = (UserModel) userTestBuilder.withUsername(followedName).build(ObjectType.MODEL);
+            UserNode userNodeExpected = (UserNode) userTestBuilder.withUsername(followedName).build(ObjectType.NODE);
+            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(userNodeExpected);
+            UserModel followed2 = (UserModel) userTestBuilder.withUsername(followedName2)
+                    .withFollowers(Set.of(followingRelationshipExpected)).build(ObjectType.MODEL);
+            List<UserModel> following = List.of(followed, followed2);
 
             when(userService.findFollowed(username)).thenReturn(Flux.fromIterable(following));
 
@@ -138,6 +164,12 @@ class FollowerServiceTest {
             StepVerifier.create(acquaintancesActualMono)
                     .thenConsumeWhile(
                             acquaintancesActual -> {
+                                UserModel actualUser = acquaintancesActual.getUsers().stream()
+                                        .filter(user -> user.getUsername().equals(followedName))
+                                        .findFirst().get();
+                                UserModel actualUser2 = acquaintancesActual.getUsers().stream()
+                                        .filter(user -> user.getUsername().equals(followedName2))
+                                        .findFirst().get();
                                 assertAll(
                                         () -> assertEquals(following.size(), acquaintancesActual.getUsers().size(),
                                                 () -> "should return following: " + following.size()
@@ -146,10 +178,23 @@ class FollowerServiceTest {
                                                         .anyMatch(user -> user.getUsername().equals(followedName)),
                                                 () -> "should return following with name: " + followedName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertEquals(followed.getNumberOfFollowers(), actualUser.getNumberOfFollowers(),
+                                                () -> "should return followed with same number of followers: " + followed.getNumberOfFollowers()
+                                                        + ", but was: " + actualUser.getNumberOfFollowers()),
+                                        () -> assertEquals(followed.getNumberOfFollowing(), actualUser.getNumberOfFollowing(),
+                                                () -> "should return followed with same number of following: " + followed.getNumberOfFollowing()
+                                                        + ", but was: " + actualUser.getNumberOfFollowing()),
+
                                         () -> assertTrue(acquaintancesActual.getUsers().stream()
                                                         .anyMatch(user -> user.getUsername().equals(followedName2)),
                                                 () -> "should return following with name: " + followedName2
                                                         + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertEquals(followed2.getNumberOfFollowers(), actualUser2.getNumberOfFollowers(),
+                                                () -> "should return followed with same number of followers: " + followed2.getNumberOfFollowers()
+                                                        + ", but was: " + actualUser.getNumberOfFollowers()),
+                                        () -> assertEquals(followed2.getNumberOfFollowing(), actualUser2.getNumberOfFollowing(),
+                                                () -> "should return followed with same number of following: " + followed2.getNumberOfFollowing()
+                                                        + ", but was: " + actualUser2.getNumberOfFollowing()),
                                         () -> verify(userService, times(1)).findFollowed(username),
                                         () -> verifyNoMoreInteractions(userService));
                                 return true;
