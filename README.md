@@ -97,15 +97,16 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 - Automatically add secrets to the Vault
 - User registration
 - JWT authorization
-- Users endpoint (PUT, DELETE)
-- Posts endpoint (GET, POST, PUT, DELETE)
-- Comments endpoint (GET, POST, PUT, DELETE)
+- Users API
+- Posts API
+- Comments API
+- Followers API
 - Documentation created using Swagger 2
 - Custom password validation
+- User recommendations using Neo4j
 
 ## To Do
 
-- User recommendations
 - Adding fake data at specified intervals
 
 ## Endpoints List:
@@ -146,9 +147,13 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 
 ### Followers
 
-| Method    | URI                          | Action                                                               |
-| --------- | ---------------------------- | -------------------------------------------------------------------- |
-| `POST`     | `/api/v1/followers/{username}`        | `Follow the User`
+| Method  | URI                                            | Action                                                               |
+|---------|------------------------------------------------| -------------------------------------------------------------------- |
+| `GET`   | `/api/v1/following/recommendations/{username}` | `Get user's following recommendations by username`
+| `GET`   | `/api/v1/following/{username}`                 | `Get user's following by username`
+| `GET`   | `/api/v1/followers/{username}`                 | `Get user's followers by username`
+| `POST`  | `/api/v1/followers/{username}`                 | `Follow the User`
+| `Delete` | `/api/v1/followers/{username}`                 | `Unollow the User`
 
 ## Status
 
