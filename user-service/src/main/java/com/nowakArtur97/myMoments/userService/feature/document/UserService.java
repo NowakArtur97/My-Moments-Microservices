@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.management.relation.RoleNotFoundException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,6 +54,13 @@ public class UserService {
     public Optional<UserDocument> findByUsername(String username) {
 
         return userRepository.findByUsername(username);
+    }
+
+    public List<UserDocument> findUserPhotos(List<String> usernames) {
+
+        log.info("Looking up Photos of users: {}", usernames);
+
+        return userRepository.findByUsernameIn(usernames);
     }
 
     public UserDocument registerUser(@Valid UserRegistrationDTO userRegistrationDTO, MultipartFile image)

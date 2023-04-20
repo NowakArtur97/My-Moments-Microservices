@@ -16,7 +16,6 @@ services:
     mem_limit: 256M
     mem_reservation: 64M
 
-
   mongo-db-user-service:
     image: mongo:3.6
     ports:

@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -45,6 +47,20 @@ class UserController {
     private final UserObjectMapper userObjectMapper;
 
     private final ModelMapper modelMapper;
+
+    @GetMapping(path = "/photos")
+    @ApiOperation("Get User photos by Usernames")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully found photos")})
+    ResponseEntity<List<UserModel>> getUserPhotos(
+            @ApiParam(value = "Usernames", name = "usernames", required = true)
+            @RequestParam("usernames") List<String> usernames
+    ) {
+        List<UserModel> userPhotos = userService.findUserPhotos(usernames).stream()
+                .map(userDocument -> modelMapper.map(userDocument, UserModel.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userPhotos, HttpStatus.OK);
+    }
 
     @PutMapping(path = "/me", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation("Update an account")

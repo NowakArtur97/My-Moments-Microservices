@@ -27,4 +27,7 @@ public class UserProfileModel implements UserProfile {
 
     @ApiModelProperty(notes = "The user's location")
     private String location;
+
+    @ApiModelProperty(notes = "The user's image")
+    private byte[] image;
 }
