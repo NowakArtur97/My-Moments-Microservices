@@ -98,10 +98,10 @@ class FollowerServiceTest {
                                                 () -> "should return follower with name: " + followerName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> assertEquals(follower.getNumberOfFollowers(), actualUser.getNumberOfFollowers(),
-                                                () -> "should return follower with same number of followers: " + follower.getNumberOfFollowers()
+                                                () -> "should return follower with number of followers: " + follower.getNumberOfFollowers()
                                                         + ", but was: " + actualUser.getNumberOfFollowers()),
                                         () -> assertEquals(follower.getNumberOfFollowing(), actualUser.getNumberOfFollowing(),
-                                                () -> "should return follower with same number of following: " + follower.getNumberOfFollowing()
+                                                () -> "should return follower with number of following: " + follower.getNumberOfFollowing()
                                                         + ", but was: " + actualUser.getNumberOfFollowing()),
 
                                         () -> assertTrue(acquaintancesActual.getUsers().stream()
@@ -109,10 +109,10 @@ class FollowerServiceTest {
                                                 () -> "should return follower with name: " + followerName2
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> assertEquals(follower2.getNumberOfFollowers(), actualUser2.getNumberOfFollowers(),
-                                                () -> "should return follower with same number of followers: " + follower2.getNumberOfFollowers()
+                                                () -> "should return follower with number of followers: " + follower2.getNumberOfFollowers()
                                                         + ", but was: " + actualUser2.getNumberOfFollowers()),
                                         () -> assertEquals(follower2.getNumberOfFollowing(), actualUser2.getNumberOfFollowing(),
-                                                () -> "should return follower with same number of following: " + follower2.getNumberOfFollowing()
+                                                () -> "should return follower with number of following: " + follower2.getNumberOfFollowing()
                                                         + ", but was: " + actualUser2.getNumberOfFollowing()),
                                         () -> verify(userService, times(1)).findFollowers(username),
                                         () -> verifyNoMoreInteractions(userService));
@@ -179,10 +179,10 @@ class FollowerServiceTest {
                                                 () -> "should return following with name: " + followedName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> assertEquals(followed.getNumberOfFollowers(), actualUser.getNumberOfFollowers(),
-                                                () -> "should return followed with same number of followers: " + followed.getNumberOfFollowers()
+                                                () -> "should return followed with number of followers: " + followed.getNumberOfFollowers()
                                                         + ", but was: " + actualUser.getNumberOfFollowers()),
                                         () -> assertEquals(followed.getNumberOfFollowing(), actualUser.getNumberOfFollowing(),
-                                                () -> "should return followed with same number of following: " + followed.getNumberOfFollowing()
+                                                () -> "should return followed with number of following: " + followed.getNumberOfFollowing()
                                                         + ", but was: " + actualUser.getNumberOfFollowing()),
 
                                         () -> assertTrue(acquaintancesActual.getUsers().stream()
@@ -190,10 +190,10 @@ class FollowerServiceTest {
                                                 () -> "should return following with name: " + followedName2
                                                         + ", but was: " + acquaintancesActual.getUsers()),
                                         () -> assertEquals(followed2.getNumberOfFollowers(), actualUser2.getNumberOfFollowers(),
-                                                () -> "should return followed with same number of followers: " + followed2.getNumberOfFollowers()
+                                                () -> "should return followed with number of followers: " + followed2.getNumberOfFollowers()
                                                         + ", but was: " + actualUser.getNumberOfFollowers()),
                                         () -> assertEquals(followed2.getNumberOfFollowing(), actualUser2.getNumberOfFollowing(),
-                                                () -> "should return followed with same number of following: " + followed2.getNumberOfFollowing()
+                                                () -> "should return followed with number of following: " + followed2.getNumberOfFollowing()
                                                         + ", but was: " + actualUser2.getNumberOfFollowing()),
                                         () -> verify(userService, times(1)).findFollowed(username),
                                         () -> verifyNoMoreInteractions(userService));

@@ -5,6 +5,8 @@ import com.nowakArtur97.myMoments.followerService.exception.ForbiddenException;
 import com.nowakArtur97.myMoments.followerService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.followerService.feature.UserTestBuilder;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
+import com.nowakArtur97.myMoments.followerService.feature.node.FollowingRelationship;
+import com.nowakArtur97.myMoments.followerService.feature.node.UserNode;
 import com.nowakArtur97.myMoments.followerService.jwt.JwtUtil;
 import com.nowakArtur97.myMoments.followerService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.followerService.testUtil.generator.NameWithSpacesGenerator;
@@ -22,6 +24,7 @@ import reactor.test.StepVerifier;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -76,7 +79,10 @@ class FollowerControllerTest {
             String username = "user";
             String followerName = "followerName";
 
-            UserModel userModel = (UserModel) userTestBuilder.withUsername(followerName).build(ObjectType.MODEL);
+            UserNode userNodeExpected = (UserNode) userTestBuilder.withUsername(followerName).build(ObjectType.NODE);
+            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(userNodeExpected);
+            UserModel userModel = (UserModel) userTestBuilder.withUsername(followerName)
+                    .withFollowers(Set.of(followingRelationshipExpected)).build(ObjectType.MODEL);
             UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(List.of(userModel));
 
             when(followerService.findFollowers(username)).thenReturn(Mono.just(usersAcquaintancesModelExpected));
@@ -94,6 +100,9 @@ class FollowerControllerTest {
             StepVerifier.create(usersAcquaintancesModelMono)
                     .thenConsumeWhile(
                             acquaintancesActual -> {
+                                UserModel actualUserModel = usersAcquaintancesModelExpected.getUsers().stream()
+                                        .filter(user -> user.getUsername().equals(followerName))
+                                        .findFirst().get();
                                 assertAll(
                                         () -> assertEquals(usersAcquaintancesModelExpected.getUsers().size(),
                                                 acquaintancesActual.getUsers().size(),
@@ -103,6 +112,12 @@ class FollowerControllerTest {
                                                         .anyMatch(user -> user.getUsername().equals(followerName)),
                                                 () -> "should return follower with name: " + followerName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertEquals(actualUserModel.getNumberOfFollowing(), userModel.getNumberOfFollowing(),
+                                                () -> "should return follower with number of following: " + userModel.getNumberOfFollowing()
+                                                        + ", but was: " + actualUserModel.getNumberOfFollowing()),
+                                        () -> assertEquals(actualUserModel.getNumberOfFollowers(), userModel.getNumberOfFollowers(),
+                                                () -> "should return follower with number of followers: " + userModel.getNumberOfFollowers()
+                                                        + ", but was: " + actualUserModel.getNumberOfFollowers()),
                                         () -> verify(followerService, times(1)).findFollowers(username),
                                         () -> verifyNoMoreInteractions(followerService),
                                         () -> verifyNoInteractions(jwtUtil));
@@ -243,9 +258,9 @@ class FollowerControllerTest {
                     .thenConsumeWhile(
                             errorResponse -> {
                                 assertAll(() -> assertEquals(exceptionMessage,
-                                        errorResponse.getErrors().get(0),
-                                        () -> "should return error response with message: " + exceptionMessage + ", but was: "
-                                                + errorResponse.getErrors().get(0)),
+                                                errorResponse.getErrors().get(0),
+                                                () -> "should return error response with message: " + exceptionMessage + ", but was: "
+                                                        + errorResponse.getErrors().get(0)),
                                         () -> assertEquals(1, errorResponse.getErrors().size(),
                                                 () -> "should return error response with 1 message, but was: "
                                                         + errorResponse.getErrors().size()),
@@ -288,9 +303,9 @@ class FollowerControllerTest {
                     .thenConsumeWhile(
                             errorResponse -> {
                                 assertAll(() -> assertEquals(exceptionMessage,
-                                        errorResponse.getErrors().get(0),
-                                        () -> "should return error response with message: " + exceptionMessage + ", but was: "
-                                                + errorResponse.getErrors().get(0)),
+                                                errorResponse.getErrors().get(0),
+                                                () -> "should return error response with message: " + exceptionMessage + ", but was: "
+                                                        + errorResponse.getErrors().get(0)),
                                         () -> assertEquals(1, errorResponse.getErrors().size(),
                                                 () -> "should return error response with 1 message, but was: "
                                                         + errorResponse.getErrors().size()),
@@ -405,9 +420,9 @@ class FollowerControllerTest {
                     .thenConsumeWhile(
                             errorResponse -> {
                                 assertAll(() -> assertEquals(exceptionMessage,
-                                        errorResponse.getErrors().get(0),
-                                        () -> "should return error response with message: " + exceptionMessage + ", but was: "
-                                                + errorResponse.getErrors().get(0)),
+                                                errorResponse.getErrors().get(0),
+                                                () -> "should return error response with message: " + exceptionMessage + ", but was: "
+                                                        + errorResponse.getErrors().get(0)),
                                         () -> assertEquals(1, errorResponse.getErrors().size(),
                                                 () -> "should return error response with 1 message, but was: "
                                                         + errorResponse.getErrors().size()),
@@ -452,9 +467,9 @@ class FollowerControllerTest {
                     .thenConsumeWhile(
                             errorResponse -> {
                                 assertAll(() -> assertEquals(exceptionMessage,
-                                        errorResponse.getErrors().get(0),
-                                        () -> "should return error response with message: " + exceptionMessage + ", but was: "
-                                                + errorResponse.getErrors().get(0)),
+                                                errorResponse.getErrors().get(0),
+                                                () -> "should return error response with message: " + exceptionMessage + ", but was: "
+                                                        + errorResponse.getErrors().get(0)),
                                         () -> assertEquals(1, errorResponse.getErrors().size(),
                                                 () -> "should return error response with 1 message, but was: "
                                                         + errorResponse.getErrors().size()),
@@ -497,9 +512,9 @@ class FollowerControllerTest {
                     .thenConsumeWhile(
                             errorResponse -> {
                                 assertAll(() -> assertEquals(exceptionMessage,
-                                        errorResponse.getErrors().get(0),
-                                        () -> "should return error response with message: " + exceptionMessage + ", but was: "
-                                                + errorResponse.getErrors().get(0)),
+                                                errorResponse.getErrors().get(0),
+                                                () -> "should return error response with message: " + exceptionMessage + ", but was: "
+                                                        + errorResponse.getErrors().get(0)),
                                         () -> assertEquals(1, errorResponse.getErrors().size(),
                                                 () -> "should return error response with 1 message, but was: "
                                                         + errorResponse.getErrors().size()),
@@ -544,9 +559,9 @@ class FollowerControllerTest {
                     .thenConsumeWhile(
                             errorResponse -> {
                                 assertAll(() -> assertEquals(exceptionMessage,
-                                        errorResponse.getErrors().get(0),
-                                        () -> "should return error response with message: " + exceptionMessage + ", but was: "
-                                                + errorResponse.getErrors().get(0)),
+                                                errorResponse.getErrors().get(0),
+                                                () -> "should return error response with message: " + exceptionMessage + ", but was: "
+                                                        + errorResponse.getErrors().get(0)),
                                         () -> assertEquals(1, errorResponse.getErrors().size(),
                                                 () -> "should return error response with 1 message, but was: "
                                                         + errorResponse.getErrors().size()),

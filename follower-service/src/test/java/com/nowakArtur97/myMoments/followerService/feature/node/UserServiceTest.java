@@ -323,10 +323,10 @@ class UserServiceTest {
                         () -> "should return user with username: " + userExpected.getUsername() + ", but was: "
                                 + userActual.getUsername()),
                 () -> assertEquals(userExpected.getNumberOfFollowing(), userActual.getNumberOfFollowing(),
-                        () -> "should return user with same number of following: " + userExpected.getNumberOfFollowing() + ", but was: "
+                        () -> "should return user with number of following: " + userExpected.getNumberOfFollowing() + ", but was: "
                                 + userActual.getNumberOfFollowing()),
                 () -> assertEquals(userExpected.getNumberOfFollowers(), userActual.getNumberOfFollowers(),
-                        () -> "should return user with same number of followers: " + userExpected.getNumberOfFollowers() + ", but was: "
+                        () -> "should return user with number of followers: " + userExpected.getNumberOfFollowers() + ", but was: "
                                 + userActual.getNumberOfFollowers()));
         return true;
     }

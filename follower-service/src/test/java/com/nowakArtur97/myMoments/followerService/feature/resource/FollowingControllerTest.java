@@ -3,6 +3,8 @@ package com.nowakArtur97.myMoments.followerService.feature.resource;
 import com.nowakArtur97.myMoments.followerService.advice.ErrorResponse;
 import com.nowakArtur97.myMoments.followerService.feature.UserTestBuilder;
 import com.nowakArtur97.myMoments.followerService.feature.node.FollowerService;
+import com.nowakArtur97.myMoments.followerService.feature.node.FollowingRelationship;
+import com.nowakArtur97.myMoments.followerService.feature.node.UserNode;
 import com.nowakArtur97.myMoments.followerService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.followerService.testUtil.generator.NameWithSpacesGenerator;
 import org.junit.jupiter.api.*;
@@ -20,6 +22,7 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -73,7 +76,10 @@ class FollowingControllerTest {
             String username = "user";
             String followerName = "followerName";
 
-            UserModel userModel = (UserModel) userTestBuilder.withUsername(followerName).build(ObjectType.MODEL);
+            UserNode userNodeExpected = (UserNode) userTestBuilder.withUsername(followerName).build(ObjectType.NODE);
+            FollowingRelationship followingRelationshipExpected = new FollowingRelationship(userNodeExpected);
+            UserModel userModel = (UserModel) userTestBuilder.withUsername(followerName)
+                    .withFollowing(Set.of(followingRelationshipExpected)).build(ObjectType.MODEL);
             UsersAcquaintancesModel usersAcquaintancesModelExpected = new UsersAcquaintancesModel(List.of(userModel));
 
             when(followerService.findFollowed(username)).thenReturn(Mono.just(usersAcquaintancesModelExpected));
@@ -91,6 +97,9 @@ class FollowingControllerTest {
             StepVerifier.create(usersAcquaintancesModelMono)
                     .thenConsumeWhile(
                             acquaintancesActual -> {
+                                UserModel actualUserModel = usersAcquaintancesModelExpected.getUsers().stream()
+                                        .filter(user -> user.getUsername().equals(followerName))
+                                        .findFirst().get();
                                 assertAll(
                                         () -> assertEquals(usersAcquaintancesModelExpected.getUsers().size(),
                                                 acquaintancesActual.getUsers().size(),
@@ -100,6 +109,12 @@ class FollowingControllerTest {
                                                         .anyMatch(user -> user.getUsername().equals(followerName)),
                                                 () -> "should return follower with name: " + followerName
                                                         + ", but was: " + acquaintancesActual.getUsers()),
+                                        () -> assertEquals(actualUserModel.getNumberOfFollowing(), userModel.getNumberOfFollowing(),
+                                                () -> "should return follower with number of following: " + userModel.getNumberOfFollowing()
+                                                        + ", but was: " + actualUserModel.getNumberOfFollowing()),
+                                        () -> assertEquals(actualUserModel.getNumberOfFollowers(), userModel.getNumberOfFollowers(),
+                                                () -> "should return follower with number of followers: " + userModel.getNumberOfFollowers()
+                                                        + ", but was: " + actualUserModel.getNumberOfFollowers()),
                                         () -> verify(followerService, times(1)).findFollowed(username),
                                         () -> verifyNoMoreInteractions(followerService));
                                 return true;
