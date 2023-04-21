@@ -9,6 +9,7 @@ import com.nowakArtur97.myMoments.userService.feature.document.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.Binary;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -52,14 +53,11 @@ class UserController {
     @ApiOperation("Get User photos by Usernames")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully found photos")})
-    ResponseEntity<List<UserModel>> getUserPhotos(
+    ResponseEntity<List<byte[]>> getUserPhotos(
             @ApiParam(value = "Usernames", name = "usernames", required = true)
             @RequestParam("usernames") List<String> usernames
     ) {
-        List<UserModel> userPhotos = userService.findUserPhotos(usernames).stream()
-                .map(userDocument -> modelMapper.map(userDocument, UserModel.class))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(userPhotos, HttpStatus.OK);
+        return new ResponseEntity<>(userService.findUserPhotosByUsernames(usernames), HttpStatus.OK);
     }
 
     @PutMapping(path = "/me", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})

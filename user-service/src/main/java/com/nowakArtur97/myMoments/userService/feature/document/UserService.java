@@ -8,6 +8,7 @@ import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
 import com.nowakArtur97.myMoments.userService.feature.validation.UserValidationGroupSequence;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,11 +58,14 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public List<UserDocument> findUserPhotos(List<String> usernames) {
+    public List<byte[]> findUserPhotosByUsernames(List<String> usernames) {
 
         log.info("Looking up Photos of users: {}", usernames);
 
-        return userRepository.findByUsernameIn(usernames);
+        return userRepository.findByUsernameIn(usernames).stream()
+                .map(userNode -> userNode.getProfile().getImage())
+                .map(Binary::getData)
+                .collect(Collectors.toList());
     }
 
     public UserDocument registerUser(@Valid UserRegistrationDTO userRegistrationDTO, MultipartFile image)
