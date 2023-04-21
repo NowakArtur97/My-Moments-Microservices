@@ -97,5 +97,8 @@ public class UserMapper {
         if (userProfileDocument.getLocation() == null) {
             userProfileDocument.setLocation("");
         }
+        if (userProfileDocument.getImage() == null) {
+            userProfileDocument.setImage(new Binary(new byte[0]));
+        }
     }
 }

@@ -23,7 +23,7 @@ public class UserProfileTestBuilder {
 
     private String location = "location";
 
-    private byte[] image = "image".getBytes();
+    private byte[] image = new byte[0];
 
     public UserProfileTestBuilder withAbout(String about) {
 
@@ -117,6 +117,6 @@ public class UserProfileTestBuilder {
 
         location = "location";
 
-        image = "image".getBytes();
+        image = new byte[0];
     }
 }

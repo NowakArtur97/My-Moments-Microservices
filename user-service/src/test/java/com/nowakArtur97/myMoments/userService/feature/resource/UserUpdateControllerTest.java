@@ -143,7 +143,7 @@ class UserUpdateControllerTest {
                         .andExpect(jsonPath("profile.interests", is(userProfileDocument.getInterests())))
                         .andExpect(jsonPath("profile.languages", is(userProfileDocument.getLanguages())))
                         .andExpect(jsonPath("profile.location", is(userProfileDocument.getLocation())))
-                        .andExpect(jsonPath("profile.image").doesNotExist())
+                        .andExpect(jsonPath("profile.image").isEmpty())
                         .andExpect(jsonPath("roles[0].name", is(roleDocument.getName())))
         );
     }
@@ -179,7 +179,7 @@ class UserUpdateControllerTest {
                         .andExpect(jsonPath("profile.interests", is(userProfileDocument.getInterests())))
                         .andExpect(jsonPath("profile.languages", is(userProfileDocument.getLanguages())))
                         .andExpect(jsonPath("profile.location", is(userProfileDocument.getLocation())))
-                        .andExpect(jsonPath("profile.image").doesNotExist())
+                        .andExpect(jsonPath("profile.image").isEmpty())
                         .andExpect(jsonPath("roles[0].name", is(roleDocument.getName())))
         );
     }
@@ -215,7 +215,7 @@ class UserUpdateControllerTest {
                         .andExpect(jsonPath("profile.interests", is(userProfileDocument.getInterests())))
                         .andExpect(jsonPath("profile.languages", is(userProfileDocument.getLanguages())))
                         .andExpect(jsonPath("profile.location", is(userProfileDocument.getLocation())))
-                        .andExpect(jsonPath("profile.image").doesNotExist())
+                        .andExpect(jsonPath("profile.image").isEmpty())
                         .andExpect(jsonPath("roles[0].name", is(roleDocument.getName())))
         );
     }
@@ -255,7 +255,7 @@ class UserUpdateControllerTest {
                         .andExpect(jsonPath("profile.interests", is(userProfileDTO.getInterests())))
                         .andExpect(jsonPath("profile.languages", is(userProfileDTO.getLanguages())))
                         .andExpect(jsonPath("profile.location", is(userProfileDTO.getLocation())))
-                        .andExpect(jsonPath("profile.image").doesNotExist())
+                        .andExpect(jsonPath("profile.image").isEmpty())
                         .andExpect(jsonPath("roles[0].name", is(roleDocument.getName())))
         );
     }
@@ -294,7 +294,7 @@ class UserUpdateControllerTest {
                         .andExpect(jsonPath("profile.interests", is("")))
                         .andExpect(jsonPath("profile.languages", is("")))
                         .andExpect(jsonPath("profile.location", is("")))
-                        .andExpect(jsonPath("profile.image").doesNotExist())
+                        .andExpect(jsonPath("profile.image").isEmpty())
                         .andExpect(jsonPath("roles[0].name", is(roleDocument.getName())))
         );
     }
@@ -333,7 +333,7 @@ class UserUpdateControllerTest {
                         .andExpect(jsonPath("profile.interests", is("")))
                         .andExpect(jsonPath("profile.languages", is("")))
                         .andExpect(jsonPath("profile.location", is("")))
-                        .andExpect(jsonPath("profile.image").doesNotExist())
+                        .andExpect(jsonPath("profile.image").isEmpty())
                         .andExpect(jsonPath("roles[0].name", is(roleDocument.getName())))
         );
     }
@@ -377,7 +377,7 @@ class UserUpdateControllerTest {
                         .andExpect(jsonPath("profile.interests", is(userProfileDTO.getInterests())))
                         .andExpect(jsonPath("profile.languages", is(userProfileDTO.getLanguages())))
                         .andExpect(jsonPath("profile.location", is(userProfileDTO.getLocation())))
-                        .andExpect(jsonPath("profile.image").doesNotExist())
+                        .andExpect(jsonPath("profile.image").isNotEmpty())
                         .andExpect(jsonPath("roles[0].name", is(roleDocument.getName())))
         );
     }
