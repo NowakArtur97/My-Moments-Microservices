@@ -19,9 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -114,7 +112,7 @@ class UserServiceTest {
             UserDocument userActual = userService.registerUser(userRegistrationDTOExpected, image);
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
                             () -> "should return user with username: " + userExpected.getUsername() + ", but was"
                                     + userActual.getUsername()),
@@ -189,7 +187,7 @@ class UserServiceTest {
             UserDocument userActual = userService.registerUser(userRegistrationDTOExpected, image);
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
                             () -> "should return user with username: " + userExpected.getUsername() + ", but was"
                                     + userActual.getUsername()),
@@ -263,7 +261,7 @@ class UserServiceTest {
             UserDocument userActual = userService.registerUser(userRegistrationDTOExpected, image);
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
                             () -> "should return user with username: " + userExpected.getUsername() + ", but was"
                                     + userActual.getUsername()),
@@ -354,7 +352,7 @@ class UserServiceTest {
             UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image);
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getId(), userActual.getId(),
                             () -> "should return user with id: " + userExpected.getId() + ", but was"
                                     + userActual.getId()),
@@ -443,7 +441,7 @@ class UserServiceTest {
             UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, image);
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getId(), userActual.getId(),
                             () -> "should return user with id: " + userExpected.getId() + ", but was"
                                     + userActual.getId()),
@@ -529,7 +527,7 @@ class UserServiceTest {
             UserDocument userActual = userService.updateUser(userExpectedBeforeUpdate.getUsername(), userUpdateDTOExpected, null);
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getId(), userActual.getId(),
                             () -> "should return user with id: " + userExpected.getId() + ", but was"
                                     + userActual.getId()),
@@ -596,8 +594,8 @@ class UserServiceTest {
             when(userRepository.findByUsername(notExistingUsername)).thenReturn(Optional.empty());
 
             assertAll(() -> assertThrows(ResourceNotFoundException.class,
-                    () -> userService.updateUser(notExistingUsername, userUpdateDTOExpected, image),
-                    "should throw ResourceNotFoundException but wasn't"),
+                            () -> userService.updateUser(notExistingUsername, userUpdateDTOExpected, image),
+                            "should throw ResourceNotFoundException but wasn't"),
                     () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),
@@ -624,7 +622,7 @@ class UserServiceTest {
             when(userRepository.findByUsername(userExpected.getUsername())).thenReturn(Optional.of(userExpected));
 
             assertAll(() -> assertDoesNotThrow(() -> userService.deleteUser(userExpected.getUsername()),
-                    "should not throw ResourceNotFoundException or NotAuthorizedException but was"),
+                            "should not throw ResourceNotFoundException or NotAuthorizedException but was"),
                     () -> verify(userRepository, times(1)).findByUsername(userExpected.getUsername()),
                     () -> verify(userRepository, times(1)).delete(userExpected),
                     () -> verifyNoMoreInteractions(userRepository),
@@ -642,8 +640,8 @@ class UserServiceTest {
             when(userRepository.findByUsername(notExistingUsername)).thenReturn(Optional.empty());
 
             assertAll(() -> assertThrows(ResourceNotFoundException.class,
-                    () -> userService.deleteUser(notExistingUsername),
-                    "should throw ResourceNotFoundException but wasn't"),
+                            () -> userService.deleteUser(notExistingUsername),
+                            "should throw ResourceNotFoundException but wasn't"),
                     () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),
@@ -739,7 +737,7 @@ class UserServiceTest {
             UserDocument userActual = userActualOptional.get();
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
                             () -> "should return user with username: " + userExpected.getUsername() + ", but was"
                                     + userActual.getUsername()),
@@ -790,7 +788,7 @@ class UserServiceTest {
             Optional<UserDocument> userActualOptional = userService.findById(notExistingId);
 
             assertAll(() -> assertTrue(userActualOptional.isEmpty(),
-                    () -> "should return empty optional, but was: " + userActualOptional.get()),
+                            () -> "should return empty optional, but was: " + userActualOptional.get()),
                     () -> verify(userRepository, times(1)).findById(notExistingId),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),
@@ -813,7 +811,7 @@ class UserServiceTest {
             UserDocument userActual = userActualOptional.get();
 
             assertAll(() -> assertEquals(userExpected, userActual,
-                    () -> "should return user: " + userExpected + ", but was" + userActual),
+                            () -> "should return user: " + userExpected + ", but was" + userActual),
                     () -> assertEquals(userExpected.getUsername(), userActual.getUsername(),
                             () -> "should return user with username: " + userExpected.getUsername() + ", but was"
                                     + userActual.getUsername()),
@@ -863,9 +861,77 @@ class UserServiceTest {
 
             Optional<UserDocument> userActualOptional = userService.findByUsername(notExistingUsername);
 
-            assertAll(() -> assertTrue(userActualOptional.isEmpty(),
-                    () -> "should return empty optional, but was: " + userActualOptional.get()),
+            assertAll(() -> assertTrue(userActualOptional.isEmpty(), () -> "should return empty optional, but was: " + userActualOptional.get()),
                     () -> verify(userRepository, times(1)).findByUsername(notExistingUsername),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService),
+                    () -> verifyNoInteractions(userEventProducer));
+        }
+
+        @Test
+        void when_find_existing_user_photo_should_return_photo() {
+
+            String expectedUsername = "username";
+            byte[] expectedImageBytes = "image.jpg".getBytes();
+            List<byte[]> expectedBytes = List.of(expectedImageBytes);
+            UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder
+                    .withImage(expectedImageBytes).build(ObjectType.DOCUMENT);
+            UserDocument userExpected = (UserDocument) userTestBuilder.withUsername(expectedUsername)
+                    .withProfile(userProfileExpected).build(ObjectType.DOCUMENT);
+            List<String> expectedUsernames = List.of(expectedUsername);
+
+            when(userRepository.findByUsernameIn(expectedUsernames)).thenReturn(List.of(userExpected));
+
+            List<byte[]> actualBytes = userService.findUsersPhotosByUsernames(expectedUsernames);
+
+            assertAll(() -> assertEquals(1, expectedBytes.size(), () -> "should return one photo, but was: " + actualBytes),
+                    () -> verify(userRepository, times(1)).findByUsernameIn(expectedUsernames),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService),
+                    () -> verifyNoInteractions(userEventProducer));
+        }
+
+        @Test
+        void when_find_existing_and_not_existing_users_photos_should_return_existing_user_photo() {
+
+            String expectedUsername = "username";
+            String notExistingUsername = "notExistingUsername";
+            byte[] expectedImageBytes = "image.jpg".getBytes();
+            List<byte[]> expectedBytes = List.of(expectedImageBytes);
+            UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder
+                    .withImage(expectedImageBytes).build(ObjectType.DOCUMENT);
+            UserDocument userExpected = (UserDocument) userTestBuilder.withUsername(expectedUsername)
+                    .withProfile(userProfileExpected).build(ObjectType.DOCUMENT);
+            List<String> expectedUsernames = List.of(expectedUsername, notExistingUsername);
+
+            when(userRepository.findByUsernameIn(expectedUsernames)).thenReturn(List.of(userExpected));
+
+            List<byte[]> actualBytes = userService.findUsersPhotosByUsernames(expectedUsernames);
+
+            assertAll(() -> assertEquals(1, expectedBytes.size(),
+                            () -> "should return one photo, but was: " + actualBytes),
+                    () -> verify(userRepository, times(1)).findByUsernameIn(expectedUsernames),
+                    () -> verifyNoMoreInteractions(userRepository),
+                    () -> verifyNoInteractions(userMapper),
+                    () -> verifyNoInteractions(roleService),
+                    () -> verifyNoInteractions(userEventProducer));
+        }
+
+        @Test
+        void when_find_not_existing_user_photo_should_return_empty_array() {
+
+            String expectedUsername = "username";
+            List<String> expectedUsernames = List.of(expectedUsername);
+
+            when(userRepository.findByUsernameIn(expectedUsernames)).thenReturn(Collections.emptyList());
+
+            List<byte[]> actualBytes = userService.findUsersPhotosByUsernames(expectedUsernames);
+
+            assertAll(() -> assertTrue(actualBytes.isEmpty(),
+                            () -> "should return empty array, but was: " + actualBytes),
+                    () -> verify(userRepository, times(1)).findByUsernameIn(expectedUsernames),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),
                     () -> verifyNoInteractions(roleService),

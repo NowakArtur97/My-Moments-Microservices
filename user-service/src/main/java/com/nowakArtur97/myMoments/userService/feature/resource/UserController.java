@@ -9,7 +9,6 @@ import com.nowakArtur97.myMoments.userService.feature.document.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.Binary;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -23,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -50,14 +48,16 @@ class UserController {
     private final ModelMapper modelMapper;
 
     @GetMapping(path = "/photos")
-    @ApiOperation("Get User photos by Usernames")
+    @ApiOperation("Get Users photos by Usernames")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully found photos")})
-    ResponseEntity<List<byte[]>> getUserPhotos(
+    ResponseEntity<UsersPhotosModel> getUserPhotos(
             @ApiParam(value = "Usernames", name = "usernames", required = true)
             @RequestParam("usernames") List<String> usernames
     ) {
-        return new ResponseEntity<>(userService.findUserPhotosByUsernames(usernames), HttpStatus.OK);
+
+        List<byte[]> usersPhotos = userService.findUsersPhotosByUsernames(usernames);
+        return new ResponseEntity<>(new UsersPhotosModel(usersPhotos), HttpStatus.OK);
     }
 
     @PutMapping(path = "/me", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})

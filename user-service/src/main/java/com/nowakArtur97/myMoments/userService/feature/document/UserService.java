@@ -58,7 +58,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public List<byte[]> findUserPhotosByUsernames(List<String> usernames) {
+    public List<byte[]> findUsersPhotosByUsernames(List<String> usernames) {
 
         log.info("Looking up Photos of users: {}", usernames);
 

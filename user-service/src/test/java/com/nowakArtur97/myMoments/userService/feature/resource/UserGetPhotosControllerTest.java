@@ -115,8 +115,8 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$", hasSize(1)))
-                        .andExpect(jsonPath("$.[0]").isNotEmpty())
+                        .andExpect(jsonPath("photos", hasSize(1)))
+                        .andExpect(jsonPath("photos.[0]").isNotEmpty())
         );
     }
 
@@ -151,9 +151,9 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$", hasSize(2)))
-                        .andExpect(jsonPath("$.[0]").isNotEmpty())
-                        .andExpect(jsonPath("$.[1]").isNotEmpty())
+                        .andExpect(jsonPath("photos", hasSize(2)))
+                        .andExpect(jsonPath("photos.[0]").isNotEmpty())
+                        .andExpect(jsonPath("photos.[1]").isNotEmpty())
         );
     }
 
@@ -181,8 +181,8 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$", hasSize(1)))
-                        .andExpect(jsonPath("$.[0]").isNotEmpty())
+                        .andExpect(jsonPath("photos", hasSize(1)))
+                        .andExpect(jsonPath("photos.[0]").isNotEmpty())
         );
     }
 
@@ -201,7 +201,7 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$").isEmpty())
+                        .andExpect(jsonPath("photos").isEmpty())
         );
     }
 
