@@ -1,12 +1,16 @@
 .followers {
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
   flex-wrap: wrap;
-  flex-grow: 5vw;
+  justify-content: center;
 
   width: 100vw;
-  height: 100vh;
+  max-height: 100vh;
 
   overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.followers::-webkit-scrollbar {
+  display: none;
 }
