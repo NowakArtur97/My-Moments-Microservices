@@ -6,4 +6,7 @@ export const APP_ROUTES = {
     posts: 'posts',
     editor: 'editor',
   },
+  follower: {
+    followers: 'followers',
+  },
 };

@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { JwtInterceptor } from './auth/jwt.interceptor';
 import { AppCommonModule } from './common/common.module';
+import { FollowersModule } from './follower/followers.module';
 import { PostModule } from './post/post.module';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { PostModule } from './post/post.module';
     AppCommonModule,
     AuthModule,
     PostModule,
+    FollowersModule,
   ],
   providers: [
     {
