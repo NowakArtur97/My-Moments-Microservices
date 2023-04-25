@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import Follower from '../models/follower.model';
-import EXAMPLE_FOLLOWERS from '../service/example-followers';
+import { FollowerService } from '../service/follower.service';
 
 @Component({
   selector: 'app-followers',
@@ -11,9 +11,11 @@ import EXAMPLE_FOLLOWERS from '../service/example-followers';
 export class FollowersComponent implements OnInit {
   followers: Follower[] = [];
 
-  constructor() {}
+  constructor(private followerService: FollowerService) {}
 
   ngOnInit(): void {
-    this.followers = EXAMPLE_FOLLOWERS;
+    this.followerService.myFollowers.subscribe(
+      (followers) => (this.followers = followers)
+    );
   }
 }
