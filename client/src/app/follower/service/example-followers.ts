@@ -1,4 +1,4 @@
-import Follower from '../models/follower.model';
+import UserAcquaintance from '../models/user-acquaintance.model';
 
 const MIN_FOLLOWERS = 5;
 const MAX_FOLLOWERS = 2000;
@@ -7,7 +7,7 @@ const getRandomNumberOfUsers = (): number =>
   Math.floor(Math.random() * (MAX_FOLLOWERS - MIN_FOLLOWERS + 1)) +
   MIN_FOLLOWERS;
 
-const EXAMPLE_FOLLOWERS: Follower[] = [
+const EXAMPLE_FOLLOWERS: UserAcquaintance[] = [
   {
     username: 'follower1',
     numberOfFollowers: getRandomNumberOfUsers(),

@@ -1,4 +1,4 @@
-.followers {
+.user_acquaintances {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -11,6 +11,6 @@
   scrollbar-width: none;
 }
 
-.followers::-webkit-scrollbar {
+.user_acquaintances::-webkit-scrollbar {
   display: none;
 }

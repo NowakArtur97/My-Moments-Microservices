@@ -4,15 +4,15 @@ import { FollowerService } from '../service/follower.service';
 import { UserAcquaintancesComponent } from '../user-acquaintances/user-acquaintances.component';
 
 @Component({
-  selector: 'app-followers',
+  selector: 'app-following',
   templateUrl: '../user-acquaintances/user-acquaintances.component.html',
   styleUrls: ['../user-acquaintances/user-acquaintances.component.css'],
 })
-export class FollowersComponent
+export class FollowingComponent
   extends UserAcquaintancesComponent
   implements OnInit {
   constructor(protected followerService: FollowerService) {
     super(followerService);
-    this.subject = this.followerService.myFollowers;
+    this.subject = this.followerService.myFollowing;
   }
 }

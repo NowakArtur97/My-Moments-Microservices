@@ -1,4 +1,4 @@
-.follower {
+.user_acquaintance {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,13 +16,13 @@
   cursor: pointer;
 }
 
-.follower:hover {
+.user_acquaintance:hover {
   color: hsl(0, 0%, 100%);
   background-color: hsl(0, 0%, 0%);
   transition: color 0.5s, background-color 0.5s;
 }
 
-.follower__photo_wrapper {
+.user_acquaintance__photo_wrapper {
   flex-basis: 40%;
 
   display: flex;
@@ -30,14 +30,14 @@
   align-items: center;
 }
 
-.follower__photo {
+.user_acquaintance__photo {
   height: 48px;
   width: 48px;
 
   border-radius: 60%;
 }
 
-.follower__username_wrapper {
+.user_acquaintance__username_wrapper {
   flex-basis: 20%;
 
   display: flex;
@@ -45,12 +45,12 @@
   align-items: center;
 }
 
-.follower__username {
+.user_acquaintance__username {
   font-size: 1.5em;
   font-weight: 600;
 }
 
-.follower__stats {
+.user_acquaintance__stats {
   flex-basis: 30%;
 
   display: flex;
@@ -58,7 +58,7 @@
   align-items: center;
 }
 
-.follower__stats_section {
+.user_acquaintance__stats_section {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,71 +66,71 @@
   flex-wrap: wrap;
 }
 
-.follower__stats_text,
-.follower__stats_number {
+.user_acquaintance__stats_text,
+.user_acquaintance__stats_number {
   width: 100%;
   text-align: center;
 }
 
-.follower__stats_text {
+.user_acquaintance__stats_text {
   font-size: 1.2em;
 }
 
-.follower__stats_number {
+.user_acquaintance__stats_number {
   font-size: 1.4em;
   font-weight: 600;
 }
 
 @media (min-width: 568px) {
-  .follower {
+  .user_acquaintance {
     width: 23vw;
     height: 23vw;
   }
 }
 
 @media (min-width: 720px) {
-  .follower {
+  .user_acquaintance {
     width: 17vw;
     height: 17vw;
   }
 }
 
 @media (min-width: 820px) {
-  .follower {
+  .user_acquaintance {
     width: 15vw;
     height: 15vw;
   }
 }
 
 @media (min-width: 912px) {
-  .follower {
+  .user_acquaintance {
     width: 12vw;
     height: 12vw;
   }
 }
 
 @media (min-width: 1024px) {
-  .follower {
+  .user_acquaintance {
     margin: 1vh;
   }
 }
 
 @media (min-width: 1366px) {
-  .follower {
+  .user_acquaintance {
     width: 8vw;
     height: 8vw;
   }
 
-  .follower__photo {
+  .user_acquaintance__photo {
     height: 80px;
     width: 80px;
   }
 
-  .follower__stats_text {
+  .user_acquaintance__stats_text {
     font-size: 1.5em;
   }
 
-  .follower__stats_number {
+  .user_acquaintance__stats_number {
     font-size: 1.7em;
   }
 }

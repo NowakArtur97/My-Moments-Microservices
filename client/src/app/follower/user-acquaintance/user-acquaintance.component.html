@@ -1,0 +1,29 @@
+<div class="user_acquaintance">
+  <div class="user_acquaintance__photo_wrapper">
+    <!-- TODO: Follower image -->
+    <img
+      src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg"
+      alt="user image"
+      class="user_acquaintance__photo"
+    />
+  </div>
+  <div class="user_acquaintance__username_wrapper">
+    <p class="user_acquaintance__username">
+      {{ user.username }}
+    </p>
+  </div>
+  <div class="user_acquaintance__stats">
+    <div class="user_acquaintance__stats_section">
+      <p class="user_acquaintance__stats_text">Followers</p>
+      <p class="user_acquaintance__stats_number">
+        {{ user.numberOfFollowers }}
+      </p>
+    </div>
+    <div class="user_acquaintance__stats_section">
+      <p class="user_acquaintance__stats_text">Following</p>
+      <p class="user_acquaintance__stats_number">
+        {{ user.numberOfFollowing }}
+      </p>
+    </div>
+  </div>
+</div>

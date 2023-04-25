@@ -5,14 +5,14 @@ import BACKEND_URLS from 'src/app/backend-urls';
 import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
-import Follower from '../models/follower.model';
+import UserAcquaintance from '../models/user-acquaintance.model';
 import UsersAcquaintancesResponse from '../models/users-acquaintances-response.model';
 import EXAMPLE_FOLLOWERS from './example-followers';
 
 @Injectable({ providedIn: 'root' })
 export class FollowerService extends HttpService {
-  myFollowers = new BehaviorSubject<Follower[]>(EXAMPLE_FOLLOWERS);
-  myFollowing = new BehaviorSubject<Follower[]>(EXAMPLE_FOLLOWERS);
+  myFollowers = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
+  myFollowing = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -30,7 +30,10 @@ export class FollowerService extends HttpService {
       this.myFollowing
     );
 
-  private getUsers(url: String, subject: BehaviorSubject<Follower[]>): void {
+  private getUsers(
+    url: String,
+    subject: BehaviorSubject<UserAcquaintance[]>
+  ): void {
     this.httpClient
       .get<UsersAcquaintancesResponse>(
         `${environment.followerServiceUrl}${url}`

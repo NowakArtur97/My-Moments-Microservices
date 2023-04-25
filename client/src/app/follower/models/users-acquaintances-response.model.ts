@@ -1,5 +1,5 @@
-import Follower from './follower.model';
+import UserAcquaintance from './user-acquaintance.model';
 
 export default interface UsersAcquaintancesResponse {
-  readonly users: Follower[];
+  readonly users: UserAcquaintance[];
 }

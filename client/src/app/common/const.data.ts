@@ -8,5 +8,6 @@ export const APP_ROUTES = {
   },
   follower: {
     followers: 'followers',
+    following: 'following',
   },
 };
