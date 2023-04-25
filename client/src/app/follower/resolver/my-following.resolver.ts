@@ -10,7 +10,7 @@ export default class MyFollowersResolver extends MyAcquaintancesResolver {
     super(followerService);
   }
 
-  getUsers = (): Follower[] => this.followerService.myFollowers.getValue();
+  getUsers = (): Follower[] => this.followerService.myFollowing.getValue();
 
-  fetchUsers = (): void => this.followerService.getMyFollowers();
+  fetchUsers = (): void => this.followerService.getMyFollowing();
 }
