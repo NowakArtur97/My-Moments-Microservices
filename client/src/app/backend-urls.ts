@@ -6,10 +6,13 @@ const BACKEND_URLS = {
   common: {
     myResource: '/me',
   },
-  comments: {
+  comment: {
     postComments: (postId: string): string => `/${postId}/comments`,
     postComment: (postId: string, commentId: string): string =>
       `/${postId}/comments/${commentId}`,
+  },
+  follower: {
+    followers: (username: string): string => `/${username}`,
   },
 };
 

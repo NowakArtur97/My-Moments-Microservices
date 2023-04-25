@@ -54,8 +54,8 @@ export class PostService extends HttpService {
         `${environment.postServiceUrl}${BACKEND_URLS.common.myResource}`
       )
       .subscribe(
-        (postsResponse: PostsResponse) =>
-          this.handleSuccessfullPostsResponse(postsResponse.posts),
+        ({ posts }: PostsResponse) =>
+          this.handleSuccessfullPostsResponse(posts),
         (httpErrorResponse: HttpErrorResponse) => {
           this.logErrors(httpErrorResponse);
           // TODO: DELETE

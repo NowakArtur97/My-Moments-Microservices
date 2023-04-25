@@ -31,7 +31,7 @@ export class CommentService extends HttpService {
   getComments(postId: string): void {
     this.httpClient
       .get<CommentsResponse>(
-        `${environment.commentsServiceUrl}${BACKEND_URLS.comments.postComments(
+        `${environment.commentServiceUrl}${BACKEND_URLS.comment.postComments(
           postId
         )}`
       )
@@ -50,7 +50,7 @@ export class CommentService extends HttpService {
   addComment(postId: string, commentDTO: CommentDTO): void {
     this.httpClient
       .post<Comment>(
-        `${environment.commentsServiceUrl}${BACKEND_URLS.comments.postComments(
+        `${environment.commentServiceUrl}${BACKEND_URLS.comment.postComments(
           postId
         )}`,
         commentDTO
@@ -66,7 +66,7 @@ export class CommentService extends HttpService {
   deleteComment(postId: string, commentId: string): void {
     this.httpClient
       .delete(
-        `${environment.commentsServiceUrl}${BACKEND_URLS.comments.postComment(
+        `${environment.commentServiceUrl}${BACKEND_URLS.comment.postComment(
           postId,
           commentId
         )}`
