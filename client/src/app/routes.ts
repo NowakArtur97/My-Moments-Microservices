@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AuthWrapperComponent } from './auth/auth-wrapper/auth-wrapper.component';
 import { APP_ROUTES } from './common/const.data';
 import { FollowersComponent } from './follower/followers/followers.component';
+import MyFollowersResolver from './follower/resolver/my-followers.resolver';
 import { PostWrapperComponent } from './post/post-wrapper/post-wrapper.component';
 import { PostsComponent } from './post/posts/posts.component';
 import MyPostsResolver from './post/resolver/my-posts.resolver';
@@ -25,7 +26,7 @@ const routes: Routes = [
     path: APP_ROUTES.follower.followers,
     component: FollowersComponent,
     // canActivate: [AuthGuard],
-    // resolve: { posts: MyFollowersResolver }, // TODO: Create resolver
+    resolve: { posts: MyFollowersResolver },
   },
   { path: '**', component: AuthWrapperComponent },
 ];
