@@ -12,7 +12,8 @@ const BACKEND_URLS = {
       `/${postId}/comments/${commentId}`,
   },
   follower: {
-    followers: (username: string): string => `/${username}`,
+    followers: (username: string): string => `/followers/${username}`,
+    following: (username: string): string => `/following/${username}`,
   },
 };
 

@@ -12,25 +12,35 @@ import EXAMPLE_FOLLOWERS from './example-followers';
 @Injectable({ providedIn: 'root' })
 export class FollowerService extends HttpService {
   myFollowers = new BehaviorSubject<Follower[]>(EXAMPLE_FOLLOWERS);
+  myFollowing = new BehaviorSubject<Follower[]>(EXAMPLE_FOLLOWERS);
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
   }
 
-  getMyFollowers(): void {
+  getMyFollowers = (): void =>
+    this.getUsers(
+      `${BACKEND_URLS.follower.followers('username')}`, // TODO: Get username
+      this.myFollowers
+    );
+
+  getMyFollowing = (): void =>
+    this.getUsers(
+      `${BACKEND_URLS.follower.following('username')}`, // TODO: Get username
+      this.myFollowing
+    );
+
+  private getUsers(url: String, subject: BehaviorSubject<Follower[]>): void {
     this.httpClient
       .get<UsersAcquaintancesResponse>(
-        `${environment.followerServiceUrl}${BACKEND_URLS.follower.followers(
-          'username'
-        )}` // TODO: Get username
+        `${environment.followerServiceUrl}${url}`
       )
       .subscribe(
-        ({ followers }: UsersAcquaintancesResponse) =>
-          this.myFollowers.next(followers),
+        ({ users }: UsersAcquaintancesResponse) => subject.next(users),
         (httpErrorResponse: HttpErrorResponse) => {
           this.logErrors(httpErrorResponse);
           // TODO: DELETE
-          this.myFollowers.next(EXAMPLE_FOLLOWERS);
+          subject.next(EXAMPLE_FOLLOWERS);
         }
       );
   }
