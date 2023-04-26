@@ -10,8 +10,12 @@ import { FollowerService } from '../service/follower.service';
   styleUrls: ['./user-acquaintances.component.css'],
 })
 export abstract class UserAcquaintancesComponent {
-  users: UserAcquaintance[] = [];
+  private readonly LOAD_USER_INTERVAL = 10;
+  private users: UserAcquaintance[] = [];
+  usersLoaded: UserAcquaintance[] = [];
   subject!: BehaviorSubject<UserAcquaintance[]>;
+  usersInterval!: NodeJS.Timeout;
+  arePhotosLoaded = false;
 
   constructor(
     protected followerService: FollowerService,
@@ -20,11 +24,27 @@ export abstract class UserAcquaintancesComponent {
 
   ngOnInit(): void {
     this.subject.subscribe((users) => (this.users = users));
-    this.userService.usersPhotos.subscribe(
-      (usersPhotos) =>
-        (this.users = this.users.map((user, index) => {
-          return { ...user, photo: usersPhotos[index] };
-        }))
-    );
+    this.userService.usersPhotos.subscribe((usersPhotos) => {
+      this.users = this.users.map((user, index) => {
+        return { ...user, photo: usersPhotos[index] };
+      });
+      this.arePhotosLoaded = usersPhotos.length > 0;
+      this.usersLoaded = [];
+      this.loadUsers();
+    });
+  }
+
+  private loadUsers(): void {
+    let index = 0;
+    if (!this.arePhotosLoaded) {
+      return;
+    }
+    this.usersInterval = setInterval(() => {
+      this.usersLoaded.push(this.users[index]);
+      index++;
+      if (this.usersLoaded.length === this.users.length) {
+        clearInterval(this.usersInterval);
+      }
+    }, this.LOAD_USER_INTERVAL);
   }
 }

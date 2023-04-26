@@ -12,8 +12,18 @@
   border-radius: 20%;
 
   transition: color 2s, background-color 2s;
+  animation: 500ms appear;
 
   cursor: pointer;
+}
+
+@keyframes appear {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .user_acquaintance:hover {

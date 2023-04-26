@@ -12,6 +12,7 @@ import EXAMPLE_FOLLOWERS from './example-followers';
 
 @Injectable({ providedIn: 'root' })
 export class FollowerService extends HttpService {
+  // TODO: Delete
   // myFollowers = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
   // myFollowing = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
   myFollowers = new BehaviorSubject<UserAcquaintance[]>([]);

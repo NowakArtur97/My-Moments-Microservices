@@ -283,30 +283,30 @@
 @keyframes bin_text_enter {
   0% {
     color: hsl(0, 0%, 100%);
-    transform: translate(-45%, -50%) scale(0);
+    transform: translate(-40%, -50%) scale(0);
   }
   20% {
     color: hsl(0, 0%, 0%);
-    transform: translate(-45%, -50%) scale(1);
+    transform: translate(-40%, -50%) scale(1);
   }
   100% {
     color: hsl(0, 0%, 0%);
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-45%, -50%) scale(1);
   }
 }
 
 @keyframes bin_text_leave {
   0% {
     color: hsl(0, 0%, 0%);
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-45%, -50%) scale(1);
   }
   20% {
     color: hsl(0, 0%, 0%);
-    transform: translate(-45%, -50%) scale(1);
+    transform: translate(-40%, -50%) scale(1);
   }
   100% {
     color: hsl(0, 0%, 100%);
-    transform: translate(-45%, -50%) scale(0);
+    transform: translate(-40%, -50%) scale(0);
   }
 }
 
@@ -334,7 +334,7 @@
 
 @media (min-width: 1024px) {
   .comment__author {
-    font-size: 2em;
+    font-size: 1.9em;
   }
 
   .comment__button_wrapper {
@@ -342,18 +342,18 @@
   }
 
   .comment__button {
-    font-size: 1.75em;
+    font-size: 1.7em;
   }
 
   .comment__content {
-    font-size: 1.75em;
+    font-size: 1.7em;
   }
 
   .comment__create_date {
-    font-size: 1.75em;
+    font-size: 1.7em;
   }
 
   .comment__bin_text {
-    font-size: 3em;
+    font-size: 2.9em;
   }
 }
