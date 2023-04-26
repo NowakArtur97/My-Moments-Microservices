@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { Resolve } from '@angular/router';
 
 import UserAcquaintance from '../models/user-acquaintance.model';
 import { FollowerService } from '../service/follower.service';
@@ -8,10 +8,7 @@ import { FollowerService } from '../service/follower.service';
 export default abstract class MyAcquaintancesResolver implements Resolve<any> {
   constructor(protected followerService: FollowerService) {}
 
-  public resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): UserAcquaintance[] {
+  public resolve(): UserAcquaintance[] {
     const followers = this.getUsers();
     if (followers.length === 0) {
       this.fetchUsers();

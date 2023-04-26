@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { Resolve } from '@angular/router';
 
 import Post from '../models/post.model';
 import { PostService } from '../services/post.service';
@@ -8,10 +8,7 @@ import { PostService } from '../services/post.service';
 export default class MyPostsResolver implements Resolve<any> {
   constructor(private postService: PostService) {}
 
-  public resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Post[] {
+  public resolve(): Post[] {
     const posts = this.postService.myPosts.getValue();
     if (posts.length === 0) {
       this.postService.getMyPosts();
