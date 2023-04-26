@@ -25,15 +25,13 @@ export class CommentService extends HttpService {
   editComment = new BehaviorSubject<Comment>(this.DEFAULT_COMMENT);
 
   constructor(protected httpClient: HttpClient) {
-    super(httpClient);
+    super(httpClient, environment.commentServiceUrl);
   }
 
   getComments(postId: string): void {
     this.httpClient
       .get<CommentsResponse>(
-        `${environment.commentServiceUrl}${BACKEND_URLS.comment.postComments(
-          postId
-        )}`
+        `${this.baseUrl}${BACKEND_URLS.comment.postComments(postId)}`
       )
       .subscribe(
         (commentsResponse: CommentsResponse) =>
@@ -50,9 +48,7 @@ export class CommentService extends HttpService {
   addComment(postId: string, commentDTO: CommentDTO): void {
     this.httpClient
       .post<Comment>(
-        `${environment.commentServiceUrl}${BACKEND_URLS.comment.postComments(
-          postId
-        )}`,
+        `${this.baseUrl}${BACKEND_URLS.comment.postComments(postId)}`,
         commentDTO
       )
       .subscribe(
@@ -66,10 +62,7 @@ export class CommentService extends HttpService {
   deleteComment(postId: string, commentId: string): void {
     this.httpClient
       .delete(
-        `${environment.commentServiceUrl}${BACKEND_URLS.comment.postComment(
-          postId,
-          commentId
-        )}`
+        `${this.baseUrl}${BACKEND_URLS.comment.postComment(postId, commentId)}`
       )
       .subscribe(
         () => {},

@@ -15,7 +15,7 @@ export class FollowerService extends HttpService {
   myFollowing = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
 
   constructor(protected httpClient: HttpClient) {
-    super(httpClient);
+    super(httpClient, environment.followerServiceUrl);
   }
 
   getMyFollowers = (): void =>
@@ -35,9 +35,7 @@ export class FollowerService extends HttpService {
     subject: BehaviorSubject<UserAcquaintance[]>
   ): void {
     this.httpClient
-      .get<UsersAcquaintancesResponse>(
-        `${environment.followerServiceUrl}${url}`
-      )
+      .get<UsersAcquaintancesResponse>(`${this.baseUrl}${url}`)
       .subscribe(
         ({ users }: UsersAcquaintancesResponse) => subject.next(users),
         (httpErrorResponse: HttpErrorResponse) => {

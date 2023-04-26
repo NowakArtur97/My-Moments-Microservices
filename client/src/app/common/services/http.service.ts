@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import ErrorResponse from '../models/error-response.model';
 
 export default abstract class HttpService {
-  constructor(protected httpClient: HttpClient) {}
+  constructor(protected httpClient: HttpClient, protected baseUrl: string) {}
 
   protected defaultErrorResponse: ErrorResponse = {
     status: 500,

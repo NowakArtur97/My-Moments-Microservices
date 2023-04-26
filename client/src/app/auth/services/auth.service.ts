@@ -24,7 +24,7 @@ export class AuthService extends HttpService {
   // authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
-    super(httpClient);
+    super(httpClient, environment.userServiceUrl);
   }
 
   registerUser(userData: UserRegistrationDTO): void {
@@ -33,7 +33,7 @@ export class AuthService extends HttpService {
     ]);
     this.httpClient
       .post<AuthenticationResponse>(
-        `${environment.userServiceUrl}${BACKEND_URLS.user.registration}`,
+        `${this.baseUrl}${BACKEND_URLS.user.registration}`,
         multipartData
       )
       .subscribe(
@@ -47,7 +47,7 @@ export class AuthService extends HttpService {
   loginUser(authenticationRequest: AuthenticationRequest): void {
     this.httpClient
       .post<AuthenticationResponse>(
-        `${environment.userServiceUrl}${BACKEND_URLS.user.authentication}`,
+        `${this.baseUrl}${BACKEND_URLS.user.authentication}`,
         authenticationRequest
       )
       .subscribe(

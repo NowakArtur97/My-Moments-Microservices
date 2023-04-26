@@ -30,7 +30,7 @@ export class PostService extends HttpService {
   editedPost = new BehaviorSubject<Post | null>(null);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
-    super(httpClient);
+    super(httpClient, environment.postServiceUrl);
   }
 
   createPost(postDTO: PostDTO): void {
@@ -40,7 +40,7 @@ export class PostService extends HttpService {
       [{ key: 'post', value: { caption } }]
     );
     this.httpClient
-      .post<Post>(`${environment.postServiceUrl}`, multipartData)
+      .post<Post>(`${this.baseUrl}`, multipartData)
       .subscribe(
         (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
         (httpErrorResponse: HttpErrorResponse) =>
@@ -51,7 +51,7 @@ export class PostService extends HttpService {
   getMyPosts(): void {
     this.httpClient
       .get<PostsResponse>(
-        `${environment.postServiceUrl}${BACKEND_URLS.common.myResource}`
+        `${this.baseUrl}${BACKEND_URLS.common.myResource}`
       )
       .subscribe(
         ({ posts }: PostsResponse) =>
@@ -76,7 +76,7 @@ export class PostService extends HttpService {
       [{ key: 'post', value: { caption } }]
     );
     this.httpClient
-      .put<Post>(`${environment.postServiceUrl}/${postId}`, multipartData)
+      .put<Post>(`${this.baseUrl}/${postId}`, multipartData)
       .subscribe(
         (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
         (httpErrorResponse: HttpErrorResponse) =>
@@ -85,7 +85,7 @@ export class PostService extends HttpService {
   }
 
   deletePost(postId: string) {
-    this.httpClient.delete(`${environment.postServiceUrl}/${postId}`).subscribe(
+    this.httpClient.delete(`${this.baseUrl}/${postId}`).subscribe(
       () => {},
       (httpErrorResponse: HttpErrorResponse) =>
         this.logErrors(httpErrorResponse)
