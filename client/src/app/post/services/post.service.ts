@@ -39,20 +39,16 @@ export class PostService extends HttpService {
       [{ key: 'photos', files }],
       [{ key: 'post', value: { caption } }]
     );
-    this.httpClient
-      .post<Post>(`${this.baseUrl}`, multipartData)
-      .subscribe(
-        (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
-        (httpErrorResponse: HttpErrorResponse) =>
-          this.logErrors(httpErrorResponse)
-      );
+    this.httpClient.post<Post>(`${this.baseUrl}`, multipartData).subscribe(
+      (newPost: Post) => this.handleSuccessfullPostsResponse([newPost]),
+      (httpErrorResponse: HttpErrorResponse) =>
+        this.logErrors(httpErrorResponse)
+    );
   }
 
   getMyPosts(): void {
     this.httpClient
-      .get<PostsResponse>(
-        `${this.baseUrl}${BACKEND_URLS.common.myResource}`
-      )
+      .get<PostsResponse>(`${this.baseUrl}${BACKEND_URLS.common.myResource}`)
       .subscribe(
         ({ posts }: PostsResponse) =>
           this.handleSuccessfullPostsResponse(posts),
@@ -122,7 +118,7 @@ export class PostService extends HttpService {
     return posts.map((post: Post) => {
       return {
         ...post,
-        photos: post.photos.map((photo) => `data:image/jpg;base64,${photo}`),
+        photos: post.photos.map((photo) => this.mapToBase64(photo)),
       };
     });
   }
