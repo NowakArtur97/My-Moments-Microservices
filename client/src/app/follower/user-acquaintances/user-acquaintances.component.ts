@@ -5,7 +5,6 @@ import { UserService } from 'src/app/auth/services/user.service';
 import { APP_ROUTES } from 'src/app/common/const.data';
 
 import UserAcquaintance from '../models/user-acquaintance.model';
-import { EXAMPLE_FOLLOWERS, EXAMPLE_FOLLOWERS_2 } from '../service/example-followers';
 import { FollowerService } from '../service/follower.service';
 
 @Component({
@@ -30,39 +29,47 @@ export abstract class UserAcquaintancesComponent {
   ) {}
 
   ngOnInit(): void {
-    // TODO: Delete
-    this.following = EXAMPLE_FOLLOWERS;
-    this.followers = EXAMPLE_FOLLOWERS_2;
-    this.users =
-      this.router.url === APP_ROUTES.follower.followers
-        ? this.followers
-        : this.following;
-    this.usersToCheckAgainst =
-      this.router.url === APP_ROUTES.follower.followers
-        ? this.following
-        : this.followers;
-    this.users = this.users.map((user) => {
-      return {
-        ...user,
-        isMutual: this.usersToCheckAgainst.some(
-          (userToCheckAgainst) => userToCheckAgainst.username === user.username
-        ),
-      };
+    this.followerService.myFollowers.subscribe(
+      (followers) => (this.followers = followers)
+    );
+    this.followerService.myFollowing.subscribe(
+      (following) => (this.following = following)
+    );
+    this.userService.usersPhotos.subscribe((usersPhotos) => {
+      this.setUsersBasedOnView();
+      this.users = this.users.map((user, index) =>
+        this.mapToUserWithPhoto(user, usersPhotos, index)
+      );
+      this.arePhotosLoaded = usersPhotos.length > 0; // TODO: Delete?
+      this.usersLoaded = [];
+      this.loadUsers();
     });
-    console.log(this.users);
-    this.usersLoaded = [];
-    this.arePhotosLoaded = true;
-    this.loadUsers();
+  }
 
-    // this.subject.subscribe((users) => (this.users = users));
-    // this.userService.usersPhotos.subscribe((usersPhotos) => {
-    //   this.users = this.users.map((user, index) => {
-    //     return { ...user, photo: usersPhotos[index] };
-    //   });
-    //   this.arePhotosLoaded = usersPhotos.length > 0;
-    //   this.usersLoaded = [];
-    //   this.loadUsers();
-    // });
+  private setUsersBasedOnView() {
+    const isInFollowersView = this.router.url === APP_ROUTES.follower.followers;
+    if (isInFollowersView) {
+      this.users = this.followers;
+      this.usersToCheckAgainst = this.following;
+    } else {
+      this.users = this.following;
+      this.usersToCheckAgainst = this.followers;
+    }
+  }
+
+  private mapToUserWithPhoto(
+    user: UserAcquaintance,
+    usersPhotos: string[],
+    index: number
+  ): UserAcquaintance {
+    const isMutual = this.usersToCheckAgainst.some(
+      (userToCheckAgainst) => userToCheckAgainst.username === user.username
+    );
+    return {
+      ...user,
+      photo: usersPhotos[index],
+      isMutual,
+    };
   }
 
   private loadUsers(): void {

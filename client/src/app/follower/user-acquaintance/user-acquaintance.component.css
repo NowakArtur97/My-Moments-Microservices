@@ -37,6 +37,7 @@
   }
 }
 
+/* TODO: background transition doesn't work, needs to be simulated: https://stackoverflow.com/questions/17952468/css-background-gradient-transition-not-working */
 .user_acquaintance:hover {
   color: hsl(0, 0%, 100%);
   background: hsl(0, 0%, 0%);
