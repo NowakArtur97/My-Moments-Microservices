@@ -8,13 +8,24 @@
   height: 40vw;
   margin: 1vh 1vw;
 
-  background-color: hsl(0, 0%, 100%);
+  background: hsl(0, 0%, 100%);
   border-radius: 20%;
 
-  transition: color 2s, background-color 2s;
+  transition: color 2s, background 2s;
   animation: 500ms appear;
 
   cursor: pointer;
+}
+
+.user_acquaintance--mutual {
+  transition: color 2s, background 2s;
+  background: linear-gradient(
+    to top,
+    hsl(0, 0%, 100%) 0%,
+    hsl(0, 0%, 100%) 60%,
+    hsl(239, 89%, 48%) 60%,
+    hsl(239, 89%, 48%) 100%
+  );
 }
 
 @keyframes appear {
@@ -28,8 +39,20 @@
 
 .user_acquaintance:hover {
   color: hsl(0, 0%, 100%);
-  background-color: hsl(0, 0%, 0%);
-  transition: color 0.5s, background-color 0.5s;
+  background: hsl(0, 0%, 0%);
+  transition: color 0.5s, background 0.5s;
+}
+
+.user_acquaintance--mutual:hover {
+  color: hsl(0, 0%, 100%);
+  background: linear-gradient(
+    to top,
+    hsl(0, 0%, 0%) 0%,
+    hsl(0, 0%, 0%) 60%,
+    hsl(0, 0%, 100%) 60%,
+    hsl(0, 0%, 100%) 100%
+  );
+  transition: color 0.5s, background 0.5s;
 }
 
 .user_acquaintance__photo_wrapper {

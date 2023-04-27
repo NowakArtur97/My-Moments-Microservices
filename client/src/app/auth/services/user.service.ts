@@ -20,7 +20,6 @@ export class UserService extends HttpService {
 
   getUsersPhotos(usernames: string[]) {
     let params = new HttpParams().set('usernames', usernames.join(','));
-
     this.httpClient
       .get<UsersPhotosResponse>(`${this.baseUrl}${BACKEND_URLS.user.users}`, {
         params,

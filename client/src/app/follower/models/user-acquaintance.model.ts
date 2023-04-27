@@ -3,4 +3,5 @@ export default interface UserAcquaintance {
   readonly numberOfFollowing: number;
   readonly numberOfFollowers: number;
   photo?: string;
+  isMutual?: boolean;
 }

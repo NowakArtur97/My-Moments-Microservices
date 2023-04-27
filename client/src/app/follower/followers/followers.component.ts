@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/auth/services/user.service';
 
 import { FollowerService } from '../service/follower.service';
@@ -14,9 +15,10 @@ export class FollowersComponent
   implements OnInit {
   constructor(
     protected followerService: FollowerService,
-    protected userService: UserService
+    protected userService: UserService,
+    protected router: Router
   ) {
-    super(followerService, userService);
+    super(followerService, userService, router);
     this.subject = this.followerService.myFollowers;
   }
 }

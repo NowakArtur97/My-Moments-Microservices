@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment.local';
 
 import UserAcquaintance from '../models/user-acquaintance.model';
 import UsersAcquaintancesResponse from '../models/users-acquaintances-response.model';
-import EXAMPLE_FOLLOWERS from './example-followers';
+import { EXAMPLE_FOLLOWERS } from './example-followers';
 
 @Injectable({ providedIn: 'root' })
 export class FollowerService extends HttpService {
