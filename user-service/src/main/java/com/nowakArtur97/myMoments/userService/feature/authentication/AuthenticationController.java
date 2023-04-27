@@ -4,15 +4,21 @@ package com.nowakArtur97.myMoments.userService.feature.authentication;
 import com.nowakArtur97.myMoments.userService.common.model.ErrorResponse;
 import com.nowakArtur97.myMoments.userService.common.util.JwtUtil;
 import com.nowakArtur97.myMoments.userService.feature.document.CustomUserDetailsService;
+import com.nowakArtur97.myMoments.userService.feature.document.UserDocument;
+import com.nowakArtur97.myMoments.userService.feature.document.UserService;
+import com.nowakArtur97.myMoments.userService.feature.resource.UserModel;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,16 +40,20 @@ class AuthenticationController {
 
     private final CustomUserDetailsService customUserDetailsService;
 
+    private final UserService userService;
+
     private final AuthenticationManager authenticationManager;
 
     private final JwtUtil jwtUtil;
+
+    private final ModelMapper modelMapper;
 
     @PostMapping
     @ApiOperation(value = "Generate API key", notes = "Generate API key")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successfully generated API key", response = AuthenticationResponse.class),
             @ApiResponse(code = 400, message = "Incorrectly entered data", response = ErrorResponse.class)})
-    ResponseEntity<AuthenticationResponse> loginUser(@RequestBody @ApiParam(value = "User credentials", name = "user",
+    ResponseEntity<UserModel> loginUser(@RequestBody @ApiParam(value = "User credentials", name = "user",
             required = true) AuthenticationRequest authenticationRequest) {
 
         String userNameOrEmail = authenticationRequest.getUsername() != null
@@ -55,10 +65,18 @@ class AuthenticationController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userNameOrEmail, authenticationRequest.getPassword()));
 
+        String username = userDetails.getUsername();
+
+        log.info("Generating token for user: {}", username);
+
         String token = jwtUtil.generateToken(userDetails);
 
-        log.info("Generating token for user: {}", userDetails.getUsername());
+        UserDocument userDocument = userService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with name: '" + username + "' not found."));
 
-        return ResponseEntity.ok(new AuthenticationResponse(token, validity));
+        UserModel userModel = modelMapper.map(userDocument, UserModel.class);
+        userModel.setAuthenticationResponse(new AuthenticationResponse(token, validity));
+
+        return new ResponseEntity<>(userModel, HttpStatus.OK);
     }
 }

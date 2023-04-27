@@ -80,16 +80,15 @@ class UserController {
 
         UserDocument updatedUserDocument = userService.updateUser(username, userUpdateDTO, image);
 
-        UserModel userModel = modelMapper.map(updatedUserDocument, UserModel.class);
-
         UserDetails userDetails = new User(updatedUserDocument.getUsername(), updatedUserDocument.getPassword(),
                 customUserDetailsService.getAuthorities(updatedUserDocument.getRoles()));
 
+        log.info("Generating token for an updated user: {}", userDetails.getUsername());
+
         String newToken = jwtUtil.generateToken(userDetails);
 
+        UserModel userModel = modelMapper.map(updatedUserDocument, UserModel.class);
         userModel.setAuthenticationResponse(new AuthenticationResponse(newToken, validity));
-
-        log.info("Generating token for an updated user: {}", userDetails.getUsername());
 
         return new ResponseEntity<>(userModel, HttpStatus.OK);
     }
