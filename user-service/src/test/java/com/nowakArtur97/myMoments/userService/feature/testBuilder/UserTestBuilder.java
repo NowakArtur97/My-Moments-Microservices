@@ -1,19 +1,20 @@
 package com.nowakArtur97.myMoments.userService.feature.testBuilder;
 
+import com.nowakArtur97.myMoments.userService.feature.authentication.AuthenticationResponse;
 import com.nowakArtur97.myMoments.userService.feature.common.User;
 import com.nowakArtur97.myMoments.userService.feature.common.UserProfile;
 import com.nowakArtur97.myMoments.userService.feature.document.RoleDocument;
 import com.nowakArtur97.myMoments.userService.feature.document.UserDocument;
 import com.nowakArtur97.myMoments.userService.feature.document.UserProfileDocument;
-import com.nowakArtur97.myMoments.userService.feature.resource.UserProfileDTO;
-import com.nowakArtur97.myMoments.userService.feature.resource.UserRegistrationDTO;
-import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
+import com.nowakArtur97.myMoments.userService.feature.resource.*;
 import com.nowakArtur97.myMoments.userService.feature.authentication.AuthenticationRequest;
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserTestBuilder {
 
@@ -24,6 +25,10 @@ public class UserTestBuilder {
     private String matchingPassword = "SecretPassword123!@";
 
     private String email = "userEmail123@email.com";
+
+    private String token = "token";
+
+    private long expirationTime = 36000000;
 
     private UserProfile profile;
 
@@ -53,6 +58,20 @@ public class UserTestBuilder {
     public UserTestBuilder withEmail(String email) {
 
         this.email = email;
+
+        return this;
+    }
+
+    public UserTestBuilder withToken(String token) {
+
+        this.token = token;
+
+        return this;
+    }
+
+    public UserTestBuilder withExpirationTime(long expirationTime) {
+
+        this.expirationTime = expirationTime;
 
         return this;
     }
@@ -101,6 +120,16 @@ public class UserTestBuilder {
 
                 break;
 
+            case MODEL:
+
+                List<RoleModel> rolesModels = roles.stream()
+                        .map(role -> new RoleModel(role.getName()))
+                        .collect(Collectors.toList());
+                user = new UserModel(username, email, new AuthenticationResponse(token, expirationTime),
+                        (UserProfileModel) profile, rolesModels);
+
+                break;
+
             default:
                 throw new RuntimeException("The specified type does not exist");
         }
@@ -121,6 +150,10 @@ public class UserTestBuilder {
         email = "userEmail123@email.com";
 
         profile = null;
+
+        token = "token";
+
+        expirationTime = 36000000;
 
         roles = new HashSet<>();
     }

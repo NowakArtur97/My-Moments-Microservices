@@ -6,7 +6,6 @@ import com.nowakArtur97.myMoments.userService.feature.testBuilder.UserTestBuilde
 import com.nowakArtur97.myMoments.userService.testUtil.enums.ObjectType;
 import com.nowakArtur97.myMoments.userService.testUtil.generator.NameWithSpacesGenerator;
 import com.nowakArtur97.myMoments.userService.testUtil.mapper.ObjectTestMapper;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +35,9 @@ class UserRegistrationControllerTest {
 
     @Value("${my-moments.jwt.validity:36000000}")
     private Long validity;
+
+    @Value("${my-moments.default-user-role:USER_ROLE}")
+    private String userRole;
 
     @LocalServerPort
     private int serverPort;
@@ -83,8 +85,20 @@ class UserRegistrationControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("token", CoreMatchers.notNullValue()))
-                        .andExpect(jsonPath("expirationTimeInMilliseconds", is(validity.intValue()))));
+                        .andExpect(jsonPath("username", is(userRegistrationDTO.getUsername())))
+                        .andExpect(jsonPath("email", is(userRegistrationDTO.getEmail())))
+                        .andExpect(jsonPath("password").doesNotExist())
+                        .andExpect(jsonPath("authenticationResponse.token", notNullValue()))
+                        .andExpect(jsonPath("authenticationResponse.expirationTimeInMilliseconds",
+                                is(validity.intValue())))
+                        .andExpect(jsonPath("profile.about").isEmpty())
+                        .andExpect(jsonPath("profile.gender", is(Gender.UNSPECIFIED.toString())))
+                        .andExpect(jsonPath("profile.interests").isEmpty())
+                        .andExpect(jsonPath("profile.languages").isEmpty())
+                        .andExpect(jsonPath("profile.location").isEmpty())
+                        .andExpect(jsonPath("profile.image").isEmpty())
+                        .andExpect(jsonPath("roles[0].name", is(userRole)))
+        );
     }
 
     @Test
@@ -109,8 +123,20 @@ class UserRegistrationControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("token", notNullValue()))
-                        .andExpect(jsonPath("expirationTimeInMilliseconds", is(validity.intValue()))));
+                        .andExpect(jsonPath("username", is(userRegistrationDTO.getUsername())))
+                        .andExpect(jsonPath("email", is(userRegistrationDTO.getEmail())))
+                        .andExpect(jsonPath("password").doesNotExist())
+                        .andExpect(jsonPath("authenticationResponse.token", notNullValue()))
+                        .andExpect(jsonPath("authenticationResponse.expirationTimeInMilliseconds",
+                                is(validity.intValue())))
+                        .andExpect(jsonPath("profile.about", is(userProfileDTO.getAbout())))
+                        .andExpect(jsonPath("profile.gender", is(userProfileDTO.getGender())))
+                        .andExpect(jsonPath("profile.interests", is(userProfileDTO.getInterests())))
+                        .andExpect(jsonPath("profile.languages", is(userProfileDTO.getLanguages())))
+                        .andExpect(jsonPath("profile.location", is(userProfileDTO.getLocation())))
+                        .andExpect(jsonPath("profile.image").isEmpty())
+                        .andExpect(jsonPath("roles[0].name", is(userRole)))
+        );
     }
 
     @Test
@@ -135,8 +161,20 @@ class UserRegistrationControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("token", notNullValue()))
-                        .andExpect(jsonPath("expirationTimeInMilliseconds", is(validity.intValue()))));
+                        .andExpect(jsonPath("username", is(userRegistrationDTO.getUsername())))
+                        .andExpect(jsonPath("email", is(userRegistrationDTO.getEmail())))
+                        .andExpect(jsonPath("password").doesNotExist())
+                        .andExpect(jsonPath("authenticationResponse.token", notNullValue()))
+                        .andExpect(jsonPath("authenticationResponse.expirationTimeInMilliseconds",
+                                is(validity.intValue())))
+                        .andExpect(jsonPath("profile.about").isEmpty())
+                        .andExpect(jsonPath("profile.gender", is(Gender.UNSPECIFIED.toString())))
+                        .andExpect(jsonPath("profile.interests").isEmpty())
+                        .andExpect(jsonPath("profile.languages").isEmpty())
+                        .andExpect(jsonPath("profile.location").isEmpty())
+                        .andExpect(jsonPath("profile.image").isEmpty())
+                        .andExpect(jsonPath("roles[0].name", is(userRole)))
+        );
     }
 
     @Test
@@ -161,8 +199,20 @@ class UserRegistrationControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("token", notNullValue()))
-                        .andExpect(jsonPath("expirationTimeInMilliseconds", is(validity.intValue()))));
+                        .andExpect(jsonPath("username", is(userRegistrationDTO.getUsername())))
+                        .andExpect(jsonPath("email", is(userRegistrationDTO.getEmail())))
+                        .andExpect(jsonPath("password").doesNotExist())
+                        .andExpect(jsonPath("authenticationResponse.token", notNullValue()))
+                        .andExpect(jsonPath("authenticationResponse.expirationTimeInMilliseconds",
+                                is(validity.intValue())))
+                        .andExpect(jsonPath("profile.about", is(userProfileDTO.getAbout())))
+                        .andExpect(jsonPath("profile.gender", is(userProfileDTO.getGender())))
+                        .andExpect(jsonPath("profile.interests", is(userProfileDTO.getInterests())))
+                        .andExpect(jsonPath("profile.languages", is(userProfileDTO.getLanguages())))
+                        .andExpect(jsonPath("profile.location", is(userProfileDTO.getLocation())))
+                        .andExpect(jsonPath("profile.image").isEmpty())
+                        .andExpect(jsonPath("roles[0].name", is(userRole)))
+        );
     }
 
     @Test
@@ -190,7 +240,19 @@ class UserRegistrationControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("token", notNullValue()))
-                        .andExpect(jsonPath("expirationTimeInMilliseconds", is(validity.intValue()))));
+                        .andExpect(jsonPath("username", is(userRegistrationDTO.getUsername())))
+                        .andExpect(jsonPath("email", is(userRegistrationDTO.getEmail())))
+                        .andExpect(jsonPath("password").doesNotExist())
+                        .andExpect(jsonPath("authenticationResponse.token", notNullValue()))
+                        .andExpect(jsonPath("authenticationResponse.expirationTimeInMilliseconds",
+                                is(validity.intValue())))
+                        .andExpect(jsonPath("profile.about", is(userProfileDTO.getAbout())))
+                        .andExpect(jsonPath("profile.gender", is(userProfileDTO.getGender())))
+                        .andExpect(jsonPath("profile.interests", is(userProfileDTO.getInterests())))
+                        .andExpect(jsonPath("profile.languages", is(userProfileDTO.getLanguages())))
+                        .andExpect(jsonPath("profile.location", is(userProfileDTO.getLocation())))
+                        .andExpect(jsonPath("profile.image").isNotEmpty())
+                        .andExpect(jsonPath("roles[0].name", is(userRole)))
+        );
     }
 }
