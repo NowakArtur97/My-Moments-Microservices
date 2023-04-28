@@ -1,6 +1,4 @@
 .user_acquaintance_wrapper {
-  position: relative;
-
   width: 40vw;
   height: 40vw;
   margin: 1vh 1vw;
@@ -12,6 +10,8 @@
   animation: 500ms appear;
 
   cursor: pointer;
+
+  overflow: hidden;
 }
 
 .user_acquaintance_wrapper--mutual {
@@ -54,16 +54,13 @@
 }
 
 .user_acquaintance {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  width: 100%;
+  height: 100%;
 }
 
 .user_acquaintance__photo_wrapper {
@@ -123,6 +120,15 @@
 .user_acquaintance__stats_number {
   font-size: 1.4em;
   font-weight: 600;
+}
+
+.user_acquaintance__buttons_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
 }
 
 @media (min-width: 568px) {
