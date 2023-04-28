@@ -37,7 +37,7 @@
 /* TODO: background transition doesn't work, needs to be simulated: https://stackoverflow.com/questions/17952468/css-background-gradient-transition-not-working */
 .user_acquaintance_wrapper:hover {
   color: hsl(0, 0%, 100%);
-  background: hsl(0, 0%, 0%);
+  background: hsl(0, 0%, 7%);
   transition: color 0.5s, background-color 0.5s;
 }
 
@@ -131,6 +131,23 @@
   height: 100%;
 }
 
+.user_acquaintance__button {
+  padding: 0.3em 0.6em;
+  border: 1em hsl(0, 0%, 100%);
+  border-radius: 5%;
+
+  font-size: 1.5em;
+
+  transition: background-color 0.5s, color 0.5s;
+
+  cursor: pointer;
+}
+
+.user_acquaintance__button:hover {
+  background-color: hsl(0, 0%, 7%);
+  color: hsl(0, 0%, 100%);
+}
+
 @media (min-width: 568px) {
   .user_acquaintance_wrapper {
     width: 23vw;
@@ -176,11 +193,19 @@
     width: 80px;
   }
 
+  .user_acquaintance__username {
+    font-size: 1.8em;
+  }
+
   .user_acquaintance__stats_text {
     font-size: 1.5em;
   }
 
   .user_acquaintance__stats_number {
     font-size: 1.7em;
+  }
+
+  .user_acquaintance__button {
+    font-size: 1.8em;
   }
 }
