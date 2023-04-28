@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { APP_ROUTES } from 'src/app/common/const.data';
 
 import UserAcquaintance from '../models/user-acquaintance.model';
+import { FollowerService } from '../service/follower.service';
 
 @Component({
   selector: 'app-user-acquaintance',
@@ -51,7 +52,10 @@ export class UserAcquaintanceComponent implements OnInit {
   state = this.HOVER_STATE.DEFAULT;
   buttonState = this.HOVER_STATE.DEFAULT;
 
-  constructor(private router: Router) {}
+  constructor(
+    private followerService: FollowerService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.isInFollowersView =
@@ -59,10 +63,11 @@ export class UserAcquaintanceComponent implements OnInit {
   }
 
   onTakeAction(): void {
+    const { username } = this.user;
     if (this.isInFollowersView) {
-      console.log('UNFOLLOW');
+      this.followerService.unfollowUser(username);
     } else {
-      console.log('FOLLOW BACK');
+      this.followerService.followBack(username);
     }
   }
 

@@ -49,6 +49,57 @@ export class FollowerService extends HttpService {
     );
   }
 
+  followBack(username: string): void {
+    this.httpClient
+      .post<void>(
+        `${this.baseUrl}${BACKEND_URLS.follower.followers(username)}`,
+        {}
+      )
+      .subscribe(
+        () => {
+          const followers = this.myFollowers.getValue().map((follower) => {
+            if (follower.username === username) {
+              follower.isMutual = true;
+            }
+            return follower;
+          });
+          this.myFollowers.next(followers);
+        },
+        (httpErrorResponse: HttpErrorResponse) => {
+          this.logErrors(httpErrorResponse);
+        }
+      );
+  }
+
+  unfollowUser(username: string): void {
+    this.myFollowers.next(
+      this.myFollowers.getValue().filter((user) => user.username !== username)
+    );
+    this.httpClient
+      .delete<void>(
+        `${this.baseUrl}${BACKEND_URLS.follower.followers(username)}`,
+        {}
+      )
+      .subscribe(
+        () => {
+          this.myFollowers.next(
+            this.myFollowers
+              .getValue()
+              .filter((user) => user.username !== username)
+          );
+        },
+        (httpErrorResponse: HttpErrorResponse) => {
+          this.logErrors(httpErrorResponse);
+          // TODO: Delete;
+          this.myFollowers.next(
+            this.myFollowers
+              .getValue()
+              .filter((user) => user.username !== username)
+          );
+        }
+      );
+  }
+
   private handleSuccessfulResponses(
     followers: UserAcquaintance[],
     following: UserAcquaintance[]
