@@ -32,6 +32,12 @@
     </div>
   </div>
   <div [@state]="buttonState" class="user_acquaintance__buttons_wrapper">
-    <button type="button" class="user_acquaintance__button">Follow back</button>
+    <button
+      (click)="onTakeAction()"
+      type="button"
+      class="user_acquaintance__button"
+    >
+      {{ isInFollowersView ? "Unfollow" : "Follow back" }}
+    </button>
   </div>
 </div>

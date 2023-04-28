@@ -47,7 +47,8 @@ export abstract class UserAcquaintancesComponent {
   }
 
   private setUsersBasedOnView() {
-    const isInFollowersView = this.router.url === APP_ROUTES.follower.followers;
+    const isInFollowersView =
+      this.router.url === `/${APP_ROUTES.follower.followers}`;
     if (isInFollowersView) {
       this.users = this.followers;
       this.usersToCheckAgainst = this.following;
