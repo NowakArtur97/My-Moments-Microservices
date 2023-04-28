@@ -1,23 +1,20 @@
-.user_acquaintance {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.user_acquaintance_wrapper {
+  position: relative;
 
   width: 40vw;
   height: 40vw;
   margin: 1vh 1vw;
 
-  background: hsl(0, 0%, 100%);
+  background-color: hsl(0, 0%, 100%);
   border-radius: 20%;
 
-  transition: color 2s, background 2s;
+  transition: color 2s, background-color 2s;
   animation: 500ms appear;
 
   cursor: pointer;
 }
 
-.user_acquaintance--mutual {
+.user_acquaintance_wrapper--mutual {
   transition: color 2s, background 2s;
   background: linear-gradient(
     to top,
@@ -38,13 +35,13 @@
 }
 
 /* TODO: background transition doesn't work, needs to be simulated: https://stackoverflow.com/questions/17952468/css-background-gradient-transition-not-working */
-.user_acquaintance:hover {
+.user_acquaintance_wrapper:hover {
   color: hsl(0, 0%, 100%);
   background: hsl(0, 0%, 0%);
-  transition: color 0.5s, background 0.5s;
+  transition: color 0.5s, background-color 0.5s;
 }
 
-.user_acquaintance--mutual:hover {
+.user_acquaintance_wrapper--mutual:hover {
   color: hsl(0, 0%, 100%);
   background: linear-gradient(
     to top,
@@ -54,6 +51,19 @@
     hsl(0, 0%, 100%) 100%
   );
   transition: color 0.5s, background 0.5s;
+}
+
+.user_acquaintance {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .user_acquaintance__photo_wrapper {
@@ -116,41 +126,41 @@
 }
 
 @media (min-width: 568px) {
-  .user_acquaintance {
+  .user_acquaintance_wrapper {
     width: 23vw;
     height: 23vw;
   }
 }
 
 @media (min-width: 720px) {
-  .user_acquaintance {
+  .user_acquaintance_wrapper {
     width: 17vw;
     height: 17vw;
   }
 }
 
 @media (min-width: 820px) {
-  .user_acquaintance {
+  .user_acquaintance_wrapper {
     width: 15vw;
     height: 15vw;
   }
 }
 
 @media (min-width: 912px) {
-  .user_acquaintance {
+  .user_acquaintance_wrapper {
     width: 12vw;
     height: 12vw;
   }
 }
 
 @media (min-width: 1024px) {
-  .user_acquaintance {
+  .user_acquaintance_wrapper {
     margin: 1vh;
   }
 }
 
 @media (min-width: 1366px) {
-  .user_acquaintance {
+  .user_acquaintance_wrapper {
     width: 8vw;
     height: 8vw;
   }

@@ -12,7 +12,9 @@ import EXAMPLE_PHOTO from './example-photo';
   providedIn: 'root',
 })
 export class UserService extends HttpService {
-  usersPhotos = new BehaviorSubject<string[]>([]);
+  usersPhotos = new BehaviorSubject<string[]>([
+    ...Array.from(Array(20)).map(() => this.mapToBase64(EXAMPLE_PHOTO)),
+  ]);
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient, environment.userServiceUrl);

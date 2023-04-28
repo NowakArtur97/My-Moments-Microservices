@@ -13,10 +13,10 @@ import { EXAMPLE_FOLLOWERS, EXAMPLE_FOLLOWERS_2 } from './example-followers';
 @Injectable({ providedIn: 'root' })
 export class FollowerService extends HttpService {
   // TODO: Delete
-  // myFollowers = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
-  // myFollowing = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
-  myFollowers = new BehaviorSubject<UserAcquaintance[]>([]);
-  myFollowing = new BehaviorSubject<UserAcquaintance[]>([]);
+  myFollowers = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
+  myFollowing = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS_2);
+  // myFollowers = new BehaviorSubject<UserAcquaintance[]>([]);
+  // myFollowing = new BehaviorSubject<UserAcquaintance[]>([]);
 
   constructor(
     protected httpClient: HttpClient,
