@@ -20,7 +20,6 @@ export abstract class UserAcquaintancesComponent {
   usersLoaded: UserAcquaintance[] = [];
   subject!: BehaviorSubject<UserAcquaintance[]>;
   usersInterval!: NodeJS.Timeout;
-  arePhotosLoaded = false;
 
   constructor(
     protected followerService: FollowerService,
@@ -29,18 +28,24 @@ export abstract class UserAcquaintancesComponent {
   ) {}
 
   ngOnInit(): void {
-    this.followerService.myFollowers.subscribe(
-      (followers) => (this.followers = followers)
-    );
-    this.followerService.myFollowing.subscribe(
-      (following) => (this.following = following)
-    );
-    this.userService.usersPhotos.subscribe((usersPhotos) => {
+    this.followerService.myFollowers.subscribe((followers) => {
+      this.followers = followers;
       this.setUsersBasedOnView();
-      this.users = this.users.map((user, index) =>
-        this.mapToUserWithPhoto(user, usersPhotos, index)
-      );
-      this.arePhotosLoaded = usersPhotos.length > 0; // TODO: Delete?
+      if (this.users.length === 0) {
+        return;
+      }
+      this.users = this.users.map((user) => this.setMutualUsers(user));
+      this.usersLoaded = [];
+      this.loadUsers();
+    });
+    this.followerService.myFollowing.subscribe((following) => {
+      this.following = following;
+      this.setUsersBasedOnView();
+      if (this.users.length === 0) {
+        this.usersLoaded = this.following;
+        return;
+      }
+      this.users = this.users.map((user) => this.setMutualUsers(user));
       this.usersLoaded = [];
       this.loadUsers();
     });
@@ -58,26 +63,19 @@ export abstract class UserAcquaintancesComponent {
     }
   }
 
-  private mapToUserWithPhoto(
-    user: UserAcquaintance,
-    usersPhotos: string[],
-    index: number
-  ): UserAcquaintance {
+  private setMutualUsers(user: UserAcquaintance): UserAcquaintance {
     const isMutual = this.usersToCheckAgainst.some(
       (userToCheckAgainst) => userToCheckAgainst.username === user.username
     );
     return {
       ...user,
-      photo: usersPhotos[index],
       isMutual,
     };
   }
 
   private loadUsers(): void {
     let index = 0;
-    if (!this.arePhotosLoaded) {
-      return;
-    }
+    clearInterval(this.usersInterval);
     this.usersInterval = setInterval(() => {
       this.usersLoaded.push(this.users[index]);
       index++;

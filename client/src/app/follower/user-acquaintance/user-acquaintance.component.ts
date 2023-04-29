@@ -68,6 +68,8 @@ export class UserAcquaintanceComponent implements OnInit {
       this.followerService.unfollowUser(username);
     } else {
       this.followerService.followBack(username);
+      this.user.isMutual = true;
+      this.setAnimationVariables(false);
     }
   }
 

@@ -1,6 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin } from 'rxjs';
+import UsersPhotosResponse from 'src/app/auth/models/users-photos-response.model';
+import EXAMPLE_PHOTO from 'src/app/auth/services/example-photo';
 import { UserService } from 'src/app/auth/services/user.service';
 import BACKEND_URLS from 'src/app/backend-urls';
 import HttpService from 'src/app/common/services/http.service';
@@ -25,12 +27,13 @@ export class FollowerService extends HttpService {
     super(httpClient, environment.followerServiceUrl);
   }
 
-  getAcquaintances(): void {
+  getAcquaintances(username: string = 'username'): void {
+    // TODO: Get username from service
     const followersRequest = this.httpClient.get<UsersAcquaintancesResponse>(
-      `${this.baseUrl}${BACKEND_URLS.follower.followers('username')}`
+      `${this.baseUrl}${BACKEND_URLS.follower.followers(username)}`
     );
     const followingRequest = this.httpClient.get<UsersAcquaintancesResponse>(
-      `${this.baseUrl}${BACKEND_URLS.follower.following('username')}`
+      `${this.baseUrl}${BACKEND_URLS.follower.following(username)}`
     );
 
     forkJoin(followersRequest, followingRequest).subscribe(
@@ -57,15 +60,23 @@ export class FollowerService extends HttpService {
       )
       .subscribe(
         () => {
-          const followers = this.myFollowers.getValue().map((follower) => {
-            if (follower.username === username) {
-              follower.isMutual = true;
+          const following = this.myFollowing.getValue().map((following) => {
+            if (following.username === username) {
+              following.isMutual = true;
             }
-            return follower;
+            return following;
           });
-          this.myFollowers.next(followers);
+          this.myFollowing.next(following);
         },
         (httpErrorResponse: HttpErrorResponse) => {
+          // TODO: Delete
+          const following = this.myFollowing.getValue().map((following) => {
+            if (following.username === username) {
+              following.isMutual = true;
+            }
+            return following;
+          });
+          this.myFollowing.next(following);
           this.logErrors(httpErrorResponse);
         }
       );
@@ -104,12 +115,39 @@ export class FollowerService extends HttpService {
     followers: UserAcquaintance[],
     following: UserAcquaintance[]
   ) {
+    const users = [...followers, ...following];
+    const usernames = users.map(({ username }) => username);
+    // TODO: Handle users photo
+    this.userService.getUsersPhotos(usernames).subscribe(
+      ({ photos }: UsersPhotosResponse) => {
+        this.setUsersPhotos(followers, following, photos);
+      },
+      (httpErrorResponse: HttpErrorResponse) => {
+        this.logErrors(httpErrorResponse);
+        // TODO: DELETE
+        const mockPhotos: string[] = Array.from(
+          Array(usernames.length)
+        ).map(() => this.mapToBase64(EXAMPLE_PHOTO));
+        this.setUsersPhotos(followers, following, mockPhotos);
+      }
+    );
+  }
+
+  private setUsersPhotos(
+    followers: UserAcquaintance[],
+    following: UserAcquaintance[],
+    photos: string[]
+  ) {
+    let index = 0;
+    followers.forEach((user) => {
+      user.photo = photos[index];
+      index++;
+    });
+    following.forEach((user) => {
+      user.photo = photos[index];
+      index++;
+    });
     this.myFollowers.next(followers);
     this.myFollowing.next(following);
-    const usernames = [...followers, ...following].map(
-      ({ username }) => username
-    );
-    // TODO: Handle users photo
-    this.userService.getUsersPhotos(usernames);
   }
 }
