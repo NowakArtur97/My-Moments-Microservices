@@ -11,32 +11,17 @@ import { FollowerService } from '../service/follower.service';
   templateUrl: './user-acquaintance.component.html',
   styleUrls: ['./user-acquaintance.component.css'],
   animations: [
-    trigger('state', [
-      state(
-        'default',
-        style({
-          transform: 'translateY(0%)',
-        })
-      ),
-      state(
-        'hover',
-        style({
-          transform: 'translateY(-100%)',
-        })
-      ),
-      transition('default <=> hover', animate('0.5s')),
-    ]),
     trigger('buttonState', [
       state(
         'default',
         style({
-          transform: 'translateY(-100%)',
+          transform: 'translateY(0%)',
         })
       ),
       state(
         'hover',
         style({
-          transform: 'translateY(0%)',
+          transform: 'translateY(-100%)',
         })
       ),
       transition('default <=> hover', animate('0.5s')),
@@ -49,7 +34,6 @@ export class UserAcquaintanceComponent implements OnInit {
 
   isInFollowersView = false;
   isHovered = false;
-  state = this.HOVER_STATE.DEFAULT;
   buttonState = this.HOVER_STATE.DEFAULT;
 
   constructor(
@@ -92,7 +76,6 @@ export class UserAcquaintanceComponent implements OnInit {
 
   private setAnimationVariables(isHovered: boolean): void {
     this.isHovered = isHovered;
-    this.state = isHovered ? this.HOVER_STATE.HOVER : this.HOVER_STATE.DEFAULT;
     this.buttonState = isHovered
       ? this.HOVER_STATE.HOVER
       : this.HOVER_STATE.DEFAULT;
