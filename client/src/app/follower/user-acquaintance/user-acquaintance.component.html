@@ -1,4 +1,6 @@
 <div
+  [@userState]="userState"
+  (@userState.done)="onUnfollowAnimationFinished()"
   [ngClass]="{ 'user_acquaintance_wrapper--mutual': user.isMutual }"
   class="user_acquaintance_wrapper"
 >

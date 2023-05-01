@@ -11,6 +11,21 @@ import { FollowerService } from '../service/follower.service';
   templateUrl: './user-acquaintance.component.html',
   styleUrls: ['./user-acquaintance.component.css'],
   animations: [
+    trigger('userState', [
+      state(
+        'default',
+        style({
+          transform: 'scale(1)',
+        })
+      ),
+      state(
+        'delete',
+        style({
+          transform: 'scale(0)',
+        })
+      ),
+      transition('default => delete', animate('0.5s')),
+    ]),
     trigger('buttonState', [
       state(
         'default',
@@ -30,11 +45,17 @@ import { FollowerService } from '../service/follower.service';
 })
 export class UserAcquaintanceComponent implements OnInit {
   @Input('user') user!: UserAcquaintance;
-  private readonly HOVER_STATE = { DEFAULT: 'default', HOVER: 'hover' };
+  private readonly ANIMATION_STATE = {
+    DEFAULT: 'default',
+    HOVER: 'hover',
+    DELETE: 'delete',
+  };
 
   isInFollowersView = false;
   isHovered = false;
-  buttonState = this.HOVER_STATE.DEFAULT;
+  userState = this.ANIMATION_STATE.DEFAULT;
+  buttonState = this.ANIMATION_STATE.DEFAULT;
+  wasUnfollowed = false;
 
   constructor(
     private followerService: FollowerService,
@@ -47,13 +68,20 @@ export class UserAcquaintanceComponent implements OnInit {
   }
 
   onTakeAction(): void {
-    const { username } = this.user;
     if (this.isInFollowersView) {
-      this.followerService.unfollowUser(username);
+      this.wasUnfollowed = true;
+      this.userState = this.ANIMATION_STATE.DELETE;
     } else {
-      this.followerService.followBack(username);
+      this.followerService.followBack(this.user.username);
       this.setAnimationVariables(false);
     }
+  }
+
+  onUnfollowAnimationFinished(): void {
+    if (!this.wasUnfollowed) {
+      return;
+    }
+    this.followerService.unfollowUser(this.user.username);
   }
 
   @HostListener('mouseover')
@@ -77,7 +105,7 @@ export class UserAcquaintanceComponent implements OnInit {
   private setAnimationVariables(isHovered: boolean): void {
     this.isHovered = isHovered;
     this.buttonState = isHovered
-      ? this.HOVER_STATE.HOVER
-      : this.HOVER_STATE.DEFAULT;
+      ? this.ANIMATION_STATE.HOVER
+      : this.ANIMATION_STATE.DEFAULT;
   }
 }
