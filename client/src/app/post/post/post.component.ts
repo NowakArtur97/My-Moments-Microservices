@@ -242,7 +242,7 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     }, timeout);
   }
 
-  private setSizes(boundingClientRect: DOMRect) {
+  private setSizes(boundingClientRect: DOMRect): void {
     if (this.post.isCurrentlyLastElement) {
       this.startWidth =
         boundingClientRect.width -

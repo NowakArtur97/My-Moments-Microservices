@@ -16,7 +16,7 @@ export class UserService extends HttpService {
   }
 
   getUsersPhotos(usernames: string[]): Observable<UsersPhotosResponse> {
-    let params = new HttpParams().set('usernames', usernames.join(','));
+    const params = new HttpParams().set('usernames', usernames.join(','));
     return this.httpClient.get<UsersPhotosResponse>(
       `${this.baseUrl}${BACKEND_URLS.user.users}`,
       {

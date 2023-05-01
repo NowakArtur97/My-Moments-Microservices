@@ -47,6 +47,6 @@ export default abstract class HttpService {
   protected isErrorResponse = (httpErrorResponse: HttpErrorResponse): boolean =>
     (httpErrorResponse.error as ErrorResponse)?.errors !== undefined;
 
-  protected mapToBase64 = (photo: String): string =>
+  protected mapToBase64 = (photo: string): string =>
     `data:image/jpg;base64,${photo}`;
 }

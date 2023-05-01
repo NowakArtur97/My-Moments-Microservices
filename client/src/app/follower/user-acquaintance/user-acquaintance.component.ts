@@ -90,7 +90,7 @@ export class UserAcquaintanceComponent implements OnInit {
     this.setAnimationVariables(false);
   }
 
-  private setAnimationVariables(isHovered: boolean) {
+  private setAnimationVariables(isHovered: boolean): void {
     this.isHovered = isHovered;
     this.state = isHovered ? this.HOVER_STATE.HOVER : this.HOVER_STATE.DEFAULT;
     this.buttonState = isHovered

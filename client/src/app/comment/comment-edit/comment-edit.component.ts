@@ -53,7 +53,7 @@ export class CommentEditComponent implements OnInit {
     this.commentDTO = { ...this.DEFAULT_COMMENT_VALUE };
   }
 
-  private startEditingComment() {
+  private startEditingComment(): void {
     this.isEditingComment = true;
     this.clearTimeouts(this.textContentDisappearTimeouts);
     this.commentDTO.content = '';
@@ -61,13 +61,13 @@ export class CommentEditComponent implements OnInit {
     this.animateTextContentAppearance();
   }
 
-  private stopEditingComment() {
+  private stopEditingComment(): void {
     this.isEditingComment = false;
     this.clearTimeouts(this.textContentAppearTimeouts);
     this.animateTextContentDisappearance();
   }
 
-  private clearTimeouts(timeouts: Array<NodeJS.Timeout>) {
+  private clearTimeouts(timeouts: Array<NodeJS.Timeout>): void {
     timeouts.forEach((timeout) => clearTimeout(timeout));
     timeouts = [];
   }

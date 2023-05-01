@@ -1,10 +1,4 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import Comment from '../models/comment.model';
@@ -43,8 +37,8 @@ export class CommentComponent implements OnInit {
   };
   @ViewChild('commentContentWrapper')
   commentContentWrapper!: ElementRef<HTMLDivElement>;
-  deleteState: string = '';
-  private wasEditingStarted: boolean = false;
+  deleteState = '';
+  private wasEditingStarted = false;
 
   constructor(private commentService: CommentService) {}
 

@@ -134,7 +134,7 @@ export class PostEditComponent implements OnInit {
     }
   }
 
-  private loadPostToEditor() {
+  private loadPostToEditor(): void {
     if (this.editedPost !== null) {
       this.editorState = this.EDITOR_STATES.EDIT;
       const { caption, photos } = this.editedPost;

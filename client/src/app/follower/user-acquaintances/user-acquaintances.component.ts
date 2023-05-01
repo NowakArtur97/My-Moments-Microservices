@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from 'src/app/auth/services/user.service';
@@ -11,7 +11,7 @@ import { FollowerService } from '../service/follower.service';
   template: '',
   styleUrls: ['./user-acquaintances.component.css'],
 })
-export abstract class UserAcquaintancesComponent {
+export abstract class UserAcquaintancesComponent implements OnInit {
   private readonly LOAD_USER_INTERVAL = 10;
   private following: UserAcquaintance[] = [];
   private followers: UserAcquaintance[] = [];
@@ -58,7 +58,7 @@ export abstract class UserAcquaintancesComponent {
     });
   }
 
-  private setUsersBasedOnView() {
+  private setUsersBasedOnView(): void {
     if (this.isInFollowersView) {
       this.users = this.followers;
       this.usersToCheckAgainst = this.following;

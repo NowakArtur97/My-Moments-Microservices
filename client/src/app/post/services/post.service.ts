@@ -80,7 +80,7 @@ export class PostService extends HttpService {
       );
   }
 
-  deletePost(postId: string) {
+  deletePost(postId: string): void {
     this.httpClient.delete(`${this.baseUrl}/${postId}`).subscribe(
       () => {},
       (httpErrorResponse: HttpErrorResponse) =>
