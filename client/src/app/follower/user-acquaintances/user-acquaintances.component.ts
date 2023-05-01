@@ -20,57 +20,52 @@ export abstract class UserAcquaintancesComponent {
   usersLoaded: UserAcquaintance[] = [];
   subject!: BehaviorSubject<UserAcquaintance[]>;
   usersInterval!: NodeJS.Timeout;
+  isInFollowersView: boolean;
 
   constructor(
     protected followerService: FollowerService,
     protected userService: UserService,
     protected router: Router
-  ) {}
+  ) {
+    this.isInFollowersView =
+      this.router.url === `/${APP_ROUTES.follower.followers}`;
+  }
 
   ngOnInit(): void {
     this.followerService.myFollowers.subscribe((followers) => {
       this.followers = followers;
-      this.setUsersBasedOnView();
-      if (this.users.length === 0) {
+      const wasAlreadyLoaded =
+        this.users.length !== 0 && this.isInFollowersView;
+      if (wasAlreadyLoaded || this.followers.length === 0) {
+        this.usersLoaded = this.followers;
         return;
       }
-      this.users = this.users.map((user) => this.setMutualUsers(user));
+      this.setUsersBasedOnView();
       this.usersLoaded = [];
       this.loadUsers();
     });
     this.followerService.myFollowing.subscribe((following) => {
       this.following = following;
-      this.setUsersBasedOnView();
-      if (this.users.length === 0) {
+      const wasAlreadyLoaded =
+        this.users.length !== 0 && !this.isInFollowersView;
+      if (wasAlreadyLoaded || this.following.length === 0) {
         this.usersLoaded = this.following;
         return;
       }
-      this.users = this.users.map((user) => this.setMutualUsers(user));
+      this.setUsersBasedOnView();
       this.usersLoaded = [];
       this.loadUsers();
     });
   }
 
   private setUsersBasedOnView() {
-    const isInFollowersView =
-      this.router.url === `/${APP_ROUTES.follower.followers}`;
-    if (isInFollowersView) {
+    if (this.isInFollowersView) {
       this.users = this.followers;
       this.usersToCheckAgainst = this.following;
     } else {
       this.users = this.following;
       this.usersToCheckAgainst = this.followers;
     }
-  }
-
-  private setMutualUsers(user: UserAcquaintance): UserAcquaintance {
-    const isMutual = this.usersToCheckAgainst.some(
-      (userToCheckAgainst) => userToCheckAgainst.username === user.username
-    );
-    return {
-      ...user,
-      isMutual,
-    };
   }
 
   private loadUsers(): void {

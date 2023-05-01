@@ -15,10 +15,10 @@ import { EXAMPLE_FOLLOWERS, EXAMPLE_FOLLOWERS_2 } from './example-followers';
 @Injectable({ providedIn: 'root' })
 export class FollowerService extends HttpService {
   // TODO: Delete
-  myFollowers = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
-  myFollowing = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS_2);
-  // myFollowers = new BehaviorSubject<UserAcquaintance[]>([]);
-  // myFollowing = new BehaviorSubject<UserAcquaintance[]>([]);
+  // myFollowers = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS);
+  // myFollowing = new BehaviorSubject<UserAcquaintance[]>(EXAMPLE_FOLLOWERS_2);
+  myFollowers = new BehaviorSubject<UserAcquaintance[]>([]);
+  myFollowing = new BehaviorSubject<UserAcquaintance[]>([]);
 
   constructor(
     protected httpClient: HttpClient,
@@ -42,12 +42,7 @@ export class FollowerService extends HttpService {
       (httpErrorResponse: HttpErrorResponse) => {
         this.logErrors(httpErrorResponse);
         // TODO: DELETE
-        const usernames = [...EXAMPLE_FOLLOWERS, ...EXAMPLE_FOLLOWERS_2].map(
-          ({ username }) => username
-        );
-        this.userService.getUsersPhotos(usernames);
-        this.myFollowers.next(EXAMPLE_FOLLOWERS);
-        this.myFollowing.next(EXAMPLE_FOLLOWERS_2);
+        this.handleSuccessfulResponses(EXAMPLE_FOLLOWERS, EXAMPLE_FOLLOWERS_2);
       }
     );
   }
@@ -115,12 +110,12 @@ export class FollowerService extends HttpService {
     followers: UserAcquaintance[],
     following: UserAcquaintance[]
   ) {
-    const users = [...followers, ...following];
-    const usernames = users.map(({ username }) => username);
-    // TODO: Handle users photo
+    const usernames = [...followers, ...following].map(
+      ({ username }) => username
+    );
     this.userService.getUsersPhotos(usernames).subscribe(
       ({ photos }: UsersPhotosResponse) => {
-        this.setUsersPhotos(followers, following, photos);
+        this.setUsersProperties(followers, following, photos);
       },
       (httpErrorResponse: HttpErrorResponse) => {
         this.logErrors(httpErrorResponse);
@@ -128,26 +123,38 @@ export class FollowerService extends HttpService {
         const mockPhotos: string[] = Array.from(
           Array(usernames.length)
         ).map(() => this.mapToBase64(EXAMPLE_PHOTO));
-        this.setUsersPhotos(followers, following, mockPhotos);
+        this.setUsersProperties(followers, following, mockPhotos);
       }
     );
   }
 
-  private setUsersPhotos(
+  private setUsersProperties(
     followers: UserAcquaintance[],
     following: UserAcquaintance[],
     photos: string[]
   ) {
     let index = 0;
-    followers.forEach((user) => {
-      user.photo = photos[index];
-      index++;
+    const followersWithProperties = followers.map((user) => {
+      const isMutual = following.some(
+        (userToCheckAgainst) => userToCheckAgainst.username === user.username
+      );
+      return {
+        ...user,
+        photo: photos[index++],
+        isMutual,
+      };
     });
-    following.forEach((user) => {
-      user.photo = photos[index];
-      index++;
+    const followingWithProperties = following.map((user) => {
+      const isMutual = followers.some(
+        (userToCheckAgainst) => userToCheckAgainst.username === user.username
+      );
+      return {
+        ...user,
+        photo: photos[index++],
+        isMutual,
+      };
     });
-    this.myFollowers.next(followers);
-    this.myFollowing.next(following);
+    this.myFollowers.next(followersWithProperties);
+    this.myFollowing.next(followingWithProperties);
   }
 }
