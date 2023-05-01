@@ -9,8 +9,8 @@ import ErrorResponse from 'src/app/common/models/error-response.model';
 import { environment } from 'src/environments/environment.local';
 
 import AuthenticationRequest from '../models/authentication-request.model';
-import AuthenticationResponse from '../models/authentication-response.model';
 import UserRegistrationDTO from '../models/user-registration.dto';
+import User from '../models/user.model';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
@@ -48,9 +48,22 @@ describe('AuthService', () => {
         password: 'Password123!',
         matchingPassword: 'Password123!',
       };
-      const authResponse: AuthenticationResponse = {
-        token: 'token',
-        expirationTimeInMilliseconds: 3600000,
+      const authResponse: User = {
+        username: 'username',
+        email: 'username@email.com',
+        profile: {
+          about: 'about',
+          gender: 'UNSPECIFIED',
+          interests: 'interests',
+          languages: 'languages',
+          location: 'location',
+          image: ['image'],
+        },
+        authenticationResponse: {
+          token: 'token',
+          expirationTimeInMilliseconds: 72000000,
+        },
+        roles: [{ name: 'USER_ROLE' }],
       };
 
       authService.authenticatedUser.pipe(skip(1)).subscribe((res) => {
@@ -110,9 +123,22 @@ describe('AuthService', () => {
         email: 'email@email.com',
         password: 'Password123!',
       };
-      const authResponse: AuthenticationResponse = {
-        token: 'token',
-        expirationTimeInMilliseconds: 3600000,
+      const authResponse: User = {
+        username: 'username',
+        email: 'username@email.com',
+        profile: {
+          about: 'about',
+          gender: 'UNSPECIFIED',
+          interests: 'interests',
+          languages: 'languages',
+          location: 'location',
+          image: ['image'],
+        },
+        authenticationResponse: {
+          token: 'token',
+          expirationTimeInMilliseconds: 72000000,
+        },
+        roles: [{ name: 'USER_ROLE' }],
       };
 
       authService.authenticatedUser.pipe(skip(1)).subscribe((res) => {

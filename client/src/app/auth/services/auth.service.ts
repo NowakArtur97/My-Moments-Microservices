@@ -9,17 +9,30 @@ import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
 import AuthenticationRequest from '../models/authentication-request.model';
-import AuthenticationResponse from '../models/authentication-response.model';
 import UserRegistrationDTO from '../models/user-registration.dto';
+import User from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends HttpService {
   authError = new BehaviorSubject<ErrorResponse | null>(null);
   // TODO: DELETE
-  authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>({
-    token:
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjc0MTEzMjc5LCJpYXQiOjE2NzQwNDEyNzl9.vzLRaWJ1dvvTDw7TXYh_ydlHpB4tiOsFDYdFfWd2Axo',
-    expirationTimeInMilliseconds: 72000000,
+  authenticatedUser = new BehaviorSubject<User | null>({
+    username: 'username',
+    email: 'username@email.com',
+    profile: {
+      about: 'about',
+      gender: 'UNSPECIFIED',
+      interests: 'interests',
+      languages: 'languages',
+      location: 'location',
+      image: ['image'],
+    },
+    authenticationResponse: {
+      token:
+        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjc0MTEzMjc5LCJpYXQiOjE2NzQwNDEyNzl9.vzLRaWJ1dvvTDw7TXYh_ydlHpB4tiOsFDYdFfWd2Axo',
+      expirationTimeInMilliseconds: 72000000,
+    },
+    roles: [{ name: 'USER_ROLE' }],
   });
   // authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);
 
@@ -32,12 +45,12 @@ export class AuthService extends HttpService {
       { key: 'user', value: userData },
     ]);
     this.httpClient
-      .post<AuthenticationResponse>(
+      .post<User>(
         `${this.baseUrl}${BACKEND_URLS.user.registration}`,
         multipartData
       )
       .subscribe(
-        (authenticationResponse: AuthenticationResponse) =>
+        (authenticationResponse: User) =>
           this.handleSuccessfullAuthentication(authenticationResponse),
         (httpErrorResponse: HttpErrorResponse) =>
           this.handleAuthenticationErrors(httpErrorResponse)
@@ -46,21 +59,19 @@ export class AuthService extends HttpService {
 
   loginUser(authenticationRequest: AuthenticationRequest): void {
     this.httpClient
-      .post<AuthenticationResponse>(
+      .post<User>(
         `${this.baseUrl}${BACKEND_URLS.user.authentication}`,
         authenticationRequest
       )
       .subscribe(
-        (authenticationResponse: AuthenticationResponse) =>
+        (authenticationResponse: User) =>
           this.handleSuccessfullAuthentication(authenticationResponse),
         (httpErrorResponse: HttpErrorResponse) =>
           this.handleAuthenticationErrors(httpErrorResponse)
       );
   }
 
-  private handleSuccessfullAuthentication(
-    authenticationResponse: AuthenticationResponse
-  ): void {
+  private handleSuccessfullAuthentication(authenticationResponse: User): void {
     this.authenticatedUser.next(authenticationResponse);
     this.authError.next(null);
     this.router.navigate([`/${APP_ROUTES.post.posts}`]);

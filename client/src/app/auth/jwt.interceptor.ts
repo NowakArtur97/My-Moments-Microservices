@@ -16,7 +16,9 @@ export class JwtInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return this.authService.authenticatedUser.pipe(
       take(1),
-      map((authenticatedUser) => authenticatedUser?.token),
+      map(
+        (authenticatedUser) => authenticatedUser?.authenticationResponse.token
+      ),
       exhaustMap((token) => {
         const { url } = request;
         const isNotSecured =
