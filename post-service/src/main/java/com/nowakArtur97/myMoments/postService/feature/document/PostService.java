@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,6 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Service
 @Validated
@@ -55,9 +57,16 @@ public class PostService {
 
     public Flux<PostDocument> findPostsByAuthor(String author) {
 
-        log.info("Looking up a Post by author: {}", author);
+        log.info("Looking up Posts by author: {}", author);
 
         return postRepository.findByAuthor(author);
+    }
+
+    public Flux<PostDocument> findPostsByAuthors(List<String> usernames, Pageable page) {
+
+        log.info("Looking up Posts by authors: {}", usernames);
+
+        return postRepository.findByAuthorIn(usernames, page);
     }
 
     public Mono<PostsCommentsModel> getCommentsByPostId(String id) {

@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -76,17 +79,37 @@ class PostController {
                 .map(ResponseEntity::ok);
     }
 
+//    @GetMapping
+//    @Operation(summary = "Find User's Posts by Username", description = "Provide a name to look up specific Posts",
+//            security = @SecurityRequirement(name = "bearerAuth"))
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "User's posts found"),
+//            @ApiResponse(responseCode = "400", description = "Invalid User's name supplied")})
+//    Mono<ResponseEntity<UsersPostsModel>> getUserPosts(
+//            @Parameter(description = "Username of the Posts being looked up", name = "username", required = true,
+//                    example = "user") @RequestParam("username") String username) {
+//
+//        return postService.findPostsByAuthor(username)
+//                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
+//                .collectList()
+//                .map(UsersPostsModel::new)
+//                .map(ResponseEntity::ok);
+//    }
+
     @GetMapping
-    @Operation(summary = "Find User's Posts by Username", description = "Provide a name to look up specific Posts",
+    @Operation(summary = "Find Users Posts by Usernames", description = "Provide names to look up Posts",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User's posts found"),
-            @ApiResponse(responseCode = "400", description = "Invalid User's name supplied")})
-    Mono<ResponseEntity<UsersPostsModel>> getUsersPosts(
-            @Parameter(description = "Username of the Posts being looked up", name = "username", required = true,
-                    example = "user") @RequestParam("username") String username) {
+            @ApiResponse(responseCode = "200", description = "Users posts found"),
+            @ApiResponse(responseCode = "400", description = "Invalid Usernames supplied")})
+    Mono<ResponseEntity<UsersPostsModel>> getUsersPostsByUsernames(
+            @Parameter(description = "Usernames of the Posts being looked up", name = "usernames", required = true,
+                    example = "user,user2") @RequestParam("usernames") List<String> usernames,
+            @Parameter(description = "Paging details", name = "page", example = "page=0&size=20&sort=caption,asc")
+            @ParameterObject Pageable page
+    ) {
 
-        return postService.findPostsByAuthor(username)
+        return postService.findPostsByAuthors(usernames, page)
                 .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
                 .collectList()
                 .map(UsersPostsModel::new)

@@ -26,16 +26,3 @@ services:
     cpus: 0.5
     mem_limit: 256M
     mem_reservation: 64M
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: my-moments-user
-      RABBITMQ_DEFAULT_PASS: my-moments-password
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    cpus: 0.5
-    mem_limit: 128M
-    mem_reservation: 32M
