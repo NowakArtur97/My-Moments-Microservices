@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -306,10 +307,11 @@ class PostGetControllerTest {
     }
 
     @Test
-    void when_find_posts_by_username_should_return_posts() {
+    void when_find_posts_by_usernames_without_page_should_return_posts() {
 
         String username = "user";
         String header = "Bearer token";
+        PageRequest defaultPage = PageRequest.of(0, 20);
 
         byte[] imageBytesExpected = "image.jpg".getBytes();
         byte[] imageBytesExpected2 = "image2.jpg".getBytes();
@@ -324,12 +326,13 @@ class PostGetControllerTest {
         PostModel postModelExpected2 = (PostModel) postTestBuilder.withCaption("caption 2").withAuthor(username)
                 .withBytes(List.of(imageBytesExpected2)).build(ObjectType.MODEL);
 
-        when(postService.findPostsByAuthor(username)).thenReturn(Flux.just(postDocumentExpected, postDocumentExpected2));
+        when(postService.findPostsByAuthors(List.of(username), defaultPage))
+                .thenReturn(Flux.just(postDocumentExpected, postDocumentExpected2));
         when(modelMapper.map(postDocumentExpected, PostModel.class)).thenReturn(postModelExpected);
         when(modelMapper.map(postDocumentExpected2, PostModel.class)).thenReturn(postModelExpected2);
 
         Mono<UsersPostsModel> userPostsModelMono = webTestClient.get()
-                .uri(POSTS_BASE_PATH + "?username=" + username)
+                .uri(POSTS_BASE_PATH + "?usernames=" + username)
                 .header("Authorization", header)
                 .exchange()
                 .expectStatus()
@@ -369,7 +372,8 @@ class PostGetControllerTest {
                                     () -> assertEquals(2, userPostsModelActual.getPosts().size(),
                                             () -> "should return: two posts, but was: "
                                                     + userPostsModelActual.getPosts().size()),
-                                    () -> verify(postService, times(1)).findPostsByAuthor(username),
+                                    () -> verify(postService, times(1))
+                                            .findPostsByAuthors(List.of(username), defaultPage),
                                     () -> verifyNoMoreInteractions(postService),
                                     () -> verify(modelMapper, times(1))
                                             .map(postDocumentExpected, PostModel.class),
@@ -384,15 +388,97 @@ class PostGetControllerTest {
     }
 
     @Test
-    void when_find_posts_by_username_without_posts_should_not_return_any_posts() {
+    void when_find_posts_by_usernames_with_page_should_return_posts() {
 
         String username = "user";
         String header = "Bearer token";
+        PageRequest page = PageRequest.of(0, 10);
 
-        when(postService.findPostsByAuthor(username)).thenReturn(Flux.empty());
+        byte[] imageBytesExpected = "image.jpg".getBytes();
+        byte[] imageBytesExpected2 = "image2.jpg".getBytes();
+        Binary imageExpected = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        Binary imageExpected2 = new Binary(BsonBinarySubType.BINARY, imageBytesExpected);
+        PostDocument postDocumentExpected = (PostDocument) postTestBuilder.withAuthor(username)
+                .withBinary(List.of(imageExpected)).build(ObjectType.DOCUMENT);
+        PostDocument postDocumentExpected2 = (PostDocument) postTestBuilder.withCaption("caption 2").withAuthor(username)
+                .withBinary(List.of(imageExpected2)).build(ObjectType.DOCUMENT);
+        PostModel postModelExpected = (PostModel) postTestBuilder.withAuthor(username)
+                .withBytes(List.of(imageBytesExpected)).build(ObjectType.MODEL);
+        PostModel postModelExpected2 = (PostModel) postTestBuilder.withCaption("caption 2").withAuthor(username)
+                .withBytes(List.of(imageBytesExpected2)).build(ObjectType.MODEL);
+
+        when(postService.findPostsByAuthors(List.of(username), page))
+                .thenReturn(Flux.just(postDocumentExpected, postDocumentExpected2));
+        when(modelMapper.map(postDocumentExpected, PostModel.class)).thenReturn(postModelExpected);
+        when(modelMapper.map(postDocumentExpected2, PostModel.class)).thenReturn(postModelExpected2);
 
         Mono<UsersPostsModel> userPostsModelMono = webTestClient.get()
-                .uri(POSTS_BASE_PATH + "?username=" + username)
+                .uri(POSTS_BASE_PATH + "?usernames=" + username + "&page=0&size=10")
+                .header("Authorization", header)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .returnResult(UsersPostsModel.class)
+                .getResponseBody()
+                .single();
+
+        StepVerifier.create(userPostsModelMono)
+                .thenConsumeWhile(
+                        userPostsModelActual -> {
+                            PostModel postModelActual = userPostsModelActual.getPosts().get(0);
+                            PostModel postModelActual2 = userPostsModelActual.getPosts().get(1);
+                            assertAll(
+                                    () -> assertNotNull(postModelActual.getId(),
+                                            () -> "should return post with not null id, but was: null"),
+                                    () -> assertEquals(postModelExpected.getCaption(), postModelActual.getCaption(),
+                                            () -> "should return post with caption: " + postModelExpected.getCaption()
+                                                    + ", but was: " + postModelActual.getCaption()),
+                                    () -> assertEquals(postModelExpected.getPhotos().size(), postModelActual.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected.getPhotos().size()
+                                                    + ", but was: " + postModelActual.getPhotos().size()),
+                                    () -> assertEquals(postModelExpected.getAuthor(), postModelActual.getAuthor(),
+                                            () -> "should return post with author: " + postModelExpected.getAuthor()
+                                                    + ", but was: " + postModelActual.getAuthor()),
+                                    () -> assertNotNull(postModelActual2.getId(),
+                                            () -> "should return post with not null id, but was: null"),
+                                    () -> assertEquals(postModelExpected2.getCaption(), postModelActual2.getCaption(),
+                                            () -> "should return post with caption: " + postModelExpected2.getCaption()
+                                                    + ", but was: " + postModelActual2.getCaption()),
+                                    () -> assertEquals(postModelExpected2.getPhotos().size(), postModelActual2.getPhotos().size(),
+                                            () -> "should return post with photos size: " + postModelExpected2.getPhotos().size()
+                                                    + ", but was: " + postModelActual2.getPhotos().size()),
+                                    () -> assertEquals(postModelExpected2.getAuthor(), postModelActual2.getAuthor(),
+                                            () -> "should return post with author: " + postModelExpected2.getAuthor()
+                                                    + ", but was: " + postModelActual2.getAuthor()),
+                                    () -> assertEquals(2, userPostsModelActual.getPosts().size(),
+                                            () -> "should return: two posts, but was: "
+                                                    + userPostsModelActual.getPosts().size()),
+                                    () -> verify(postService, times(1))
+                                            .findPostsByAuthors(List.of(username), page),
+                                    () -> verifyNoMoreInteractions(postService),
+                                    () -> verify(modelMapper, times(1))
+                                            .map(postDocumentExpected, PostModel.class),
+                                    () -> verify(modelMapper, times(1))
+                                            .map(postDocumentExpected2, PostModel.class),
+                                    () -> verifyNoMoreInteractions(modelMapper),
+                                    () -> verifyNoInteractions(jwtUtil),
+                                    () -> verifyNoInteractions(postObjectMapper));
+                            return true;
+                        }
+                ).verifyComplete();
+    }
+
+    @Test
+    void when_find_posts_by_usernames_without_posts_should_not_return_any_posts() {
+
+        String username = "user";
+        String header = "Bearer token";
+        PageRequest defaultPage = PageRequest.of(0, 20);
+
+        when(postService.findPostsByAuthors(List.of(username), defaultPage)).thenReturn(Flux.empty());
+
+        Mono<UsersPostsModel> userPostsModelMono = webTestClient.get()
+                .uri(POSTS_BASE_PATH + "?usernames=" + username)
                 .header("Authorization", header)
                 .exchange()
                 .expectStatus()
@@ -408,7 +494,8 @@ class PostGetControllerTest {
                                     () -> assertTrue(userPostsModelActual.getPosts().isEmpty(),
                                             () -> "should return: zero posts, but was: "
                                                     + userPostsModelActual.getPosts().size()),
-                                    () -> verify(postService, times(1)).findPostsByAuthor(username),
+                                    () -> verify(postService, times(1))
+                                            .findPostsByAuthors(List.of(username), defaultPage),
                                     () -> verifyNoMoreInteractions(postService),
                                     () -> verifyNoInteractions(jwtUtil),
                                     () -> verifyNoInteractions(modelMapper),

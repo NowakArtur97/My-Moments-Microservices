@@ -11,7 +11,7 @@ public interface PostRepository extends ReactiveMongoRepository<PostDocument, St
 
     Flux<PostDocument> findByAuthor(String author);
 
-    Flux<PostDocument> findByAuthorIn(List<String> authors, Pageable page);
+    Flux<PostDocument> findByAuthorInOrderByCreateDateDesc(List<String> authors, Pageable page);
 
     Mono<Void> deleteByAuthor(String author);
 }

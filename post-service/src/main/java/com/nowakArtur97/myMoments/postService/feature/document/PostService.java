@@ -66,7 +66,7 @@ public class PostService {
 
         log.info("Looking up Posts by authors: {}", usernames);
 
-        return postRepository.findByAuthorIn(usernames, page);
+        return postRepository.findByAuthorInOrderByCreateDateDesc(usernames, page);
     }
 
     public Mono<PostsCommentsModel> getCommentsByPostId(String id) {

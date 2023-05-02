@@ -79,23 +79,6 @@ class PostController {
                 .map(ResponseEntity::ok);
     }
 
-//    @GetMapping
-//    @Operation(summary = "Find User's Posts by Username", description = "Provide a name to look up specific Posts",
-//            security = @SecurityRequirement(name = "bearerAuth"))
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "User's posts found"),
-//            @ApiResponse(responseCode = "400", description = "Invalid User's name supplied")})
-//    Mono<ResponseEntity<UsersPostsModel>> getUserPosts(
-//            @Parameter(description = "Username of the Posts being looked up", name = "username", required = true,
-//                    example = "user") @RequestParam("username") String username) {
-//
-//        return postService.findPostsByAuthor(username)
-//                .map(postDocument -> modelMapper.map(postDocument, PostModel.class))
-//                .collectList()
-//                .map(UsersPostsModel::new)
-//                .map(ResponseEntity::ok);
-//    }
-
     @GetMapping
     @Operation(summary = "Find Users Posts by Usernames", description = "Provide names to look up Posts",
             security = @SecurityRequirement(name = "bearerAuth"))

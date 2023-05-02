@@ -15,10 +15,10 @@ import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 @Setter
 @AllArgsConstructor
 @ToString
-@Schema(description = "Details about the User's Posts")
+@Schema(description = "Details about the Users Posts")
 class UsersPostsModel {
 
-    @Schema(accessMode = READ_ONLY, description = "The user's posts")
+    @Schema(accessMode = READ_ONLY, description = "The users posts")
     private final List<PostModel> posts;
 
     public UsersPostsModel() {

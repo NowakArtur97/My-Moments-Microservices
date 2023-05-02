@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -375,12 +376,43 @@ class PostServiceTest {
                                     () -> verifyNoInteractions(webClientBuilder)))
                     .verifyComplete();
         }
+
+        @Test
+        void when_find_posts_by_authors_should_return_posts() {
+
+            String author = "user";
+            String author2 = "user 2";
+            List<String> authors = List.of(author, author2);
+            PageRequest page = PageRequest.of(0, 2);
+
+            PostDocument postExpected = (PostDocument) postTestBuilder.withAuthor(author).build(ObjectType.DOCUMENT);
+            PostDocument postExpected2 = (PostDocument) postTestBuilder.withAuthor(author2).build(ObjectType.DOCUMENT);
+
+            when(postRepository.findByAuthorInOrderByCreateDateDesc(authors, page)).thenReturn(Flux.just(postExpected, postExpected2));
+
+            Flux<PostDocument> postsActualFlux = postService.findPostsByAuthors(authors, page);
+
+            StepVerifier.create(postsActualFlux)
+                    .expectNextMatches(postActual -> assertPost(postExpected, postActual))
+                    .expectNextMatches(postActual -> assertPost(postExpected2, postActual))
+                    .then(() ->
+                            assertAll(
+                                    () -> verify(postRepository, times(1))
+                                            .findByAuthorInOrderByCreateDateDesc(authors, page),
+                                    () -> verifyNoMoreInteractions(postRepository),
+                                    () -> verify(reactiveCircuitBreakerFactory, times(1))
+                                            .create("comment-fallback"),
+                                    () -> verifyNoMoreInteractions(reactiveCircuitBreakerFactory),
+                                    () -> verifyNoInteractions(postEventProducer),
+                                    () -> verifyNoInteractions(webClientBuilder)))
+                    .verifyComplete();
+        }
     }
 
     private boolean assertPost(PostDocument postExpected, PostDocument postActual) {
 
         assertAll(() -> assertEquals(postExpected, postActual,
-                () -> "should return post: " + postExpected + ", but was: " + postActual),
+                        () -> "should return post: " + postExpected + ", but was: " + postActual),
                 () -> assertEquals(postExpected.getId(), postActual.getId(),
                         () -> "should return post with id: " + postExpected.getId() + ", but was: "
                                 + postActual.getId()),
