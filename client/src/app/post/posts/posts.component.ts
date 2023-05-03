@@ -1,31 +1,33 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 import { ClickAndDragToScrollService } from '../../common/services/click-and-drag-to-scroll.service';
 import PostElement from '../models/post-element.model';
 import PostState from '../models/post-state.enum';
+import Post from '../models/post.model';
 import { PostService } from '../services/post.service';
 
 @Component({
-  selector: 'app-posts',
-  templateUrl: './posts.component.html',
+  template: '',
   styleUrls: ['./posts.component.css'],
 })
-export class PostsComponent implements OnInit, AfterViewChecked {
+export abstract class PostsComponent implements OnInit, AfterViewChecked {
   @ViewChild('centerMarker') centerMarker!: ElementRef<HTMLDivElement>;
   @ViewChild('postsContainer') postsContainer!: ElementRef<HTMLDivElement>;
   @ViewChildren('postsElements') postElements!: QueryList<ElementRef>;
 
   posts: PostElement[] = [];
   previousActiveElement!: PostElement;
+  postsSubscription!: BehaviorSubject<Post[]>;
 
   constructor(
-    private postService: PostService,
+    protected postService: PostService,
     private clickAndDragToScrollService: ClickAndDragToScrollService
   ) {}
 
   // TODO: DELETE
   // ngOnInit(): void {
-  //   this.postService.myPosts.subscribe((posts) => {
+  //   this.postsSubscription.subscribe((posts) => {
   //     const postsWithMappedImages = this.postService
   //       .mapBinaryToJpgs(posts)
   //       .map((post) => ({
@@ -40,7 +42,7 @@ export class PostsComponent implements OnInit, AfterViewChecked {
   // }
 
   ngOnInit(): void {
-    this.postService.myPosts.subscribe((posts) => {
+    this.postsSubscription.subscribe((posts) => {
       this.posts = this.postService.mapPostsToElements(posts);
       if (this.posts.length > 1) {
         this.posts[this.posts.length - 1].isCurrentlyLastElement = true;

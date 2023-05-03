@@ -16,7 +16,6 @@ export abstract class UserAcquaintancesComponent implements OnInit {
   private following: UserAcquaintance[] = [];
   private followers: UserAcquaintance[] = [];
   private users: UserAcquaintance[] = [];
-  private usersToCheckAgainst: UserAcquaintance[] = [];
   usersLoaded: UserAcquaintance[] = [];
   subject!: BehaviorSubject<UserAcquaintance[]>;
   usersInterval!: NodeJS.Timeout;
@@ -61,10 +60,8 @@ export abstract class UserAcquaintancesComponent implements OnInit {
   private setUsersBasedOnView(): void {
     if (this.isInFollowersView) {
       this.users = this.followers;
-      this.usersToCheckAgainst = this.following;
     } else {
       this.users = this.following;
-      this.usersToCheckAgainst = this.followers;
     }
   }
 
