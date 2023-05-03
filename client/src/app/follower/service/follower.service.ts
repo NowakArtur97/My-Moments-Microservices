@@ -49,7 +49,7 @@ export class FollowerService extends HttpService {
   followBack(username: string): void {
     this.httpClient
       .post<void>(
-        `${this.baseUrl}${BACKEND_URLS.follower.followers(username)}`,
+        `${this.baseUrl}${BACKEND_URLS.follower.following(username)}`,
         {}
       )
       .subscribe(
@@ -82,7 +82,7 @@ export class FollowerService extends HttpService {
     );
     this.httpClient
       .delete<void>(
-        `${this.baseUrl}${BACKEND_URLS.follower.followers(username)}`,
+        `${this.baseUrl}${BACKEND_URLS.follower.following(username)}`,
         {}
       )
       .subscribe(
