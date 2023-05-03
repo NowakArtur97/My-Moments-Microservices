@@ -122,6 +122,7 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 
 | Method    | URI                          | Action                                                               |
 | --------- | ---------------------------- | -------------------------------------------------------------------- |
+| `GET`     | `/api/v1/users/photos?usernames=${username1,username2}`        | `Get users photos by usernames`      
 | `PUT`     | `/api/v1/users/me`        | `Update user information`                                      |
 | `DELETE`     | `/api/v1/users/me`        | `Delete user`                                      |
 
@@ -131,7 +132,7 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 | --------- | ---------------------------- | -------------------------------------------------------------------- |
 | `GET`     | `/api/v1/posts/{id}` | `Get information about a post`                     |
 | `GET`     | `/api/v1/posts/me` | `Get user's posts`                     |
-| `GET`     | `/api/v1/posts?username=${username}`        | `Get user's posts by username`
+| `GET`     | `/api/v1/posts?usernames=${username1,username2}&page=${page}&size=${sizeOfPage}&sort=${sortingConditions},${asc|desc}`        | `Get users posts by usernames (with optional paging)`
 | `POST`     | `/api/v1/posts`        | `Create a post`
 | `PUT`     | `/api/v1/posts/{id}`        | `Update post information`                                      |
 | `DELETE`     | `/api/v1/posts/{id}`        | `Delete post with related comments`                                      |
@@ -149,11 +150,11 @@ Then use the token as a Bearer Token using e.g. Postman. Requests can be sent to
 
 | Method  | URI                                            | Action                                                               |
 |---------|------------------------------------------------| -------------------------------------------------------------------- |
+| `GET`   | `/api/v1/followers/{username}`                 | `Get user's followers by username`
 | `GET`   | `/api/v1/following/recommendations/{username}` | `Get user's following recommendations by username`
 | `GET`   | `/api/v1/following/{username}`                 | `Get user's following by username`
-| `GET`   | `/api/v1/followers/{username}`                 | `Get user's followers by username`
-| `POST`  | `/api/v1/followers/{username}`                 | `Follow the User`
-| `Delete` | `/api/v1/followers/{username}`                 | `Unollow the User`
+| `POST`  | `/api/v1/following/{username}`                 | `Follow the User`
+| `Delete` | `/api/v1/following/{username}`                 | `Unollow the User`
 
 ## Status
 
