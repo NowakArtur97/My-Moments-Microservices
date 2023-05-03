@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Resolve } from '@angular/router';
 
 import Post from '../models/post.model';
 import { PostService } from '../services/post.service';
+import PostsResolver from './posts.resolver';
 
 @Injectable({ providedIn: 'root' })
-export default class MyPostsResolver implements Resolve<any> {
-  constructor(private postService: PostService) {}
+export default class MyPostsResolver extends PostsResolver {
+  constructor(protected postService: PostService) {
+    super(postService);
+  }
 
-  public resolve(): Post[] {
-    const posts = this.postService.myPosts.getValue();
-    if (posts.length === 0) {
-      this.postService.getMyPosts();
-      return this.postService.myPosts.getValue();
-    } else {
-      return posts;
-    }
+  getPosts = (): Post[] => this.postService.myPosts.getValue();
+
+  fetchPosts(): void {
+    this.postService.getMyPosts();
   }
 }

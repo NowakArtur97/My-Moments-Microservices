@@ -28,7 +28,6 @@ export class FollowerService extends HttpService {
   }
 
   getAcquaintances(username: string): void {
-    // TODO: Get username from service
     const followersRequest = this.httpClient.get<UsersAcquaintancesResponse>(
       `${this.baseUrl}${BACKEND_URLS.follower.followers(username)}`
     );

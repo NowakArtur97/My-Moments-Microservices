@@ -7,6 +7,9 @@ const BACKEND_URLS = {
   common: {
     myResource: '/me',
   },
+  post: {
+    usersPosts: (usernames: string[]): string => `?usernames=${usernames}`,
+  },
   comment: {
     postComments: (postId: string): string => `/${postId}/comments`,
     postComment: (postId: string, commentId: string): string =>

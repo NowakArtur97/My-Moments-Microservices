@@ -27,6 +27,16 @@ export class PostService extends HttpService {
       return { ...post, currentPhotoIndex: 0 };
     })
   );
+  // followingPosts = new BehaviorSubject<Post[]>([]);
+  followingPosts = new BehaviorSubject<Post[]>(
+    this.mapBinaryToJpgs(
+      [...EXAMPLE_POSTS].map((post) => {
+        return { ...post, photos: this.shuffleArray([...post.photos]) };
+      })
+    ).map((post) => {
+      return { ...post, currentPhotoIndex: 0 };
+    })
+  );
   editedPost = new BehaviorSubject<Post | null>(null);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
@@ -59,6 +69,25 @@ export class PostService extends HttpService {
             return { ...post, photos: this.shuffleArray([...post.photos]) };
           });
           this.handleSuccessfullPostsResponse(mockPosts);
+        }
+      );
+  }
+
+  getFollowingPosts(following: string[]): void {
+    this.httpClient
+      .get<PostsResponse>(
+        `${this.baseUrl}${BACKEND_URLS.post.usersPosts(following)}`
+      )
+      .subscribe(
+        ({ posts }: PostsResponse) =>
+          this.handleSuccessfullFollowingPostsResponse(posts),
+        (httpErrorResponse: HttpErrorResponse) => {
+          this.logErrors(httpErrorResponse);
+          // TODO: DELETE
+          const mockPosts: Post[] = [...EXAMPLE_POSTS].map((post) => {
+            return { ...post, photos: this.shuffleArray([...post.photos]) };
+          });
+          this.handleSuccessfullFollowingPostsResponse(mockPosts);
         }
       );
   }
@@ -111,6 +140,18 @@ export class PostService extends HttpService {
     );
     this.myPosts.next([...this.myPosts.getValue(), ...mappedBinaryToJpgsPosts]);
     this.router.navigate([`/${APP_ROUTES.post.posts}`]);
+  }
+
+  private handleSuccessfullFollowingPostsResponse(posts: Post[]): void {
+    const mappedBinaryToJpgsPosts: Post[] = this.mapBinaryToJpgs(posts).map(
+      (post) => {
+        return { ...post, currentPhotoIndex: 0 };
+      }
+    );
+    this.followingPosts.next([
+      ...this.myPosts.getValue(),
+      ...mappedBinaryToJpgsPosts,
+    ]);
   }
 
   // TODO: make private and revert changes
