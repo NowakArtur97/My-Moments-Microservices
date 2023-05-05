@@ -13,9 +13,7 @@ import { FollowerService } from '../service/follower.service';
 })
 export abstract class UserAcquaintancesComponent implements OnInit {
   private readonly LOAD_USER_INTERVAL = 10;
-  private following: UserAcquaintance[] = [];
-  private followers: UserAcquaintance[] = [];
-  private users: UserAcquaintance[] = [];
+  protected users: UserAcquaintance[] = [];
   usersLoaded: UserAcquaintance[] = [];
   subject!: BehaviorSubject<UserAcquaintance[]>;
   usersInterval!: NodeJS.Timeout;
@@ -30,42 +28,14 @@ export abstract class UserAcquaintancesComponent implements OnInit {
       this.router.url === `/${APP_ROUTES.follower.followers}`;
   }
 
-  ngOnInit(): void {
-    this.followerService.myFollowers.subscribe((followers) => {
-      this.followers = followers;
-      const wasAlreadyLoaded =
-        this.users.length !== 0 && this.isInFollowersView;
-      if (wasAlreadyLoaded || this.followers.length === 0) {
-        this.usersLoaded = this.followers;
-        return;
-      }
-      this.setUsersBasedOnView();
-      this.usersLoaded = [];
-      this.loadUsers();
-    });
-    this.followerService.myFollowing.subscribe((following) => {
-      this.following = following;
-      const wasAlreadyLoaded =
-        this.users.length !== 0 && !this.isInFollowersView;
-      if (wasAlreadyLoaded || this.following.length === 0) {
-        this.usersLoaded = this.following;
-        return;
-      }
-      this.setUsersBasedOnView();
-      this.usersLoaded = [];
-      this.loadUsers();
-    });
-  }
+  ngOnInit(): void {}
 
-  private setUsersBasedOnView(): void {
-    if (this.isInFollowersView) {
-      this.users = this.followers;
-    } else {
-      this.users = this.following;
+  protected loadUsers(users: UserAcquaintance[]): void {
+    if (users.length === 0) {
+      return;
     }
-  }
-
-  private loadUsers(): void {
+    this.users = users;
+    this.usersLoaded = [];
     let index = 0;
     clearInterval(this.usersInterval);
     this.usersInterval = setInterval(() => {

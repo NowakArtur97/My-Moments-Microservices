@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { AuthWrapperComponent } from './auth/auth-wrapper/auth-wrapper.component';
+import { AuthGuard } from './auth/auth.guard';
 import { APP_ROUTES } from './common/const.data';
 import { FollowersComponent } from './follower/followers/followers.component';
 import { FollowingComponent } from './follower/following/following.component';
@@ -18,31 +19,31 @@ const routes: Routes = [
   {
     path: '',
     component: FollowingPostsComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     resolve: { posts: FollowingResolver },
   },
   { path: APP_ROUTES.auth, component: AuthWrapperComponent },
   {
     path: APP_ROUTES.post.posts,
     component: MyPostsComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     resolve: { posts: MyPostsResolver },
   },
   {
     path: APP_ROUTES.post.editor,
     component: PostWrapperComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: APP_ROUTES.follower.followers,
     component: FollowersComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     resolve: { followers: MyFollowersResolver },
   },
   {
     path: APP_ROUTES.follower.following,
     component: FollowingComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     resolve: { following: MyFollowingResolver },
   },
   { path: '**', component: AuthWrapperComponent },

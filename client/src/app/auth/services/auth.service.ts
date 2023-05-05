@@ -17,7 +17,7 @@ export class AuthService extends HttpService {
   authError = new BehaviorSubject<ErrorResponse | null>(null);
   // TODO: DELETE
   authenticatedUser = new BehaviorSubject<User | null>({
-    username: 'username',
+    username: 'newUser',
     email: 'username@email.com',
     profile: {
       about: 'about',
@@ -29,12 +29,12 @@ export class AuthService extends HttpService {
     },
     authenticationResponse: {
       token:
-        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjc0MTEzMjc5LCJpYXQiOjE2NzQwNDEyNzl9.vzLRaWJ1dvvTDw7TXYh_ydlHpB4tiOsFDYdFfWd2Axo',
+        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjgzMzQzMTUxLCJpYXQiOjE2ODMyNzExNTF9.VjFCqa6TIxJ-NyDpWGl4rR_RZxzdPN1CKpJ7YvpE8ds',
       expirationTimeInMilliseconds: 72000000,
     },
     roles: [{ name: 'USER_ROLE' }],
   });
-  // authenticatedUser = new BehaviorSubject<AuthenticationResponse | null>(null);
+  // authenticatedUser = new BehaviorSubject<User | null>(null);
 
   constructor(protected httpClient: HttpClient, private router: Router) {
     super(httpClient, environment.userServiceUrl);

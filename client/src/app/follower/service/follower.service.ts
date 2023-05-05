@@ -53,27 +53,36 @@ export class FollowerService extends HttpService {
         {}
       )
       .subscribe(
-        () => {
-          const following = this.myFollowing.getValue().map((following) => {
-            if (following.username === username) {
-              following.isMutual = true;
-            }
-            return following;
-          });
-          this.myFollowing.next(following);
-        },
+        () => this.updateUsers(username),
         (httpErrorResponse: HttpErrorResponse) => {
           // TODO: Delete
-          const following = this.myFollowing.getValue().map((following) => {
-            if (following.username === username) {
-              following.isMutual = true;
-            }
-            return following;
-          });
-          this.myFollowing.next(following);
+          this.updateUsers(username);
           this.logErrors(httpErrorResponse);
         }
       );
+  }
+
+  private updateUsers(username: string) {
+    const following = this.myFollowing.getValue().map((following) =>
+      following.username === username
+        ? {
+            ...following,
+            isMutual: true,
+            numberOfFollowing: following.numberOfFollowing + 1,
+          }
+        : following
+    );
+    const followers = this.myFollowers.getValue().map((follower) =>
+      follower.username === username
+        ? {
+            ...follower,
+            isMutual: true,
+            numberOfFollowers: follower.numberOfFollowers + 1,
+          }
+        : follower
+    );
+    this.myFollowing.next(following);
+    this.myFollowers.next(followers);
   }
 
   unfollowUser(username: string): void {
@@ -87,8 +96,8 @@ export class FollowerService extends HttpService {
       )
       .subscribe(
         () => {
-          this.myFollowers.next(
-            this.myFollowers
+          this.myFollowing.next(
+            this.myFollowing
               .getValue()
               .filter((user) => user.username !== username)
           );
@@ -96,8 +105,8 @@ export class FollowerService extends HttpService {
         (httpErrorResponse: HttpErrorResponse) => {
           this.logErrors(httpErrorResponse);
           // TODO: Delete;
-          this.myFollowers.next(
-            this.myFollowers
+          this.myFollowing.next(
+            this.myFollowing
               .getValue()
               .filter((user) => user.username !== username)
           );

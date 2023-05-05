@@ -69,11 +69,11 @@ export class UserAcquaintanceComponent implements OnInit {
 
   onTakeAction(): void {
     if (this.isInFollowersView) {
-      this.wasUnfollowed = true;
-      this.userState = this.ANIMATION_STATE.DELETE;
-    } else {
       this.followerService.followBack(this.user.username);
       this.setAnimationVariables(false);
+    } else {
+      this.wasUnfollowed = true;
+      this.userState = this.ANIMATION_STATE.DELETE;
     }
   }
 
@@ -86,8 +86,8 @@ export class UserAcquaintanceComponent implements OnInit {
 
   @HostListener('mouseover')
   onHover(): void {
-    const areAlreadyMutual = !this.isInFollowersView && this.user.isMutual;
-    if (areAlreadyMutual) {
+    const skipActionOnHover = this.isInFollowersView && this.user.isMutual;
+    if (skipActionOnHover) {
       return;
     }
     this.setAnimationVariables(true);
@@ -95,8 +95,8 @@ export class UserAcquaintanceComponent implements OnInit {
 
   @HostListener('mouseout')
   onLeave(): void {
-    const areAlreadyMutual = !this.isInFollowersView && this.user.isMutual;
-    if (areAlreadyMutual) {
+    const skipActionOnHover = this.isInFollowersView && this.user.isMutual;
+    if (skipActionOnHover) {
       return;
     }
     this.setAnimationVariables(false);
