@@ -128,9 +128,9 @@ export class FollowerService extends HttpService {
       (httpErrorResponse: HttpErrorResponse) => {
         this.logErrors(httpErrorResponse);
         // TODO: DELETE
-        const mockPhotos: string[] = Array.from(
-          Array(usernames.length)
-        ).map(() => this.mapToBase64(EXAMPLE_PHOTO));
+        const mockPhotos: string[] = Array.from(Array(usernames.length)).fill(
+          EXAMPLE_PHOTO
+        );
         this.setUsersProperties(followers, following, mockPhotos);
       }
     );
@@ -146,9 +146,10 @@ export class FollowerService extends HttpService {
       const isMutual = following.some(
         (userToCheckAgainst) => userToCheckAgainst.username === user.username
       );
+      const photo = photos[index++];
       return {
         ...user,
-        photo: photos[index++],
+        photo: this.mapToBase64(photo === '' ? EXAMPLE_PHOTO : photo), // TODO: Change to default photo
         isMutual,
       };
     });
@@ -156,9 +157,10 @@ export class FollowerService extends HttpService {
       const isMutual = followers.some(
         (userToCheckAgainst) => userToCheckAgainst.username === user.username
       );
+      const photo = photos[index++];
       return {
         ...user,
-        photo: photos[index++],
+        photo: this.mapToBase64(photo === '' ? EXAMPLE_PHOTO : photo), // TODO: Change to default photo
         isMutual,
       };
     });
