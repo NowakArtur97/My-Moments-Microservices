@@ -1,6 +1,7 @@
 const BACKEND_URLS = {
   user: {
     users: '/users',
+    photos: '/users/photos',
     authentication: '/authentication',
     registration: '/registration/register',
   },
