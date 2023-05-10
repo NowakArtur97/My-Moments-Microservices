@@ -3,6 +3,7 @@ package com.nowakArtur97.myMoments.userService.feature.document;
 import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.feature.messaging.UserEventProducer;
 import com.nowakArtur97.myMoments.userService.feature.messaging.UserUpdateEventPayload;
+import com.nowakArtur97.myMoments.userService.feature.resource.UserPhotoModel;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserProfileDTO;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserRegistrationDTO;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
@@ -874,7 +875,6 @@ class UserServiceTest {
 
             String expectedUsername = "username";
             byte[] expectedImageBytes = "image.jpg".getBytes();
-            List<byte[]> expectedBytes = List.of(expectedImageBytes);
             UserProfileDocument userProfileExpected = (UserProfileDocument) userProfileTestBuilder
                     .withImage(expectedImageBytes).build(ObjectType.DOCUMENT);
             UserDocument userExpected = (UserDocument) userTestBuilder.withUsername(expectedUsername)
@@ -883,9 +883,13 @@ class UserServiceTest {
 
             when(userRepository.findByUsernameIn(expectedUsernames)).thenReturn(List.of(userExpected));
 
-            List<byte[]> actualBytes = userService.findUsersPhotosByUsernames(expectedUsernames);
+            List<UserPhotoModel> actualUserPhotos = userService.findUsersPhotosByUsernames(expectedUsernames);
 
-            assertAll(() -> assertEquals(1, expectedBytes.size(), () -> "should return one photo, but was: " + actualBytes),
+            assertAll(() -> assertEquals(1, actualUserPhotos.size(),
+                            () -> "should return one users photo, but was: " + actualUserPhotos),
+                    () -> assertEquals(userExpected.getUsername(), actualUserPhotos.get(0).getUsername(),
+                            () -> "should return user with username: " + userExpected.getUsername() + ", but was"
+                                    + actualUserPhotos.get(0).getUsername()),
                     () -> verify(userRepository, times(1)).findByUsernameIn(expectedUsernames),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),
@@ -908,10 +912,13 @@ class UserServiceTest {
 
             when(userRepository.findByUsernameIn(expectedUsernames)).thenReturn(List.of(userExpected));
 
-            List<byte[]> actualBytes = userService.findUsersPhotosByUsernames(expectedUsernames);
+            List<UserPhotoModel> actualUserPhotos = userService.findUsersPhotosByUsernames(expectedUsernames);
 
-            assertAll(() -> assertEquals(1, expectedBytes.size(),
-                            () -> "should return one photo, but was: " + actualBytes),
+            assertAll(() -> assertEquals(1, actualUserPhotos.size(),
+                            () -> "should return one users photo, but was: " + actualUserPhotos),
+                    () -> assertEquals(userExpected.getUsername(), actualUserPhotos.get(0).getUsername(),
+                            () -> "should return user with username: " + userExpected.getUsername() + ", but was"
+                                    + actualUserPhotos.get(0).getUsername()),
                     () -> verify(userRepository, times(1)).findByUsernameIn(expectedUsernames),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),
@@ -927,10 +934,10 @@ class UserServiceTest {
 
             when(userRepository.findByUsernameIn(expectedUsernames)).thenReturn(Collections.emptyList());
 
-            List<byte[]> actualBytes = userService.findUsersPhotosByUsernames(expectedUsernames);
+            List<UserPhotoModel> actualUserPhotos = userService.findUsersPhotosByUsernames(expectedUsernames);
 
-            assertAll(() -> assertTrue(actualBytes.isEmpty(),
-                            () -> "should return empty array, but was: " + actualBytes),
+            assertAll(() -> assertTrue(actualUserPhotos.isEmpty(),
+                            () -> "should return empty array, but was: " + actualUserPhotos),
                     () -> verify(userRepository, times(1)).findByUsernameIn(expectedUsernames),
                     () -> verifyNoMoreInteractions(userRepository),
                     () -> verifyNoInteractions(userMapper),

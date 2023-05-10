@@ -29,6 +29,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
@@ -104,7 +105,8 @@ class UserGetPhotosControllerTest {
     void when_get_existing_user_photo_should_return_photo() {
 
         MultiValueMap<String, String> expectedUsernames = new LinkedMultiValueMap<>();
-        expectedUsernames.addAll(USERNAMES_REQUEST_PARAMETER, List.of("user4567"));
+        String username = "user4567";
+        expectedUsernames.addAll(USERNAMES_REQUEST_PARAMETER, List.of(username));
 
         assertAll(
                 () -> mockMvc.perform(
@@ -115,8 +117,9 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("photos", hasSize(1)))
-                        .andExpect(jsonPath("photos.[0]").isNotEmpty())
+                        .andExpect(jsonPath("usersPhotos", hasSize(1)))
+                        .andExpect(jsonPath("usersPhotos.[0].username", is(username)))
+                        .andExpect(jsonPath("usersPhotos.[0].image").isNotEmpty())
         );
     }
 
@@ -151,9 +154,11 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("photos", hasSize(2)))
-                        .andExpect(jsonPath("photos.[0]").isNotEmpty())
-                        .andExpect(jsonPath("photos.[1]").isNotEmpty())
+                        .andExpect(jsonPath("usersPhotos", hasSize(2)))
+                        .andExpect(jsonPath("usersPhotos.[0].username", is(userDocument.getUsername())))
+                        .andExpect(jsonPath("usersPhotos.[0].image").isNotEmpty())
+                        .andExpect(jsonPath("usersPhotos.[1].username", is(userDocument2.getUsername())))
+                        .andExpect(jsonPath("usersPhotos.[1].image").isNotEmpty())
         );
     }
 
@@ -181,8 +186,9 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("photos", hasSize(1)))
-                        .andExpect(jsonPath("photos.[0]").isNotEmpty())
+                        .andExpect(jsonPath("usersPhotos", hasSize(1)))
+                        .andExpect(jsonPath("usersPhotos.[0].username", is(userDocument.getUsername())))
+                        .andExpect(jsonPath("usersPhotos.[0].image").isNotEmpty())
         );
     }
 
@@ -201,7 +207,7 @@ class UserGetPhotosControllerTest {
                                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("photos").isEmpty())
+                        .andExpect(jsonPath("usersPhotos").isEmpty())
         );
     }
 

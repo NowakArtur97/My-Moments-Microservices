@@ -15,5 +15,5 @@ import java.util.List;
 public class UsersPhotosModel {
 
     @ApiModelProperty(notes = "The users photos")
-    private List<byte[]> photos;
+    private List<UserPhotoModel> usersPhotos;
 }

@@ -56,8 +56,8 @@ class UserController {
             @RequestParam("usernames") List<String> usernames
     ) {
 
-        List<byte[]> usersPhotos = userService.findUsersPhotosByUsernames(usernames);
-        return new ResponseEntity<>(new UsersPhotosModel(usersPhotos), HttpStatus.OK);
+        List<UserPhotoModel> usersPhotosData = userService.findUsersPhotosByUsernames(usernames);
+        return new ResponseEntity<>(new UsersPhotosModel(usersPhotosData), HttpStatus.OK);
     }
 
     @PutMapping(path = "/me", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})

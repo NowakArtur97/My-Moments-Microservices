@@ -3,6 +3,7 @@ package com.nowakArtur97.myMoments.userService.feature.document;
 import com.nowakArtur97.myMoments.userService.exception.ResourceNotFoundException;
 import com.nowakArtur97.myMoments.userService.feature.messaging.UserEventProducer;
 import com.nowakArtur97.myMoments.userService.feature.messaging.UserUpdateEventPayload;
+import com.nowakArtur97.myMoments.userService.feature.resource.UserPhotoModel;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserRegistrationDTO;
 import com.nowakArtur97.myMoments.userService.feature.resource.UserUpdateDTO;
 import com.nowakArtur97.myMoments.userService.feature.validation.UserValidationGroupSequence;
@@ -58,13 +59,16 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public List<byte[]> findUsersPhotosByUsernames(List<String> usernames) {
+    public List<UserPhotoModel> findUsersPhotosByUsernames(List<String> usernames) {
 
         log.info("Looking up Photos of users: {}", usernames);
 
         return userRepository.findByUsernameIn(usernames).stream()
-                .map(userNode -> userNode.getProfile().getImage())
-                .map(Binary::getData)
+                .map(userNode ->
+                        new UserPhotoModel(
+                                userNode.getUsername(),
+                                userNode.getProfile().getImage().getData())
+                )
                 .collect(Collectors.toList());
     }
 
