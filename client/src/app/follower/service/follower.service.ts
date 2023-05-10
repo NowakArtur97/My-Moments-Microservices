@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin } from 'rxjs';
-import UsersPhotosResponse from 'src/app/auth/models/users-photos-response.model';
+import { UserPhotoModel, UsersPhotosResponse } from 'src/app/auth/models/users-photos-response.model';
 import EXAMPLE_PHOTO from 'src/app/auth/services/example-photo';
 import { UserService } from 'src/app/auth/services/user.service';
 import BACKEND_URLS from 'src/app/backend-urls';
@@ -122,15 +122,17 @@ export class FollowerService extends HttpService {
       ({ username }) => username
     );
     this.userService.getUsersPhotos(usernames).subscribe(
-      ({ photos }: UsersPhotosResponse) => {
-        this.setUsersProperties(followers, following, photos);
+      ({ usersPhotos }: UsersPhotosResponse) => {
+        this.setUsersProperties(followers, following, usersPhotos);
       },
       (httpErrorResponse: HttpErrorResponse) => {
         this.logErrors(httpErrorResponse);
         // TODO: DELETE
-        const mockPhotos: string[] = Array.from(Array(usernames.length)).fill(
-          EXAMPLE_PHOTO
-        );
+        const mockPhotos: UserPhotoModel[] = Array.from(
+          Array(usernames.length)
+        ).map((username) => {
+          return { username, image: EXAMPLE_PHOTO };
+        });
         this.setUsersProperties(followers, following, mockPhotos);
       }
     );
@@ -139,32 +141,38 @@ export class FollowerService extends HttpService {
   private setUsersProperties(
     followers: UserAcquaintance[],
     following: UserAcquaintance[],
-    photos: string[]
+    usersPhotos: UserPhotoModel[]
   ) {
-    let index = 0;
-    const followersWithProperties = followers.map((user) => {
-      const isMutual = following.some(
-        (userToCheckAgainst) => userToCheckAgainst.username === user.username
-      );
-      const photo = photos[index++];
-      return {
-        ...user,
-        photo: this.mapToBase64(photo === '' ? EXAMPLE_PHOTO : photo), // TODO: Change to default photo
-        isMutual,
-      };
-    });
-    const followingWithProperties = following.map((user) => {
-      const isMutual = followers.some(
-        (userToCheckAgainst) => userToCheckAgainst.username === user.username
-      );
-      const photo = photos[index++];
-      return {
-        ...user,
-        photo: this.mapToBase64(photo === '' ? EXAMPLE_PHOTO : photo), // TODO: Change to default photo
-        isMutual,
-      };
-    });
+    const followersWithProperties = this.setProperties(
+      followers,
+      following,
+      usersPhotos
+    );
+    const followingWithProperties = this.setProperties(
+      following,
+      followers,
+      usersPhotos
+    );
     this.myFollowers.next(followersWithProperties);
     this.myFollowing.next(followingWithProperties);
   }
+
+  private setProperties = (
+    users: UserAcquaintance[],
+    usersToCheckAgainst: UserAcquaintance[],
+    usersPhotos: UserPhotoModel[]
+  ) =>
+    users.map((user) => {
+      const isMutual = usersToCheckAgainst.some(
+        (userToCheckAgainst) => userToCheckAgainst.username === user.username
+      );
+      const photo = usersPhotos.find(
+        (userPhoto) => userPhoto.username === user.username
+      )!!.image;
+      return {
+        ...user,
+        photo: this.mapToBase64(photo === '' ? EXAMPLE_PHOTO : photo),
+        isMutual,
+      };
+    });
 }

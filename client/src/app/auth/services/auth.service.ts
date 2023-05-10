@@ -29,7 +29,7 @@ export class AuthService extends HttpService {
     },
     authenticationResponse: {
       token:
-        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjgzNjkwNjkyLCJpYXQiOjE2ODM2MTg2OTJ9.Qt9JFMqwZcqrmfEX0s1pOJ21sqljHM2tmxJ2azTTnI0',
+        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXdVc2VyIiwiZXhwIjoxNjgzNzgwNTU4LCJpYXQiOjE2ODM3MDg1NTh9.sI4rrDwlswiRfV2PQ7OapFuvlpEZZEYlquUn82TxDHg',
       expirationTimeInMilliseconds: 72000000,
     },
     roles: [{ name: 'USER_ROLE' }],

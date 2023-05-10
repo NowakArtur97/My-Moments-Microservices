@@ -5,7 +5,7 @@ import BACKEND_URLS from 'src/app/backend-urls';
 import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
-import UsersPhotosResponse from '../models/users-photos-response.model';
+import { UsersPhotosResponse } from '../models/users-photos-response.model';
 
 @Injectable({
   providedIn: 'root',
