@@ -47,7 +47,7 @@ export class AuthWrapperComponent implements OnInit {
   private readonly SING_IN_IMAGE = { present: -100, hidden: 0 };
   private readonly SING_UP_IMAGE = { present: 100, hidden: 0 };
 
-  isInLoginView = true;
+  isInLoginView = false; // TODO: Revert to true
   hasErrors = false;
   public imagesPresentLeftValue!: number;
   public imagesHiddenLeftValue!: number;

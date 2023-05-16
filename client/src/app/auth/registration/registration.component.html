@@ -14,93 +14,175 @@
     [ngFormOptions]="{ updateOn: 'change' }"
     [appNotInclude]="['password', 'username']"
     [appMustMatch]="['password', 'matching_password']"
-    class="auth_form"
+    class="auth_form auth_form--row"
   >
-    <h1 class="auth_form__title">Sign Up</h1>
-    <div class="auth_form__controls_wrapper">
-      <div class="auth_form__controls">
-        <label
-          for="username"
-          class="auth_form__label"
-          aria-placeholder="Username"
-          >Username:
-        </label>
-        <input
-          [(ngModel)]="userRegistrationDTO.username"
-          required
-          minlength="4"
-          maxlength="40"
-          appNoWhiteSpaces
-          type="text"
-          name="username"
-          id="username"
-          class="auth_form__input"
-          placeholder="Username"
-        />
+    <div class="auth_sub_form">
+      <h1 class="auth_form__title">Sign Up</h1>
+      <div class="auth_form__controls_wrapper">
+        <div class="auth_form__controls">
+          <label
+            for="username"
+            class="auth_form__label"
+            aria-placeholder="Username"
+            >Username:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.username"
+            required
+            minlength="4"
+            maxlength="40"
+            appNoWhiteSpaces
+            type="text"
+            name="username"
+            id="registration_username"
+            class="auth_form__input"
+            placeholder="Username"
+          />
+        </div>
+        <div class="auth_form__controls">
+          <label for="email" class="auth_form__label" aria-placeholder="Email"
+            >Email:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.email"
+            required
+            email
+            type="text"
+            name="email"
+            id="registration_email"
+            class="auth_form__input"
+            placeholder="Email"
+          />
+        </div>
+        <div class="auth_form__controls">
+          <label
+            for="password"
+            class="auth_form__label"
+            aria-placeholder="Password"
+            >Password:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.password"
+            required
+            minlength="6"
+            maxlength="30"
+            appPasswordRules
+            type="password"
+            name="password"
+            id="registration_password"
+            class="auth_form__input"
+            placeholder="Password"
+          />
+        </div>
+        <div class="auth_form__controls">
+          <label
+            for="matching_password"
+            class="auth_form__label"
+            aria-placeholder="Matching Password"
+            >Matching Password:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.matchingPassword"
+            required
+            minlength="6"
+            maxlength="30"
+            appPasswordRules
+            type="password"
+            name="matching_password"
+            id="registration_matching_password"
+            class="auth_form__input"
+            placeholder="Matching Password"
+          />
+        </div>
+        <div class="auth_form__controls">
+          <button type="submit" class="auth_form__button">Continue</button>
+        </div>
       </div>
-      <div class="auth_form__controls">
-        <label for="email" class="auth_form__label" aria-placeholder="Email"
-          >Email:
-        </label>
-        <input
-          [(ngModel)]="userRegistrationDTO.email"
-          required
-          email
-          type="text"
-          name="email"
-          id="email"
-          class="auth_form__input"
-          placeholder="Email"
-        />
-      </div>
-      <div class="auth_form__controls">
-        <label
-          for="password"
-          class="auth_form__label"
-          aria-placeholder="Password"
-          >Password:
-        </label>
-        <input
-          [(ngModel)]="userRegistrationDTO.password"
-          required
-          minlength="6"
-          maxlength="30"
-          appPasswordRules
-          type="password"
-          name="password"
-          id="password"
-          class="auth_form__input"
-          placeholder="Password"
-        />
-      </div>
-      <div class="auth_form__controls">
-        <label
-          for="matching_password"
-          class="auth_form__label"
-          aria-placeholder="Matching Password"
-          >Matching Password:
-        </label>
-        <input
-          [(ngModel)]="userRegistrationDTO.matchingPassword"
-          required
-          minlength="6"
-          maxlength="30"
-          appPasswordRules
-          type="password"
-          name="matching_password"
-          id="matching_password"
-          class="auth_form__input"
-          placeholder="Matching Password"
-        />
-      </div>
-      <div class="auth_form__controls">
-        <button type="submit" class="auth_form__button">Sign Up</button>
+      <div class="auth_form__switch_view">
+        <p (click)="onChangeView()" class="auth_form__switch_text">
+          Already Have An Account? Sign In Here
+        </p>
       </div>
     </div>
-    <div class="auth_form__switch_view">
-      <p (click)="onChangeView()" class="auth_form__switch_text">
-        Already Have An Account? Sign In Here
-      </p>
+    <div class="auth_sub_form">
+      <h1 class="auth_form__title">Details</h1>
+      <div class="auth_form__controls_wrapper">
+        <div class="auth_form__controls">
+          <label for="about" class="auth_form__label" aria-placeholder="about"
+            >About:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.profile.about"
+            required
+            maxlength="250"
+            type="text"
+            name="about"
+            id="about"
+            class="auth_form__input"
+            placeholder=""
+          />
+        </div>
+        <div class="auth_form__controls">
+          <label
+            for="email"
+            class="auth_form__label"
+            aria-placeholder="Interests"
+            >Interests:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.profile.interests"
+            required
+            maxlength="250"
+            type="text"
+            name="interests"
+            id="interests"
+            class="auth_form__input"
+            placeholder=""
+          />
+        </div>
+        <div class="auth_form__controls">
+          <label
+            for="languages"
+            class="auth_form__label"
+            aria-placeholder="Languages"
+            >Known languages:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.profile.languages"
+            maxlength="250"
+            type="text"
+            name="languages"
+            id="languages"
+            class="auth_form__input"
+            placeholder=""
+          />
+        </div>
+        <div class="auth_form__controls">
+          <label
+            for="location"
+            class="auth_form__label"
+            aria-placeholder="Location"
+            >Location:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.profile.location"
+            maxlength="50"
+            type="text"
+            name="location"
+            id="location"
+            class="auth_form__input"
+            placeholder=""
+          />
+        </div>
+        <div class="auth_form__controls">
+          <button type="submit" class="auth_form__button">Continue</button>
+        </div>
+      </div>
+      <div class="auth_form__switch_view">
+        <p (click)="onChangeView()" class="auth_form__switch_text">
+          Already Have An Account? Sign In Here
+        </p>
+      </div>
     </div>
   </form>
 </section>

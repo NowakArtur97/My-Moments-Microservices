@@ -30,6 +30,20 @@
   padding: 2% 2%;
 }
 
+.auth_form--row {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.auth_sub_form {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .auth_form__title {
   flex-basis: 10%;
 
