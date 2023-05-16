@@ -9,7 +9,7 @@ import HttpService from 'src/app/common/services/http.service';
 import { environment } from 'src/environments/environment.local';
 
 import AuthenticationRequest from '../models/authentication-request.model';
-import UserRegistrationDTO from '../models/user-registration.dto';
+import { UserRegistrationDTO } from '../models/user-registration.dto';
 import User from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })

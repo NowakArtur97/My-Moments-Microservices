@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { AUTH_FORMS_WIDTH_TO_TWO_COLUMNS_CHANGE } from 'src/app/common/const.data';
 
 import { AuthBaseComponent } from '../auth-base/auth-base.component';
-import UserRegistrationDTO from '../models/user-registration.dto';
+import { UserRegistrationDTO } from '../models/user-registration.dto';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -21,6 +21,13 @@ export class RegistrationComponent
     email: '',
     password: '',
     matchingPassword: '',
+    profile: {
+      about: '',
+      gender: '',
+      interests: '',
+      languages: '',
+      location: '',
+    },
   };
 
   constructor(protected authService: AuthService) {
