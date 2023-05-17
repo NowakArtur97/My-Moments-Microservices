@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewChecked, Component, HostListener } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -11,6 +12,30 @@ import { AuthService } from '../services/auth.service';
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['../auth-base/auth-base.component.css'],
+  animations: [
+    trigger('step', [
+      state(
+        'first',
+        style({
+          top: '0',
+        })
+      ),
+      state(
+        'second',
+        style({
+          top: '-100%',
+        })
+      ),
+      state(
+        'third',
+        style({
+          top: '-200%',
+        })
+      ),
+      transition('first <=> second', [animate('500ms ease-in-out')]),
+      transition('second <=> third', [animate('500ms ease-in-out')]),
+    ]),
+  ],
 })
 export class RegistrationComponent
   extends AuthBaseComponent
@@ -29,12 +54,18 @@ export class RegistrationComponent
       location: '',
     },
   };
+  step = 'first';
 
   constructor(protected authService: AuthService) {
     super(authService);
   }
 
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
+
+  onContinueRegistration(step: string): void {
+    this.step = step;
+    console.log(step);
+  }
 
   onSubmit = (): void =>
     this.authService.registerUser(this.userRegistrationDTO);

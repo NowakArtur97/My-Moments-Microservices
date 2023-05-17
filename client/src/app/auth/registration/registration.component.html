@@ -10,6 +10,7 @@
 >
   <form
     #authForm="ngForm"
+    [@step]="step"
     (ngSubmit)="onSubmit()"
     [ngFormOptions]="{ updateOn: 'change' }"
     [appNotInclude]="['password', 'username']"
@@ -95,7 +96,13 @@
           />
         </div>
         <div class="auth_form__controls">
-          <button type="submit" class="auth_form__button">Continue</button>
+          <button
+            (click)="onContinueRegistration('second')"
+            type="button"
+            class="auth_form__button"
+          >
+            Continue
+          </button>
         </div>
       </div>
       <div class="auth_form__switch_view">
@@ -175,7 +182,13 @@
           />
         </div>
         <div class="auth_form__controls">
-          <button type="submit" class="auth_form__button">Continue</button>
+          <button
+            (click)="onContinueRegistration('second')"
+            type="button"
+            class="auth_form__button"
+          >
+            Continue
+          </button>
         </div>
       </div>
       <div class="auth_form__switch_view">
