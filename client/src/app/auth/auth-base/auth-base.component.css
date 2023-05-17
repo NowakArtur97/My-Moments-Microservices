@@ -41,6 +41,7 @@
 
 .auth_sub_form {
   height: 100%;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -77,6 +78,11 @@
   width: 100%;
 }
 
+.auth_form__controls--row {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .auth_form__label {
   font-size: 2em;
 }
@@ -103,7 +109,7 @@
 
 .auth_form__button {
   height: 50%;
-  width: 80%;
+  width: 45%;
 
   border: 1em hsl(0, 0%, 7%);
   background-color: hsl(0, 0%, 7%);
@@ -153,10 +159,6 @@
     font-size: 1.75em;
   }
 
-  .auth_form__button {
-    width: 70%;
-  }
-
   .auth_form__switch_text {
     font-size: 1.75em;
   }
@@ -175,10 +177,6 @@
   .auth_form__input {
     border-radius: 2%;
     font-size: 2em;
-  }
-
-  .auth_form__button {
-    width: 50%;
   }
 
   .auth_form__switch_text {
