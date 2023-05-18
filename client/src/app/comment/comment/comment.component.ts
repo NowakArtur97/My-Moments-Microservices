@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 import Comment from '../models/comment.model';
 import { CommentService } from '../services/comments.service';
@@ -39,14 +40,21 @@ export class CommentComponent implements OnInit {
   commentContentWrapper!: ElementRef<HTMLDivElement>;
   deleteState = '';
   private wasEditingStarted = false;
+  isAuthorAuthenticatedUser = false;
 
-  constructor(private commentService: CommentService) {}
+  constructor(
+    private commentService: CommentService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.commentService.editComment.subscribe(({ id }) => {
       if (this.comment.id !== id) {
         this.wasEditingStarted = false;
       }
+    });
+    this.authService.authenticatedUser.subscribe((user) => {
+      this.isAuthorAuthenticatedUser = user?.username === this.comment.author;
     });
   }
 

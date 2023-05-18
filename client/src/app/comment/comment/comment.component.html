@@ -13,7 +13,7 @@
   <div class="comment__data">
     <div class="comment__header">
       <div class="comment__author">{{ comment.author }}</div>
-      <div class="comment__buttons_wrapper">
+      <div *ngIf="isAuthorAuthenticatedUser" class="comment__buttons_wrapper">
         <div class="comment__button_wrapper">
           <button
             appOnClickStopPropagation
