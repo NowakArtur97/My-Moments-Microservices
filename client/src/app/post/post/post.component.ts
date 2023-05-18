@@ -70,8 +70,8 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
   startWidth!: number;
   showCommentsAnimationStartTime!: number;
 
-  private stateTimeout!: NodeJS.Timeout;
-  private rotationTimeout!: NodeJS.Timeout;
+  private stateTimeout!: number;
+  private rotationTimeout!: number;
 
   constructor(
     private postService: PostService,
@@ -221,23 +221,23 @@ export class PostComponent implements OnInit, OnChanges, AfterViewChecked {
     if (isInFirstHalfOfRotation) {
       clearTimeout(this.stateTimeout);
       timeout = timeDifference - this.HALF_ANIMATION_TIME;
-      this.rotationTimeout = setTimeout(() => {
+      this.rotationTimeout = window.setTimeout(() => {
         this.isRotating = false;
       }, timeout);
       this.areCommentsVisible = areCommentsVisibleAfterTimeout;
       return;
     } else if (isInSecondHalfOfRotation) {
       timeout = timeDifference - this.HALF_ANIMATION_TIME;
-      this.rotationTimeout = setTimeout(() => {
+      this.rotationTimeout = window.setTimeout(() => {
         this.isRotating = false;
       }, timeout);
     } else {
       timeout = this.HALF_ANIMATION_TIME;
-      this.rotationTimeout = setTimeout(() => {
+      this.rotationTimeout = window.setTimeout(() => {
         this.isRotating = false;
       }, this.FULL_ANIMATION_TIME);
     }
-    this.stateTimeout = setTimeout(() => {
+    this.stateTimeout = window.setTimeout(() => {
       this.areCommentsVisible = areCommentsVisibleAfterTimeout;
     }, timeout);
   }

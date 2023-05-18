@@ -9,7 +9,7 @@ import ErrorResponse from 'src/app/common/models/error-response.model';
 import { environment } from 'src/environments/environment.local';
 
 import AuthenticationRequest from '../models/authentication-request.model';
-import UserRegistrationDTO from '../models/user-registration.dto';
+import { UserRegistrationDTO } from '../models/user-registration.dto';
 import User from '../models/user.model';
 import { AuthService } from './auth.service';
 
@@ -47,6 +47,13 @@ describe('AuthService', () => {
         email: 'email@email.com',
         password: 'Password123!',
         matchingPassword: 'Password123!',
+        profile: {
+          about: '',
+          gender: '',
+          interests: '',
+          languages: '',
+          location: '',
+        },
       };
       const authResponse: User = {
         username: 'username',
@@ -89,6 +96,13 @@ describe('AuthService', () => {
         email: 'incorrectEmail.com',
         password: 'incorrectData',
         matchingPassword: 'incorrectData',
+        profile: {
+          about: '',
+          gender: '',
+          interests: '',
+          languages: '',
+          location: '',
+        },
       };
       const errorResponse: ErrorResponse = {
         errors: ['Invalid data'],

@@ -25,8 +25,8 @@ export class CommentEditComponent implements OnInit {
   isEditingComment = false;
   letterIndex = 0;
   content = '';
-  private textContentAppearTimeouts: Array<NodeJS.Timeout> = [];
-  private textContentDisappearTimeouts: Array<NodeJS.Timeout> = [];
+  private textContentAppearTimeouts: Array<number> = [];
+  private textContentDisappearTimeouts: Array<number> = [];
 
   constructor(private commentService: CommentService) {}
 
@@ -67,7 +67,7 @@ export class CommentEditComponent implements OnInit {
     this.animateTextContentDisappearance();
   }
 
-  private clearTimeouts(timeouts: Array<NodeJS.Timeout>): void {
+  private clearTimeouts(timeouts: Array<number>): void {
     timeouts.forEach((timeout) => clearTimeout(timeout));
     timeouts = [];
   }
@@ -79,7 +79,7 @@ export class CommentEditComponent implements OnInit {
       this.clearTimeouts(this.textContentAppearTimeouts);
     } else {
       this.textContentAppearTimeouts.push(
-        setTimeout(
+        window.setTimeout(
           () => this.animateTextContentAppearance(),
           this.CONTENT_TEXT_ANIMATION_SPEED
         )
@@ -93,7 +93,7 @@ export class CommentEditComponent implements OnInit {
       this.clearTimeouts(this.textContentDisappearTimeouts);
     } else {
       this.textContentDisappearTimeouts.push(
-        setTimeout(
+        window.setTimeout(
           () => this.animateTextContentDisappearance(),
           this.CONTENT_TEXT_ANIMATION_SPEED
         )

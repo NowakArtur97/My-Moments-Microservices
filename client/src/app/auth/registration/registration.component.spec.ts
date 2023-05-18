@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppCommonModule } from 'src/app/common/common.module';
 
 import { PasswordRulesDirective } from '../directives/password-rules.directive';
-import UserRegistrationDTO from '../models/user-registration.dto';
+import { UserRegistrationDTO } from '../models/user-registration.dto';
 import { RegistrationComponent } from './registration.component';
 
 describe('RegistrationComponent', () => {
@@ -18,6 +18,13 @@ describe('RegistrationComponent', () => {
     email: 'email@email.com',
     password: 'Password123!@',
     matchingPassword: 'Password123!@',
+    profile: {
+      about: '',
+      gender: '',
+      interests: '',
+      languages: '',
+      location: '',
+    },
   };
 
   beforeEach(async () => {

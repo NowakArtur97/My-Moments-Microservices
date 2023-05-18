@@ -16,7 +16,7 @@ export abstract class UserAcquaintancesComponent implements OnInit {
   protected users: UserAcquaintance[] = [];
   usersLoaded: UserAcquaintance[] = [];
   subject!: BehaviorSubject<UserAcquaintance[]>;
-  usersInterval!: NodeJS.Timeout;
+  usersInterval!: number;
   isInFollowersView: boolean;
 
   constructor(
@@ -38,7 +38,7 @@ export abstract class UserAcquaintancesComponent implements OnInit {
     this.usersLoaded = [];
     let index = 0;
     clearInterval(this.usersInterval);
-    this.usersInterval = setInterval(() => {
+    this.usersInterval = window.setInterval(() => {
       this.usersLoaded.push(this.users[index]);
       index++;
       if (this.usersLoaded.length === this.users.length) {
