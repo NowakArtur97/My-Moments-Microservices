@@ -35,7 +35,7 @@ export class FollowerService extends HttpService {
       `${this.baseUrl}${BACKEND_URLS.follower.following(username)}`
     );
 
-    forkJoin(followersRequest, followingRequest).subscribe(
+    forkJoin([followersRequest, followingRequest]).subscribe(
       ([{ users: followers }, { users: following }]) =>
         this.handleSuccessfulResponses(followers, following),
       (httpErrorResponse: HttpErrorResponse) => {
@@ -62,15 +62,15 @@ export class FollowerService extends HttpService {
       );
   }
 
-  private updateUsers(username: string) {
-    const following = this.myFollowing.getValue().map((following) =>
-      following.username === username
+  private updateUsers(username: string): void {
+    const following = this.myFollowing.getValue().map((user) =>
+      user.username === username
         ? {
-            ...following,
+            ...user,
             isMutual: true,
-            numberOfFollowing: following.numberOfFollowing + 1,
+            numberOfFollowing: user.numberOfFollowing + 1,
           }
-        : following
+        : user
     );
     const followers = this.myFollowers.getValue().map((follower) =>
       follower.username === username
@@ -117,7 +117,7 @@ export class FollowerService extends HttpService {
   private handleSuccessfulResponses(
     followers: UserAcquaintance[],
     following: UserAcquaintance[]
-  ) {
+  ): void {
     const usernames = [...followers, ...following].map(
       ({ username }) => username
     );
@@ -142,7 +142,7 @@ export class FollowerService extends HttpService {
     followers: UserAcquaintance[],
     following: UserAcquaintance[],
     usersPhotos: UserPhotoModel[]
-  ) {
+  ): void {
     const followersWithProperties = this.setProperties(
       followers,
       following,

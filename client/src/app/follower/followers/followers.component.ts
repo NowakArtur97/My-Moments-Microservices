@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/auth/services/user.service';
 
@@ -11,7 +11,9 @@ import { UserAcquaintancesComponent } from '../user-acquaintances/user-acquainta
   templateUrl: '../user-acquaintances/user-acquaintances.component.html',
   styleUrls: ['../user-acquaintances/user-acquaintances.component.css'],
 })
-export class FollowersComponent extends UserAcquaintancesComponent {
+export class FollowersComponent
+  extends UserAcquaintancesComponent
+  implements OnInit {
   private followers: UserAcquaintance[] = [];
 
   constructor(

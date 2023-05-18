@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from 'src/app/auth/services/user.service';
@@ -11,7 +11,7 @@ import { FollowerService } from '../service/follower.service';
   template: '',
   styleUrls: ['./user-acquaintances.component.css'],
 })
-export abstract class UserAcquaintancesComponent implements OnInit {
+export abstract class UserAcquaintancesComponent {
   private readonly LOAD_USER_INTERVAL = 10;
   protected users: UserAcquaintance[] = [];
   usersLoaded: UserAcquaintance[] = [];
@@ -27,8 +27,6 @@ export abstract class UserAcquaintancesComponent implements OnInit {
     this.isInFollowersView =
       this.router.url === `/${APP_ROUTES.follower.followers}`;
   }
-
-  ngOnInit(): void {}
 
   protected loadUsers(users: UserAcquaintance[]): void {
     if (users.length === 0) {
