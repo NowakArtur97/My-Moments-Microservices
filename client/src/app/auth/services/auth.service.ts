@@ -40,10 +40,10 @@ export class AuthService extends HttpService {
     super(httpClient, environment.userServiceUrl);
   }
 
-  registerUser(userData: UserRegistrationDTO, image: File): void {
+  registerUser(userData: UserRegistrationDTO, image: File | null): void {
     const multipartData = this.createFormData([
       { key: 'user', value: userData },
-      { key: 'image', value: image }, // TODO: Check
+      // { key: 'image', value: image }, // TODO: Check
     ]);
     this.httpClient
       .post<User>(

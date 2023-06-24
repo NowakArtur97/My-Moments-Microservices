@@ -254,16 +254,24 @@
         </div>
         <div class="auth_form__controls">
           <label for="image" class="auth_form__label" aria-placeholder="image"
-            >Upload profile image:
+            >Profile image:
           </label>
           <input
-            [(ngModel)]="image"
+            #image
+            (change)="onSetProfileImage(image.files)"
+            accept="image/*"
             type="file"
             name="image"
             id="image"
-            class="auth_form__input"
+            class="auth_form__hidden"
             placeholder="image"
-          />
+          /><button
+            (click)="image.click()"
+            type="button"
+            class="auth_form__button"
+          >
+            Upload
+          </button>
         </div>
         <div class="auth_form__controls auth_form__controls--row">
           <button

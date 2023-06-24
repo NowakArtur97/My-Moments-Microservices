@@ -55,7 +55,7 @@ export class RegistrationComponent
     },
   };
   step = 'third';
-  image!: File;
+  image: File | null = null;
 
   constructor(protected authService: AuthService) {
     super(authService);
@@ -70,6 +70,12 @@ export class RegistrationComponent
 
   onSubmit = (): void =>
     this.authService.registerUser(this.userRegistrationDTO, this.image);
+
+  onSetProfileImage(image: FileList | null): void {
+    if (image) {
+      this.image = image[0];
+    }
+  }
 
   setupAnimationValues(): void {
     this.setupLeftOffset();

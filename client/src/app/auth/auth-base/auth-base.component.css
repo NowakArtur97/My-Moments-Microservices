@@ -142,6 +142,10 @@
   color: hsl(0, 0%, 100%);
 }
 
+.auth_form__hidden {
+  display: none;
+}
+
 @media (min-width: 736px) {
   .auth_form__title {
     font-size: 7em;
