@@ -54,7 +54,7 @@ export class RegistrationComponent
       location: '',
     },
   };
-  step = 'first';
+  step = 'third';
 
   constructor(protected authService: AuthService) {
     super(authService);

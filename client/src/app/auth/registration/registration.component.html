@@ -126,7 +126,7 @@
             name="about"
             id="about"
             class="auth_form__input"
-            placeholder=""
+            placeholder="About"
           />
         </div>
         <div class="auth_form__controls">
@@ -144,7 +144,7 @@
             name="interests"
             id="interests"
             class="auth_form__input"
-            placeholder=""
+            placeholder="Interests"
           />
         </div>
         <div class="auth_form__controls">
@@ -161,7 +161,7 @@
             name="languages"
             id="languages"
             class="auth_form__input"
-            placeholder=""
+            placeholder="Known languages"
           />
         </div>
         <div class="auth_form__controls">
@@ -178,7 +178,7 @@
             name="location"
             id="location"
             class="auth_form__input"
-            placeholder=""
+            placeholder="Location"
           />
         </div>
         <div class="auth_form__controls auth_form__controls--row">
@@ -190,12 +190,77 @@
             Back
           </button>
           <button
-            (click)="onContinueRegistration('second')"
+            (click)="onContinueRegistration('third')"
             type="button"
             class="auth_form__button"
           >
             Continue
           </button>
+        </div>
+      </div>
+      <div class="auth_form__switch_view">
+        <p (click)="onChangeView()" class="auth_form__switch_text">
+          Already Have An Account? Sign In Here
+        </p>
+      </div>
+    </div>
+    <div class="auth_sub_form">
+      <h1 class="auth_form__title">Profile picture</h1>
+      <div class="auth_form__controls_wrapper">
+        <div class="auth_form__controls auth_form__controls--row">
+          <label
+            for="male_gender"
+            class="auth_form__label"
+            aria-placeholder="male_gender"
+            >Male:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.profile.gender"
+            type="checkbox"
+            name="male_gender"
+            id="male_gender"
+            class="auth_form__input"
+            value="MALE"
+          />
+          <label
+            for="female_gender"
+            class="auth_form__label"
+            aria-placeholder="female_gender"
+            >Female:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.profile.gender"
+            type="checkbox"
+            name="female_gender"
+            id="female_gender"
+            class="auth_form__input"
+            value="FEMALE"
+          />
+          <label
+            for="unspecified_gender"
+            class="auth_form__label"
+            aria-placeholder="unspecified_gender"
+            >Unspecified:
+          </label>
+          <input
+            [(ngModel)]="userRegistrationDTO.profile.gender"
+            type="checkbox"
+            name="unspecified_gender"
+            id="unspecified_gender"
+            class="auth_form__input"
+            value="UNSPECIFIED"
+            checked
+          />
+        </div>
+        <div class="auth_form__controls auth_form__controls--row">
+          <button
+            (click)="onContinueRegistration('second')"
+            type="button"
+            class="auth_form__button"
+          >
+            Back
+          </button>
+          <button type="submit" class="auth_form__button">Sign Up</button>
         </div>
       </div>
       <div class="auth_form__switch_view">
