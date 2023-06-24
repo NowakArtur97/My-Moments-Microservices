@@ -252,6 +252,19 @@
             checked
           />
         </div>
+        <div class="auth_form__controls">
+          <label for="image" class="auth_form__label" aria-placeholder="image"
+            >Upload profile image:
+          </label>
+          <input
+            [(ngModel)]="image"
+            type="file"
+            name="image"
+            id="image"
+            class="auth_form__input"
+            placeholder="image"
+          />
+        </div>
         <div class="auth_form__controls auth_form__controls--row">
           <button
             (click)="onContinueRegistration('second')"
