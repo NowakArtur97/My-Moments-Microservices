@@ -105,6 +105,7 @@
 
 .auth_form__input[type="checkbox"] {
   width: auto;
+  margin-left: -20px;
 }
 
 .auth_form__input:focus {
@@ -175,6 +176,10 @@
   .auth_form__input {
     border-radius: 2%;
     font-size: 1.75em;
+  }
+
+  .auth_form__input[type="checkbox"] {
+    margin-left: -30px;
   }
 
   .auth_form__switch_text {
