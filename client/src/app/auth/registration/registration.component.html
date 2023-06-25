@@ -248,9 +248,9 @@
             >Male:
           </label>
           <input
-            [(ngModel)]="userRegistrationDTO.profile.gender"
-            type="checkbox"
-            name="male_gender"
+            (click)="onChoseGender($event)"
+            type="radio"
+            name="gender"
             id="male_gender"
             class="auth_form__input"
             value="MALE"
@@ -262,9 +262,9 @@
             >Female:
           </label>
           <input
-            [(ngModel)]="userRegistrationDTO.profile.gender"
-            type="checkbox"
-            name="female_gender"
+            (click)="onChoseGender($event)"
+            type="radio"
+            name="gender"
             id="female_gender"
             class="auth_form__input"
             value="FEMALE"

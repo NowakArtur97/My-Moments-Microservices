@@ -103,7 +103,7 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-.auth_form__input[type="checkbox"] {
+.auth_form__input[type="radio"] {
   width: auto;
   margin-left: -20px;
 }
@@ -178,7 +178,7 @@
     font-size: 1.75em;
   }
 
-  .auth_form__input[type="checkbox"] {
+  .auth_form__input[type="radio"] {
     margin-left: -30px;
   }
 

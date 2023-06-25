@@ -83,6 +83,20 @@ export class RegistrationComponent
     }
   }
 
+  onChoseGender(event: Event): void {
+    const radioButton = <HTMLInputElement>event.target;
+    if (radioButton.checked) {
+      const { gender } = this.userRegistrationDTO.profile;
+      const isSameValue = gender === radioButton.value;
+      if (isSameValue) {
+        this.userRegistrationDTO.profile.gender = '';
+        radioButton.checked = false;
+      } else {
+        this.userRegistrationDTO.profile.gender = radioButton.value;
+      }
+    }
+  }
+
   private loadFileToImage(image: FileList) {
     this.image = image[0];
     const fileReader = new FileReader();
