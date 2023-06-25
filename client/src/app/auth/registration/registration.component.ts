@@ -7,6 +7,7 @@ import { AUTH_FORMS_WIDTH_TO_TWO_COLUMNS_CHANGE } from 'src/app/common/const.dat
 import { AuthBaseComponent } from '../auth-base/auth-base.component';
 import { UserRegistrationDTO } from '../models/user-registration.dto';
 import { AuthService } from '../services/auth.service';
+import EXAMPLE_PHOTO from '../services/example-photo';
 
 @Component({
   selector: 'app-registration',
@@ -56,9 +57,14 @@ export class RegistrationComponent
   };
   step = 'third';
   image: File | null = null;
+  imagePicture: string = '';
 
   constructor(protected authService: AuthService) {
     super(authService);
+  }
+
+  ngOnInit(): void {
+    this.imagePicture = this.authService.mapToBase64(EXAMPLE_PHOTO);
   }
 
   ngAfterViewChecked = (): void => this.refreshFormFieldsAfterChange();
@@ -73,8 +79,16 @@ export class RegistrationComponent
 
   onSetProfileImage(image: FileList | null): void {
     if (image) {
-      this.image = image[0];
+      this.loadFileToImage(image);
     }
+  }
+
+  private loadFileToImage(image: FileList) {
+    this.image = image[0];
+    const fileReader = new FileReader();
+    fileReader.onloadend = (event: any) =>
+      (this.imagePicture = event.target.result);
+    fileReader.readAsDataURL(this.image);
   }
 
   setupAnimationValues(): void {
