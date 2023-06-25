@@ -78,7 +78,10 @@
 
 .auth_form__controls--row {
   flex-direction: row;
-  justify-content: space-between;
+}
+
+.auth_form__controls--big {
+  flex-basis: 60%;
 }
 
 .auth_form__label {
@@ -100,9 +103,22 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+.auth_form__input[type="checkbox"] {
+  width: auto;
+}
+
 .auth_form__input:focus {
   background-color: hsl(0, 0%, 100%);
   color: hsl(0, 0%, 7%);
+}
+
+.auth_form__photo_wrapper {
+  max-height: 233.2px;
+}
+
+.auth_form__photo {
+  height: 100%;
+  width: 100%;
 }
 
 .auth_form__button {
