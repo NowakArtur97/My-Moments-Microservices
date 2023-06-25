@@ -71,7 +71,6 @@ export class RegistrationComponent
 
   onContinueRegistration(step: string): void {
     this.step = step;
-    console.log(step);
   }
 
   onSubmit = (): void =>

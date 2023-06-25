@@ -137,9 +137,14 @@
   cursor: pointer;
 }
 
-.auth_form__button:hover {
+.auth_form__button:hover:not([disabled]) {
   background-color: hsl(0, 0%, 100%);
   color: hsl(0, 0%, 7%);
+}
+
+.auth_form__button:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .auth_form__switch_view {

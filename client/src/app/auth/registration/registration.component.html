@@ -120,7 +120,6 @@
           </label>
           <input
             [(ngModel)]="userRegistrationDTO.profile.about"
-            required
             maxlength="250"
             type="text"
             name="about"
@@ -138,7 +137,6 @@
           </label>
           <input
             [(ngModel)]="userRegistrationDTO.profile.interests"
-            required
             maxlength="250"
             type="text"
             name="interests"
@@ -278,7 +276,13 @@
           >
             Back
           </button>
-          <button type="submit" class="auth_form__button">Sign Up</button>
+          <button
+            [disabled]="!authForm.valid"
+            type="submit"
+            class="auth_form__button"
+          >
+            Sign Up
+          </button>
         </div>
       </div>
       <div class="auth_form__switch_view">
