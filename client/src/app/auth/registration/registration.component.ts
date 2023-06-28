@@ -42,6 +42,7 @@ export class RegistrationComponent
   extends AuthBaseComponent
   implements AfterViewChecked {
   private registerFormSubscriptions$ = new Subscription();
+  private readonly DEFAULT_GENDER = 'UNSPECIFIED';
   userRegistrationDTO: UserRegistrationDTO = {
     username: '',
     email: '',
@@ -49,7 +50,7 @@ export class RegistrationComponent
     matchingPassword: '',
     profile: {
       about: '',
-      gender: '',
+      gender: this.DEFAULT_GENDER,
       interests: '',
       languages: '',
       location: '',
@@ -88,7 +89,7 @@ export class RegistrationComponent
       const { gender } = this.userRegistrationDTO.profile;
       const isSameValue = gender === radioButton.value;
       if (isSameValue) {
-        this.userRegistrationDTO.profile.gender = '';
+        this.userRegistrationDTO.profile.gender = this.DEFAULT_GENDER;
         radioButton.checked = false;
       } else {
         this.userRegistrationDTO.profile.gender = radioButton.value;
