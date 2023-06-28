@@ -6,4 +6,5 @@ export default interface PostElement extends Post {
   state: PostState;
   stoppedBeingActive: boolean;
   isCurrentlyLastElement: boolean;
+  authorImage: string;
 }

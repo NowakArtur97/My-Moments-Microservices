@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment.local';
 import AuthenticationRequest from '../models/authentication-request.model';
 import { UserRegistrationDTO } from '../models/user-registration.dto';
 import User from '../models/user.model';
+import EXAMPLE_PHOTO from './example-photo';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends HttpService {
@@ -25,7 +26,7 @@ export class AuthService extends HttpService {
       interests: 'interests',
       languages: 'languages',
       location: 'location',
-      image: ['image'],
+      image: EXAMPLE_PHOTO,
     },
     authenticationResponse: {
       token:

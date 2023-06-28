@@ -9,7 +9,7 @@ interface UserProfile {
   readonly interests: string;
   readonly languages: string;
   readonly location: string;
-  readonly image: string[];
+  readonly image: string;
 }
 
 interface Role {

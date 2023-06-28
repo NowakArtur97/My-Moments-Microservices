@@ -34,10 +34,9 @@
         alt="user post"
       />
       <div class="post__author">
-        <!-- TODO: User photo -->
         <img
           (click)="onShowComments()"
-          src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg"
+          [src]="post.authorImage"
           class="post__author_photo"
           alt="author image"
         />

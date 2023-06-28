@@ -15,6 +15,6 @@ export class MyPostsComponent extends PostsComponent {
     clickAndDragToScrollService: ClickAndDragToScrollService
   ) {
     super(postService, clickAndDragToScrollService);
-    this.postsSubscription = this.postService.followingPosts;
+    this.postsSubscription = this.postService.myPosts;
   }
 }

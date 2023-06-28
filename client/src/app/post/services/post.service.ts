@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import BACKEND_URLS from 'src/app/backend-urls';
 import { APP_ROUTES } from 'src/app/common/const.data';
 import HttpService from 'src/app/common/services/http.service';
@@ -39,7 +40,11 @@ export class PostService extends HttpService {
   );
   editedPost = new BehaviorSubject<Post | null>(null);
 
-  constructor(protected httpClient: HttpClient, private router: Router) {
+  constructor(
+    protected httpClient: HttpClient,
+    private router: Router,
+    private authService: AuthService
+  ) {
     super(httpClient, environment.postServiceUrl);
   }
 
@@ -123,14 +128,19 @@ export class PostService extends HttpService {
     ]);
   }
 
-  mapPostsToElements = (posts: Post[]): PostElement[] =>
-    posts.map((post) => ({
+  mapPostsToElements(posts: Post[]): PostElement[] {
+    const authorImage = this.mapToBase64(
+      this.authService.authenticatedUser.getValue()!!.profile.image
+    ); // TODO: Add image if authenticated User is not an author
+    return posts.map((post) => ({
       ...post,
       currentPhotoIndex: 0,
       state: PostState.INACTIVE,
       stoppedBeingActive: false,
       isCurrentlyLastElement: false,
+      authorImage,
     }));
+  }
 
   private handleSuccessfullPostsResponse(newPosts: Post[]): void {
     const mappedBinaryToJpgsPosts: Post[] = this.mapBinaryToJpgs(newPosts).map(
