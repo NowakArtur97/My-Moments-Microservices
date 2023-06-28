@@ -41,10 +41,12 @@ export class AuthService extends HttpService {
   }
 
   registerUser(userData: UserRegistrationDTO, image: File | null): void {
-    const multipartData = this.createFormData([
-      { key: 'user', value: userData },
-      // { key: 'image', value: image }, // TODO: Check
-    ]);
+    const multipartData = image
+      ? this.createFormDataFromFiles(
+          [{ key: 'image', files: [image] }],
+          [{ key: 'user', value: userData }]
+        )
+      : this.createFormData([{ key: 'user', value: userData }]);
     this.httpClient
       .post<User>(
         `${this.baseUrl}${BACKEND_URLS.user.registration}`,
