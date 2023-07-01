@@ -1,0 +1,131 @@
+version: "2.4"
+
+networks:
+  my-moments:
+    driver: bridge
+    name: my-moments
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+services:
+  configuration-service:
+    restart: on-failure
+    networks:
+      - my-moments
+    build: ./configuration-service
+    image: configuration-service:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - /configuration-service/dir:/app
+    container_name: configuration-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  user-service:
+    restart: on-failure
+    build: ./user-service
+    networks:
+      - my-moments
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /user-service/dir:/app
+    depends_on:
+      - configuration-service
+      - mongo-db-user-service
+    container_name: user-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  post-service:
+    restart: on-failure
+    build: ./post-service
+    networks:
+      - my-moments
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /post-service/dir:/app
+    depends_on:
+      - configuration-service
+      - mongo-db-post-service
+    container_name: post-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  follower-service:
+    restart: on-failure
+    build: ./follower-service
+    networks:
+      - my-moments
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    volumes:
+      - /follower-service/dir:/app
+    depends_on:
+      - configuration-service
+      - neo4j-follower-service
+    container_name: follower-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  mongo-db-user-service:
+    image: mongo:3.6
+    networks:
+      - my-moments
+    ports:
+      - "27017:27017"
+    volumes:
+      - /var/lib/mongo-db-user-service:/data/db
+    container_name: mongo-db-user-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  mongo-db-post-service:
+    image: mongo:3.6
+    networks:
+      - my-moments
+    ports:
+      - "27019:27017"
+    volumes:
+      - /var/lib/mongo-db-post-service:/data/db
+    container_name: mongo-db-post-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
+
+  neo4j-follower-service:
+    restart: always
+    image: neo4j:4.3.3
+    networks:
+      - my-moments
+    volumes:
+      - ./conf:/conf
+      - ./import:/import
+      - ./logs:/logs
+      - ./plugins:/plugins
+    environment:
+      - NEO4J_AUTH=neo4j/secret
+      - NEO4J_dbms_memory_pagecache_size=128MB
+      - NEO4J_dbms.memory.heap.initial_size=128MB
+      - NEO4J_dbms_memory_heap_max__size=128MB
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    container_name: neo4j-follower-service
+    cpus: 0.5
+    mem_limit: 256M
+    mem_reservation: 64M
